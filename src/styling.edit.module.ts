@@ -6,20 +6,42 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { EmailsWorkshop } from "./workshops/emails/ko/emails";
-import { EmailDetailsWorkshop, EmailSelector } from "./workshops/emails/ko";
-import { RowEditorModule } from "./row/ko/rowEditor.module";
-import { ColumnEditorModule } from "./column/ko/columnEditor.module";
-import { SectionEditorModule } from "./section/ko/sectionEditor.module";
+import { StyleEditor } from "./workshops/styleEditor/styleEditor";
+import { BoxEditor } from "./workshops/boxes/boxEditor";
+import { ColorSelector, ColorEditor } from "./workshops/colors";
+import { FontSelector } from "./workshops/fonts";
+import { GoogleFonts } from "./workshops/googleFonts";
+import { AnimationSelector } from "./workshops/animations";
+import { ShadowSelector } from "./workshops/shadows";
+import { Typography } from "./workshops/typography";
+import { LivingStyleGuide } from "./livingStyleGuide/livingStyleGuide";
+import { StyleService } from "./styleService";
+// import { StyleCompiler } from "./styleCompiler";
+import { StyleableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylable";
+import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
+import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylesheet";
+import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 
-
-export class EmailsEditModule implements IInjectorModule {
+export class StylingEditModule implements IInjectorModule {
     public register(injector: IInjector): void {
-        injector.bind("emailsWorkshop", EmailsWorkshop);
-        injector.bind("emailDetailsWorkshop", EmailDetailsWorkshop);
-        injector.bind("emailSelector", EmailSelector);
-        injector.bindModule(new RowEditorModule());
-        injector.bindModule(new ColumnEditorModule());
-        injector.bindModule(new SectionEditorModule());
+        injector.bind("fontSelector", FontSelector);
+        injector.bind("googleFonts", GoogleFonts);
+        injector.bind("typography", Typography);
+        injector.bind("boxEditor", BoxEditor);
+        injector.bind("colorSelector", ColorSelector);
+        injector.bind("colorEditor", ColorEditor);
+        injector.bind("shadowSelector", ShadowSelector);
+        injector.bind("animationSelector", AnimationSelector);
+        injector.bind("styleEditor", StyleEditor);
+        // injector.bind("styleCompiler", StyleCompiler);
+        injector.bindSingleton("styleService", StyleService);
+        injector.bind("livingStyleGuide", LivingStyleGuide);
+        injector.bindSingleton("styleableBindingHandler", StyleableBindingHandler);
+        injector.bindSingleton("styledBindingHandler", StyledBindingHandler);
+        injector.bindSingleton("stylesheetBindingHandler", StylesheetBindingHandler);
+
+        injector.resolve("styleableBindingHandler");
+        injector.resolve("styledBindingHandler");
+        injector.resolve("stylesheetBindingHandler");
     }
 }

@@ -1,0 +1,19 @@
+<style data-bind="html: compiledFontStyles"></style>
+
+<div class="editor">
+    <h1>Font family</h1>
+    <hr />
+
+    <ul class="list fonts">
+        <li class="list-item font-box">
+            <a href="#" title="Clear font" class="font-family" data-bind="click: $component.clearFonts">
+                (None)
+            </a>
+        </li>
+        <!-- ko foreach: { data: fonts, as: 'font' } -->
+        <li class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }">
+            <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.displayName, style: { 'font-family': font.family }"></a>
+        </li>
+        <!--/ko -->
+    </ul>
+</div>

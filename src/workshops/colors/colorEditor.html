@@ -1,0 +1,10 @@
+<div class="form">
+    <label>Color name</label>
+    <div class="form-group">
+        <input type="text" class="form-control" spellcheck="false" data-bind="textInput: colorName">
+    </div>
+
+    <!-- ko if: colorValue -->
+    <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
+    <!-- /ko -->
+</div>

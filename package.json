@@ -1,5 +1,5 @@
 {
-    "name": "@paperbits/styling",
+    "name": "@paperbits/styles",
     "version": "0.0.1",
     "description": "Paperbits style editors.",
     "author": "Paperbits",
@@ -15,12 +15,7 @@
     "bugs": {
         "url": "https://github.com/paperbits/paperbits-styles/issues"
     },
-    "browserslist": [
-        "defaults",
-        "not ie < 11"
-    ],
     "dependencies": {
-        "@paperbits/core": "0.1.21",
         "@paperbits/common": "0.1.21",
         "cropperjs": "^1.4.0",
         "es6-shim": "^0.35.3",
@@ -30,7 +25,10 @@
         "lity": "^2.3.0",
         "lodash": "^4.17.4",
         "perfect-scrollbar": "^1.2.0",
-        "xhr2": "^0.1.4"
+        "xhr2": "^0.1.4",
+        "jss": "^9.8.7",
+        "jss-preset-default": "^4.5.0",
+        "pickr-widget": "^0.3.1"
     },
     "devDependencies": {
         "@types/es6-shim": "^0.31.36",

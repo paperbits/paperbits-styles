@@ -1,0 +1,18 @@
+<div class="editor">
+    <h1>Shadow</h1>
+    <hr />
+
+    <ul class="list">
+        <li class="list-item">
+            <a href="#" title="Clear shadow" class="list-item-label" data-bind="click: $component.clearShadows">
+                No shadow
+            </a>
+        </li>
+
+        <!-- ko foreach: { data: shadows, as: 'shadow' } -->
+        <li class="list-item shadow-box" data-bind="css: { selected: shadow.key == $component.selectedShadow() }">
+            <a href="#" class="list-item-label" data-bind="click: $component.selectShadow, text: shadow.displayName"></a>
+        </li>
+        <!--/ko -->
+    </ul>
+</div>

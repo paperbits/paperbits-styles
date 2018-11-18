@@ -1,0 +1,12 @@
+<style data-bind="html: compiledStyles"></style>
+
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: {}">
+    <ul class="list fonts">
+        <!-- ko foreach: { data: fonts, as: 'font' } -->
+        <li class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }">
+            <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
+            </a>
+        </li>
+        <!--/ko -->
+    </ul>
+</fieldset>

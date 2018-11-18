@@ -1,1 +1,43 @@
-<h1>Styles</h1>
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: {}">
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" data-bind="collapse: '#paddingCollapse'"></a>
+            <b>Sizing</b>
+        </label>
+        <div id="paddingCollapse" class="collapse form-group-collapse">
+            <div class="box-model">
+                <div class="box-model-margin">
+                    <span class="box-model-label">margin</span>
+                    <input type="text" class="box-model-control box-model-control-top" data-bind="textInput: marginTop">
+                    <input type="text" class="box-model-control box-model-control-left" data-bind="textInput: marginLeft">
+                    <input type="text" class="box-model-control box-model-control-right" data-bind="textInput: marginRight">
+                    <input type="text" class="box-model-control box-model-control-bottom" data-bind="textInput: marginBottom">
+                    
+                    <div class="box-model-border">
+                        <span class="box-model-label">border</span>
+                        <input type="text" class="box-model-control box-model-control-top" data-bind="textInput: borderTop">
+                        <input type="text" class="box-model-control box-model-control-left" data-bind="textInput: borderLeft">
+                        <input type="text" class="box-model-control box-model-control-right" data-bind="textInput: borderRight">
+                        <input type="text" class="box-model-control box-model-control-bottom" data-bind="textInput: borderBottom">
+
+                        <input type="text" class="box-model-control box-model-control-top-left" data-bind="textInput: topLeftRadius">
+                        <input type="text" class="box-model-control box-model-control-top-right" data-bind="textInput: topRightRadius">
+                        <input type="text" class="box-model-control box-model-control-bottom-left" data-bind="textInput: bottomLeftRadius">
+                        <input type="text" class="box-model-control box-model-control-bottom-right" data-bind="textInput: bottomRightRadius">
+
+                        <div class="box-model-padding">
+                            <span class="box-model-label">padding</span>
+                            <input type="text" class="box-model-control box-model-control-top" data-bind="textInput: paddingTop">
+                            <input type="text" class="box-model-control box-model-control-left" data-bind="textInput: paddingLeft">
+                            <input type="text" class="box-model-control box-model-control-right" data-bind="textInput: paddingRight">
+                            <input type="text" class="box-model-control box-model-control-bottom" data-bind="textInput: paddingBottom">
+                            <div class="box-model-content">
+                                content
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>

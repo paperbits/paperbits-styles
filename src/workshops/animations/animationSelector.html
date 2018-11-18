@@ -1,0 +1,18 @@
+<div class="editor">
+    <h1>Animation</h1>
+    <hr />
+
+    <ul class="list">
+        <li class="list-item">
+            <a href="#" title="Clear animation" class="list-item-label" data-bind="click: $component.clearAnimations">
+                No animation
+            </a>
+        </li>
+
+        <!-- ko foreach: { data: animations, as: 'animation' } -->
+        <li class="list-item" data-bind="css: { selected: animation.key == $component.selectedAnimation() }">
+            <a href="#" class="list-item-label" data-bind="click: $component.selectAnimation, text: animation.displayName"></a>
+        </li>
+        <!--/ko -->
+    </ul>
+</div>
