@@ -16,7 +16,6 @@ import { ShadowSelector } from "./workshops/shadows";
 import { Typography } from "./workshops/typography";
 import { LivingStyleGuide } from "./livingStyleGuide/livingStyleGuide";
 import { StyleService } from "./styleService";
-// import { StyleCompiler } from "./styleCompiler";
 import { StyleableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylable";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylesheet";
@@ -33,7 +32,6 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("shadowSelector", ShadowSelector);
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("styleEditor", StyleEditor);
-        // injector.bind("styleCompiler", StyleCompiler);
         injector.bindSingleton("styleService", StyleService);
         injector.bind("livingStyleGuide", LivingStyleGuide);
         injector.bindSingleton("styleableBindingHandler", StyleableBindingHandler);
