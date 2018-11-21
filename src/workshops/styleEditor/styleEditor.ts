@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyContract } from "../../contracts";
+import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyContract, BackgroundContract } from "../../contracts";
 
 
 @Component({
@@ -21,16 +21,25 @@ export class StyleEditor {
 
     public styleName: KnockoutObservable<string>;
 
+    public readonly backgroundHasPicture: KnockoutComputed<boolean>;
+
     constructor() {
         this.init = this.init.bind(this);
         this.onStyleNameUpdate = this.onStyleNameUpdate.bind(this);
         this.onTypographyUpdate = this.onTypographyUpdate.bind(this);
         this.onBoxModelUpdate = this.onBoxModelUpdate.bind(this);
-        this.onBackgorundColorSelected = this.onBackgorundColorSelected.bind(this);
+        this.onBackgroundUpdate = this.onBackgroundUpdate.bind(this);
         this.onShadowSelected = this.onShadowSelected.bind(this);
         this.onAnimationSelected = this.onAnimationSelected.bind(this);
         this.styleName = ko.observable("New style");
         this.styleName.subscribe(this.onStyleNameUpdate);
+
+
+        // this.backgroundHasPicture = ko.pureComputed(() =>
+        //     this.background() &&
+        //     this.background().sourceKey &&
+        //     this.background().sourceKey !== null
+        // );
     }
 
     @OnMounted()
@@ -43,18 +52,8 @@ export class StyleEditor {
         this.onUpdate(this.elementStyle);
     }
 
-    public onBackgorundColorSelected(color: ColorContract): void {
-        if (color) {
-            Object.assign(this.elementStyle, {
-                background: {
-                    colorKey: color.key
-                }
-            });
-        }
-        else if (this.elementStyle["background"]) {
-            this.elementStyle["background"]["colorKey"] = undefined;
-        }
-
+    public onBackgroundUpdate(background: BackgroundContract): void {
+        this.elementStyle["background"] = background;
         this.onUpdate(this.elementStyle);
     }
 

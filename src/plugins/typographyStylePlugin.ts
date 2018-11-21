@@ -9,11 +9,19 @@ export class TypographyStylePlugin extends StylePlugin {
         super();
     }
     public compile(typographyContract: TypographyContract): Object {
-        const result = {
-            fontWeight: typographyContract.fontWeight || "normal",
-            fontStyle: typographyContract.fontStyle || "normal",
-            fontSize: typographyContract.fontSize || "initial",
-        };
+        const result = {};
+
+        if (typographyContract.fontWeight) {
+            result["fontWeight"] = typographyContract.fontWeight;
+        }
+
+        if (typographyContract.fontStyle) {
+            result["fontStyle"] = typographyContract.fontStyle;
+        }
+
+        if (typographyContract.fontSize) {
+            result["fontSize"] = typographyContract.fontSize;
+        }
 
         if (typographyContract.fontKey) {
             const fontContract = Utils.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);

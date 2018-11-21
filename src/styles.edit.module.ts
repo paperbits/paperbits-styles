@@ -6,7 +6,8 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { StyleEditor } from "./workshops/styleEditor/styleEditor";
+import { StyleModule } from "./styles.module";
+import { StyleEditor } from "./workshops/styleEditor";
 import { BoxEditor } from "./workshops/boxes/boxEditor";
 import { ColorSelector, ColorEditor } from "./workshops/colors";
 import { FontSelector } from "./workshops/fonts";
@@ -14,8 +15,8 @@ import { GoogleFonts } from "./workshops/googleFonts";
 import { AnimationSelector } from "./workshops/animations";
 import { ShadowSelector } from "./workshops/shadows";
 import { Typography } from "./workshops/typography";
-import { LivingStyleGuide } from "./livingStyleGuide/livingStyleGuide";
-import { StyleService } from "./styleService";
+import { Background } from "./workshops/background";
+import { LivingStyleGuide } from "./livingStyleGuide";
 import { StyleableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylable";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylesheet";
@@ -23,16 +24,17 @@ import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 
 export class StylingEditModule implements IInjectorModule {
     public register(injector: IInjector): void {
+        injector.bindModule(new StyleModule());
         injector.bind("fontSelector", FontSelector);
         injector.bind("googleFonts", GoogleFonts);
         injector.bind("typography", Typography);
+        injector.bind("background", Background);
         injector.bind("boxEditor", BoxEditor);
         injector.bind("colorSelector", ColorSelector);
         injector.bind("colorEditor", ColorEditor);
         injector.bind("shadowSelector", ShadowSelector);
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("styleEditor", StyleEditor);
-        injector.bindSingleton("styleService", StyleService);
         injector.bind("livingStyleGuide", LivingStyleGuide);
         injector.bindSingleton("styleableBindingHandler", StyleableBindingHandler);
         injector.bindSingleton("styledBindingHandler", StyledBindingHandler);

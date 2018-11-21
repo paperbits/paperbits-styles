@@ -133,13 +133,11 @@ export class LivingStyleGuide {
 
         await this.styleService.addComponentVariation(componentName, variationName);
 
-        this.eventManager.dispatchEvent("onStyleChange");
         this.applyChanges();
     }
 
     public applyChanges(): void {
         this.updateButons();
         this.styles.valueHasMutated();
-        this.styleService.updateStyles(this.styles());
     }
 }

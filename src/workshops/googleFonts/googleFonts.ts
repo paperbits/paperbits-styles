@@ -84,33 +84,35 @@ export class GoogleFonts {
     }
 
     public async selectFont(googleFont: GoogleFontContract): Promise<void> {
-        const fontContract: any = {};
+
         const identifier = Utils.identifier();
 
-        fontContract.key = `fonts/${identifier}`;
-        fontContract.family = googleFont.family;
-        fontContract.category = googleFont.category;
-        fontContract.version = googleFont.version;
-        fontContract.lastModified = googleFont.lastModified;
+        const fontContract: FontContract = {
+            key: `fonts/${identifier}`,
+            family: googleFont.family,
+            displayName: googleFont.family,
+            category: googleFont.category,
+            version: googleFont.version,
+            lastModified: googleFont.lastModified,
+            variants: googleFont.variants.map(variantName => {
+                const regex = /(\d*)(\w*)/gm;
+                const matches = regex.exec(variantName);
 
-        fontContract.variants = googleFont.variants.map(variantName => {
-            const regex = /(\d*)(\w*)/gm;
-            const matches = regex.exec(variantName);
+                /* Normal weight is equivalent to 400. Bold weight is quivalent to 700. */
+                const fontWeight = matches[1] || 400;
+                const fontStyle = matches[2] || "normal";
+                const fontFile = googleFont.files[variantName];
 
-            /* Normal weight is equivalent to 400. Bold weight is quivalent to 700. */
-            const fontWeight = matches[1] || 400;
-            const fontStyle = matches[2] || "normal";
-            const fontFile = googleFont.files[variantName];
+                const fontVariant: FontVariantContract = {
+                    weight: fontWeight,
+                    style: fontStyle,
+                    file: fontFile
+                };
 
-            const fontVariant: FontVariantContract = {
-                weight: fontWeight,
-                style: fontStyle,
-                file: fontFile
-            };
-
-            return fontVariant;
-        });
-
+                return fontVariant;
+            })
+        };
+        
         const styles = await this.styleService.getStyles();
 
         styles.fonts[identifier] = fontContract;

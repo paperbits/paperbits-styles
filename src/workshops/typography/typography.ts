@@ -29,7 +29,7 @@ export class Typography {
         this.onFontSelected = this.onFontSelected.bind(this);
         this.onColorSelected = this.onColorSelected.bind(this);
         this.onShadowSelected = this.onShadowSelected.bind(this);
-        this.dispatchUpdates = this.dispatchUpdates.bind(this);
+        this.applyChanges = this.applyChanges.bind(this);
         this.toggleBold = this.toggleBold.bind(this);
         this.toggleItalic = this.toggleItalic.bind(this);
 
@@ -58,13 +58,13 @@ export class Typography {
             this.textAlign(typography.textAlign);
         }
 
-        this.fontKey.subscribe(this.dispatchUpdates);
-        this.fontWeight.subscribe(this.dispatchUpdates);
-        this.fontStyle.subscribe(this.dispatchUpdates);
-        this.fontSize.subscribe(this.dispatchUpdates);
-        this.colorKey.subscribe(this.dispatchUpdates);
-        this.shadowKey.subscribe(this.dispatchUpdates);
-        this.textAlign.subscribe(this.dispatchUpdates);
+        this.fontKey.subscribe(this.applyChanges);
+        this.fontWeight.subscribe(this.applyChanges);
+        this.fontStyle.subscribe(this.applyChanges);
+        this.fontSize.subscribe(this.applyChanges);
+        this.colorKey.subscribe(this.applyChanges);
+        this.shadowKey.subscribe(this.applyChanges);
+        this.textAlign.subscribe(this.applyChanges);
     }
 
     public onFontSelected(fontContract: FontContract): void {
@@ -105,7 +105,7 @@ export class Typography {
         this.textAlign("justify");
     }
 
-    private dispatchUpdates(): void {
+    private applyChanges(): void {
         if (this.onUpdate) {
             this.onUpdate({
                 fontKey: this.fontKey(),

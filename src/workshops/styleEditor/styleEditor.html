@@ -14,20 +14,7 @@
 
     <typography params="{ typography: elementStyle.typography, onUpdate: onTypographyUpdate }"></typography>
 
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" data-bind="collapse: '#backgroundCollapse'"></a>
-            <b>Background</b>
-        </label>
-        <div id="backgroundCollapse" class="collapse form-group-collapse">
-            <label>Color</label>
-            <div class="form-group">
-                <a href="#" data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onBackgorundColorSelected, selectedColor: $component.backgroundColorKey } } }">
-                    <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    <background params="{ background: elementStyle.background, onUpdate: onBackgroundUpdate }"></background>
 
     <div class="form-group form-group-collapsible">
         <label class="form-label">

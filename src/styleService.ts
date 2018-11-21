@@ -1,5 +1,6 @@
 import * as Utils from "@paperbits/common/utils";
 import { IObjectStorage } from "@paperbits/common/persistence";
+import { IEventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract } from "./contracts";
 
 
@@ -97,8 +98,8 @@ const config: ThemeContract = {
             displayName: "Default Bg",
             value: "#fff"
         },
-        primary: {
-            key: "colors/primary",
+        primaryBg: {
+            key: "colors/primaryBg",
             displayName: "Primary Bg",
             value: "#4AB3F4"
         },
@@ -294,7 +295,7 @@ const config: ThemeContract = {
                 displayName: "Primary button",
                 category: "appearance",
                 background: {
-                    colorKey: "colors/primary"
+                    colorKey: "colors/primaryBg"
                 },
                 typography: {
                     colorKey: "colors/primaryText"
@@ -357,7 +358,7 @@ const config: ThemeContract = {
                     bottomRightRadius: 5
                 },
                 // background: {
-                //     colorKey: "colors/primary"
+                //     colorKey: "colors/primaryBg"
                 // },
                 shadow: {
                     shadowKey: "shadows/shadow3"
@@ -398,20 +399,22 @@ const config: ThemeContract = {
 };
 
 export class StyleService {
-    constructor(private readonly objectStorage: IObjectStorage) { }
+    constructor(
+        private readonly objectStorage: IObjectStorage,
+        private readonly eventManager: IEventManager
+    ) { }
 
     public async getStyles(): Promise<ThemeContract> {
-        return config;
-         return await this.objectStorage.getObject<ThemeContract>(stylesPath);
+        // console.log(JSON.stringify(config));
+        // return config;
+        return await this.objectStorage.getObject<ThemeContract>(stylesPath);
     }
 
     public getClassNameByStyleKey(key: string): string {
-        // components/navbar/default/components/navlink
-
-        let className = key.replace("components/", "").replaceAll("/", "-");
+        // TODO: Consider a case: components/navbar/default/components/navlink
+        let className = key.replaceAll("components/", "").replaceAll("instances/", "").replaceAll("/", "-");
 
         className = className.replaceAll("-default", "");
-
         className = Utils.camelCaseToKebabCase(className);
 
         return className;
@@ -442,7 +445,6 @@ export class StyleService {
 
         styles["components"][componentName][variationName] = newVariation;
 
-
         this.updateStyles(styles);
 
         return `components/${componentName}/${variationName}`;
@@ -450,6 +452,7 @@ export class StyleService {
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
         this.objectStorage.updateObject(stylesPath, updatedStyles);
+        this.eventManager.dispatchEvent("onStyleChange");
     }
 
     public async getVariations<TVariation>(categoryName: string): Promise<TVariation[]> {
@@ -473,5 +476,11 @@ export class StyleService {
         });
 
         return variations;
+    }
+
+    public async setInstanceStyle(instanceKey: string, instanceStyles: Object): Promise<void> {
+        const styles = await this.getStyles();
+        Utils.mergeDeepAt(instanceKey, styles, instanceStyles);
+        this.eventManager.dispatchEvent("onStyleChange");
     }
 }

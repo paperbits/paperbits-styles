@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright Paperbits. All Rights Reserved.
@@ -6,12 +7,13 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { StyleService } from "./styleService";
+import { StyleService, StyleCompiler } from "./";
 import { StylePublisher } from "./publishing/stylePublisher";
 
 export class StyleModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("stylePublisher", StylePublisher);
+        injector.bindSingleton("styleCompiler", StyleCompiler);
     }
 }

@@ -1,5 +1,7 @@
 import * as Utils from "@paperbits/common/utils";
+import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
+import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import {
     StylePlugin,
     FontsStylePlugin,
@@ -11,11 +13,10 @@ import {
     ShadowStylePlugin,
     AnimationStylePlugin,
     TypographyStylePlugin,
-    ComponentsStylePlugin 
+    ComponentsStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
-import { ThemeContract, BoxContract } from "./contracts";
 
 
 const opts = preset();
@@ -29,86 +30,108 @@ opts.createGenerateClassName = () => {
 jss.setup(opts);
 
 
-
-
 export class StyleCompiler {
     public plugins: Bag<StylePlugin>;
 
-    constructor(private readonly themeContract: ThemeContract) {
+    constructor(
+        private readonly styleService: StyleService,
+        private readonly permalinkResolver: IPermalinkResolver,
+    ) {
         this.plugins = {};
-        this.plugins["padding"] = new PaddingStylePlugin();
-        this.plugins["margin"] = new MarginStylePlugin();
-        this.plugins["border"] = new BorderStylePlugin();
-        this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(this.themeContract);
-        this.plugins["shadow"] = new ShadowStylePlugin(this.themeContract);
-        this.plugins["animation"] = new AnimationStylePlugin(this.themeContract);
-        this.plugins["typography"] = new TypographyStylePlugin(this.themeContract);
-        this.plugins["components"] = new ComponentsStylePlugin(this);
+
     }
 
     /**
      * Returns compliled CSS.
      */
-    public compile(): string {
+    public async compile(): Promise<string> {
+        const themeContract = await this.styleService.getStyles();
+
+        this.plugins["padding"] = new PaddingStylePlugin();
+        this.plugins["margin"] = new MarginStylePlugin();
+        this.plugins["border"] = new BorderStylePlugin();
+        this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
+        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.permalinkResolver);
+        this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
+        this.plugins["animation"] = new AnimationStylePlugin(themeContract);
+        this.plugins["typography"] = new TypographyStylePlugin(themeContract);
+        this.plugins["components"] = new ComponentsStylePlugin(this);
+
         const globals = {};
         const result = {
             "@global": globals
         };
 
-        const fontsPlugin = new FontsStylePlugin(this.themeContract);
+        const fontsPlugin = new FontsStylePlugin(themeContract);
         const fontsRules = fontsPlugin.compile();
         Object.assign(result, fontsRules);
 
-        Object.keys(this.themeContract.components).forEach(componentName => {
-            const componentConfig = this.themeContract.components[componentName];
 
-            Object.keys(componentConfig).forEach(variationName => {
-                let className = `${componentName}-${variationName}`;
-                className = className.replaceAll("-default", "");
+        if (themeContract.components) {
+            for (const componentName of Object.keys(themeContract.components)) {
+                const componentConfig = themeContract.components[componentName];
+
+                for (const variationName of Object.keys(componentConfig)) {
+                    const className = `${componentName}-${variationName}`.replaceAll("-default", "");
+                    result[className] = {};
+
+                    if (variationName !== "default") {
+                        result[className]["extend"] = `${componentName}`;
+                    }
+
+                    const pluginRules = await this.getVariationRules(componentConfig[variationName]);
+                    Object.assign(result[className], pluginRules);
+                }
+            }
+        }
+
+        if (themeContract.instances) {
+            for (const instanceName of Object.keys(themeContract.instances)) {
+                const componentConfig = themeContract.instances[instanceName];
+
+                const className = `${instanceName}`;
                 result[className] = {};
 
-                if (variationName !== "default") {
-                    result[className]["extend"] = `${componentName}`;
-                }
-
-                const pluginRules = this.getVariationRules(componentConfig[variationName]);
+                const pluginRules = await this.getVariationRules(componentConfig);
                 Object.assign(result[className], pluginRules);
-            });
-        });
+            }
+        }
 
-        Object.keys(this.themeContract.globals).forEach(tagName => {
-            globals[tagName] = {};
+        if (themeContract.globals) {
+            for (const tagName of Object.keys(themeContract.globals)) {
+                globals[tagName] = {};
 
-            const pluginRules = this.getVariationRules(this.themeContract.globals[tagName]);
+                const pluginRules = await this.getVariationRules(themeContract.globals[tagName]);
 
-            Object.assign(globals[tagName], pluginRules);
-        });
+                Object.assign(globals[tagName], pluginRules);
+            }
+        }
 
         const styleSheet = jss.createStyleSheet(result);
 
         return styleSheet.toString();
     }
 
-    public getVariationRules(componentVariationConfig): Object {
+    public async getVariationRules(componentVariationConfig): Promise<object> {
         const result = {};
 
-        Object.keys(componentVariationConfig).forEach(pluginName => {
+        for (const pluginName of Object.keys(componentVariationConfig)) {
             const plugin = this.plugins[pluginName];
 
             if (plugin) {
-                const pluginRules = plugin.compile(componentVariationConfig[pluginName]);
+                const pluginRules = await plugin.compile(componentVariationConfig[pluginName]);
                 Object.assign(result, pluginRules);
             }
-        });
+        }
 
         return result;
     }
 
-    public getFontsStyles(): string {
+    public async getFontsStyles(): Promise<string> {
+        const themeContract = await this.styleService.getStyles();
         const result = {};
 
-        const fontsPlugin = new FontsStylePlugin(this.themeContract);
+        const fontsPlugin = new FontsStylePlugin(themeContract);
         const fontsRules = fontsPlugin.compile();
 
         Object.assign(result, fontsRules);

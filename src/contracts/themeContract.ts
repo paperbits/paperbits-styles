@@ -8,4 +8,5 @@ export interface ThemeContract {
     shadows: Bag<ShadowContract>;
     globals: Bag<BoxContract>;
     components: Object;
+    instances?: Object;
 }

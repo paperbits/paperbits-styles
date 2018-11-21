@@ -1,0 +1,78 @@
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" data-bind="collapse: '#backgroundCollapse'"></a>
+        <b>Background</b>
+    </label>
+
+    <div id="backgroundCollapse" class="collapse form-group-collapse">
+        <div class="tabs">
+            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() }" title="No background">
+                <a href="#" data-bind="click: clearBackground">
+                    <i class="paperbits-icon paperbits-ban"></i>
+                </a>
+            </div>
+
+            <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }" title="Background picture">
+                <a href="#" data-bind="balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
+                    <i class="paperbits-icon paperbits-image-2"></i>
+                </a>
+            </div>
+
+            <div class="tab" data-bind="css: { 'tab-is-active': colorKey }" title="Background color">
+                <a href="#" data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
+                    <i class="paperbits-icon paperbits-paint-bucket-40"></i>
+                </a>
+            </div>
+        </div>
+
+
+
+        <div class="dropzone">
+            <div class="dropzone-controls">
+                <!-- ko if: sourceKey() -->
+                <svg alignment="top left" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="top center" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="top right" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="center left" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="center right" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="bottom left" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="bottom center" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <svg alignment="bottom right" data-bind="alignment: position">
+                    <polygon points="2,2 14,2 14,14" />
+                </svg>
+                <!-- /ko -->
+                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: position">
+                    <div class="fit" data-bind="style: { 'background-image': source, 'background-color': color, 'background-position': position, 'background-size': size, 'background-repeat': repeat }"></div>
+                </a>
+            </div>
+        </div>
+
+        <!-- ko if: sourceKey() -->
+        <label class="form-label">
+            <span class="help"></span>Background picture sizing
+        </label>
+        <div class="form-group">
+            <label class="form-label">
+                <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
+            </label>
+            <label class="form-label">
+                <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
+            </label>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
