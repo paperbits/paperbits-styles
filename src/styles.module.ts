@@ -9,11 +9,15 @@
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { StyleService, StyleCompiler } from "./";
 import { StylePublisher } from "./publishing/stylePublisher";
+import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 
 export class StyleModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("stylePublisher", StylePublisher);
         injector.bindSingleton("styleCompiler", StyleCompiler);
+        injector.bindSingleton("styledBindingHandler", StyledBindingHandler);
+
+        injector.resolve("styledBindingHandler");
     }
 }

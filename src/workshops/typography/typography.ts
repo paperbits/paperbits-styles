@@ -109,7 +109,7 @@ export class Typography {
         if (this.onUpdate) {
             this.onUpdate({
                 fontKey: this.fontKey(),
-                fontSize: parseInt(this.fontSize()),
+                fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
                 fontWeight: this.fontWeight(),
                 fontStyle: this.fontStyle(),
                 colorKey: this.colorKey(),
