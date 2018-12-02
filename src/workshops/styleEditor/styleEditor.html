@@ -5,8 +5,8 @@
             <b>Miscellaneous</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
-            <label>Style name</label>
             <div class="form-group">
+                <label>Style name</label>
                 <input type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName">
             </div>
         </div>
@@ -16,35 +16,9 @@
 
     <background params="{ background: elementStyle.background, onUpdate: onBackgroundUpdate }"></background>
 
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" data-bind="collapse: '#shadowCollapse'"></a>
-            <b>Shadow</b>
-        </label>
-        <div id="shadowCollapse" class="collapse form-group-collapse">
-            <label>Type</label>
-            <div class="form-group">
-                <a href="#" data-bind="balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.ShadowKey } } }">
-                    <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    <shadow-editor params="{ shadow: elementStyle.shadow, onUpdate: onShadowUpdate }"></shadow-editor>
 
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" data-bind="collapse: '#animationCollapse'"></a>
-            <b>Animation</b>
-        </label>
-        <div id="animationCollapse" class="collapse form-group-collapse">
-            <label>Type</label>
-            <div class="form-group">
-                <a href="#" data-bind="balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }">
-                    <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+    <animation params="{ animation: elementStyle.animation, onUpdate: onAnimationUpdate }"></animation>
 
     <box-editor params="{ elementStyle: elementStyle, onUpdate: onBoxModelUpdate }"></box-editor>
 </fieldset>

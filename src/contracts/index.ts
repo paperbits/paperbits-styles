@@ -1,5 +1,6 @@
 export * from "./animationContract";
 export * from "./backgroundContract";
+export * from "./linearGradientContract";
 export * from "./borderContract";
 export * from "./boxContract";
 export * from "./colorContract";

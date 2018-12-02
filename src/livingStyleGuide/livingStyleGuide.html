@@ -1,4 +1,5 @@
 <div class="living-style-guide" data-bind="if: styles">
+    <!-- ko with: styles -->
     <div class="fonts">
         <a href="#" data-bind="click: $component.addFonts">Add fonts</a>
         <!--ko foreach: { data: $component.fonts, as: 'font' }-->
@@ -17,7 +18,8 @@
         <div class="row">
             <div class="col">
                 <div class="font-primary">
-                    <div class="font-sample" data-bind="stylable: { elementStyle: styles().globals.body, onUpdate: $component.applyChanges }">
+                    <div class="font-name" data-bind="text: $component.bodyFontDisplayName"></div>
+                    <div class="font-sample" data-bind="stylable: { elementStyle: globals.body }">
                         Abc
                     </div>
                 </div>
@@ -26,38 +28,39 @@
 
         <div class="row">
             <div class="col">
-                <h1 data-bind="stylable: { elementStyle: styles().globals.h1, onUpdate: $component.applyChanges }">Heading
-                    level 1</h1>
-                <h2 data-bind="stylable: { elementStyle: styles().globals.h2, onUpdate: $component.applyChanges }">Heading
-                    level 2</h2>
-                <h3 data-bind="stylable: { elementStyle: styles().globals.h3, onUpdate: $component.applyChanges }">Heading
-                    level 3</h3>
-                <h4 data-bind="stylable: { elementStyle: styles().globals.h4, onUpdate: $component.applyChanges }">Heading
-                    level 4</h4>
-                <h5 data-bind="stylable: { elementStyle: styles().globals.h5, onUpdate: $component.applyChanges }">Heading
-                    level 5</h5>
-                <h6 data-bind="stylable: { elementStyle: styles().globals.h6, onUpdate: $component.applyChanges }">Heading
-                    level 6</h6>
+                <article>
+                    <h1 data-bind="stylable: { elementStyle: globals.h1 }">Heading level 1</h1>
+                    <h2 data-bind="stylable: { elementStyle: globals.h2 }">Heading level 2</h2>
+                    <h3 data-bind="stylable: { elementStyle: globals.h3 }">Heading level 3</h3>
+                    <h4 data-bind="stylable: { elementStyle: globals.h4 }">Heading level 4</h4>
+                    <h5 data-bind="stylable: { elementStyle: globals.h5 }">Heading level 5</h5>
+                    <h6 data-bind="stylable: { elementStyle: globals.h6 }">Heading level 6</h6>
+                </article>
             </div>
-            <div class="col">
-                <p data-bind="stylable: { elementStyle: styles().globals.p, onUpdate: $component.applyChanges }">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip
-                    ex ea
-                    commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                    pariatur.
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                    est
-                    laborum.
-                </p>
 
-                <blockquote data-bind="stylable: { elementStyle: styles().globals.blockquote, onUpdate: $component.applyChanges }">
-                    Typography is the craft of endowing juman language with a durable visual form. <br />
-                    - Robert Bringhurst
-                </blockquote>
+            <div class="col">
+                <article>
+                    <p data-bind="stylable: { elementStyle: globals.p }">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                        labore
+                        et
+                        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                        aliquip
+                        ex ea
+                        commodo consequat.
+                    </p>
+                </article>
+
+                <article>
+                    <a href="#" data-bind="stylable: { elementStyle: globals.a }">Regular link</a>
+                </article>
+
+                <article>
+                    <blockquote data-bind="stylable: { elementStyle: globals.blockquote }">
+                        Typography is the craft of endowing juman language with a durable visual form. <br />
+                        - Robert Bringhurst
+                    </blockquote>
+                </article>
             </div>
         </div>
     </article>
@@ -65,7 +68,7 @@
     <article>
         <h2 class="heading">Colors</h2>
         <ul class="samples">
-            <!-- ko foreach: { data: colors, as: 'color' } -->
+            <!-- ko foreach: { data: $component.colors, as: 'color' } -->
             <li class="sample">
                 <a href="#" class="sample-color" data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
                 <span class="sample-name" data-bind="text: color.displayName"></span>
@@ -85,7 +88,7 @@
                 Appearance
             </div>
             <div class="col col-md-10 samples">
-                <!--ko foreach: { data: buttons, as: 'button' }-->
+                <!--ko foreach: { data: $component.buttons, as: 'button' }-->
                 <div class="sample">
                     <button data-bind="stylable: { elementStyle: button }">Button</button>
                     <span class="sample-name" data-bind="text: button.displayName"></span>
@@ -93,7 +96,7 @@
                 <!--/ko-->
 
                 <div>
-                    <a href="#" data-bind="click: addButtonVariation">Add variation</a>
+                    <a href="#" data-bind="click: $component.addButtonVariation">Add variation</a>
                 </div>
             </div>
         </div>
@@ -108,7 +111,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Label</label>
-                    <input type="text" class="form-control" value="Input value" data-bind="stylable: { elementStyle: styles().components.formControl.default }" />
+                    <input type="text" class="form-control" value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
                 </div>
             </div>
         </div>
@@ -119,7 +122,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Label</label>
-                    <input type="text" class="form-control" disabled value="Input value" data-bind="stylable: { elementStyle: styles().components.formControl.default }" />
+                    <input type="text" class="form-control" disabled value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
                 </div>
             </div>
         </div>
@@ -130,7 +133,7 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Label</label>
-                    <input type="text" class="form-control is-valid" value="Input value" data-bind="stylable: { elementStyle: styles().components.formControl.default }" />
+                    <input type="text" class="form-control is-valid" value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -144,37 +147,41 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Label</label>
-                    <input type="text" class="form-control is-invalid" value="Input value" data-bind="stylable: { elementStyle: styles().components.formControl.default }" />
+                    <input type="text" class="form-control is-invalid" value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
                     <div class="invalid-feedback">
                         Please fix input errors.
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <input type="text" value="Input value" data-bind="stylable: { elementStyle: styles().components.formControl.default }" />
+        <!-- <input type="text" value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
 
-        <textarea data-bind="stylable: { elementStyle: styles().components.formControl.default }">Text area content</textarea> -->
+        <textarea data-bind="stylable: { elementStyle: components.formControl.default }">Text area content</textarea> -->
 
 
     </article>
 
     <article>
         <h2 class="heading">Navigation</h2>
-        <nav class="navbar navbar-expand" data-bind="stylable: { elementStyle: styles().components.navbar.default }">
-            <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+        <nav class="navbar navbar-expand" data-bind="stylable: { elementStyle: components.navbar.default }">
+            <a class="navbar-brand" href="#">
+                <img src="https://cdn.paperbits.io/images/logo.svg" />
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse"></div>
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#" data-bind="stylable: { elementStyle: styles().components.navbar.default.components.navLink }">Nav
+                <a class="nav-item nav-link" href="#" data-bind="stylable: { elementStyle: components.navbar.default.components.navLink }">Nav
                     item</a>
-                <a class="nav-item nav-link active" href="#" data-bind="stylable: { elementStyle: styles().components.navbar.default.components.navLink }">Nav
-                    item (Asctive) <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link disabled" href="#" data-bind="stylable: { elementStyle: styles().components.navbar.default.components.navLink }">Nav
+                <a class="nav-item nav-link active" href="#" data-bind="stylable: { elementStyle: components.navbar.default.components.navLink }">Nav
+                    item (Active) <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link disabled" href="#" data-bind="stylable: { elementStyle: components.navbar.default.components.navLink }">Nav
                     item (Disabled)</a>
             </div>
         </nav>
     </article>
+
+    <!-- /ko -->
 </div>

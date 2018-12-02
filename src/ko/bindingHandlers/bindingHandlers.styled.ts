@@ -6,7 +6,7 @@ import { StyleService } from "../../styleService";
 export class StyledBindingHandler {
     constructor(private readonly styleService: StyleService) {
         ko.bindingHandlers["styled"] = {
-            update: (element: HTMLElement, valueAccessor) => {
+            update: async (element: HTMLElement, valueAccessor) => {
                 const styleConfig = ko.unwrap(valueAccessor());
 
                 if (!styleConfig) {
@@ -16,23 +16,23 @@ export class StyledBindingHandler {
                 const cssObservable = ko.observable();
 
                 if (typeof styleConfig === "string" || styleConfig instanceof String) {
-                    const className = this.styleService.getClassNameByStyleKey(<string>styleConfig);
+                    const className = await this.styleService.getClassNameByStyleKey(<string>styleConfig);
                     cssObservable(className);
                 }
                 else {
                     const classNames = [];
 
-                    Object.keys(styleConfig).forEach(category => {
+                    for (const category of Object.keys(styleConfig)) {
                         if (!styleConfig[category]) {
                             return;
                         }
 
-                        const className = this.styleService.getClassNameByStyleKey(<string>styleConfig[category]);
+                        const className = await this.styleService.getClassNameByStyleKey(<string>styleConfig[category]);
 
                         if (className) {
                             classNames.push(className);
                         }
-                    });
+                    }
 
                     cssObservable(classNames.join(" "));
                 }

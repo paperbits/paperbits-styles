@@ -1,11 +1,11 @@
-
+import { BackgroundStylePlugin } from "./../../plugins/backgroundStylePlugin";
 import * as ko from "knockout";
+import * as Utils from "@paperbits/common";
 import template from "./background.html";
 import { StyleService } from "../..";
-import { MediaContract } from "@paperbits/common/media";
+import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BackgroundContract, ColorContract } from "../../contracts";
-import { IPermalinkResolver } from "@paperbits/common/permalinks";
+import { BackgroundContract, ColorContract, LinearGradientContract } from "../../contracts";
 
 
 @Component({
@@ -16,11 +16,14 @@ import { IPermalinkResolver } from "@paperbits/common/permalinks";
 export class Background {
     public readonly color: KnockoutObservable<string>;
     public readonly colorKey: KnockoutObservable<string>;
+    public readonly gradientKey: KnockoutObservable<string>;
     public readonly source: KnockoutObservable<string>;
     public readonly sourceKey: KnockoutObservable<string>;
     public readonly repeat: KnockoutObservable<string>;
     public readonly size: KnockoutObservable<string>;
     public readonly position: KnockoutObservable<string>;
+
+    public readonly backgroundPreview: KnockoutObservable<Object>;
 
     @Param()
     public background: KnockoutObservable<BackgroundContract>;
@@ -30,21 +33,26 @@ export class Background {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly permalinkResolver: IPermalinkResolver
+        private readonly mediaService: IMediaService,
+        private readonly backgroundStylePlugin: BackgroundStylePlugin
     ) {
         this.initialize = this.initialize.bind(this);
         this.onMediaSelected = this.onMediaSelected.bind(this);
         this.onColorSelected = this.onColorSelected.bind(this);
+        this.onGradientSelected = this.onGradientSelected.bind(this);
         this.clearBackground = this.clearBackground.bind(this);
 
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
         this.color = ko.observable<string>();
         this.colorKey = ko.observable<string>();
+        this.gradientKey = ko.observable<string>();
         this.repeat = ko.observable<string>();
         this.background = ko.observable<BackgroundContract>();
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
+
+        this.backgroundPreview = ko.observable<string>();
     }
 
     @OnMounted()
@@ -52,16 +60,32 @@ export class Background {
         const background = this.background();
 
         if (background) {
-            this.colorKey(background.colorKey);
-            this.sourceKey(background.sourceKey);
-            this.repeat(background.repeat || "no-repeat");
-            this.size(background.size || "contain");
-            this.position(background.position || "center center");
+            const jss = await this.backgroundStylePlugin.contractToJss(background);
+            this.backgroundPreview({ backgroundPreview: jss });
+
+            const styles = await this.styleService.getStyles();
 
             if (background.colorKey) {
-                const color = await this.styleService.getColorByKey(background.colorKey);
+                const color = Utils.getObjectAt<ColorContract>(background.colorKey, styles);
                 this.color(color.value);
                 this.colorKey(background.colorKey);
+            }
+
+            if (background.images && background.images.length > 0) {
+                const image = background.images[0];
+
+                this.sourceKey(image.sourceKey);
+                this.repeat(image.repeat || "no-repeat");
+                this.size(image.size || "contain");
+                this.position(image.position || "center");
+
+                const media = await this.mediaService.getMediaByPermalinkKey(image.sourceKey);
+                this.source(`url("${media.downloadUrl}")`);
+            }
+
+            if (background.gradientKey) {
+                // gradient = Utils.getObjectAt<LinearGradientContract>(background.gradientKey, styles);
+                this.gradientKey(background.gradientKey);
             }
         }
 
@@ -86,6 +110,12 @@ export class Background {
         this.applyChanges();
     }
 
+    public onGradientSelected(gradient: LinearGradientContract): void {
+        // this.color(gradient ? gradient.value : "transparent");
+        this.gradientKey(gradient ? gradient.key : undefined);
+        this.applyChanges();
+    }
+
     public clearBackground(): void {
         this.color("transparent");
         this.colorKey(undefined);
@@ -96,15 +126,31 @@ export class Background {
         this.applyChanges();
     }
 
-    private applyChanges(): void {
+    private async applyChanges(): Promise<void> {
         if (this.onUpdate) {
-            this.onUpdate({
+            let images;
+
+            if (this.sourceKey()) {
+                images = [];
+
+                images.push({
+                    sourceKey: this.sourceKey(),
+                    position: this.position(),
+                    size: this.size(),
+                    repeat: this.repeat()
+                });
+            }
+
+            const updates = {
                 colorKey: this.colorKey(),
-                sourceKey: this.sourceKey(),
-                position: this.position(),
-                size: this.size(),
-                repeat: this.repeat()
-            });
+                gradientKey: this.gradientKey(),
+                images: images
+            };
+
+            this.onUpdate(updates);
+
+            const jss = await this.backgroundStylePlugin.contractToJss(updates);
+            this.backgroundPreview({ backgroundPreview: jss });
         }
     }
 }

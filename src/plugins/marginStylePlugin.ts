@@ -5,7 +5,7 @@ import { MarginContract } from "../contracts";
 export class MarginStylePlugin extends StylePlugin {
     public displayName = "Margin";
 
-    public compile(contract: MarginContract): Object {
+    public async contractToJss(contract: MarginContract): Promise<Object> {
         return {
             marginTop: contract.top || 0,
             marginLeft: contract.left || 0,

@@ -8,14 +8,15 @@ export class AnimationStylePlugin extends StylePlugin {
     constructor(private readonly themeContract: ThemeContract) {
         super();
     }
-    public compile(animationKey: string): Object {
-        const contract = Utils.getObjectAt<AnimationContract>(animationKey, this.themeContract);
+
+    public async contractToJss(animation): Promise<Object> {
+        const contract = Utils.getObjectAt<AnimationContract>(animation.animationKey, this.themeContract);
 
         const result = {
             animationName: contract.name,
-            animationDuration: contract.duration || 0,
-            animationIterationCount: contract.iterationCount || "infinite",
-            animationTimingFunction: contract.timingFunction || "linear"
+            animationDuration: animation.duration ? animation.duration + "s" : "0",
+            animationIterationCount: animation.iterationCount || "infinite",
+            animationTimingFunction: animation.timingFunction || "linear"
         };
 
         return result;

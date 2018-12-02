@@ -6,32 +6,6 @@
 
     <div id="typographyCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <label>Font size</label>
-            <input type="number" class="form-control" min="5" max="100" data-bind="textInput: $component.fontSize" />
-        </div>
-
-        <div class="form-group">
-            <label>Font family</label>
-            <a href="#" data-bind="balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }">
-                <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-            </a>
-        </div>
-
-        <div class="form-group">
-            <label>Color</label>
-            <a href="#" data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
-                <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-            </a>
-        </div>
-
-        <div class="form-group">
-            <label>Shadow</label>
-            <a href="#" data-bind="balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }">
-                <i class="paperbits-icon paperbits-paint-bucket-40"></i>
-            </a>
-        </div>
-
-        <div class="form-group">
             <div class="toolbox-btn" data-bind="css: { 'toolbox-btn-is-active': fontWeight() === 'bold' }" title="Bold">
                 <a href="#" data-bind="click: toggleBold">
                     <i class="paperbits-icon paperbits-bold"></i>
@@ -62,6 +36,34 @@
                     <i class="paperbits-icon paperbits-align-justify"></i>
                 </a>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label>Font size</label>
+            <input type="number" class="form-control" placeholder="(Inherit)" min="5" max="100" data-bind="textInput: $component.fontSize" />
+        </div>
+
+        <div class="form-group">
+            <label for="fontFamily">Font family</label>
+            <button id="fontFamily" class="btn" data-bind="text: $component.fontName, balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }">
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="textColor">Color</label>
+            <button id="textColor" class="btn" data-bind="text: $component.colorName, balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="textShadow">Shadow</label>
+            <button id="textShadow" class="btn" data-bind="text: $component.shadowName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }">
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="textTransform">Transform</label>
+            <select id="textTransform" class="form-control" data-bind="options: textTransformOptions, optionsValue: 'value', optionsText: 'text', value: $component.textTransform"></select>
         </div>
     </div>
 </div>

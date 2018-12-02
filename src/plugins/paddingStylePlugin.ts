@@ -5,7 +5,7 @@ import { PaddingContract } from "../contracts";
 export class PaddingStylePlugin extends StylePlugin {
     public displayName = "Padding";
 
-    public compile(contract: PaddingContract): Object {
+    public async contractToJss(contract: PaddingContract): Promise<Object> {
         return {
             paddingTop: contract.top || 0,
             paddingLeft: contract.left || 0,

@@ -1,0 +1,24 @@
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" data-bind="collapse: '#animationCollapse'"></a>
+        <b>Animation</b>
+    </label>
+
+    <div id="animationCollapse" class="collapse form-group-collapse">
+        <div class="form-group">
+            <label for="animationType">Type</label>
+            <button id="animationType" class="btn" data-bind="text: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }"></button>
+        </div>
+
+        <!-- ko if: $component.animationKey -->
+        <div class="form-group">
+            <label for="animationDuration">Duration (seconds)</label>
+            <input id="animationDuration" type="number" class="form-control" min="0.5" step="0.5" data-bind="textInput: $component.duration" />
+        </div>
+        <div class="form-group">
+            <label for="animationIterationCount">Iteration count</label>
+            <input id="animationIterationCount" type="number" class="form-control" min="1" step="1" placeholder="infinite" data-bind="textInput: $component.iterationCount" />
+        </div>
+        <!-- /ko -->
+    </div>
+</div>

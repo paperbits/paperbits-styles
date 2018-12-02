@@ -5,24 +5,22 @@ import { StyleCompiler } from "..";
 export class ComponentsStylePlugin extends StylePlugin {
     public displayName = "Components";
 
-    constructor(
-        private readonly styleCompiler: StyleCompiler
-    ) {
+    constructor(private readonly styleCompiler: StyleCompiler) {
         super();
     }
 
-    public compile(componentsConfig): Object {
+    public async contractToJss(componentsConfig): Promise<Object> {
         const result = {};
 
-        Object.keys(componentsConfig).forEach(componentName => {
+        for (const componentName of Object.keys(componentsConfig)) {
             const componentVariationConfig = componentsConfig[componentName];
 
             const className = `& .${Utils.camelCaseToKebabCase(componentName)}`;
             result[className] = {};
 
-            const pluginRules = this.styleCompiler.getVariationRules(componentVariationConfig);
+            const pluginRules = await this.styleCompiler.getVariationRules(componentVariationConfig);
             Object.assign(result[className], pluginRules);
-        });
+        }
 
         return result;
     }

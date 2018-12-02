@@ -9,7 +9,7 @@ export class ShadowStylePlugin extends StylePlugin {
         super();
     }
 
-    public compile(shadow: any): Object {
+    public async contractToJss(shadow: any): Promise<Object> {
         if (!shadow || !shadow.shadowKey) {
             return {};
         }

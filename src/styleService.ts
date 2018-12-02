@@ -164,6 +164,11 @@ const config: ThemeContract = {
                 fontSize: 18,
             }
         },
+        a: {
+            typography: {
+                colorKey: "colors/default"
+            }
+        },
         p: {
             displayName: "Paragraph",
             typography: {
@@ -410,14 +415,21 @@ export class StyleService {
         return await this.objectStorage.getObject<ThemeContract>(stylesPath);
     }
 
-    public getClassNameByStyleKey(key: string): string {
+    public async getClassNameByStyleKey(key: string): Promise<string> {
+        const segments = key.split("/");
+        const component = segments[1];
+        const componentVariation = segments[2];
+        const classNames = [];
+
+        classNames.push(Utils.camelCaseToKebabCase(component));
+
+        if (componentVariation) {
+            classNames.push(`${Utils.camelCaseToKebabCase(component)}-${Utils.camelCaseToKebabCase(componentVariation)}`);
+        }
+
         // TODO: Consider a case: components/navbar/default/components/navlink
-        let className = key.replaceAll("components/", "").replaceAll("instances/", "").replaceAll("/", "-");
 
-        className = className.replaceAll("-default", "");
-        className = Utils.camelCaseToKebabCase(className);
-
-        return className;
+        return classNames.join(" ");
     }
 
     public async getColorByKey(colorKey: string): Promise<ColorContract> {
@@ -452,6 +464,11 @@ export class StyleService {
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
         this.objectStorage.updateObject(stylesPath, updatedStyles);
+        this.eventManager.dispatchEvent("onStyleChange");
+    }
+
+    public async updateStyle(style): Promise<void> {
+        this.objectStorage.updateObject(`${stylesPath}/${style.key}`, style);
         this.eventManager.dispatchEvent("onStyleChange");
     }
 

@@ -51,7 +51,7 @@ export class StyleCompiler {
         this.plugins["margin"] = new MarginStylePlugin();
         this.plugins["border"] = new BorderStylePlugin();
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.permalinkResolver);
+        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.permalinkResolver);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
@@ -63,9 +63,8 @@ export class StyleCompiler {
         };
 
         const fontsPlugin = new FontsStylePlugin(themeContract);
-        const fontsRules = fontsPlugin.compile();
+        const fontsRules = await fontsPlugin.contractToJss();
         Object.assign(result, fontsRules);
-
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
@@ -74,10 +73,6 @@ export class StyleCompiler {
                 for (const variationName of Object.keys(componentConfig)) {
                     const className = `${componentName}-${variationName}`.replaceAll("-default", "");
                     result[className] = {};
-
-                    if (variationName !== "default") {
-                        result[className]["extend"] = `${componentName}`;
-                    }
 
                     const pluginRules = await this.getVariationRules(componentConfig[variationName]);
                     Object.assign(result[className], pluginRules);
@@ -119,7 +114,7 @@ export class StyleCompiler {
             const plugin = this.plugins[pluginName];
 
             if (plugin) {
-                const pluginRules = await plugin.compile(componentVariationConfig[pluginName]);
+                const pluginRules = await plugin.contractToJss(componentVariationConfig[pluginName]);
                 Object.assign(result, pluginRules);
             }
         }
@@ -132,7 +127,7 @@ export class StyleCompiler {
         const result = {};
 
         const fontsPlugin = new FontsStylePlugin(themeContract);
-        const fontsRules = fontsPlugin.compile();
+        const fontsRules = await fontsPlugin.contractToJss();
 
         Object.assign(result, fontsRules);
 

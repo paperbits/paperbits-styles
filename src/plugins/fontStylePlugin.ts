@@ -8,7 +8,7 @@ export class FontsStylePlugin extends StylePlugin {
         super();
     }
 
-    public compile(): Object {
+    public async contractToJss(): Promise<Object> {
         const fontFaceRules = [];
 
         Object.keys(this.themeContract.fonts).forEach(fontKey => {

@@ -61,12 +61,13 @@ export class GoogleFonts {
         const fonts = [];
 
         payload.items.slice(0, 100).forEach(googleFont => {
-            const fileName = googleFont.files["regular"];
+            const fileName = googleFont.files["regular"] || googleFont.files["400"] || googleFont.files[googleFont.variants[0]];
+
             fonts.push(googleFont);
 
             fontFaceJssRules.push({
                 fontFamily: googleFont.family,
-                src: `url(${fileName})`,
+                src: `url(${fileName.replace("http://", "https://")})`,
                 fontStyle: "normal",
                 fontWeight: "normal"
             });
@@ -112,7 +113,7 @@ export class GoogleFonts {
                 return fontVariant;
             })
         };
-        
+
         const styles = await this.styleService.getStyles();
 
         styles.fonts[identifier] = fontContract;

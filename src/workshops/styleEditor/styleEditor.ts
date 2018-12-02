@@ -24,26 +24,19 @@ export class StyleEditor {
     public readonly backgroundHasPicture: KnockoutComputed<boolean>;
 
     constructor() {
-        this.init = this.init.bind(this);
+        this.initialize = this.initialize.bind(this);
         this.onStyleNameUpdate = this.onStyleNameUpdate.bind(this);
         this.onTypographyUpdate = this.onTypographyUpdate.bind(this);
         this.onBoxModelUpdate = this.onBoxModelUpdate.bind(this);
         this.onBackgroundUpdate = this.onBackgroundUpdate.bind(this);
-        this.onShadowSelected = this.onShadowSelected.bind(this);
-        this.onAnimationSelected = this.onAnimationSelected.bind(this);
+        this.onShadowUpdate = this.onShadowUpdate.bind(this);
+        this.onAnimationUpdate = this.onAnimationUpdate.bind(this);
         this.styleName = ko.observable("New style");
         this.styleName.subscribe(this.onStyleNameUpdate);
-
-
-        // this.backgroundHasPicture = ko.pureComputed(() =>
-        //     this.background() &&
-        //     this.background().sourceKey &&
-        //     this.background().sourceKey !== null
-        // );
     }
 
     @OnMounted()
-    public init(): void {
+    public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
     }
 
@@ -57,9 +50,9 @@ export class StyleEditor {
         this.onUpdate(this.elementStyle);
     }
 
-    public onShadowSelected(shadow: ShadowContract): void {
+    public onShadowUpdate(shadow): void {
         if (shadow) {
-            this.elementStyle["shadow"] = { shadowKey: shadow.key };
+            this.elementStyle["shadow"] = { shadowKey: shadow.shadowKey };
         }
         else {
             delete this.elementStyle["shadow"];
@@ -68,9 +61,13 @@ export class StyleEditor {
         this.onUpdate(this.elementStyle);
     }
 
-    public onAnimationSelected(animation: AnimationContract): void {
+    public onAnimationUpdate(animation): void {
         if (animation) {
-            this.elementStyle["animation"] = animation.key;
+            this.elementStyle["animation"] = {
+                animationKey: animation.animationKey,
+                duration: animation.duration,
+                iterationCount: animation.iterationCount
+            };
         }
         else {
             delete this.elementStyle["animation"];

@@ -6,7 +6,7 @@
 
     <div id="backgroundCollapse" class="collapse form-group-collapse">
         <div class="tabs">
-            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() }" title="No background">
+            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }" title="No background">
                 <a href="#" data-bind="click: clearBackground">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
@@ -23,9 +23,13 @@
                     <i class="paperbits-icon paperbits-paint-bucket-40"></i>
                 </a>
             </div>
+
+            <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }" title="Background gradient">
+                <a href="#" data-bind="balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradient: $component.gradientKey } } }">
+                    <i class="paperbits-icon paperbits-gradient"></i>
+                </a>
+            </div>
         </div>
-
-
 
         <div class="dropzone">
             <div class="dropzone-controls">
@@ -55,8 +59,9 @@
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
                 <!-- /ko -->
+                <style data-bind="jss: backgroundPreview"></style>
                 <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: position">
-                    <div class="fit" data-bind="style: { 'background-image': source, 'background-color': color, 'background-position': position, 'background-size': size, 'background-repeat': repeat }"></div>
+                    <div class="fit background-preview"></div>
                 </a>
             </div>
         </div>

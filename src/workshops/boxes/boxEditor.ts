@@ -122,30 +122,39 @@ export class BoxEditor {
             return;
         }
 
+        const parseNumber = (value) => {
+            if (value) {
+                return parseInt(value);
+            }
+            else {
+                return undefined;
+            }
+        };
+
         this.onUpdate({
             padding: {
-                top: parseInt(this.paddingTop()),
-                left: parseInt(this.paddingLeft()),
-                right: parseInt(this.paddingRight()),
-                bottom: parseInt(this.paddingBottom())
+                top: parseNumber(this.paddingTop()),
+                left: parseNumber(this.paddingLeft()),
+                right: parseNumber(this.paddingRight()),
+                bottom: parseNumber(this.paddingBottom())
             },
             margin: {
-                top: parseInt(this.marginTop()),
-                left: parseInt(this.marginLeft()),
-                right: parseInt(this.marginRight()),
-                bottom: parseInt(this.marginBottom())
+                top: parseNumber(this.marginTop()),
+                left: parseNumber(this.marginLeft()),
+                right: parseNumber(this.marginRight()),
+                bottom: parseNumber(this.marginBottom())
             },
             border: {
-                top: { width: parseInt(this.borderTop()), style: "solid", color: "orange" },
-                left: { width: parseInt(this.borderLeft()), style: "solid", color: "orange" },
-                right: { width: parseInt(this.borderRight()), style: "solid", color: "orange" },
-                bottom: { width: parseInt(this.borderBottom()), style: "solid", color: "orange" }
+                top: { width: parseNumber(this.borderTop()), style: "solid", color: "orange" },
+                left: { width: parseNumber(this.borderLeft()), style: "solid", color: "orange" },
+                right: { width: parseNumber(this.borderRight()), style: "solid", color: "orange" },
+                bottom: { width: parseNumber(this.borderBottom()), style: "solid", color: "orange" }
             },
             borderRadius: {
-                topLeftRadius: parseInt(this.topLeftRadius()),
-                topRightRadius: parseInt(this.topRightRadius()),
-                bottomLeftRadius: parseInt(this.bottomLeftRadius()),
-                bottomRightRadius: parseInt(this.bottomRightRadius())
+                topLeftRadius: parseNumber(this.topLeftRadius()),
+                topRightRadius: parseNumber(this.topRightRadius()),
+                bottomLeftRadius: parseNumber(this.bottomLeftRadius()),
+                bottomRightRadius: parseNumber(this.bottomRightRadius())
             }
         });
     }

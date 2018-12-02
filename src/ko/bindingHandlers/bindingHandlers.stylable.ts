@@ -1,12 +1,14 @@
 import * as ko from "knockout";
 import { IView, IViewManager } from "@paperbits/common/ui";
 import { IEventManager } from "@paperbits/common/events";
+import { StyleService } from "../..";
 
 
 export class StyleableBindingHandler {
     constructor(
         private readonly viewManager: IViewManager,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: IEventManager,
+        private readonly styleService: StyleService
     ) {
         ko.bindingHandlers["stylable"] = {
             init: (element: HTMLElement, valueAccessor) => {
@@ -24,7 +26,7 @@ export class StyleableBindingHandler {
                                 params: {
                                     elementStyle: config.elementStyle,
                                     onUpdate: () => {
-                                        this.eventManager.dispatchEvent("onStyleChange");
+                                        this.styleService.updateStyle(config.elementStyle);
                                     }
                                 }
                             },

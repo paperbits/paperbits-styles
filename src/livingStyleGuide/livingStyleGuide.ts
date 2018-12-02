@@ -25,6 +25,7 @@ export class LivingStyleGuide {
     public buttons: KnockoutObservableArray<any>;
     public fonts: KnockoutObservableArray<FontContract>;
     public colors: KnockoutObservableArray<ColorContract>;
+    public bodyFontDisplayName: KnockoutObservable<string>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -36,6 +37,7 @@ export class LivingStyleGuide {
         this.applyChanges = this.applyChanges.bind(this);
         this.updateFonts = this.updateFonts.bind(this);
         this.addFonts = this.addFonts.bind(this);
+        this.addColor = this.addColor.bind(this);
         this.selectColor = this.selectColor.bind(this);
 
         this.styles = ko.observable();
@@ -43,6 +45,7 @@ export class LivingStyleGuide {
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
+        this.bodyFontDisplayName = ko.observable();
     }
 
 
@@ -54,6 +57,9 @@ export class LivingStyleGuide {
         this.updateFonts();
         this.updateColors();
         this.updateButons();
+
+        const bodyFont = Utils.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
+        this.bodyFontDisplayName(bodyFont.displayName);
     }
 
     public updateFonts(): void {

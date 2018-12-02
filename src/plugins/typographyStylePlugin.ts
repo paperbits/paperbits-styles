@@ -8,7 +8,7 @@ export class TypographyStylePlugin extends StylePlugin {
     constructor(private readonly themeContract: ThemeContract) {
         super();
     }
-    public compile(typographyContract: TypographyContract): Object {
+    public async contractToJss(typographyContract: TypographyContract): Promise<Object> {
         const result = {};
 
         if (typographyContract.fontWeight) {
@@ -54,6 +54,10 @@ export class TypographyStylePlugin extends StylePlugin {
 
         if (typographyContract.textAlign) {
             result["textAlign"] = typographyContract.textAlign;
+        }
+
+        if (typographyContract.textTransform) {
+            result["textTransform"] = typographyContract.textTransform;
         }
 
         return result;

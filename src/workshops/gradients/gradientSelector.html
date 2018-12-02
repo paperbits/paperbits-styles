@@ -1,0 +1,18 @@
+<div class="editor">
+    <h1>Gradient</h1>
+    <hr/>
+
+    <ul class="palette">
+        <li class="color-box">
+            <a href="#" title="Clear gradient" class="color" data-bind="click: $component.clearGradients">
+                <i class="paperbits-icon paperbits-ban"></i>
+            </a>
+        </li>
+
+        <!-- ko foreach: { data: gradients, as: 'gradient' } -->
+        <li class="color-box" data-bind="css: { selected: gradient === $component.selectedGradient() }">
+            <a href="#" class="color" data-bind="click: $component.selectGradient, attr: { title: gradient.displayName }, style: { background: gradient.value }"></a>
+        </li>
+        <!--/ko -->
+    </ul>
+</div>
