@@ -1,4 +1,4 @@
-<div class="living-style-guide" data-bind="if: styles">
+<div class="living-style-guide container" data-bind="if: styles">
     <!-- ko with: styles -->
     <div class="fonts">
         <a href="#" data-bind="click: $component.addFonts">Add fonts</a>
@@ -16,7 +16,7 @@
         <h2 class="heading">Typography</h2>
 
         <div class="row">
-            <div class="col">
+            <div class="col-md-6">
                 <div class="font-primary">
                     <div class="font-name" data-bind="text: $component.bodyFontDisplayName"></div>
                     <div class="font-sample" data-bind="stylable: { elementStyle: globals.body }">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="row">
-            <div class="col">
+            <div class="col-md-6">
                 <article>
                     <h1 data-bind="stylable: { elementStyle: globals.h1 }">Heading level 1</h1>
                     <h2 data-bind="stylable: { elementStyle: globals.h2 }">Heading level 2</h2>
