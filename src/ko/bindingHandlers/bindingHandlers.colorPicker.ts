@@ -16,10 +16,10 @@ ko.bindingHandlers["colorPicker"] = {
                 opacity: true,
                 hue: true,
                 interaction: {
-                    hex: false,
-                    rgba: false,
+                    hex: true,
+                    rgba: true,
                     hsva: false,
-                    input: false,
+                    input: true,
                     clear: false,
                     save: false
                 }

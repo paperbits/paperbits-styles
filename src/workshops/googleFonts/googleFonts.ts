@@ -52,7 +52,7 @@ export class GoogleFonts {
         const googleFontsApiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM";
 
         const response = await this.httpClient.send<GoogleFontsResult>({
-            url: `https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key=${googleFontsApiKey}`,
+            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${googleFontsApiKey}`,
             method: HttpMethod.get,
         });
 
@@ -60,7 +60,7 @@ export class GoogleFonts {
         const fontFaceJssRules = [];
         const fonts = [];
 
-        payload.items.slice(0, 100).forEach(googleFont => {
+        payload.items.slice(0, 25).forEach(googleFont => {
             const fileName = googleFont.files["regular"] || googleFont.files["400"] || googleFont.files[googleFont.variants[0]];
 
             fonts.push(googleFont);
