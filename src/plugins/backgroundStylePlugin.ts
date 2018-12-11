@@ -1,4 +1,3 @@
-
 import * as Utils from "@paperbits/common/utils";
 import { StylePlugin } from "./stylePlugin";
 import { StyleService } from "../";

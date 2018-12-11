@@ -13,6 +13,7 @@ import { StyleEditor } from "./workshops/styleEditor";
 import { BoxEditor } from "./workshops/boxes/boxEditor";
 import { ColorSelector, ColorEditor } from "./workshops/colors";
 import { GradientSelector } from "./workshops/gradients";
+import { GradientEditor } from "./workshops/gradients";
 import { FontSelector } from "./workshops/fonts";
 import { GoogleFonts } from "./workshops/googleFonts";
 import { AnimationSelector } from "./workshops/animations";
@@ -38,6 +39,7 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("colorSelector", ColorSelector);
         injector.bind("colorEditor", ColorEditor);
         injector.bind("gradientSelector", GradientSelector);
+        injector.bind("gradientEditor", GradientEditor);
         injector.bind("shadowSelector", ShadowSelector);
         injector.bind("shadowEditor", ShadowEditor);
         injector.bind("animationSelector", AnimationSelector);

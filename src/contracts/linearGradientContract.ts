@@ -7,29 +7,29 @@ export interface LinearGradientColorStopContract {
     /**
      * e.g. 25%.
      */
-    length: string;
+    length: number;
 }
 
 export interface LinearGradientContract {
     /**
      * Unique identifier.
      */
-    key: string;
+    key?: string;
 
     /**
      * Display name.
      */
-    displayName: string;
+    displayName?: string;
 
     /**
      * Direction of the gradient, e.g. 45deg.
      */
-    direction: string;
+    direction?: string;
 
     /**
      * Color stops.
      */
-    colorStops: LinearGradientColorStopContract[];
+    colorStops?: LinearGradientColorStopContract[];
 }
 
 /**
@@ -37,15 +37,17 @@ export interface LinearGradientContract {
  * @param contract {LinearGradientContract}
  */
 export function getLinearGradientString(contract: LinearGradientContract): string {
-    const colorStops = contract.colorStops.map(colorStop => {
-        let colorStopString = colorStop.color;
+    const colorStops = contract.colorStops
+        .sort((a, b) => a.length - b.length)
+        .map(colorStop => {
+            let colorStopString = colorStop.color;
 
-        if (colorStop.length) {
-            colorStopString += " " + colorStop.length;
-        }
+            if (colorStop.length) {
+                colorStopString += ` ${colorStop.length}%`;
+            }
 
-        return colorStopString;
-    });
+            return colorStopString;
+        });
 
     return `linear-gradient(${contract.direction},${colorStops.join(",")})`;
 }

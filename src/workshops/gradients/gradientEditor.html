@@ -1,0 +1,17 @@
+<!-- <style data-bind="jss: gradientPreview"></style> -->
+
+<style data-bind="jss: gradientPreview"></style>
+
+<div class="dropzone">
+    <div class="dropzone-showbox">
+        <div class="fit gradient-preview"></div>
+    </div>
+</div>
+
+<div class="color-stops" data-bind="click: $component.addColorStop">
+    <!-- ko foreach: { data: $component.colorStops, as: 'colorStop' } -->
+    <button class="color-stop" data-bind="style: { left: colorStop.length+'%' }">
+        +
+    </button>
+    <!-- /ko -->
+</div>

@@ -16,7 +16,7 @@ export class StyledBindingHandler {
                 const cssObservable = ko.observable();
 
                 if (typeof styleConfig === "string" || styleConfig instanceof String) {
-                    const className = await this.styleService.getClassNameByStyleKey(<string>styleConfig);
+                    const className = this.styleService.getClassNameByStyleKey(<string>styleConfig);
                     cssObservable(className);
                 }
                 else {
@@ -27,7 +27,7 @@ export class StyledBindingHandler {
                             return;
                         }
 
-                        const className = await this.styleService.getClassNameByStyleKey(<string>styleConfig[category]);
+                        const className = this.styleService.getClassNameByStyleKey(<string>styleConfig[category]);
 
                         if (className) {
                             classNames.push(className);

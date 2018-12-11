@@ -1,8 +1,9 @@
+
 import * as Utils from "@paperbits/common/utils";
+import { IStyleService } from "@paperbits/common/styles";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { IEventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract } from "./contracts";
-
 
 const stylesPath = "styles";
 
@@ -403,7 +404,7 @@ const config: ThemeContract = {
     }
 };
 
-export class StyleService {
+export class StyleService implements IStyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly eventManager: IEventManager
@@ -415,7 +416,7 @@ export class StyleService {
         return await this.objectStorage.getObject<ThemeContract>(stylesPath);
     }
 
-    public async getClassNameByStyleKey(key: string): Promise<string> {
+    public getClassNameByStyleKey(key: string): string {
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
