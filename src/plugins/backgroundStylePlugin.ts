@@ -29,7 +29,7 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (contract.images && contract.images.length > 0) {
             for (const image of contract.images) {
-                const sourceUrl = await this.permalinkResolver.getUrlByPermalinkKey(image.sourceKey);
+                const sourceUrl = await this.permalinkResolver.getUrlByContentItemKey(image.sourceKey);
                 backgroundImage.push(`url("${sourceUrl}")`);
                 backgroundPosition.push(image.position || "center");
                 backgroundSize.push(image.size || "contain");

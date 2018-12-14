@@ -79,7 +79,7 @@ export class Background {
                 this.size(image.size || "contain");
                 this.position(image.position || "center");
 
-                const media = await this.mediaService.getMediaByPermalinkKey(image.sourceKey);
+                const media = await this.mediaService.getMediaByKey(image.sourceKey);
                 this.source(`url("${media.downloadUrl}")`);
             }
 
@@ -97,7 +97,7 @@ export class Background {
 
     public onMediaSelected(media: MediaContract): void {
         this.source(media ? `url("${media.downloadUrl}")` : "none");
-        this.sourceKey(media ? media.permalinkKey : undefined);
+        this.sourceKey(media ? media.key : undefined);
         this.repeat(this.repeat() || "no-repeat");
         this.size(this.size() || "contain");
         this.position(this.position() || "center center");
