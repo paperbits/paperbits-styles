@@ -17,7 +17,7 @@ export interface FontVariantContract {
     /**
      * e.g. "files/abcdef".
      */
-    permalinkKey?: string;
+    sourceKey?: string;
 }
 
 export interface FontContract {
