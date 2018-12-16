@@ -3,7 +3,9 @@
         "target": "es5",
         "lib": [
             "es2015",
+            "es2016",
             "es6",
+            "es7",
             "dom"
         ],
         "module": "commonjs",

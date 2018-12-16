@@ -8,6 +8,7 @@ export class TypographyStylePlugin extends StylePlugin {
     constructor(private readonly themeContract: ThemeContract) {
         super();
     }
+
     public async contractToJss(typographyContract: TypographyContract): Promise<Object> {
         const result = {};
 

@@ -14,12 +14,8 @@ export class ComponentsStylePlugin extends StylePlugin {
 
         for (const componentName of Object.keys(componentsConfig)) {
             const componentVariationConfig = componentsConfig[componentName];
-
-            const className = `& .${Utils.camelCaseToKebabCase(componentName)}`;
-            result[className] = {};
-
-            const pluginRules = await this.styleCompiler.getVariationRules(componentVariationConfig);
-            Object.assign(result[className], pluginRules);
+            const pluginRules = await this.styleCompiler.getVariationClasses(componentVariationConfig, componentName, null, true);
+            Object.assign(result, pluginRules);
         }
 
         return result;

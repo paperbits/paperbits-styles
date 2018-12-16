@@ -20,21 +20,8 @@ export class StyledBindingHandler {
                     cssObservable(className);
                 }
                 else {
-                    const classNames = [];
-
-                    for (const category of Object.keys(styleConfig)) {
-                        if (!styleConfig[category]) {
-                            return;
-                        }
-
-                        const className = this.styleService.getClassNameByStyleKey(<string>styleConfig[category]);
-
-                        if (className) {
-                            classNames.push(className);
-                        }
-                    }
-
-                    cssObservable(classNames.join(" "));
+                    const classNames = this.styleService.getClassNamesByStyleConfig(styleConfig);
+                    cssObservable(classNames);
                 }
 
                 ko.applyBindingsToNode(element, { css: cssObservable });
