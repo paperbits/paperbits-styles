@@ -28,31 +28,29 @@ export class StyleService implements IStyleService {
         for (const category of Object.keys(styleConfig)) {
             const categoryConfig = styleConfig[category];
 
-            if (!categoryConfig) {
-                return;
-            }
+            if (categoryConfig) {
+                if (this.isResponsive(categoryConfig)) {
+                    for (const breakpoint of Object.keys(categoryConfig)) {
+                        let className;
 
-            if (this.isResponsive(categoryConfig)) {
-                for (const breakpoint of Object.keys(categoryConfig)) {
-                    let className;
+                        if (breakpoint === "xs") {
+                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint]);
+                        }
+                        else {
+                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint], breakpoint);
+                        }
 
-                    if (breakpoint === "xs") {
-                        className = this.getClassNameByStyleKey(categoryConfig[breakpoint]);
+                        if (className) {
+                            classNames.push(className);
+                        }
                     }
-                    else {
-                        className = this.getClassNameByStyleKey(categoryConfig[breakpoint], breakpoint);
-                    }
+                }
+                else {
+                    const className = this.getClassNameByStyleKey(categoryConfig);
 
                     if (className) {
                         classNames.push(className);
                     }
-                }
-            }
-            else {
-                const className = this.getClassNameByStyleKey(categoryConfig);
-
-                if (className) {
-                    classNames.push(className);
                 }
             }
         }
