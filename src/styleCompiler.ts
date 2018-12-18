@@ -1,7 +1,7 @@
 import * as Utils from "@paperbits/common/utils";
 import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
-import { IPermalinkResolver } from "@paperbits/common/permalinks";
+import { IMediaService } from "@paperbits/common/media";
 import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import {
     StylePlugin,
@@ -19,7 +19,6 @@ import {
 import jss from "jss";
 import preset from "jss-preset-default";
 
-
 const opts = preset();
 
 opts.createGenerateClassName = () => {
@@ -36,7 +35,7 @@ export class StyleCompiler {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly permalinkResolver: IPermalinkResolver,
+        private readonly mediaService: IMediaService,
     ) {
         this.plugins = {};
     }
@@ -55,7 +54,7 @@ export class StyleCompiler {
         this.plugins["margin"] = new MarginStylePlugin();
         this.plugins["border"] = new BorderStylePlugin();
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.permalinkResolver);
+        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.mediaService);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);

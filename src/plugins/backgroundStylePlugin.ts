@@ -1,15 +1,15 @@
 import * as Utils from "@paperbits/common/utils";
+import { IMediaService } from "@paperbits/common/media";
 import { StylePlugin } from "./stylePlugin";
 import { StyleService } from "../";
 import { BackgroundContract, ColorContract, LinearGradientContract, getLinearGradientString } from "../contracts";
-import { IPermalinkResolver } from "@paperbits/common/permalinks";
 
 export class BackgroundStylePlugin extends StylePlugin {
     public displayName = "Background";
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly permalinkResolver: IPermalinkResolver
+        private readonly mediaService: IMediaService
     ) {
         super();
     }
@@ -29,8 +29,8 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (contract.images && contract.images.length > 0) {
             for (const image of contract.images) {
-                const sourceUrl = await this.permalinkResolver.getUrlByContentItemKey(image.sourceKey);
-                backgroundImage.push(`url("${sourceUrl}")`);
+                const media = await this.mediaService.getMediaByKey(image.sourceKey);
+                backgroundImage.push(`url("${media.downloadUrl}")`);
                 backgroundPosition.push(image.position || "center");
                 backgroundSize.push(image.size || "contain");
                 backgroundRepeat.push(image.repeat || "no-repeat");
