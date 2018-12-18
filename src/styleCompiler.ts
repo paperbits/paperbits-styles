@@ -60,22 +60,29 @@ export class StyleCompiler {
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
         this.plugins["components"] = new ComponentsStylePlugin(this);
 
-        const styleRules = {
+        const allStyles = {
             "@global": {}
         };
 
         const fontsPlugin = new FontsStylePlugin(themeContract);
         const fontsRules = await fontsPlugin.contractToJss();
-        Utils.assign(styleRules, fontsRules);
+        Utils.assign(allStyles, fontsRules);
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
                 const componentConfig = themeContract.components[componentName];
 
+                const defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
+
                 for (const variationName of Object.keys(componentConfig)) {
-                    const pluginRules = await this.getVariationClasses(componentConfig[variationName], componentName, variationName);
-                    Utils.assign(styleRules, pluginRules);
+                    const variationStyles = await this.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
+                    const key = `& .${componentName}-${variationName}`;
+                    defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
                 }
+
+                delete defaultComponentStyles[componentName][`&.${componentName}-default`];
+
+                Utils.assign(allStyles, defaultComponentStyles);
             }
         }
 
@@ -84,7 +91,7 @@ export class StyleCompiler {
                 const instanceConfig = themeContract.instances[instanceName];
 
                 const pluginRules = await this.getVariationClasses(instanceConfig, instanceName);
-                Utils.assign(styleRules, pluginRules);
+                Utils.assign(allStyles, pluginRules);
             }
         }
 
@@ -92,13 +99,13 @@ export class StyleCompiler {
             for (const tagName of Object.keys(themeContract.globals)) {
 
                 const pluginRules = await this.getVariationClasses(themeContract.globals[tagName], tagName);
-                Utils.assign(styleRules["@global"], pluginRules);
+                Utils.assign(allStyles["@global"], pluginRules);
             }
 
             // TODO: Get rid of special case for global text style
             for (const variationName of Object.keys(themeContract.globals.text)) {
                 const classes = await this.getVariationClasses(themeContract.globals.text[variationName], "text", variationName);
-                Utils.assign(styleRules, classes);
+                Utils.assign(allStyles, classes);
             }
         }
 
@@ -107,11 +114,11 @@ export class StyleCompiler {
         for (const breakpoint of Object.keys(BreakpointValues)) {
             const breakpointValue = BreakpointValues[breakpoint];
             const breakpointKey = `@media (min-width: ${breakpointValue}px)`;
-            responsiveStyleRules[breakpointKey] = styleRules[breakpointKey];
-            delete styleRules[breakpointKey];
+            responsiveStyleRules[breakpointKey] = allStyles[breakpointKey];
+            delete allStyles[breakpointKey];
         }
 
-        const styleSheet = jss.createStyleSheet(styleRules);
+        const styleSheet = jss.createStyleSheet(allStyles);
         const responsiveStyleSheet = jss.createStyleSheet(responsiveStyleRules);
 
         /* We have to ensure that responsive style rules come after regular ones */

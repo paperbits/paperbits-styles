@@ -135,7 +135,7 @@ export class LivingStyleGuide {
 
     public async addButtonVariation(): Promise<void> {
         const componentName = buttonComponentName;
-        const variationName = `${Utils.identifier()}`; // TODO: Replace name with kebab-like name.
+        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
         await this.styleService.addComponentVariation(componentName, variationName);
 
