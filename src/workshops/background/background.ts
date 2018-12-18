@@ -37,6 +37,8 @@ export class Background {
         private readonly backgroundStylePlugin: BackgroundStylePlugin
     ) {
         this.initialize = this.initialize.bind(this);
+        this.fillout = this.fillout.bind(this);
+        this.applyChanges = this.applyChanges.bind(this);
         this.onMediaSelected = this.onMediaSelected.bind(this);
         this.onColorSelected = this.onColorSelected.bind(this);
         this.onGradientSelected = this.onGradientSelected.bind(this);
@@ -55,44 +57,51 @@ export class Background {
         this.backgroundPreview = ko.observable<string>();
     }
 
+    private async fillout(background: BackgroundContract): Promise<void> {
+        if (!background) {
+            return;
+        }
+
+        const jss = await this.backgroundStylePlugin.contractToJss(background);
+        this.backgroundPreview({ backgroundPreview: jss });
+
+        const styles = await this.styleService.getStyles();
+
+        if (background.colorKey) {
+            const color = Utils.getObjectAt<ColorContract>(background.colorKey, styles);
+            this.color(color.value);
+            this.colorKey(background.colorKey);
+        }
+
+        if (background.images && background.images.length > 0) {
+            const image = background.images[0];
+
+            this.sourceKey(image.sourceKey);
+            this.repeat(image.repeat || "no-repeat");
+            this.size(image.size || "contain");
+            this.position(image.position || "center");
+
+            const media = await this.mediaService.getMediaByKey(image.sourceKey);
+            this.source(`url("${media.downloadUrl}")`);
+        }
+
+        if (background.gradientKey) {
+            // gradient = Utils.getObjectAt<LinearGradientContract>(background.gradientKey, styles);
+            this.gradientKey(background.gradientKey);
+        }
+    }
+
     @OnMounted()
     public async initialize(): Promise<void> {
         const background = this.background();
 
-        if (background) {
-            const jss = await this.backgroundStylePlugin.contractToJss(background);
-            this.backgroundPreview({ backgroundPreview: jss });
+        await this.fillout(background);
 
-            const styles = await this.styleService.getStyles();
-
-            if (background.colorKey) {
-                const color = Utils.getObjectAt<ColorContract>(background.colorKey, styles);
-                this.color(color.value);
-                this.colorKey(background.colorKey);
-            }
-
-            if (background.images && background.images.length > 0) {
-                const image = background.images[0];
-
-                this.sourceKey(image.sourceKey);
-                this.repeat(image.repeat || "no-repeat");
-                this.size(image.size || "contain");
-                this.position(image.position || "center");
-
-                const media = await this.mediaService.getMediaByKey(image.sourceKey);
-                this.source(`url("${media.downloadUrl}")`);
-            }
-
-            if (background.gradientKey) {
-                // gradient = Utils.getObjectAt<LinearGradientContract>(background.gradientKey, styles);
-                this.gradientKey(background.gradientKey);
-            }
-        }
-
-        this.size.subscribe(this.applyChanges.bind(this));
-        this.position.subscribe(this.applyChanges.bind(this));
-        this.colorKey.subscribe(this.applyChanges.bind(this));
-        this.repeat.subscribe(this.applyChanges.bind(this));
+        this.size.subscribe(this.applyChanges);
+        this.position.subscribe(this.applyChanges);
+        this.colorKey.subscribe(this.applyChanges);
+        this.repeat.subscribe(this.applyChanges);
+        this.background.subscribe(this.fillout);
     }
 
     public onMediaSelected(media: MediaContract): void {

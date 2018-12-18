@@ -41,6 +41,7 @@ export class Typography {
 
     constructor(private readonly styleService: StyleService) {
         this.initialize = this.initialize.bind(this);
+        this.fillout = this.fillout.bind(this);
         this.onFontSelected = this.onFontSelected.bind(this);
         this.onColorSelected = this.onColorSelected.bind(this);
         this.onShadowSelected = this.onShadowSelected.bind(this);
@@ -62,42 +63,48 @@ export class Typography {
         this.shadowName = ko.observable();
     }
 
+    private async fillout(typography: TypographyContract): Promise<void> {
+        if (!typography) {
+            return;
+        }
+
+        const styles = await this.styleService.getStyles();
+
+        if (typography.fontKey) {
+            const fontContract = Utils.getObjectAt<FontContract>(typography.fontKey, styles);
+            this.fontName(fontContract.displayName);
+            this.fontKey(typography.fontKey);
+        }
+
+        if (typography.colorKey) {
+            const colorContract = Utils.getObjectAt<FontContract>(typography.colorKey, styles);
+            this.colorName(colorContract.displayName);
+            this.colorKey(typography.colorKey);
+        }
+
+        this.fontSize(typography.fontSize);
+        this.fontWeight(typography.fontWeight);
+        this.fontStyle(typography.fontStyle);
+        this.textTransform(typography.textTransform);
+
+        if (typography.shadowKey) {
+            const shadowContract = Utils.getObjectAt<FontContract>(typography.shadowKey, styles);
+            this.shadowName(shadowContract.displayName);
+            this.shadowKey(typography.shadowKey);
+        }
+
+        this.textAlign(typography.textAlign);
+    }
+
     @OnMounted()
     public async initialize(): Promise<void> {
         const typography = this.typography();
-
-        const styles = await this.styleService.getStyles();
 
         this.fontName(inheritLabel);
         this.colorName(inheritLabel);
         this.shadowName(inheritLabel);
 
-        if (typography) {
-            if (typography.fontKey) {
-                const fontContract = Utils.getObjectAt<FontContract>(typography.fontKey, styles);
-                this.fontName(fontContract.displayName);
-                this.fontKey(typography.fontKey);
-            }
-
-            if (typography.colorKey) {
-                const colorContract = Utils.getObjectAt<FontContract>(typography.colorKey, styles);
-                this.colorName(colorContract.displayName);
-                this.colorKey(typography.colorKey);
-            }
-
-            this.fontSize(typography.fontSize);
-            this.fontWeight(typography.fontWeight);
-            this.fontStyle(typography.fontStyle);
-            this.textTransform(typography.textTransform);
-
-            if (typography.shadowKey) {
-                const shadowContract = Utils.getObjectAt<FontContract>(typography.shadowKey, styles);
-                this.shadowName(shadowContract.displayName);
-                this.shadowKey(typography.shadowKey);
-            }
-
-            this.textAlign(typography.textAlign);
-        }
+        await this.fillout(typography);
 
         this.fontKey.subscribe(this.applyChanges);
         this.fontWeight.subscribe(this.applyChanges);
@@ -107,6 +114,7 @@ export class Typography {
         this.shadowKey.subscribe(this.applyChanges);
         this.textAlign.subscribe(this.applyChanges);
         this.textTransform.subscribe(this.applyChanges);
+        this.typography.subscribe(this.fillout);
     }
 
     public onFontSelected(fontContract: FontContract): void {

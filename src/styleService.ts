@@ -151,6 +151,7 @@ export class StyleService implements IStyleService {
     public async setInstanceStyle(instanceKey: string, instanceStyles: Object): Promise<void> {
         const styles = await this.getStyles();
         Utils.mergeDeepAt(instanceKey, styles, instanceStyles);
+        this.updateStyles(styles);
         this.eventManager.dispatchEvent("onStyleChange");
     }
 
