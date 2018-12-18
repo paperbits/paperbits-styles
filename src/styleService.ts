@@ -121,8 +121,9 @@ export class StyleService implements IStyleService {
     }
 
     public async updateStyle(style): Promise<void> {
-        this.objectStorage.updateObject(`${stylesPath}/${style.key}`, style);
-        this.eventManager.dispatchEvent("onStyleChange");
+        const styles = await this.getStyles();
+        Utils.mergeDeepAt(style.key, styles, style);
+        await this.updateStyles(styles);
     }
 
     public async getVariations<TVariation>(categoryName: string): Promise<TVariation[]> {
