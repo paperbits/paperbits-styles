@@ -6,6 +6,7 @@ import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorat
 import { StyleService } from "../../styleService";
 import { FontContract, FontVariantContract } from "../../contracts/fontContract";
 import { GoogleFontContract, GoogleFontsResult } from "./googleFontsParser";
+import { GoogleFont } from "./googleFont";
 import jss from "jss";
 import preset from "jss-preset-default";
 
@@ -31,19 +32,23 @@ export class GoogleFonts {
     @Event()
     public readonly onSelect: (font: FontContract) => void;
 
-    public fonts: KnockoutObservableArray<GoogleFontContract>;
+    public fonts: KnockoutObservableArray<GoogleFont>;
+    public searchPattern: KnockoutObservable<string>;
 
-    public compiledStyles: KnockoutObservable<string>;
+    private loadedContracts: GoogleFontContract[];
+    private searchTimeout;
 
     constructor(
         private readonly styleService: StyleService,
         private readonly httpClient: IHttpClient
     ) {
         this.loadGoogleFonts = this.loadGoogleFonts.bind(this);
+        this.loadNextPage = this.loadNextPage.bind(this);
         this.selectFont = this.selectFont.bind(this);
+        this.searchFonts = this.searchFonts.bind(this);
 
-        this.compiledStyles = ko.observable<string>();
-        this.fonts = ko.observableArray<GoogleFontContract>();
+        this.searchPattern = ko.observable("");
+        this.fonts = ko.observableArray<GoogleFont>();
         this.selectedFont = ko.observable();
     }
 
@@ -56,67 +61,38 @@ export class GoogleFonts {
             method: HttpMethod.get,
         });
 
-        const payload = response.toObject();
-        const fontFaceJssRules = [];
-        const fonts = [];
+        this.loadedContracts = response.toObject().items;
+        this.loadNextPage();
 
-        payload.items.slice(0, 25).forEach(googleFont => {
-            const fileName = googleFont.files["regular"] || googleFont.files["400"] || googleFont.files[googleFont.variants[0]];
-
-            fonts.push(googleFont);
-
-            fontFaceJssRules.push({
-                fontFamily: googleFont.family,
-                src: `url(${fileName.replace("http://", "https://")})`,
-                fontStyle: "normal",
-                fontWeight: "normal"
-            });
-        });
-
-        const result = {
-            "@font-face": fontFaceJssRules
-        };
-
-        const styleSheet = jss.createStyleSheet(result);
-        const compiledStyles = styleSheet.toString();
-
-        this.compiledStyles(compiledStyles);
-        this.fonts(fonts);
+        this.searchPattern.subscribe(this.searchFonts);
     }
 
-    public async selectFont(googleFont: GoogleFontContract): Promise<void> {
+    public searchFonts(pattern: string): void {
+        this.fonts([]);
 
-        const identifier = Utils.identifier();
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(this.loadNextPage, 500);
+    }
 
-        const fontContract: FontContract = {
-            key: `fonts/${identifier}`,
-            family: googleFont.family,
-            displayName: googleFont.family,
-            category: googleFont.category,
-            version: googleFont.version,
-            lastModified: googleFont.lastModified,
-            variants: googleFont.variants.map(variantName => {
-                const regex = /(\d*)(\w*)/gm;
-                const matches = regex.exec(variantName);
+    public async loadNextPage(): Promise<void> {
+        if (!this.loadedContracts) {
+            return;
+        }
+        const loadedCount = this.fonts().length;
+        const pattern = this.searchPattern().toLowerCase();
 
-                /* Normal weight is equivalent to 400. Bold weight is quivalent to 700. */
-                const fontWeight = matches[1] || 400;
-                const fontStyle = matches[2] || "normal";
-                const fontFile = googleFont.files[variantName];
+        const fonts = this.loadedContracts
+            .filter(x => x.family.toLowerCase().contains(pattern))
+            .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
 
-                const fontVariant: FontVariantContract = {
-                    weight: fontWeight,
-                    style: fontStyle,
-                    file: fontFile
-                };
+        this.fonts.push(...fonts);
+    }
 
-                return fontVariant;
-            })
-        };
-
+    public async selectFont(googleFont: GoogleFont): Promise<void> {
+        const fontContract = googleFont.toContract();
         const styles = await this.styleService.getStyles();
 
-        styles.fonts[identifier] = fontContract;
+        styles.fonts[googleFont.identifier] = fontContract;
 
         if (this.selectedFont) {
             this.selectedFont(fontContract);

@@ -59,6 +59,10 @@ export class StyleService implements IStyleService {
     }
 
     public getClassNameByStyleKey(key: string, breakpoint?: string): string {
+        if (key.startsWith("globals")) {
+            return null;
+        }
+
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
@@ -121,6 +125,14 @@ export class StyleService implements IStyleService {
     }
 
     public async updateStyle(style): Promise<void> {
+        if (!style) {
+            throw new Error("Style cannot be empty.");
+        }
+
+        if (!style.key) {
+            throw new Error("Style doesn't have key.");
+        }
+
         const styles = await this.getStyles();
         Utils.mergeDeepAt(style.key, styles, style);
         await this.updateStyles(styles);

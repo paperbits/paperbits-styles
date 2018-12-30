@@ -120,7 +120,6 @@ export class Background {
     }
 
     public onGradientSelected(gradient: LinearGradientContract): void {
-        // this.color(gradient ? gradient.value : "transparent");
         this.gradientKey(gradient ? gradient.key : undefined);
         this.applyChanges();
     }
@@ -132,6 +131,7 @@ export class Background {
         this.sourceKey(undefined);
         this.size(undefined);
         this.position(undefined);
+        this.gradientKey(undefined);
         this.applyChanges();
     }
 

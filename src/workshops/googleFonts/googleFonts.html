@@ -1,12 +1,15 @@
-<style data-bind="html: compiledStyles"></style>
-
-<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: {}">
-    <ul class="list fonts">
-        <!-- ko foreach: { data: fonts, as: 'font' } -->
-        <li class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }">
-            <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
-            </a>
-        </li>
-        <!--/ko -->
-    </ul>
+<fieldset class="flex-item form">
+    <div class="form-group">
+        <input class="form-control" type="search" data-bind="textInput: searchPattern, valueUpdate: 'keyup'"
+            placeholder="Search fonts..." />
+    </div>
+</fieldset>
+<fieldset class="form flex-item flex-item-grow list fonts" data-bind="scrollable: { onEndReach: $component.loadNextPage }">
+    <!-- ko foreach: { data: fonts, as: 'font' } -->
+    <div class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
+        <style data-bind="jss: preview"></style>
+        <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
+        </a>
+    </div>
+    <!--/ko -->
 </fieldset>
