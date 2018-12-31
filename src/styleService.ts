@@ -59,7 +59,7 @@ export class StyleService implements IStyleService {
     }
 
     public getClassNameByStyleKey(key: string, breakpoint?: string): string {
-        if (key.startsWith("globals")) {
+        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
             return null;
         }
 
