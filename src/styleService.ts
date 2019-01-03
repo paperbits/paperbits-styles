@@ -96,7 +96,7 @@ export class StyleService implements IStyleService {
 
     public async addColorVariation(variationName: string): Promise<string> {
         const styles = await this.getStyles();
-        const newColor = Utils.clone(styles["colors"]["default"]);
+        const newColor: any = Utils.clone(styles["colors"]["default"]);
         newColor.key = `colors/${variationName}`;
 
         styles["colors"][variationName] = newColor;
@@ -109,7 +109,7 @@ export class StyleService implements IStyleService {
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation = Utils.clone(styles["components"][componentName]["default"]);
+        const newVariation: any = Utils.clone(styles["components"][componentName]["default"]);
         newVariation.key = `components/${componentName}/${variationName}`;
 
         styles["components"][componentName][variationName] = newVariation;

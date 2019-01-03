@@ -18,7 +18,6 @@
     "dependencies": {
         "@paperbits/common": "0.1.32",
         "cropperjs": "^1.4.0",
-        "es6-shim": "^0.35.3",
         "google-maps": "^3.2.1",
         "knockout": "^3.5.0-beta",
         "knockout.validation": "^2.0.3",
@@ -31,7 +30,6 @@
         "pickr-widget": "^0.3.1"
     },
     "devDependencies": {
-        "@types/es6-shim": "^0.31.36",
         "@types/google-maps": "^3.2.0",
         "@types/knockout": "^3.4.53",
         "@types/knockout.mapping": "^2.0.33",
