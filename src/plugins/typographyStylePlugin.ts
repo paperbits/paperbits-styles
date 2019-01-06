@@ -29,6 +29,10 @@ export class TypographyStylePlugin extends StylePlugin {
             result["fontFamily"] = fontContract.family;
         }
 
+        if (typographyContract.lineHeight) {
+            result["lineHeight"] = typographyContract.lineHeight;
+        }
+
         if (typographyContract.colorKey) {
             const colorContract = Utils.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
             result["color"] = colorContract.value || "transparent";

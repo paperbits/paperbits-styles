@@ -9,3 +9,4 @@ export * from "./shadowStylePlugin";
 export * from "./stylePlugin";
 export * from "./typographyStylePlugin";
 export * from "./componentsStylePlugin";
+export * from "./statesStylePlugin";

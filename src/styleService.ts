@@ -172,4 +172,14 @@ export class StyleService implements IStyleService {
         const styles = await this.getStyles();
         return Utils.getObjectAt<ColorContract>(styleKey, styles);
     }
+
+    public async removeStyle(styleKey: string): Promise<void> {
+        if (!styleKey) {
+            throw new Error("Style key wasn't specified.");
+        }
+       
+        const styles = await this.getStyles();
+        Utils.setValue(styleKey, styles, null);
+        await this.updateStyles(styles);
+    }
 }

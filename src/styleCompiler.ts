@@ -14,7 +14,8 @@ import {
     ShadowStylePlugin,
     AnimationStylePlugin,
     TypographyStylePlugin,
-    ComponentsStylePlugin
+    ComponentsStylePlugin,
+    StatesStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -59,6 +60,7 @@ export class StyleCompiler {
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
         this.plugins["components"] = new ComponentsStylePlugin(this);
+        this.plugins["states"] = new StatesStylePlugin(this);
 
         const allStyles = {
             "@global": {}
@@ -189,6 +191,26 @@ export class StyleCompiler {
 
                     Utils.assign(result[className], pluginRules);
                 }
+            }
+        }
+
+        return result;
+    }
+
+    public async getStateClasses(stateConfig, stateName: string): Promise<object> {
+        const result = {};
+
+        for (const pluginName of Object.keys(stateConfig)) {
+            const plugin = this.plugins[pluginName];
+
+            if (plugin) {
+                const pluginConfig = stateConfig[pluginName];
+                const className = `&:${stateName}`;
+                const pluginRules = await plugin.contractToJss(pluginConfig);
+
+                result[className] = result[className] || {};
+
+                Utils.assign(result[className], pluginRules);
             }
         }
 

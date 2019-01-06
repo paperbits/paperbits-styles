@@ -39,6 +39,7 @@ export class LivingStyleGuide {
         this.addFonts = this.addFonts.bind(this);
         this.addColor = this.addColor.bind(this);
         this.selectColor = this.selectColor.bind(this);
+        this.removeFont = this.removeFont.bind(this);
 
         this.styles = ko.observable();
         this.colors = ko.observableArray();
@@ -93,6 +94,7 @@ export class LivingStyleGuide {
                     onSelect: () => {
                         this.viewManager.closeWidgetEditor();
                         this.eventManager.dispatchEvent("onStyleChange");
+
                         this.updateFonts();
                     }
                 }
@@ -101,6 +103,11 @@ export class LivingStyleGuide {
         };
 
         this.viewManager.openViewAsPopup(view);
+    }
+
+    public async removeFont(font: FontContract): Promise<void> {
+        this.styleService.removeStyle(font.key);
+        this.updateFonts();
     }
 
     public async addColor(): Promise<void> {

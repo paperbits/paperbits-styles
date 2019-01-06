@@ -18,6 +18,7 @@ export class Typography {
     public fontSize: KnockoutObservable<any>;
     public fontWeight: KnockoutObservable<any>;
     public fontStyle: KnockoutObservable<any>;
+    public lineHeight: KnockoutObservable<any>;
     public colorKey: KnockoutObservable<any>;
     public shadowKey: KnockoutObservable<any>;
     public textAlign: KnockoutObservable<any>;
@@ -54,6 +55,7 @@ export class Typography {
         this.fontSize = ko.observable();
         this.fontWeight = ko.observable();
         this.fontStyle = ko.observable();
+        this.lineHeight = ko.observable();
         this.colorKey = ko.observable();
         this.shadowKey = ko.observable();
         this.textAlign = ko.observable();
@@ -110,6 +112,7 @@ export class Typography {
         this.fontWeight.subscribe(this.applyChanges);
         this.fontStyle.subscribe(this.applyChanges);
         this.fontSize.subscribe(this.applyChanges);
+        this.lineHeight.subscribe(this.applyChanges);
         this.colorKey.subscribe(this.applyChanges);
         this.shadowKey.subscribe(this.applyChanges);
         this.textAlign.subscribe(this.applyChanges);
@@ -134,28 +137,32 @@ export class Typography {
 
     public toggleBold(): void {
         const weight = this.fontWeight();
-        this.fontWeight(weight !== "bold" ? "bold" : "normal");
+        this.fontWeight(weight === "bold" ? undefined : "bold");
     }
 
     public toggleItalic(): void {
         const style = this.fontStyle();
-        this.fontStyle(style !== "italic" ? "italic" : "normal");
+        this.fontStyle(style === "italic" ? undefined : "italic");
     }
 
     public alignLeft(): void {
-        this.textAlign("left");
+        const alignment = this.textAlign();
+        this.textAlign(alignment === "left" ? undefined : "left");
     }
 
     public alignCenter(): void {
-        this.textAlign("center");
+        const alignment = this.textAlign();
+        this.textAlign(alignment === "center" ? undefined : "center");
     }
 
     public alignRight(): void {
-        this.textAlign("right");
+        const alignment = this.textAlign();
+        this.textAlign(alignment === "right" ? undefined : "right");
     }
 
     public justify(): void {
-        this.textAlign("justify");
+        const alignment = this.textAlign();
+        this.textAlign(alignment === "justify" ? undefined : "justify");
     }
 
     private applyChanges(): void {
@@ -165,6 +172,7 @@ export class Typography {
                 fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
                 fontWeight: this.fontWeight(),
                 fontStyle: this.fontStyle(),
+                lineHeight: this.lineHeight() ? this.lineHeight() : undefined,
                 colorKey: this.colorKey(),
                 shadowKey: this.shadowKey(),
                 textAlign: this.textAlign(),

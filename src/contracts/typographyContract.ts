@@ -7,4 +7,5 @@ export interface TypographyContract {
     shadowKey?: string;
     textAlign?: string;
     textTransform?: string;
+    lineHeight?: string;
 }

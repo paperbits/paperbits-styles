@@ -8,6 +8,7 @@
                 Abc
             </div>
             <div class="font-name" data-bind="text: font.displayName"></div>
+            <!-- <button data-bind="click: $component.removeFont">X</button> -->
         </div>
         <!--/ko-->
     </div>
@@ -63,6 +64,27 @@
                 </article>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ul data-bind="stylable: { elementStyle: globals.ul }">
+                    <li>
+                        List item 1
+                    </li>
+                    <li>
+                        List item 2
+                    </li>
+                    <li>
+                        List item 3
+                    </li>
+                    <li>
+                        List item 4
+                    </li>
+                    <li>
+                        List item 5
+                    </li>
+                </ul>
+            </div>
+        </div>
     </article>
 
     <article>
@@ -79,27 +101,19 @@
         <a href="#" data-bind="click: $component.addColor">Add color</a>
     </article>
 
-
-
     <article>
         <h2 class="heading">Buttons</h2>
         <div class="row">
-            <div class="col col-md-2 d-flex align-items-center">
-                Appearance
-            </div>
-            <div class="col col-md-10 samples">
+            <div class="col col-md-12 samples">
                 <!--ko foreach: { data: $component.buttons, as: 'button' }-->
                 <div class="sample">
                     <button data-bind="stylable: { elementStyle: button }">Button</button>
                     <span class="sample-name" data-bind="text: button.displayName"></span>
                 </div>
                 <!--/ko-->
-
-                <div>
-                    <a href="#" data-bind="click: $component.addButtonVariation">Add variation</a>
-                </div>
             </div>
         </div>
+        <a href="#" data-bind="click: $component.addButtonVariation">Add variation</a>
     </article>
 
     <article>
@@ -115,7 +129,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col col-md-2 d-flex align-items-center category-name">
                 Disabled
             </div>
@@ -153,7 +167,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- <input type="text" value="Input value" data-bind="stylable: { elementStyle: components.formControl.default }" />
 
         <textarea data-bind="stylable: { elementStyle: components.formControl.default }">Text area content</textarea> -->
