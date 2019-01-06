@@ -20,6 +20,6 @@ export class StylePublisher implements IPublisher {
         const css = await this.styleCompiler.compile();
         const bytes = Utils.stringToUnit8Array(css);
 
-        await this.outputBlobStorage.uploadBlob(`website\\styles\\customizations.css`, bytes);
+        await this.outputBlobStorage.uploadBlob(`styles\\customizations.css`, bytes);
     }
 }
