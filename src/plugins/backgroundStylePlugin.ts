@@ -30,6 +30,12 @@ export class BackgroundStylePlugin extends StylePlugin {
         if (contract.images && contract.images.length > 0) {
             for (const image of contract.images) {
                 const media = await this.mediaService.getMediaByKey(image.sourceKey);
+
+                if (!media) {
+                    console.warn(`Unable to set background image. Media with source key ${image.sourceKey} not found.`);
+                    continue;
+                }
+
                 backgroundImage.push(`url("${media.downloadUrl}")`);
                 backgroundPosition.push(image.position || "center");
                 backgroundSize.push(image.size || "contain");
