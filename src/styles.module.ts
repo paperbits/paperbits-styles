@@ -17,7 +17,5 @@ export class StyleModule implements IInjectorModule {
         injector.bindSingleton("stylePublisher", StylePublisher);
         injector.bindSingleton("styleCompiler", StyleCompiler);
         injector.bindSingleton("styledBindingHandler", StyledBindingHandler);
-
-        injector.resolve("styledBindingHandler");
     }
 }
