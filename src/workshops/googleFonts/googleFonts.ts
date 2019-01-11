@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import template from "./googleFonts.html";
-import { IHttpClient, HttpMethod } from "@paperbits/common/http";
+import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract, FontVariantContract } from "../../contracts/fontContract";
@@ -40,7 +40,7 @@ export class GoogleFonts {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly httpClient: IHttpClient
+        private readonly httpClient: HttpClient
     ) {
         this.loadGoogleFonts = this.loadGoogleFonts.bind(this);
         this.loadNextPage = this.loadNextPage.bind(this);
