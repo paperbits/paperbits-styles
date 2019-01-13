@@ -135,7 +135,7 @@ export class StyleService implements IStyleService {
         const styles = await this.getStyles();
         const style = Utils.getObjectAt(key, styles);
 
-        if (style["class"]) {
+        if (style && style["class"]) {
             return style["class"][breakpoint || "xs"];
         }
 
