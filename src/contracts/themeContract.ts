@@ -10,4 +10,5 @@ export interface ThemeContract {
     globals?: Bag<BoxContract>;
     components?: Object;
     instances?: Object;
+    utils?: any;
 }

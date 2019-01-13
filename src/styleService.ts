@@ -63,6 +63,82 @@ export class StyleService implements IStyleService {
             return null;
         }
 
+        // const styles = awa this.getStyles();
+
+        const segments = key.split("/");
+        const component = segments[1];
+        const componentVariation = segments[2];
+        const classNames = [];
+
+        classNames.push(Utils.camelCaseToKebabCase(component));
+
+        if (componentVariation) {
+            let className;
+
+            if (breakpoint) {
+                className = `${component}-${breakpoint}-${componentVariation}`;
+            }
+            else {
+                className = `${component}-${componentVariation}`;
+            }
+
+            className = Utils.camelCaseToKebabCase(className);
+            classNames.push(className);
+        }
+
+        // TODO: Consider a case: components/navbar/default/components/navlink
+
+        return classNames.join(" ");
+    }
+
+    public async getClassNamesByStyleConfigAsync(styleConfig: any): Promise<string> {
+        const classNames = [];
+
+        for (const category of Object.keys(styleConfig)) {
+            const categoryConfig = styleConfig[category];
+
+            if (categoryConfig) {
+                if (this.isResponsive(categoryConfig)) {
+                    for (const breakpoint of Object.keys(categoryConfig)) {
+                        let className;
+
+                        if (breakpoint === "xs") {
+                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                        }
+                        else {
+                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                        }
+
+                        if (className) {
+                            classNames.push(className);
+                        }
+                    }
+                }
+                else {
+                    const className = await this.getClassNameByStyleKeyAsync(categoryConfig);
+
+                    if (className) {
+                        classNames.push(className);
+                    }
+                }
+            }
+        }
+
+        return classNames.join(" ");
+    }
+
+    public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
+        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
+            return null;
+        }
+
+        const styles = await this.getStyles();
+        const style = Utils.getObjectAt(key, styles);
+
+        if (style["class"]) {
+            return style["class"][breakpoint || "xs"];
+        }
+
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
@@ -177,7 +253,7 @@ export class StyleService implements IStyleService {
         if (!styleKey) {
             throw new Error("Style key wasn't specified.");
         }
-       
+
         const styles = await this.getStyles();
         Utils.setValue(styleKey, styles, null);
         await this.updateStyles(styles);

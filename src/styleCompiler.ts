@@ -97,17 +97,22 @@ export class StyleCompiler {
             }
         }
 
-        if (themeContract.globals) {
-            for (const tagName of Object.keys(themeContract.globals)) {
-
-                const pluginRules = await this.getVariationClasses(themeContract.globals[tagName], tagName);
-                Utils.assign(allStyles["@global"], pluginRules);
+        if (themeContract.utils) {
+            for (const variationName of Object.keys(themeContract.utils.text)) {
+                const classes = await this.getVariationClasses(themeContract.utils.text[variationName], "text", variationName);
+                Utils.assign(allStyles, classes);
             }
 
-            // TODO: Get rid of special case for global text style
-            for (const variationName of Object.keys(themeContract.globals.text)) {
-                const classes = await this.getVariationClasses(themeContract.globals.text[variationName], "text", variationName);
+            for (const variationName of Object.keys(themeContract.utils.content)) {
+                const classes = await this.getVariationClasses(themeContract.utils.content[variationName], "content", variationName);
                 Utils.assign(allStyles, classes);
+            }
+        }
+
+        if (themeContract.globals) {
+            for (const tagName of Object.keys(themeContract.globals)) {
+                const pluginRules = await this.getVariationClasses(themeContract.globals[tagName], tagName);
+                Utils.assign(allStyles["@global"], pluginRules);
             }
         }
 

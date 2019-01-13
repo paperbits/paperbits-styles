@@ -16,11 +16,11 @@ export class StyledBindingHandler {
                 const cssObservable = ko.observable();
 
                 if (typeof styleConfig === "string" || styleConfig instanceof String) {
-                    const className = this.styleService.getClassNameByStyleKey(<string>styleConfig);
+                    const className = await this.styleService.getClassNameByStyleKeyAsync(<string>styleConfig);
                     cssObservable(className);
                 }
                 else {
-                    const classNames = this.styleService.getClassNamesByStyleConfig(styleConfig);
+                    const classNames = await this.styleService.getClassNamesByStyleConfigAsync(styleConfig);
                     cssObservable(classNames);
                 }
 
