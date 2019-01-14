@@ -49,7 +49,7 @@ export class ShadowSelector {
         }
     }
 
-    public clearShadows(): void {
+    public clearShadow(): void {
         if (this.selectedShadow) {
             this.selectedShadow(null);
         }

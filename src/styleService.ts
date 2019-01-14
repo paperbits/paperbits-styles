@@ -13,6 +13,10 @@ export class StyleService implements IStyleService {
     ) { }
 
     private isResponsive(variation: Object): boolean {
+        if (!variation) {
+            throw new Error(`Parameter "variation" not specified.`);
+        }
+
         return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
     }
 
@@ -23,6 +27,10 @@ export class StyleService implements IStyleService {
     }
 
     public getClassNamesByStyleConfig(styleConfig: any): string {
+        if (!styleConfig) {
+            throw new Error(`Parameter "styleConfig" not specified.`);
+        }
+
         const classNames = [];
 
         for (const category of Object.keys(styleConfig)) {
@@ -59,6 +67,10 @@ export class StyleService implements IStyleService {
     }
 
     public getClassNameByStyleKey(key: string, breakpoint?: string): string {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
         if (key.startsWith("globals") && !key.startsWith("globals/text")) {
             return null;
         }
@@ -128,6 +140,10 @@ export class StyleService implements IStyleService {
     }
 
     public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+       
         if (key.startsWith("globals") && !key.startsWith("globals/text")) {
             return null;
         }
@@ -215,6 +231,10 @@ export class StyleService implements IStyleService {
     }
 
     public async getVariations<TVariation>(categoryName: string): Promise<TVariation[]> {
+        if (!categoryName) {
+            throw new Error(`Parameter "categoryName" not specified.`);
+        }
+
         const styles = await this.getStyles();
 
         const variations = Object.keys(styles[categoryName]).map(variationName => {
@@ -226,6 +246,10 @@ export class StyleService implements IStyleService {
     }
 
     public async getComponentVariations(componentName: string): Promise<any[]> {
+        if (!componentName) {
+            throw new Error(`Parameter "componentName" not specified.`);
+        }
+
         const styles = await this.getStyles();
         const componentStyles = styles.components[componentName];
 
@@ -238,6 +262,14 @@ export class StyleService implements IStyleService {
     }
 
     public async setInstanceStyle(instanceKey: string, instanceStyles: Object): Promise<void> {
+        if (!instanceKey) {
+            throw new Error(`Parameter "instanceKey" not specified.`);
+        }
+
+        if (!instanceStyles) {
+            throw new Error(`Parameter "instanceStyles" not specified.`);
+        }
+
         const styles = await this.getStyles();
         Utils.mergeDeepAt(instanceKey, styles, instanceStyles);
         this.updateStyles(styles);
@@ -245,13 +277,17 @@ export class StyleService implements IStyleService {
     }
 
     public async getStyleByKey(styleKey: string): Promise<any> {
+        if (!styleKey) {
+            throw new Error(`Parameter "styleKey" not specified.`);
+        }
+
         const styles = await this.getStyles();
         return Utils.getObjectAt<ColorContract>(styleKey, styles);
     }
 
     public async removeStyle(styleKey: string): Promise<void> {
         if (!styleKey) {
-            throw new Error("Style key wasn't specified.");
+            throw new Error(`Parameter "styleKey" not specified.`);
         }
 
         const styles = await this.getStyles();

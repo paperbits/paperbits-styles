@@ -12,8 +12,6 @@ export interface ElementStyle {
     style: any;
 }
 
-const buttonComponentName = "button";
-
 @Component({
     selector: "living-style-guide",
     template: template,
@@ -23,6 +21,7 @@ export class LivingStyleGuide {
     public styles: KnockoutObservable<any>;
     public textBlocks: KnockoutObservableArray<any>;
     public buttons: KnockoutObservableArray<any>;
+    public cards: KnockoutObservableArray<any>;
     public fonts: KnockoutObservableArray<FontContract>;
     public colors: KnockoutObservableArray<ColorContract>;
     public bodyFontDisplayName: KnockoutObservable<string>;
@@ -34,6 +33,7 @@ export class LivingStyleGuide {
     ) {
         this.loadStyles = this.loadStyles.bind(this);
         this.addButtonVariation = this.addButtonVariation.bind(this);
+        this.addCardVariation = this.addCardVariation.bind(this);
         this.applyChanges = this.applyChanges.bind(this);
         this.updateFonts = this.updateFonts.bind(this);
         this.addFonts = this.addFonts.bind(this);
@@ -45,6 +45,7 @@ export class LivingStyleGuide {
         this.colors = ko.observableArray();
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
+        this.cards = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
         this.bodyFontDisplayName = ko.observable();
     }
@@ -58,6 +59,7 @@ export class LivingStyleGuide {
         this.updateFonts();
         this.updateColors();
         this.updateButons();
+        this.updateCards();
 
         const bodyFont = Utils.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
         this.bodyFontDisplayName(bodyFont.displayName);
@@ -69,7 +71,7 @@ export class LivingStyleGuide {
         this.fonts(fonts);
     }
 
-    public async updateColors(): Promise<void> {
+    private async updateColors(): Promise<void> {
         this.colors([]);
         const styles = await this.styleService.getStyles();
         this.styles(styles);
@@ -77,12 +79,20 @@ export class LivingStyleGuide {
         this.colors(colors);
     }
 
-    public async updateButons(): Promise<void> {
+    private async updateButons(): Promise<void> {
         this.buttons([]);
         const styles = await this.styleService.getStyles();
         this.styles(styles);
-        const buttonVriations = await this.styleService.getComponentVariations("button");
-        this.buttons(buttonVriations);
+        const variations = await this.styleService.getComponentVariations("button");
+        this.buttons(variations);
+    }
+
+    private async updateCards(): Promise<void> {
+        this.cards([]);
+        const styles = await this.styleService.getStyles();
+        this.styles(styles);
+        const variations = await this.styleService.getComponentVariations("card");
+        this.cards(variations);
     }
 
     public async addFonts(): Promise<void> {
@@ -141,7 +151,16 @@ export class LivingStyleGuide {
     }
 
     public async addButtonVariation(): Promise<void> {
-        const componentName = buttonComponentName;
+        const componentName = "button";
+        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
+
+        await this.styleService.addComponentVariation(componentName, variationName);
+
+        this.applyChanges();
+    }
+
+    public async addCardVariation(): Promise<void> {
+        const componentName = "card";
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
         await this.styleService.addComponentVariation(componentName, variationName);
@@ -151,6 +170,7 @@ export class LivingStyleGuide {
 
     public applyChanges(): void {
         this.updateButons();
+        this.updateCards();
         this.styles.valueHasMutated();
     }
 }

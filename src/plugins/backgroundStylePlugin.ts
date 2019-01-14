@@ -37,8 +37,8 @@ export class BackgroundStylePlugin extends StylePlugin {
                 }
 
                 backgroundImage.push(`url("${media.downloadUrl}")`);
-                backgroundPosition.push(image.position || "center");
-                backgroundSize.push(image.size || "contain");
+                backgroundPosition.push(image.position || "unset");
+                backgroundSize.push(image.size || "unset");
                 backgroundRepeat.push(image.repeat || "no-repeat");
             }
         }
