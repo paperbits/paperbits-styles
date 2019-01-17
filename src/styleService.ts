@@ -66,6 +66,10 @@ export class StyleService implements IStyleService {
         return classNames.join(" ");
     }
 
+    public getClassNameByColorKey(colorKey: string): string {
+        return Utils.camelCaseToKebabCase(colorKey.replaceAll("/", "-"));
+    }
+
     public getClassNameByStyleKey(key: string, breakpoint?: string): string {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
@@ -143,7 +147,7 @@ export class StyleService implements IStyleService {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
         }
-       
+
         if (key.startsWith("globals") && !key.startsWith("globals/text")) {
             return null;
         }

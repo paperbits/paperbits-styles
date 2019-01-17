@@ -116,6 +116,12 @@ export class StyleCompiler {
             }
         }
 
+        if (themeContract.colors) {
+            for (const colorName of Object.keys(themeContract.colors)) {
+                allStyles[`colors-${Utils.camelCaseToKebabCase(colorName)}`] = { color: themeContract.colors[colorName].value };
+            }
+        }
+
         const responsiveStyleRules = {};
 
         for (const breakpoint of Object.keys(BreakpointValues)) {
