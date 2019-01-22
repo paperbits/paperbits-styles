@@ -45,9 +45,9 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("animationEditor", AnimationEditor);
         injector.bind("styleEditor", StyleEditor);
         injector.bind("livingStyleGuide", LivingStyleGuide);
-        injector.bindSingleton("styleableBindingHandler", StyleableBindingHandler);
-        injector.bindSingleton("stylesheetBindingHandler", StylesheetBindingHandler);
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
+        injector.bindToCollection("autostart", StyleableBindingHandler);
+        injector.bindToCollection("autostart", StylesheetBindingHandler);
     }
 }

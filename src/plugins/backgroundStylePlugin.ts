@@ -14,7 +14,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToJss(contract: BackgroundContract): Promise<Object> {
+    public async contractToJss(backgroundContract: BackgroundContract): Promise<Object> {
         const background: any = {};
         const backgroundImage = [];
         const backgroundPosition = [];
@@ -23,12 +23,19 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         const themeContract = await this.styleService.getStyles();
 
-        if (contract.colorKey) {
-            background.color = Utils.getObjectAt<ColorContract>(contract.colorKey, themeContract).value;
+        if (backgroundContract.colorKey) {
+            const color = Utils.getObjectAt<ColorContract>(backgroundContract.colorKey, themeContract);
+
+            if (color) {
+                background.color = color.value;
+            }
+            else {
+                console.warn(`Color with key "${backgroundContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
-        if (contract.images && contract.images.length > 0) {
-            for (const image of contract.images) {
+        if (backgroundContract.images && backgroundContract.images.length > 0) {
+            for (const image of backgroundContract.images) {
                 const media = await this.mediaService.getMediaByKey(image.sourceKey);
 
                 if (!media) {
@@ -43,9 +50,16 @@ export class BackgroundStylePlugin extends StylePlugin {
             }
         }
 
-        if (contract.gradientKey) {
-            const gradient = Utils.getObjectAt<LinearGradientContract>(contract.gradientKey, themeContract);
-            backgroundImage.push(getLinearGradientString(gradient));
+        if (backgroundContract.gradientKey) {
+            const gradient = Utils.getObjectAt<LinearGradientContract>(backgroundContract.gradientKey, themeContract);
+
+            if (gradient) {
+                backgroundImage.push(getLinearGradientString(gradient));
+            }
+            else {
+                backgroundImage.push("none");
+                console.warn(`Gradient with key "${backgroundContract.gradientKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
         if (backgroundImage.length > 0) {

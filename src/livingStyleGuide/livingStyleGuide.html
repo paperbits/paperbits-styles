@@ -8,7 +8,7 @@
                 Abc
             </div>
             <div class="font-name" data-bind="text: font.displayName"></div>
-            <!-- <button data-bind="click: $component.removeFont">X</button> -->
+            <button data-bind="click: $component.removeStyle">X</button>
         </div>
         <!--/ko-->
     </div>
@@ -94,6 +94,7 @@
             <li class="sample">
                 <a href="#" class="sample-color" data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
                 <span class="sample-name" data-bind="text: color.displayName"></span>
+                <button data-bind="click: $component.removeStyle">X</button>
             </li>
             <!--/ko -->
         </ul>
@@ -109,6 +110,10 @@
                 <div class="sample">
                     <button data-bind="stylable: { elementStyle: button }">Button</button>
                     <span class="sample-name" data-bind="text: button.displayName"></span>
+
+                    <!-- ko if: button.key !== "components/button/default" -->
+                    <button data-bind="click: $component.removeStyle">X</button>
+                    <!-- /ko -->
                 </div>
                 <!--/ko-->
             </div>
@@ -201,16 +206,14 @@
         <h2 class="heading">Cards</h2>
         <div class="row">
             <div class="col col-md-4">
-                <!-- <div data-bind="stylable: { elementStyle: components.card.default }">
-                    <h1>Card</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                </div> -->
-
                 <!--ko foreach: { data: $component.cards, as: 'card' }-->
                 <div data-bind="stylable: { elementStyle: card }">
                     <h1>Card</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
                 </div>
+                <!-- ko if: card.key !== "components/card/default" -->
+                <button data-bind="click: $component.removeStyle">X</button>
+                <!-- /ko -->
                 <!--/ko-->
             </div>
         </div>

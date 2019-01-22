@@ -57,24 +57,30 @@ export class Background {
         this.backgroundPreview = ko.observable<string>();
     }
 
-    private async fillout(background: BackgroundContract): Promise<void> {
-        if (!background) {
+    private async fillout(backgroundContract: BackgroundContract): Promise<void> {
+        if (!backgroundContract) {
             return;
         }
 
-        const jss = await this.backgroundStylePlugin.contractToJss(background);
+        const jss = await this.backgroundStylePlugin.contractToJss(backgroundContract);
         this.backgroundPreview({ backgroundPreview: jss });
 
         const styles = await this.styleService.getStyles();
 
-        if (background.colorKey) {
-            const color = Utils.getObjectAt<ColorContract>(background.colorKey, styles);
-            this.color(color.value);
-            this.colorKey(background.colorKey);
+        if (backgroundContract.colorKey) {
+            const colorContract = Utils.getObjectAt<ColorContract>(backgroundContract.colorKey, styles);
+
+            if (colorContract) {
+                this.color(colorContract.value);
+                this.colorKey(backgroundContract.colorKey);
+            }
+            else {
+                console.warn(`Color with key "${backgroundContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
-        if (background.images && background.images.length > 0) {
-            const image = background.images[0];
+        if (backgroundContract.images && backgroundContract.images.length > 0) {
+            const image = backgroundContract.images[0];
 
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
@@ -85,9 +91,8 @@ export class Background {
             this.source(`url("${media.downloadUrl}")`);
         }
 
-        if (background.gradientKey) {
-            // gradient = Utils.getObjectAt<LinearGradientContract>(background.gradientKey, styles);
-            this.gradientKey(background.gradientKey);
+        if (backgroundContract.gradientKey) {
+            this.gradientKey(backgroundContract.gradientKey);
         }
     }
 

@@ -3,7 +3,7 @@ import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, TypographyContract, FontContract, ColorContract, ShadowContract } from "../contracts";
 
 export class TypographyStylePlugin extends StylePlugin {
-    public displayName = "Typeography";
+    public displayName = "Typography";
 
     constructor(private readonly themeContract: ThemeContract) {
         super();
@@ -26,7 +26,13 @@ export class TypographyStylePlugin extends StylePlugin {
 
         if (typographyContract.fontKey) {
             const fontContract = Utils.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);
-            result["fontFamily"] = fontContract.family;
+
+            if (fontContract) {
+                result["fontFamily"] = fontContract.family;
+            }
+            else {
+                console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
         if (typographyContract.lineHeight) {
@@ -35,26 +41,37 @@ export class TypographyStylePlugin extends StylePlugin {
 
         if (typographyContract.colorKey) {
             const colorContract = Utils.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
-            result["color"] = colorContract.value || "transparent";
+
+            if (colorContract) {
+                result["color"] = colorContract.value || "transparent";
+            }
+            else {
+                console.warn(`Color with key "${typographyContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
         if (typographyContract.shadowKey) {
             const shadowContract = Utils.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
 
-            result["textShadow"] = {
-                x: shadowContract.offsetX || 0,
-                y: shadowContract.offsetY || 0,
-                blur: shadowContract.blur || 0,
-                color: shadowContract.color || "#000"
-            };
+            if (shadowContract) {
+                result["textShadow"] = {
+                    x: shadowContract.offsetX || 0,
+                    y: shadowContract.offsetY || 0,
+                    blur: shadowContract.blur || 0,
+                    color: shadowContract.color || "#000"
+                };
 
-            // Text inset shadow example:
-            // background-color: #565656;
-            // color: transparent;
-            // text-shadow: 0px 2px 3px rgba(255,255,255,0.5);
-            // -webkit-background-clip: text;
-            //    -moz-background-clip: text;
-            //         background-clip: text;
+                // Text inset shadow example:
+                // background-color: #565656;
+                // color: transparent;
+                // text-shadow: 0px 2px 3px rgba(255,255,255,0.5);
+                // -webkit-background-clip: text;
+                //    -moz-background-clip: text;
+                //         background-clip: text;
+            }
+            else {
+                console.warn(`Shadow with key "${typographyContract.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
         if (typographyContract.textAlign) {

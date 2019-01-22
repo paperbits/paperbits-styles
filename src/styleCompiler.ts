@@ -45,6 +45,14 @@ export class StyleCompiler {
         return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
     }
 
+    private isResponsive2(variation: Object): boolean {
+        if (!variation) {
+            throw new Error(`Parameter "variation" not specified.`);
+        }
+
+        return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
+    }
+
     /**
      * Returns compliled CSS.
      */
@@ -240,5 +248,165 @@ export class StyleCompiler {
         const styleSheet = jss.createStyleSheet(result);
 
         return styleSheet.toString();
+    }
+
+
+    public getClassNamesByStyleConfig(styleConfig: any): string {
+        if (!styleConfig) {
+            throw new Error(`Parameter "styleConfig" not specified.`);
+        }
+
+        const classNames = [];
+
+        for (const category of Object.keys(styleConfig)) {
+            const categoryConfig = styleConfig[category];
+
+            if (categoryConfig) {
+                if (this.isResponsive2(categoryConfig)) {
+                    for (const breakpoint of Object.keys(categoryConfig)) {
+                        let className;
+
+                        if (breakpoint === "xs") {
+                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint]);
+                        }
+                        else {
+                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint], breakpoint);
+                        }
+
+                        if (className) {
+                            classNames.push(className);
+                        }
+                    }
+                }
+                else {
+                    const className = this.getClassNameByStyleKey(categoryConfig);
+
+                    if (className) {
+                        classNames.push(className);
+                    }
+                }
+            }
+        }
+
+        return classNames.join(" ");
+    }
+
+    public getClassNameByColorKey(colorKey: string): string {
+        return Utils.camelCaseToKebabCase(colorKey.replaceAll("/", "-"));
+    }
+
+    public getClassNameByStyleKey(key: string, breakpoint?: string): string {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
+        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
+            return null;
+        }
+
+        // const styles = awa this.getStyles();
+
+        const segments = key.split("/");
+        const component = segments[1];
+        const componentVariation = segments[2];
+        const classNames = [];
+
+        classNames.push(Utils.camelCaseToKebabCase(component));
+
+        if (componentVariation) {
+            let className;
+
+            if (breakpoint) {
+                className = `${component}-${breakpoint}-${componentVariation}`;
+            }
+            else {
+                className = `${component}-${componentVariation}`;
+            }
+
+            className = Utils.camelCaseToKebabCase(className);
+            classNames.push(className);
+        }
+
+        // TODO: Consider a case: components/navbar/default/components/navlink
+
+        return classNames.join(" ");
+    }
+
+    public async getClassNamesByStyleConfigAsync(styleConfig: any): Promise<string> {
+        const classNames = [];
+
+        for (const category of Object.keys(styleConfig)) {
+            const categoryConfig = styleConfig[category];
+
+            if (categoryConfig) {
+                if (this.isResponsive2(categoryConfig)) {
+                    for (const breakpoint of Object.keys(categoryConfig)) {
+                        let className;
+
+                        if (breakpoint === "xs") {
+                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                        }
+                        else {
+                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                        }
+
+                        if (className) {
+                            classNames.push(className);
+                        }
+                    }
+                }
+                else {
+                    const className = await this.getClassNameByStyleKeyAsync(categoryConfig);
+
+                    if (className) {
+                        classNames.push(className);
+                    }
+                }
+            }
+        }
+
+        return classNames.join(" ");
+    }
+
+    public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
+        if (!key) {
+            throw new Error(`Parameter "key" not specified.`);
+        }
+
+        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
+            return null;
+        }
+
+        const styles = await this.styleService.getStyles();
+        const style = Utils.getObjectAt(key, styles);
+
+        if (style && style["class"]) {
+            return style["class"][breakpoint || "xs"];
+        }
+
+        const segments = key.split("/");
+        const component = segments[1];
+        const componentVariation = segments[2];
+        const classNames = [];
+
+        classNames.push(Utils.camelCaseToKebabCase(component));
+
+        if (componentVariation) {
+            let className;
+
+            if (breakpoint) {
+                className = `${component}-${breakpoint}-${componentVariation}`;
+            }
+            else {
+                className = `${component}-${componentVariation}`;
+            }
+
+            className = Utils.camelCaseToKebabCase(className);
+            classNames.push(className);
+        }
+
+        // TODO: Consider a case: components/navbar/default/components/navlink
+
+        return classNames.join(" ");
     }
 }

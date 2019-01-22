@@ -16,6 +16,6 @@ export class StyleModule implements IInjectorModule {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("stylePublisher", StylePublisher);
         injector.bindSingleton("styleCompiler", StyleCompiler);
-        injector.bindSingleton("styledBindingHandler", StyledBindingHandler);
+        injector.bindToCollection("autostart", StyledBindingHandler);
     }
 }

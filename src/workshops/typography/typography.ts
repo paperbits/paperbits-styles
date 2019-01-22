@@ -65,37 +65,55 @@ export class Typography {
         this.shadowName = ko.observable();
     }
 
-    private async fillout(typography: TypographyContract): Promise<void> {
-        if (!typography) {
+    private async fillout(typographyContract: TypographyContract): Promise<void> {
+        if (!typographyContract) {
             return;
         }
 
         const styles = await this.styleService.getStyles();
 
-        if (typography.fontKey) {
-            const fontContract = Utils.getObjectAt<FontContract>(typography.fontKey, styles);
-            this.fontName(fontContract.displayName);
-            this.fontKey(typography.fontKey);
+        if (typographyContract.fontKey) {
+            const fontContract = Utils.getObjectAt<FontContract>(typographyContract.fontKey, styles);
+
+            if (fontContract) {
+                this.fontName(fontContract.displayName);
+                this.fontKey(typographyContract.fontKey);
+            }
+            else {
+                console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
-        if (typography.colorKey) {
-            const colorContract = Utils.getObjectAt<FontContract>(typography.colorKey, styles);
-            this.colorName(colorContract.displayName);
-            this.colorKey(typography.colorKey);
+        if (typographyContract.colorKey) {
+            const colorContract = Utils.getObjectAt<FontContract>(typographyContract.colorKey, styles);
+
+            if (colorContract) {
+                this.colorName(colorContract.displayName);
+                this.colorKey(typographyContract.colorKey);
+            }
+            else {
+                console.warn(`Color with key "${typographyContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
-        this.fontSize(typography.fontSize);
-        this.fontWeight(typography.fontWeight);
-        this.fontStyle(typography.fontStyle);
-        this.textTransform(typography.textTransform);
+        this.fontSize(typographyContract.fontSize);
+        this.fontWeight(typographyContract.fontWeight);
+        this.fontStyle(typographyContract.fontStyle);
+        this.textTransform(typographyContract.textTransform);
 
-        if (typography.shadowKey) {
-            const shadowContract = Utils.getObjectAt<FontContract>(typography.shadowKey, styles);
-            this.shadowName(shadowContract.displayName);
-            this.shadowKey(typography.shadowKey);
+        if (typographyContract.shadowKey) {
+            const shadowContract = Utils.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
+
+            if (shadowContract) {
+                this.shadowName(shadowContract.displayName);
+                this.shadowKey(typographyContract.shadowKey);
+            }
+            else {
+                console.warn(`Shadow with key "${typographyContract.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
+            }
         }
 
-        this.textAlign(typography.textAlign);
+        this.textAlign(typographyContract.textAlign);
     }
 
     @OnMounted()

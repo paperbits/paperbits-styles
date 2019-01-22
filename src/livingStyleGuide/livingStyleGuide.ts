@@ -40,6 +40,8 @@ export class LivingStyleGuide {
         this.addColor = this.addColor.bind(this);
         this.selectColor = this.selectColor.bind(this);
         this.removeFont = this.removeFont.bind(this);
+        this.removeColor = this.removeColor.bind(this);
+        this.removeStyle = this.removeStyle.bind(this);
 
         this.styles = ko.observable();
         this.colors = ko.observableArray();
@@ -120,6 +122,11 @@ export class LivingStyleGuide {
         this.updateFonts();
     }
 
+    public async removeStyle(contract): Promise<void> {
+        this.styleService.removeStyle(contract.key);
+        this.applyChanges();
+    }
+
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         this.styleService.addColorVariation(variationName);
@@ -129,6 +136,11 @@ export class LivingStyleGuide {
 
         this.eventManager.dispatchEvent("onStyleChange");
         this.updateColors();
+    }
+
+    public async removeColor(color: ColorContract): Promise<void> {
+        this.styleService.removeStyle(color.key);
+        this.applyChanges();
     }
 
     public async selectColor(color: ColorContract): Promise<void> {
@@ -171,6 +183,8 @@ export class LivingStyleGuide {
     public applyChanges(): void {
         this.updateButons();
         this.updateCards();
+        this.updateColors();
+        this.updateFonts();
         this.styles.valueHasMutated();
     }
 }
