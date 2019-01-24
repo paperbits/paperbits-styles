@@ -35,13 +35,9 @@ export class LivingStyleGuide {
         this.addButtonVariation = this.addButtonVariation.bind(this);
         this.addCardVariation = this.addCardVariation.bind(this);
         this.applyChanges = this.applyChanges.bind(this);
-        this.updateFonts = this.updateFonts.bind(this);
-        this.addFonts = this.addFonts.bind(this);
-        this.addColor = this.addColor.bind(this);
         this.selectColor = this.selectColor.bind(this);
-        this.removeFont = this.removeFont.bind(this);
-        this.removeColor = this.removeColor.bind(this);
         this.removeStyle = this.removeStyle.bind(this);
+        this.addFonts = this.addFonts.bind(this);
 
         this.styles = ko.observable();
         this.colors = ko.observableArray();
@@ -52,49 +48,9 @@ export class LivingStyleGuide {
         this.bodyFontDisplayName = ko.observable();
     }
 
-
     @OnMounted()
     public async loadStyles(): Promise<void> {
-        const styles = await this.styleService.getStyles();
-        this.styles(styles);
-
-        this.updateFonts();
-        this.updateColors();
-        this.updateButons();
-        this.updateCards();
-
-        const bodyFont = Utils.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
-        this.bodyFontDisplayName(bodyFont.displayName);
-    }
-
-    public updateFonts(): void {
-        const styles = this.styles();
-        const fonts = Object.keys(styles.fonts).map(key => styles.fonts[key]);
-        this.fonts(fonts);
-    }
-
-    private async updateColors(): Promise<void> {
-        this.colors([]);
-        const styles = await this.styleService.getStyles();
-        this.styles(styles);
-        const colors = Object.keys(styles.colors).map(key => styles.colors[key]);
-        this.colors(colors);
-    }
-
-    private async updateButons(): Promise<void> {
-        this.buttons([]);
-        const styles = await this.styleService.getStyles();
-        this.styles(styles);
-        const variations = await this.styleService.getComponentVariations("button");
-        this.buttons(variations);
-    }
-
-    private async updateCards(): Promise<void> {
-        this.cards([]);
-        const styles = await this.styleService.getStyles();
-        this.styles(styles);
-        const variations = await this.styleService.getComponentVariations("card");
-        this.cards(variations);
+        this.applyChanges();
     }
 
     public async addFonts(): Promise<void> {
@@ -106,8 +62,7 @@ export class LivingStyleGuide {
                     onSelect: () => {
                         this.viewManager.closeWidgetEditor();
                         this.eventManager.dispatchEvent("onStyleChange");
-
-                        this.updateFonts();
+                        this.applyChanges();
                     }
                 }
             },
@@ -117,29 +72,18 @@ export class LivingStyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeFont(font: FontContract): Promise<void> {
-        this.styleService.removeStyle(font.key);
-        this.updateFonts();
-    }
-
     public async removeStyle(contract): Promise<void> {
-        this.styleService.removeStyle(contract.key);
+        await this.styleService.removeStyle(contract.key);
         this.applyChanges();
     }
 
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         this.styleService.addColorVariation(variationName);
-
-        const styles = await this.styleService.getStyles();
-        this.styles(styles);
-
-        this.eventManager.dispatchEvent("onStyleChange");
-        this.updateColors();
     }
 
     public async removeColor(color: ColorContract): Promise<void> {
-        this.styleService.removeStyle(color.key);
+        await this.styleService.removeStyle(color.key);
         this.applyChanges();
     }
 
@@ -151,8 +95,8 @@ export class LivingStyleGuide {
                 params: {
                     selectedColor: color,
                     onSelect: (color: ColorContract) => {
-                        this.eventManager.dispatchEvent("onStyleChange");
-                        this.updateColors();
+                        // this.eventManager.dispatchEvent("onStyleChange");
+                        this.applyChanges();
                     }
                 }
             },
@@ -167,7 +111,6 @@ export class LivingStyleGuide {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
         await this.styleService.addComponentVariation(componentName, variationName);
-
         this.applyChanges();
     }
 
@@ -176,15 +119,35 @@ export class LivingStyleGuide {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
         await this.styleService.addComponentVariation(componentName, variationName);
-
         this.applyChanges();
     }
 
-    public applyChanges(): void {
-        this.updateButons();
-        this.updateCards();
-        this.updateColors();
-        this.updateFonts();
-        this.styles.valueHasMutated();
+    public async applyChanges(): Promise<void> {
+        const styles = await this.styleService.getStyles();
+
+        const bodyFont = Utils.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
+
+        if (bodyFont) {
+            this.bodyFontDisplayName(bodyFont.displayName);
+        }
+        else {
+            this.bodyFontDisplayName("Default");
+        }
+
+        const fonts = Object.keys(styles.fonts).map(key => styles.fonts[key]);
+        this.fonts(fonts);
+
+        const colors = Object.keys(styles.colors).map(key => styles.colors[key]);
+        this.colors(colors);
+
+        const cardVariations = await this.styleService.getComponentVariations("card");
+        this.cards(cardVariations);
+
+        const buttonVariations = await this.styleService.getComponentVariations("button");
+        this.buttons(buttonVariations);
+
+        // this.styles.valueHasMutated();
+
+        this.styles(styles);
     }
 }
