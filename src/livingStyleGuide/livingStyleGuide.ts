@@ -94,8 +94,8 @@ export class LivingStyleGuide {
                 name: "color-editor",
                 params: {
                     selectedColor: color,
-                    onSelect: (color: ColorContract) => {
-                        // this.eventManager.dispatchEvent("onStyleChange");
+                    onSelect: async (color: ColorContract) => {
+                        await this.styleService.updateStyle(color);
                         this.applyChanges();
                     }
                 }
