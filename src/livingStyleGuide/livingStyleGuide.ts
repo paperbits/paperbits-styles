@@ -38,6 +38,7 @@ export class LivingStyleGuide {
         this.selectColor = this.selectColor.bind(this);
         this.removeStyle = this.removeStyle.bind(this);
         this.addFonts = this.addFonts.bind(this);
+        this.addColor = this.addColor.bind(this);
 
         this.styles = ko.observable();
         this.colors = ko.observableArray();
@@ -80,6 +81,7 @@ export class LivingStyleGuide {
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         this.styleService.addColorVariation(variationName);
+        this.applyChanges();
     }
 
     public async removeColor(color: ColorContract): Promise<void> {
