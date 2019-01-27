@@ -1,5 +1,3 @@
-import { BackgroundStylePlugin } from "./plugins/backgroundStylePlugin";
-import { StylePlugin } from "./plugins/stylePlugin";
 /**
  * @license
  * Copyright Paperbits. All Rights Reserved.
@@ -10,6 +8,7 @@ import { StylePlugin } from "./plugins/stylePlugin";
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { StyleModule } from "./styles.module";
 import { StyleEditor } from "./workshops/styleEditor";
+import { StyleGuide } from "./styleGuide/styleGuide";
 import { BoxEditor } from "./workshops/boxes/boxEditor";
 import { ColorSelector, ColorEditor } from "./workshops/colors";
 import { GradientSelector,  GradientEditor } from "./workshops/gradients";
@@ -21,11 +20,13 @@ import { ShadowSelector } from "./workshops/shadows";
 import { ShadowEditor } from "./workshops/shadows/shadowEditor";
 import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
-import { LivingStyleGuide } from "./livingStyleGuide";
-import { StyleableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylable";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylesheet";
+import { BackgroundStylePlugin } from "./plugins/backgroundStylePlugin";
+import { StylePlugin } from "./plugins/stylePlugin";
+import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
+
 
 export class StylingEditModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -44,10 +45,9 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("animationEditor", AnimationEditor);
         injector.bind("styleEditor", StyleEditor);
-        injector.bind("livingStyleGuide", LivingStyleGuide);
+        injector.bind("styleGuide", StyleGuide);
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
-        injector.bindToCollection("autostart", StyleableBindingHandler);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
     }
 }

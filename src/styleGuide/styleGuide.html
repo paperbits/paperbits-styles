@@ -1,0 +1,250 @@
+<div class="living-style-guide container" data-bind="if: styles">
+    <!-- ko with: styles -->
+
+
+    <article>
+        <h2 class="heading">Fonts</h2>
+        <div class="fonts">
+            <!-- ko foreach: { data: $component.fonts, as: 'font' } -->
+            <div class="font" data-bind="stylable: font">
+                <div class="font-sample style-card" data-bind="style: { 'font-family': font.family }">
+                    Abc
+                </div>
+                <div class="font-name" data-bind="text: font.displayName"></div>
+            </div>
+            <!-- /ko -->
+
+            <a href="#" data-bind="click: $component.addFonts">Add fonts</a>
+        </div>
+    </article>
+
+    <article>
+        <h2 class="heading">Typography</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="font-primary">
+                    <div class="font-sample style-card" data-bind="styled: globals.body, stylable: globals.body">
+                        Abc
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <article>
+                    <div class="style-card" data-bind="stylable: globals.h1">
+                        <h1 data-bind="styled: globals.h1">Heading level 1</h1>
+                    </div>
+                    <div class="style-card" data-bind="stylable: globals.h2">
+                        <h2 data-bind="styled: globals.h2">Heading level 2</h2>
+                    </div>
+
+                    <div class="style-card" data-bind="stylable: globals.h3">
+                        <h3 data-bind="styled: globals.h3">Heading level 3</h3>
+                    </div>
+
+                    <div class="style-card" data-bind="stylable: globals.h4">
+                        <h4 data-bind="styled: globals.h4">Heading level 4</h4>
+                    </div>
+
+                    <div class="style-card" data-bind="stylable: globals.h5">
+                        <h5 data-bind="styled: globals.h5">Heading level 5</h5>
+                    </div>
+
+                    <div class="style-card" data-bind="stylable: globals.h5">
+                        <h6 data-bind="styled: globals.h6">Heading level 6</h6>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col">
+                <article>
+                    <div class="style-card" data-bind="stylable: globals.p">
+                        <p data-bind="styled: globals.p">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                            ut
+                            labore
+                            et
+                            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                            nisi ut
+                            aliquip
+                            ex ea
+                            commodo consequat.
+                        </p>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="style-card" data-bind="stylable: globals.a">
+                        <a href="#" data-bind="styled: globals.a">Regular link</a>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="style-card" data-bind="stylable: globals.blockquote">
+                        <blockquote data-bind="styled: globals.blockquote">
+                            Typography is the craft of endowing human language with a durable visual form. <br />
+                            - Robert Bringhurst
+                        </blockquote>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-6">
+                <ul data-bind="styled: globals.ul">
+                    <li>
+                        List item 1
+                    </li>
+                    <li>
+                        List item 2
+                    </li>
+                    <li>
+                        List item 3
+                    </li>
+                    <li>
+                        List item 4
+                    </li>
+                    <li>
+                        List item 5
+                    </li>
+                </ul>
+            </div>
+        </div> -->
+    </article>
+
+    <article>
+        <h2 class="heading">Colors</h2>
+        <div class="samples">
+            <!-- ko foreach: { data: $component.colors, as: 'color' } -->
+            <div class="sample style-card" data-bind="stylable: color">
+                <a href="#" class="sample-color" data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
+                <span class="sample-name" data-bind="text: color.displayName"></span>
+            </div>
+            <!--/ko -->
+            <div class="sample">
+                <a href="#" data-bind="click: $component.addColor">Add color</a>
+            </div>
+        </div>
+    </article>
+
+    <article>
+        <h2 class="heading">Buttons</h2>
+        <div class="row">
+            <div class="col col-md-12 samples">
+                <!--ko foreach: { data: $component.buttons, as: 'button' }-->
+                <div class="sample style-card" data-bind="stylable: button">
+                    <button data-bind="styled: button">Button</button>
+                    <span class="sample-name" data-bind="text: button.displayName"></span>
+                </div>
+                <!--/ko-->
+                <div class="sample">
+                    <a href="#" data-bind="click: $component.addButtonVariation">Add variation</a>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <article>
+        <h2 class="heading">Form controls</h2>
+        <div class="row">
+            <div class="col col-md-3">
+                <div class="style-card" data-bind="stylable: components.formControl.default">
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" class="form-control" value="Input value" data-bind="styled: components.formControl.default" />
+                    </div>
+                    <span class="sample-name" data-bind="text: components.formControl.default.displayName"></span>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col col-md-2 d-flex align-items-center category-name">
+                Disabled
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Label</label>
+                    <input type="text" class="form-control" disabled value="Input value" data-bind="styled: components.formControl.default" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-md-2 d-flex align-items-center category-name">
+                Success
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Label</label>
+                    <input type="text" class="form-control is-valid" value="Input value" data-bind="styled: components.formControl.default" />
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-md-2 d-flex align-items-center category-name">
+                Error
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Label</label>
+                    <input type="text" class="form-control is-invalid" value="Input value" data-bind="styled: components.formControl.default" />
+                    <div class="invalid-feedback">
+                        Please fix input errors.
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- <input type="text" value="Input value" data-bind="styled: components.formControl.default" />
+
+        <textarea data-bind="styled: components.formControl.default">Text area content</textarea> -->
+
+
+    </article>
+
+    <article>
+        <h2 class="heading">Navigation</h2>
+        <nav class="navbar navbar-expand" data-bind="styled: components.navbar.default, stylable: components.navbar.default">
+            <a class="navbar-brand" href="#">
+                <img src="https://cdn.paperbits.io/images/logo.svg" />
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse"></div>
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#" data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">Nav
+                    item</a>
+                <a class="nav-item nav-link active" href="#" data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">Nav
+                    item (Active) <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link disabled" href="#" data-bind="stylable: components.navbar.default.components.navLink,styled: components.navbar.default.components.navLink">Nav
+                    item (Disabled)</a>
+            </div>
+        </nav>
+    </article>
+
+    <article>
+        <h2 class="heading">Cards</h2>
+        <div class="row">
+            <div class="col col-md-4">
+                <!--ko foreach: { data: $component.cards, as: 'card' }-->
+                <div class="style-card" data-bind="stylable: card">
+                    <div data-bind="styled: card">
+                        <h1>Card</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
+                    </div>
+                    <span class="sample-name" data-bind="text: card.displayName"></span>
+                </div>
+                <!--/ko-->
+                <a href="#" data-bind="click: $component.addCardVariation">Add variation</a>
+            </div>
+        </div>
+
+    </article>
+
+    <!-- /ko -->
+</div>

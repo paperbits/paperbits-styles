@@ -13,16 +13,22 @@ export class StyledBindingHandler {
                     return;
                 }
 
+                let classNames: string;
                 const cssObservable = ko.observable();
 
                 if (typeof styleConfig === "string" || styleConfig instanceof String) {
-                    const className = await this.styleCompiler.getClassNameByStyleKeyAsync(<string>styleConfig);
-                    cssObservable(className);
+                    classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(<string>styleConfig);
                 }
                 else {
-                    const classNames = await this.styleCompiler.getClassNamesByStyleConfigAsync(styleConfig);
-                    cssObservable(classNames);
+                    if (styleConfig.key) {
+                        classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(styleConfig.key);
+                    }
+                    else {
+                        classNames = await this.styleCompiler.getClassNamesByStyleConfigAsync(styleConfig);
+                    }
                 }
+
+                cssObservable(classNames);
 
                 ko.applyBindingsToNode(element, { css: cssObservable });
             }
