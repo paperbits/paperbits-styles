@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common";
+import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { IEventManager } from "@paperbits/common/events";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -83,8 +84,9 @@ export class StyleGuide {
 
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
-        this.styleService.addColorVariation(variationName);
-        this.applyChanges();
+        const addedColorKey = await this.styleService.addColorVariation(variationName);
+        const color = await this.styleService.getColorByKey(addedColorKey);
+        this.selectColor(color);
     }
 
     public async removeColor(color: ColorContract): Promise<void> {
@@ -120,6 +122,7 @@ export class StyleGuide {
                     elementStyle: style,
                     onUpdate: () => {
                         this.styleService.updateStyle(style);
+                        this.applyChanges();
                     }
                 }
             },
@@ -133,16 +136,20 @@ export class StyleGuide {
         const componentName = "button";
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
-        await this.styleService.addComponentVariation(componentName, variationName);
-        this.applyChanges();
+        await this.openInEditor(componentName, variationName);
+    }
+
+    private async openInEditor(componentName: string, variationName: string) {
+        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
+        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+        this.selectStyle(addedStyle);
     }
 
     public async addCardVariation(): Promise<void> {
         const componentName = "card";
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
 
-        await this.styleService.addComponentVariation(componentName, variationName);
-        this.applyChanges();
+        await this.openInEditor(componentName, variationName);
     }
 
     public async applyChanges(): Promise<void> {
@@ -161,17 +168,21 @@ export class StyleGuide {
         this.fonts(fonts);
 
         const colors = Object.keys(styles.colors).map(key => styles.colors[key]);
-        this.colors(colors);
+        this.colors(this.sortByDisplayName(colors));
 
         const cardVariations = await this.styleService.getComponentVariations("card");
-        this.cards(cardVariations);
+        this.cards(this.sortByDisplayName(cardVariations));
 
         const buttonVariations = await this.styleService.getComponentVariations("button");
-        this.buttons(buttonVariations);
+        this.buttons(this.sortByDisplayName(buttonVariations));
 
         // this.styles.valueHasMutated();
 
         this.styles(styles);
+    }
+
+    private sortByDisplayName(items: any[]) {
+        return _.sortBy(items, ["displayName"]);
     }
 
 
