@@ -250,7 +250,6 @@ export class StyleCompiler {
         return styleSheet.toString();
     }
 
-
     public getClassNamesByStyleConfig(styleConfig: any): string {
         if (!styleConfig) {
             throw new Error(`Parameter "styleConfig" not specified.`);
@@ -299,12 +298,6 @@ export class StyleCompiler {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
         }
-
-        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
-            return null;
-        }
-
-        // const styles = awa this.getStyles();
 
         const segments = key.split("/");
         const component = segments[1];
@@ -371,10 +364,6 @@ export class StyleCompiler {
     public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
-        }
-
-        if (key.startsWith("globals") && !key.startsWith("globals/text")) {
-            return null;
         }
 
         const styles = await this.styleService.getStyles();
