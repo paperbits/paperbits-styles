@@ -230,20 +230,17 @@
     <article>
         <h2 class="heading">Cards</h2>
         <div class="row">
-            <div class="col col-md-4">
-                <!--ko foreach: { data: $component.cards, as: 'card' }-->
-                <div class="style-card" data-bind="stylable: card">
-                    <div data-bind="styled: card">
-                        <h1>Card</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                    </div>
-                    <span class="sample-name" data-bind="text: card.displayName"></span>
+            <!--ko foreach: { data: $component.cards, as: 'card' }-->
+            <div class="col col-md-4 style-card" data-bind="stylable: card">
+                <div data-bind="styled: card">
+                    <h1>Card</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
                 </div>
-                <!--/ko-->
-                <a href="#" data-bind="click: $component.addCardVariation">Add variation</a>
+                <span class="sample-name" data-bind="text: card.displayName"></span>
             </div>
+            <!--/ko-->
+            <a href="#" class="samples" data-bind="click: $component.addCardVariation">Add variation</a>
         </div>
-
     </article>
 
     <!-- /ko -->

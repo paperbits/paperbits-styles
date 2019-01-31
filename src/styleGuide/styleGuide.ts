@@ -85,6 +85,8 @@ export class StyleGuide {
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         const addedColorKey = await this.styleService.addColorVariation(variationName);
+        this.applyChanges();
+
         const color = await this.styleService.getColorByKey(addedColorKey);
         this.selectColor(color);
     }
@@ -410,31 +412,44 @@ export class StyleGuide {
             };
         }
 
-        if (!style.key.startsWith("fonts/")) {
+        if (style.key.startsWith("colors/")) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
-                    const view: IView = {
-                        heading: style.displayName,
-                        component: {
-                            name: "style-editor",
-                            params: {
-                                elementStyle: style,
-                                onUpdate: () => {
-                                    this.styleService.updateStyle(style);
-                                }
-                            }
-                        },
-                        resize: "vertically horizontally"
-                    };
-
-                    this.viewManager.openViewAsPopup(view);
+                    this.selectColor(style);
                 }
             });
+        } else {
+            if (!style.key.startsWith("fonts/")) {
+                styleContextualEditor.selectionCommands.push({
+                    tooltip: "Edit variation",
+                    iconClass: "paperbits-edit-72",
+                    position: "top right",
+                    color: "#607d8b",
+                    callback: () => {
+                        const view: IView = {
+                            heading: style.displayName,
+                            component: {
+                                name: "style-editor",
+                                params: {
+                                    elementStyle: style,
+                                    onUpdate: () => {
+                                        this.styleService.updateStyle(style);
+                                    }
+                                }
+                            },
+                            resize: "vertically horizontally"
+                        };
+
+                        this.viewManager.openViewAsPopup(view);
+                    }
+                });
+            }
         }
+        
 
         return styleContextualEditor;
     }
