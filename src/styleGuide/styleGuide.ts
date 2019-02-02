@@ -135,23 +135,18 @@ export class StyleGuide {
     }
 
     public async addButtonVariation(): Promise<void> {
-        const componentName = "button";
-        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-
-        await this.openInEditor(componentName, variationName);
-    }
-
-    private async openInEditor(componentName: string, variationName: string) {
-        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
-        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
-        this.selectStyle(addedStyle);
+        await this.openInEditor("button");
     }
 
     public async addCardVariation(): Promise<void> {
-        const componentName = "card";
-        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
+        await this.openInEditor("card");
+    }
 
-        await this.openInEditor(componentName, variationName);
+    private async openInEditor(componentName: string) {
+        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
+        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
+        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+        this.selectStyle(addedStyle);
     }
 
     public async applyChanges(): Promise<void> {
