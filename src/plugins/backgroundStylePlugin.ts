@@ -1,5 +1,6 @@
+
 import * as Utils from "@paperbits/common/utils";
-import { IMediaService } from "@paperbits/common/media";
+import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "./stylePlugin";
 import { StyleService } from "../";
 import { BackgroundContract, ColorContract, LinearGradientContract, getLinearGradientString } from "../contracts";
@@ -9,7 +10,7 @@ export class BackgroundStylePlugin extends StylePlugin {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly mediaService: IMediaService
+        private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         super();
     }
@@ -36,14 +37,14 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (backgroundContract.images && backgroundContract.images.length > 0) {
             for (const image of backgroundContract.images) {
-                const media = await this.mediaService.getMediaByKey(image.sourceKey);
+                const imageUrl = await this.mediaPermalinkResolver.getUrlByTargetKey(image.sourceKey);
 
-                if (!media) {
+                if (!imageUrl) {
                     console.warn(`Unable to set background image. Media with source key ${image.sourceKey} not found.`);
                     continue;
                 }
 
-                backgroundImage.push(`url("${media.downloadUrl}")`);
+                backgroundImage.push(`url("${imageUrl}")`);
                 backgroundPosition.push(image.position || "unset");
                 backgroundSize.push(image.size || "unset");
                 backgroundRepeat.push(image.repeat || "no-repeat");

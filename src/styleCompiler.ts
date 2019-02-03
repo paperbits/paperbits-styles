@@ -1,7 +1,7 @@
 import * as Utils from "@paperbits/common/utils";
 import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
-import { IMediaService } from "@paperbits/common/media";
+import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import {
     StylePlugin,
@@ -36,7 +36,7 @@ export class StyleCompiler {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly mediaService: IMediaService,
+        private readonly mediaPermalinkResolver: IPermalinkResolver,
     ) {
         this.plugins = {};
     }
@@ -63,7 +63,7 @@ export class StyleCompiler {
         this.plugins["margin"] = new MarginStylePlugin();
         this.plugins["border"] = new BorderStylePlugin();
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.mediaService);
+        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.mediaPermalinkResolver);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
