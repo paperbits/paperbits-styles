@@ -1,8 +1,8 @@
 <div class="form-group form-group-collapsible">
-    <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Manage background settings inside an element'"></button>
     <label class="form-label">
         <a href="#" class="form-group-toggle" data-bind="collapse: '#backgroundCollapse'"></a>
         <b>Background</b>
+        <button class="btn btn-info" type="button" data-bind="infoMessageToggle: 'Manage background'"></button>
     </label>
 
     <div id="backgroundCollapse" class="collapse form-group-collapse">
@@ -68,13 +68,14 @@
         </div>
 
         <!-- ko if: sourceKey() -->
-        <label class="form-label">Background picture sizing</label>
+        <label class="form-label">
+            Background picture sizing
+            <button class="btn btn-info" type="button" data-bind="infoMessageToggle: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Rezise the background image to make sure the image is fully visible.</p>'"></button>
+        </label>
         <div class="form-group">
-            <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Fit the image in the view'"></button>
             <label class="form-label">
                 <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
             </label>
-            <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Fill the view with the image'"></button>
             <label class="form-label">
                 <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
             </label>
