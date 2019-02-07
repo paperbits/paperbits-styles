@@ -1,4 +1,5 @@
 <div class="form-group form-group-collapsible">
+    <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Manage background settings inside an element'"></button>
     <label class="form-label">
         <a href="#" class="form-group-toggle" data-bind="collapse: '#backgroundCollapse'"></a>
         <b>Background</b>
@@ -67,13 +68,13 @@
         </div>
 
         <!-- ko if: sourceKey() -->
-        <label class="form-label">
-            <span class="help"></span>Background picture sizing
-        </label>
+        <label class="form-label">Background picture sizing</label>
         <div class="form-group">
+            <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Fit the image in the view'"></button>
             <label class="form-label">
                 <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
             </label>
+            <button class="btn info-icon-btn" type="button" data-bind="infoMessageToggle: 'Fill the view with the image'"></button>
             <label class="form-label">
                 <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
             </label>
