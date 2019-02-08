@@ -6,7 +6,7 @@ import { GoogleFontContract } from "./googleFontsParser";
 
 export class GoogleFont {
     public identifier: string;
-    public preview: KnockoutObservable<any>;
+    public preview: ko.Observable<any>;
     public displayName: string;
     public family: string;
 

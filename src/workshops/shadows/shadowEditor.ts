@@ -13,11 +13,11 @@ const inheritLabel = "(Inherit)";
     injectable: "shadowEditor"
 })
 export class ShadowEditor {
-    public shadowKey: KnockoutObservable<string>;
-    public displayName: KnockoutObservable<string>;
+    public shadowKey: ko.Observable<string>;
+    public displayName: ko.Observable<string>;
 
     @Param()
-    public readonly shadow: KnockoutObservable<any>;
+    public readonly shadow: ko.Observable<any>;
 
     @Event()
     public readonly onUpdate: (shadow) => void;

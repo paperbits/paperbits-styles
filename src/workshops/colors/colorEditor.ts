@@ -10,11 +10,11 @@ import { ColorContract } from "../../contracts/colorContract";
     injectable: "colorEditor"
 })
 export class ColorEditor {
-    public colorName: KnockoutObservable<string>;
-    public colorValue: KnockoutObservable<string>;
+    public colorName: ko.Observable<string>;
+    public colorValue: ko.Observable<string>;
 
     @Param()
-    public readonly selectedColor: KnockoutObservable<ColorContract>;
+    public readonly selectedColor: ko.Observable<ColorContract>;
 
     @Event()
     public readonly onSelect: (color: ColorContract) => void;

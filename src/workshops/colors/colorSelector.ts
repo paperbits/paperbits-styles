@@ -11,12 +11,12 @@ import { ColorContract } from "../../contracts/colorContract";
 })
 export class ColorSelector {
     @Param()
-    public readonly selectedColor: KnockoutObservable<ColorContract>;
+    public readonly selectedColor: ko.Observable<ColorContract>;
 
     @Event()
     public readonly onSelect: (color: ColorContract) => void;
 
-    public colors: KnockoutObservableArray<ColorContract>;
+    public colors: ko.ObservableArray<ColorContract>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadColors = this.loadColors.bind(this);

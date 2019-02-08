@@ -27,13 +27,13 @@ jss.setup(opts);
 })
 export class GoogleFonts {
     @Param()
-    public readonly selectedFont: KnockoutObservable<FontContract>;
+    public readonly selectedFont: ko.Observable<FontContract>;
 
     @Event()
     public readonly onSelect: (font: FontContract) => void;
 
-    public fonts: KnockoutObservableArray<GoogleFont>;
-    public searchPattern: KnockoutObservable<string>;
+    public fonts: ko.ObservableArray<GoogleFont>;
+    public searchPattern: ko.Observable<string>;
 
     private loadedContracts: GoogleFontContract[];
     private searchTimeout;

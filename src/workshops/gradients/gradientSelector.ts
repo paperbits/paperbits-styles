@@ -12,12 +12,12 @@ import { LinearGradientContract, getLinearGradientString } from "../../contracts
 })
 export class GradientSelector {
     @Param()
-    public readonly selectedGradient: KnockoutObservable<LinearGradientContract>;
+    public readonly selectedGradient: ko.Observable<LinearGradientContract>;
 
     @Event()
     public readonly onSelect: (gradient: LinearGradientContract) => void;
 
-    public gradients: KnockoutObservableArray<GradientOption>;
+    public gradients: ko.ObservableArray<GradientOption>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadGradients = this.loadGradients.bind(this);

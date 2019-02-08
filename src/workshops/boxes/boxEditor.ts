@@ -10,28 +10,28 @@ import { BoxContract } from "../../contracts";
     injectable: "boxEditor"
 })
 export class BoxEditor {
-    public marginTop: KnockoutObservable<any>;
-    public marginLeft: KnockoutObservable<any>;
-    public marginRight: KnockoutObservable<any>;
-    public marginBottom: KnockoutObservable<any>;
+    public marginTop: ko.Observable<any>;
+    public marginLeft: ko.Observable<any>;
+    public marginRight: ko.Observable<any>;
+    public marginBottom: ko.Observable<any>;
 
-    public borderTop: KnockoutObservable<any>;
-    public borderLeft: KnockoutObservable<any>;
-    public borderRight: KnockoutObservable<any>;
-    public borderBottom: KnockoutObservable<any>;
+    public borderTop: ko.Observable<any>;
+    public borderLeft: ko.Observable<any>;
+    public borderRight: ko.Observable<any>;
+    public borderBottom: ko.Observable<any>;
 
-    public paddingTop: KnockoutObservable<any>;
-    public paddingLeft: KnockoutObservable<any>;
-    public paddingRight: KnockoutObservable<any>;
-    public paddingBottom: KnockoutObservable<any>;
+    public paddingTop: ko.Observable<any>;
+    public paddingLeft: ko.Observable<any>;
+    public paddingRight: ko.Observable<any>;
+    public paddingBottom: ko.Observable<any>;
 
-    public topLeftRadius: KnockoutObservable<any>;
-    public topRightRadius: KnockoutObservable<any>;
-    public bottomLeftRadius: KnockoutObservable<any>;
-    public bottomRightRadius: KnockoutObservable<any>;
+    public topLeftRadius: ko.Observable<any>;
+    public topRightRadius: ko.Observable<any>;
+    public bottomLeftRadius: ko.Observable<any>;
+    public bottomRightRadius: ko.Observable<any>;
 
     @Param()
-    public elementStyle: KnockoutObservable<BoxContract>;
+    public elementStyle: ko.Observable<BoxContract>;
 
     @Event()
     public onUpdate: (contract: BoxContract) => void;

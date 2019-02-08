@@ -12,12 +12,12 @@ import { ShadowContract } from "../../contracts/shadowContract";
 })
 export class ShadowSelector {
     @Param()
-    public readonly selectedShadow: KnockoutObservable<ShadowContract>;
+    public readonly selectedShadow: ko.Observable<ShadowContract>;
 
     @Event()
     public readonly onSelect: (shadow: ShadowContract) => void;
 
-    public shadows: KnockoutObservableArray<ShadowContract>;
+    public shadows: ko.ObservableArray<ShadowContract>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadShadows = this.loadShadows.bind(this);

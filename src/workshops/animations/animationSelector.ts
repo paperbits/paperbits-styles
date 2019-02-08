@@ -12,12 +12,12 @@ import { AnimationContract } from "../../contracts/animationContract";
 })
 export class AnimationSelector {
     @Param()
-    public readonly selectedAnimation: KnockoutObservable<AnimationContract>;
+    public readonly selectedAnimation: ko.Observable<AnimationContract>;
 
     @Event()
     public readonly onSelect: (animation: AnimationContract) => void;
 
-    public animations: KnockoutObservableArray<AnimationContract>;
+    public animations: ko.ObservableArray<AnimationContract>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadAnimations = this.loadAnimations.bind(this);

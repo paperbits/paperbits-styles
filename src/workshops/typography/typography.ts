@@ -14,18 +14,18 @@ const inheritLabel = "(Inherit)";
     injectable: "typography"
 })
 export class Typography {
-    public fontKey: KnockoutObservable<any>;
-    public fontSize: KnockoutObservable<any>;
-    public fontWeight: KnockoutObservable<any>;
-    public fontStyle: KnockoutObservable<any>;
-    public lineHeight: KnockoutObservable<any>;
-    public colorKey: KnockoutObservable<any>;
-    public shadowKey: KnockoutObservable<any>;
-    public textAlign: KnockoutObservable<any>;
-    public textTransform: KnockoutObservable<any>;
-    public fontName: KnockoutObservable<string>;
-    public colorName: KnockoutObservable<string>;
-    public shadowName: KnockoutObservable<string>;
+    public fontKey: ko.Observable<any>;
+    public fontSize: ko.Observable<any>;
+    public fontWeight: ko.Observable<any>;
+    public fontStyle: ko.Observable<any>;
+    public lineHeight: ko.Observable<any>;
+    public colorKey: ko.Observable<any>;
+    public shadowKey: ko.Observable<any>;
+    public textAlign: ko.Observable<any>;
+    public textTransform: ko.Observable<any>;
+    public fontName: ko.Observable<string>;
+    public colorName: ko.Observable<string>;
+    public shadowName: ko.Observable<string>;
 
     public textTransformOptions = [
         { value: undefined, text: "(Inherit)" },
@@ -35,7 +35,7 @@ export class Typography {
     ];
 
     @Param()
-    public typography: KnockoutObservable<TypographyContract>;
+    public typography: ko.Observable<TypographyContract>;
 
     @Event()
     public onUpdate: (contract: TypographyContract) => void;

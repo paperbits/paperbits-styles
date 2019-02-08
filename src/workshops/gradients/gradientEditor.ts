@@ -10,9 +10,9 @@ import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradi
     injectable: "gradientEditor"
 })
 export class GradientEditor {
-    public readonly direction: KnockoutObservable<number>;
-    public readonly colorStops: KnockoutObservableArray<LinearGradientColorStopContract>;
-    public readonly gradientPreview: KnockoutObservable<Object>;
+    public readonly direction: ko.Observable<number>;
+    public readonly colorStops: ko.ObservableArray<LinearGradientColorStopContract>;
+    public readonly gradientPreview: ko.Observable<Object>;
 
     constructor() {
         this.initialize = this.initialize.bind(this);

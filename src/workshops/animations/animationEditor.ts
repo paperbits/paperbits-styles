@@ -13,13 +13,13 @@ const inheritLabel = "(Inherit)";
     injectable: "animationEditor"
 })
 export class AnimationEditor {
-    public animationKey: KnockoutObservable<string>;
-    public displayName: KnockoutObservable<string>;
-    public iterationCount: KnockoutObservable<string | number>;
-    public duration: KnockoutObservable<string | number>;
+    public animationKey: ko.Observable<string>;
+    public displayName: ko.Observable<string>;
+    public iterationCount: ko.Observable<string | number>;
+    public duration: ko.Observable<string | number>;
 
     @Param()
-    public readonly animation: KnockoutObservable<any>;
+    public readonly animation: ko.Observable<any>;
 
     @Event()
     public readonly onUpdate: (animation) => void;

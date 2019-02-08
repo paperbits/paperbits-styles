@@ -14,19 +14,19 @@ import { BackgroundContract, ColorContract, LinearGradientContract } from "../..
     injectable: "background"
 })
 export class Background {
-    public readonly color: KnockoutObservable<string>;
-    public readonly colorKey: KnockoutObservable<string>;
-    public readonly gradientKey: KnockoutObservable<string>;
-    public readonly source: KnockoutObservable<string>;
-    public readonly sourceKey: KnockoutObservable<string>;
-    public readonly repeat: KnockoutObservable<string>;
-    public readonly size: KnockoutObservable<string>;
-    public readonly position: KnockoutObservable<string>;
+    public readonly color: ko.Observable<string>;
+    public readonly colorKey: ko.Observable<string>;
+    public readonly gradientKey: ko.Observable<string>;
+    public readonly source: ko.Observable<string>;
+    public readonly sourceKey: ko.Observable<string>;
+    public readonly repeat: ko.Observable<string>;
+    public readonly size: ko.Observable<string>;
+    public readonly position: ko.Observable<string>;
 
-    public readonly backgroundPreview: KnockoutObservable<Object>;
+    public readonly backgroundPreview: ko.Observable<Object>;
 
     @Param()
-    public background: KnockoutObservable<BackgroundContract>;
+    public background: ko.Observable<BackgroundContract>;
 
     @Event()
     public onUpdate: (contract: BackgroundContract) => void;

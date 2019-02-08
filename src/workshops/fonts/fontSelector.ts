@@ -13,14 +13,14 @@ import { FontContract } from "../../contracts/fontContract";
 })
 export class FontSelector {
     @Param()
-    public readonly selectedFont: KnockoutObservable<FontContract>;
+    public readonly selectedFont: ko.Observable<FontContract>;
 
     @Event()
     public readonly onSelect: (font: FontContract) => void;
 
-    public fonts: KnockoutObservableArray<FontContract>;
+    public fonts: ko.ObservableArray<FontContract>;
 
-    public compiledFontStyles: KnockoutObservable<string>;
+    public compiledFontStyles: ko.Observable<string>;
 
     constructor(
         private readonly styleService: StyleService,

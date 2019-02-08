@@ -19,13 +19,13 @@ export interface ElementStyle {
     injectable: "styleGuide"
 })
 export class StyleGuide {
-    public styles: KnockoutObservable<any>;
-    public textBlocks: KnockoutObservableArray<any>;
-    public buttons: KnockoutObservableArray<any>;
-    public cards: KnockoutObservableArray<any>;
-    public fonts: KnockoutObservableArray<FontContract>;
-    public colors: KnockoutObservableArray<ColorContract>;
-    public bodyFontDisplayName: KnockoutObservable<string>;
+    public styles: ko.Observable<any>;
+    public textBlocks: ko.ObservableArray<any>;
+    public buttons: ko.ObservableArray<any>;
+    public cards: ko.ObservableArray<any>;
+    public fonts: ko.ObservableArray<FontContract>;
+    public colors: ko.ObservableArray<ColorContract>;
+    public bodyFontDisplayName: ko.Observable<string>;
 
     constructor(
         private readonly styleService: StyleService,

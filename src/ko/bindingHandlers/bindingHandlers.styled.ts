@@ -30,7 +30,7 @@ export class StyledBindingHandler {
 
                 cssObservable(classNames);
 
-                ko.applyBindingsToNode(element, { css: cssObservable });
+                ko.applyBindingsToNode(element, { css: cssObservable }, null);
             }
         };
     }

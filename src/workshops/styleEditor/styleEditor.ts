@@ -11,17 +11,17 @@ import { BoxContract, ColorContract, AnimationContract, ShadowContract, Typograp
 })
 export class StyleEditor {
     @Param()
-    public elementStyle: any; // KnockoutObservable<any>;
+    public elementStyle: any; // ko.Observable<any>;
 
     @Param()
-    public styleKey: KnockoutObservable<string>;
+    public styleKey: ko.Observable<string>;
 
     @Event()
     public onUpdate: (contract: any) => void;
 
-    public styleName: KnockoutObservable<string>;
+    public styleName: ko.Observable<string>;
 
-    public readonly backgroundHasPicture: KnockoutComputed<boolean>;
+    public readonly backgroundHasPicture: ko.Computed<boolean>;
 
     constructor() {
         this.initialize = this.initialize.bind(this);
