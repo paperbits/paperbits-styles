@@ -23,10 +23,6 @@ export class ShadowEditor {
     public readonly onUpdate: (shadow) => void;
 
     constructor(private readonly styleService: StyleService) {
-        this.applyChanges = this.applyChanges.bind(this);
-        this.loadShadows = this.loadShadows.bind(this);
-        this.onShadowSelected = this.onShadowSelected.bind(this);
-
         this.shadow = ko.observable();
         this.shadowKey = ko.observable();
         this.displayName = ko.observable();

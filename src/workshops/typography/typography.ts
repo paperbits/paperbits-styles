@@ -41,16 +41,7 @@ export class Typography {
     public onUpdate: (contract: TypographyContract) => void;
 
     constructor(private readonly styleService: StyleService) {
-        this.initialize = this.initialize.bind(this);
-        this.fillout = this.fillout.bind(this);
-        this.onFontSelected = this.onFontSelected.bind(this);
-        this.onColorSelected = this.onColorSelected.bind(this);
-        this.onShadowSelected = this.onShadowSelected.bind(this);
-        this.applyChanges = this.applyChanges.bind(this);
-        this.toggleBold = this.toggleBold.bind(this);
-        this.toggleItalic = this.toggleItalic.bind(this);
-
-        this.typography = ko.observable();
+         this.typography = ko.observable();
         this.fontKey = ko.observable();
         this.fontSize = ko.observable();
         this.fontWeight = ko.observable();

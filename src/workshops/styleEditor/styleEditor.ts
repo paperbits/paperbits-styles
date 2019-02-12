@@ -24,20 +24,13 @@ export class StyleEditor {
     public readonly backgroundHasPicture: ko.Computed<boolean>;
 
     constructor() {
-        this.initialize = this.initialize.bind(this);
-        this.onStyleNameUpdate = this.onStyleNameUpdate.bind(this);
-        this.onTypographyUpdate = this.onTypographyUpdate.bind(this);
-        this.onBoxModelUpdate = this.onBoxModelUpdate.bind(this);
-        this.onBackgroundUpdate = this.onBackgroundUpdate.bind(this);
-        this.onShadowUpdate = this.onShadowUpdate.bind(this);
-        this.onAnimationUpdate = this.onAnimationUpdate.bind(this);
         this.styleName = ko.observable("New style");
-        this.styleName.subscribe(this.onStyleNameUpdate);
     }
 
     @OnMounted()
     public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
+        this.styleName.subscribe(this.onStyleNameUpdate);
     }
 
     public onStyleNameUpdate(name: string): void {

@@ -20,9 +20,6 @@ export class AnimationSelector {
     public animations: ko.ObservableArray<AnimationContract>;
 
     constructor(private readonly styleService: StyleService) {
-        this.loadAnimations = this.loadAnimations.bind(this);
-        this.selectAnimation = this.selectAnimation.bind(this);
-
         this.animations = ko.observableArray();
         this.selectedAnimation = ko.observable();
     }
