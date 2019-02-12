@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { IEventManager } from "@paperbits/common/events";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { IComponent, IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextualEditor, ISplitterConfig } from "@paperbits/common/ui";
+import { IComponent, IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet, ISplitterConfig } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract } from "../contracts";
 
@@ -19,6 +19,16 @@ export interface ElementStyle {
     injectable: "styleGuide"
 })
 export class StyleGuide {
+    private activeHighlightedElement: HTMLElement;
+    private scrolling: boolean;
+    private scrollTimeout: any;
+    private pointerX: number;
+    private pointerY: number;
+    private selectedContextualEditor: IContextCommandSet;
+    private actives: object = {};
+    private ownerDocument: Document;
+    private selectedStyle;
+
     public styles: ko.Observable<any>;
     public textBlocks: ko.ObservableArray<any>;
     public buttons: ko.ObservableArray<any>;
@@ -347,15 +357,7 @@ export class StyleGuide {
 
 
 
-    private activeHighlightedElement: HTMLElement;
-    private scrolling: boolean;
-    private scrollTimeout: any;
-    private pointerX: number;
-    private pointerY: number;
-    private selectedContextualEditor: IContextualEditor;
-    private actives: object = {};
-    private ownerDocument: Document;
-    private selectedStyle;
+
 
     private onPointerMove(event: MouseEvent): void {
         event.preventDefault();
@@ -386,8 +388,8 @@ export class StyleGuide {
     }
 
 
-    private getContextualEditor(style): IContextualEditor {
-        const styleContextualEditor: IContextualEditor = {
+    private getContextualEditor(style): IContextCommandSet {
+        const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
             deleteCommand: null,
             selectionCommands: []
@@ -400,9 +402,29 @@ export class StyleGuide {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
                 color: "#607d8b",
-                callback: () => {
-                    this.removeStyle(style);
-                    this.viewManager.clearContextualEditors();
+                component: {
+                    name: "confirmation",
+                    params: {
+                        getMessage: async () => {
+                            const references = await this.styleService.checkStyleIsInUse(style.key);
+                            const styleNames = references.map(x => x.displayName).join(`", "`);
+
+                            let message = `Are you sure you want to delete this style?`;
+
+                            if (styleNames) {
+                                message += ` It is referenced by "${styleNames}".`;
+                            }
+
+                            return message;
+                        },
+                        onConfirm: async () => {
+                            this.removeStyle(style);
+                            this.viewManager.clearContextualEditors();
+                        },
+                        onDecline: () => {
+                            this.viewManager.clearContextualEditors();
+                        }
+                    }
                 }
             };
         }
@@ -444,7 +466,7 @@ export class StyleGuide {
                 });
             }
         }
-        
+
 
         return styleContextualEditor;
     }

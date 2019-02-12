@@ -10,6 +10,7 @@ import { ColorContract } from "../../contracts/colorContract";
     injectable: "colorEditor"
 })
 export class ColorEditor {
+    private selectTimeout: any;
     public colorName: ko.Observable<string>;
     public colorValue: ko.Observable<string>;
 
@@ -39,10 +40,21 @@ export class ColorEditor {
     }
 
     public onColorChange(): void {
-        const colorContract = this.selectedColor();
-        colorContract.value  = this.colorValue();
-        colorContract.displayName = this.colorName();
+        const color = this.selectedColor();
+        color.value = this.colorValue();
+        color.displayName = this.colorName();
 
-        this.onSelect(colorContract);
+        clearTimeout(this.selectTimeout);
+        this.selectTimeout = setTimeout(() => this.scheduleColorUpdate(color), 600);
+    }
+
+    private scheduleColorUpdate(color: ColorContract): void {
+        if (this.selectedColor) {
+            this.selectedColor(color);
+        }
+
+        if (this.onSelect) {
+            this.onSelect(color);
+        }
     }
 }

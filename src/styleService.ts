@@ -133,4 +133,37 @@ export class StyleService {
         this.objectStorage.deleteObject(`${stylesPath}/${styleKey}`);
         this.eventManager.dispatchEvent("onStyleChange");
     }
+
+    public async checkStyleIsInUse(styleKey: string): Promise<any[]> {
+        if (!styleKey) {
+            throw new Error(`Parameter "styleKey" not specified.`);
+        }
+
+        const styles = await this.getStyles();
+        const style = Utils.getObjectAt(styleKey, styles);
+
+        const referencedStyles = Utils.findNodesRecursively((node: any) => {
+            let found = false;
+
+            if (node !== style && node.displayName) {
+                const res = Utils.findNodesRecursively((styleNode: any) => {
+                    let f = false;
+                    Object.keys(styleNode).forEach(y => {
+                        if (styleNode[y] === styleKey) {
+                            f = true;
+                        }
+                    });
+                    return f;
+                }, node);
+
+                if (res.length > 0) {
+                    found = true;
+                }
+            }
+
+            return found;
+        }, styles);
+
+        return referencedStyles;
+    }
 }
