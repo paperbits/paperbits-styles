@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common";
+import * as Objects from "@paperbits/common";
 import template from "./shadowEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
@@ -35,7 +35,7 @@ export class ShadowEditor {
         if (shadow) {
             const styles = await this.styleService.getStyles();
 
-            const amimationContract = Utils.getObjectAt<ShadowContract>(shadow.shadowKey, styles);
+            const amimationContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, styles);
             this.displayName(amimationContract.displayName);
 
             this.shadowKey(shadow.shadowKey);

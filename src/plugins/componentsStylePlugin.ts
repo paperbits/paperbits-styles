@@ -1,9 +1,8 @@
-import * as Utils from "@paperbits/common/utils";
 import { StylePlugin } from "./stylePlugin";
 import { StyleCompiler } from "..";
 
 export class ComponentsStylePlugin extends StylePlugin {
-    public displayName = "Components";
+    public readonly name = "components";
 
     constructor(private readonly styleCompiler: StyleCompiler) {
         super();

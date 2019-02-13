@@ -1,4 +1,5 @@
 import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common/objects";
 import { BreakpointValues } from "@paperbits/common/styles";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { IEventManager } from "@paperbits/common/events";
@@ -24,13 +25,14 @@ export class StyleService {
 
     public async getColorByKey(colorKey: string): Promise<ColorContract> {
         const styles = await this.getStyles();
-        return Utils.getObjectAt<ColorContract>(colorKey, styles);
+        return Objects.getObjectAt<ColorContract>(colorKey, styles);
     }
 
     public async addColorVariation(variationName: string): Promise<string> {
         const styles = await this.getStyles();
-        const newColor: any = Utils.clone(styles["colors"]["default"]);
+        const newColor: any = Objects.clone(styles["colors"]["default"]);
         newColor.key = `colors/${variationName}`;
+        newColor.displayName = "< Unnamed >";
 
         styles["colors"][variationName] = newColor;
 
@@ -42,8 +44,9 @@ export class StyleService {
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation: any = Utils.clone(styles["components"][componentName]["default"]);
+        const newVariation: any = Objects.clone(styles["components"][componentName]["default"]);
         newVariation.key = `components/${componentName}/${variationName}`;
+        newVariation.displayName = "< Unnammed >";
 
         styles["components"][componentName][variationName] = newVariation;
 
@@ -67,7 +70,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        Utils.mergeDeepAt(style.key, styles, style);
+        Objects.mergeDeepAt(style.key, styles, style);
         await this.updateStyles(styles);
     }
 
@@ -112,7 +115,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        Utils.mergeDeepAt(instanceKey, styles, instanceStyles);
+        Objects.mergeDeepAt(instanceKey, styles, instanceStyles);
         this.updateStyles(styles);
         this.eventManager.dispatchEvent("onStyleChange");
     }
@@ -123,7 +126,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        return Utils.getObjectAt<ColorContract>(styleKey, styles);
+        return Objects.getObjectAt<ColorContract>(styleKey, styles);
     }
 
     public async removeStyle(styleKey: string): Promise<void> {
@@ -140,7 +143,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        const style = Utils.getObjectAt(styleKey, styles);
+        const style = Objects.getObjectAt(styleKey, styles);
 
         const referencedStyles = Utils.findNodesRecursively((node: any) => {
             let found = false;

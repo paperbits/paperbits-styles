@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common";
+import * as Objects from "@paperbits/common";
 import template from "./typography.html";
 import { StyleService } from "../../styleService";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -64,7 +64,7 @@ export class Typography {
         const styles = await this.styleService.getStyles();
 
         if (typographyContract.fontKey) {
-            const fontContract = Utils.getObjectAt<FontContract>(typographyContract.fontKey, styles);
+            const fontContract = Objects.getObjectAt<FontContract>(typographyContract.fontKey, styles);
 
             if (fontContract) {
                 this.fontName(fontContract.displayName);
@@ -76,7 +76,7 @@ export class Typography {
         }
 
         if (typographyContract.colorKey) {
-            const colorContract = Utils.getObjectAt<FontContract>(typographyContract.colorKey, styles);
+            const colorContract = Objects.getObjectAt<FontContract>(typographyContract.colorKey, styles);
 
             if (colorContract) {
                 this.colorName(colorContract.displayName);
@@ -93,7 +93,7 @@ export class Typography {
         this.textTransform(typographyContract.textTransform);
 
         if (typographyContract.shadowKey) {
-            const shadowContract = Utils.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
+            const shadowContract = Objects.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
 
             if (shadowContract) {
                 this.shadowName(shadowContract.displayName);

@@ -2,7 +2,7 @@ import { StylePlugin } from "./stylePlugin";
 import { StyleCompiler } from "..";
 
 export class StatesStylePlugin extends StylePlugin {
-    public displayName = "States";
+    public name = "states";
 
     constructor(private readonly styleCompiler: StyleCompiler) {
         super();

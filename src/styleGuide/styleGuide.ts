@@ -1,10 +1,11 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common";
+import * as Objects from "@paperbits/common/objects";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { IEventManager } from "@paperbits/common/events";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { IComponent, IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet, ISplitterConfig } from "@paperbits/common/ui";
+import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract } from "../contracts";
 
@@ -24,10 +25,8 @@ export class StyleGuide {
     private scrollTimeout: any;
     private pointerX: number;
     private pointerY: number;
-    private selectedContextualEditor: IContextCommandSet;
     private actives: object = {};
     private ownerDocument: Document;
-    private selectedStyle;
 
     public styles: ko.Observable<any>;
     public textBlocks: ko.ObservableArray<any>;
@@ -42,16 +41,6 @@ export class StyleGuide {
         private readonly viewManager: IViewManager,
         private readonly eventManager: IEventManager
     ) {
-        this.loadStyles = this.loadStyles.bind(this);
-        this.addButtonVariation = this.addButtonVariation.bind(this);
-        this.addCardVariation = this.addCardVariation.bind(this);
-        this.applyChanges = this.applyChanges.bind(this);
-        this.selectColor = this.selectColor.bind(this);
-        this.removeStyle = this.removeStyle.bind(this);
-        this.addFonts = this.addFonts.bind(this);
-        this.addColor = this.addColor.bind(this);
-        this.onPointerDown = this.onPointerDown.bind(this);
-
         this.styles = ko.observable();
         this.colors = ko.observableArray();
         this.fonts = ko.observableArray([]);
@@ -157,12 +146,14 @@ export class StyleGuide {
         const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
         this.selectStyle(addedStyle);
+
+        this.applyChanges();
     }
 
     public async applyChanges(): Promise<void> {
         const styles = await this.styleService.getStyles();
 
-        const bodyFont = Utils.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
+        const bodyFont = Objects.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
 
         if (bodyFont) {
             this.bodyFontDisplayName(bodyFont.displayName);
@@ -246,41 +237,6 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
-    private isModelSelected(binding): boolean {
-        // const selectedElement = this.viewManager.getSelectedElement();
-
-        // if (!selectedElement) {
-        //     return false;
-        // }
-
-        // const selectedBinding = GridHelper.getWidgetBinding(selectedElement.element);
-
-        // if (binding !== selectedBinding) {
-        //     return false;
-        // }
-
-        // return true;
-
-        return false;
-    }
-
-    private isModelBeingEdited(binding): boolean {
-        // const view = this.viewManager.getOpenView();
-
-        // if (!view) {
-        //     return false;
-        // }
-
-        // if (view.component.name !== binding.editor) {
-        //     return false;
-        // }
-
-        // return true;
-
-        return false;
-    }
-
-
     private renderHighlightedElements(): void {
         if (this.scrolling || (this.viewManager.mode !== ViewManagerMode.selecting && this.viewManager.mode !== ViewManagerMode.selected)) {
             return;
@@ -351,13 +307,8 @@ export class StyleGuide {
             contextualEditor.element = element;
 
             this.viewManager.setSelectedElement(config, contextualEditor);
-            this.selectedContextualEditor = contextualEditor;
         }
     }
-
-
-
-
 
     private onPointerMove(event: MouseEvent): void {
         event.preventDefault();
@@ -373,18 +324,6 @@ export class StyleGuide {
         }
 
         this.renderHighlightedElements();
-
-        // switch (this.viewManager.mode) {
-        //     case ViewManagerMode.selecting:
-        //     case ViewManagerMode.selected:
-        //         this.renderHighlightedElements();
-        //         break;
-
-        //     case ViewManagerMode.dragging:
-        //         this.renderDropHandlers();
-
-        //         break;
-        // }
     }
 
 
@@ -396,8 +335,12 @@ export class StyleGuide {
         };
 
         if (!style.key.startsWith("globals/") &&
-            !style.key.startsWith("components/formControl/default") &&
-            !style.key.startsWith("components/navbar/default")
+            style.key !== "colors/default" &&
+            style.key !== "fonts/default" &&
+            style.key !== "components/formControl/default" &&
+            style.key !== "components/button/default" &&
+            style.key !== "components/navbar/default" &&
+            style.key !== "components/card/default"
         ) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",

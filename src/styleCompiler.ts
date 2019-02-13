@@ -1,4 +1,5 @@
 import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common/objects";
 import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
@@ -171,7 +172,7 @@ export class StyleCompiler {
                                 let className = `${componentName}-${variationName}`.replace("-default", "");
 
                                 if (isNested) {
-                                    className = `& .${className}`;
+                                    className = `& .${Utils.camelCaseToKebabCase(className)}`;
                                 }
 
                                 const pluginRules = await plugin.contractToJss(breakpointConfig);
@@ -188,7 +189,7 @@ export class StyleCompiler {
                                 let className = `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
 
                                 if (isNested) {
-                                    className = `& .${className}`;
+                                    className = `& .${Utils.camelCaseToKebabCase(className)}`;
                                 }
 
                                 result[mediaQuerKey][className] = result[mediaQuerKey][className] || {};
@@ -202,7 +203,7 @@ export class StyleCompiler {
                     let className = `${componentName}-${variationName}`.replace("-default", "");
 
                     if (isNested) {
-                        className = `& .${className}`;
+                        className = `& .${Utils.camelCaseToKebabCase(className)}`;
                     }
 
                     const pluginRules = await plugin.contractToJss(pluginConfig);
@@ -366,13 +367,6 @@ export class StyleCompiler {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        const styles = await this.styleService.getStyles();
-        const style = Utils.getObjectAt(key, styles);
-
-        if (style && style["class"]) {
-            return style["class"][breakpoint || "xs"];
-        }
-
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
@@ -395,6 +389,13 @@ export class StyleCompiler {
         }
 
         // TODO: Consider a case: components/navbar/default/components/navlink
+
+        const styles = await this.styleService.getStyles();
+        const style = Objects.getObjectAt(key, styles);
+
+        if (style && style["class"]) {
+            classNames.push(style["class"][breakpoint || "xs"]);
+        }
 
         return classNames.join(" ");
     }

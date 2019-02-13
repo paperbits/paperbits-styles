@@ -1,16 +1,16 @@
-import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, AnimationContract } from "../contracts";
 
 export class AnimationStylePlugin extends StylePlugin {
-    public displayName = "Animation";
+    public name = "animation";
 
     constructor(private readonly themeContract: ThemeContract) {
         super();
     }
 
     public async contractToJss(animation): Promise<Object> {
-        const contract = Utils.getObjectAt<AnimationContract>(animation.animationKey, this.themeContract);
+        const contract = Objects.getObjectAt<AnimationContract>(animation.animationKey, this.themeContract);
 
         const result = {
             animationName: contract.name,

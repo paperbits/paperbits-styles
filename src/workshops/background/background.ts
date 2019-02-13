@@ -1,6 +1,6 @@
 import { BackgroundStylePlugin } from "./../../plugins/backgroundStylePlugin";
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common";
+import * as Objects from "@paperbits/common";
 import template from "./background.html";
 import { StyleService } from "../..";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
@@ -68,7 +68,7 @@ export class Background {
         const styles = await this.styleService.getStyles();
 
         if (backgroundContract.colorKey) {
-            const colorContract = Utils.getObjectAt<ColorContract>(backgroundContract.colorKey, styles);
+            const colorContract = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, styles);
 
             if (colorContract) {
                 this.color(colorContract.value);

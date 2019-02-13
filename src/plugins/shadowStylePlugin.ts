@@ -1,9 +1,9 @@
-import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, ShadowContract } from "../contracts";
 
 export class ShadowStylePlugin extends StylePlugin {
-    public displayName = "Box shadow";
+    public readonly name = "shadow";
 
     constructor(private readonly themeContract: ThemeContract) {
         super();
@@ -14,7 +14,7 @@ export class ShadowStylePlugin extends StylePlugin {
             return {};
         }
 
-        const shadowContract = Utils.getObjectAt<ShadowContract>(shadow.shadowKey, this.themeContract);
+        const shadowContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, this.themeContract);
 
         if (shadowContract) {
             const result = {

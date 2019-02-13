@@ -1,12 +1,12 @@
 
-import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "./stylePlugin";
 import { StyleService } from "../";
 import { BackgroundContract, ColorContract, LinearGradientContract, getLinearGradientString } from "../contracts";
 
 export class BackgroundStylePlugin extends StylePlugin {
-    public displayName = "Background";
+    public readonly name = "background";
 
     constructor(
         private readonly styleService: StyleService,
@@ -25,7 +25,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         const themeContract = await this.styleService.getStyles();
 
         if (backgroundContract.colorKey) {
-            const color = Utils.getObjectAt<ColorContract>(backgroundContract.colorKey, themeContract);
+            const color = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, themeContract);
 
             if (color) {
                 background.color = color.value;
@@ -52,7 +52,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         }
 
         if (backgroundContract.gradientKey) {
-            const gradient = Utils.getObjectAt<LinearGradientContract>(backgroundContract.gradientKey, themeContract);
+            const gradient = Objects.getObjectAt<LinearGradientContract>(backgroundContract.gradientKey, themeContract);
 
             if (gradient) {
                 backgroundImage.push(getLinearGradientString(gradient));

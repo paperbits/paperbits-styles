@@ -3,7 +3,7 @@ import { MarginContract } from "../contracts";
 
 
 export class MarginStylePlugin extends StylePlugin {
-    public displayName = "Margin";
+    public readonly name = "margin";
 
     public async contractToJss(contract: MarginContract): Promise<Object> {
         return {

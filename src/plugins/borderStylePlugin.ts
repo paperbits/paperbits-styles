@@ -2,7 +2,7 @@ import { StylePlugin } from "./stylePlugin";
 import { BorderContract } from "../contracts";
 
 export class BorderStylePlugin extends StylePlugin {
-    public displayName = "Border";
+    public readonly name = "border";
 
     public async contractToJss(contract: BorderContract): Promise<Object> {
         const result = {

@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common";
+import * as Objects from "@paperbits/common";
 import template from "./animationEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
@@ -44,7 +44,7 @@ export class AnimationEditor {
         if (animation) {
             const styles = await this.styleService.getStyles();
 
-            const amimationContract = Utils.getObjectAt<AnimationContract>(animation.animationKey, styles);
+            const amimationContract = Objects.getObjectAt<AnimationContract>(animation.animationKey, styles);
             this.displayName(amimationContract.displayName);
 
             this.animationKey(animation.animationKey);

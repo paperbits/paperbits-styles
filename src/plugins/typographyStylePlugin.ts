@@ -1,9 +1,9 @@
-import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, TypographyContract, FontContract, ColorContract, ShadowContract } from "../contracts";
 
 export class TypographyStylePlugin extends StylePlugin {
-    public displayName = "Typography";
+    public readonly name = "typography";
 
     constructor(private readonly themeContract: ThemeContract) {
         super();
@@ -25,7 +25,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.fontKey) {
-            const fontContract = Utils.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);
+            const fontContract = Objects.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);
 
             if (fontContract) {
                 result["fontFamily"] = fontContract.family;
@@ -40,7 +40,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.colorKey) {
-            const colorContract = Utils.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
+            const colorContract = Objects.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
 
             if (colorContract) {
                 result["color"] = colorContract.value || "transparent";
@@ -51,7 +51,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.shadowKey) {
-            const shadowContract = Utils.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
+            const shadowContract = Objects.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
 
             if (shadowContract) {
                 result["textShadow"] = {

@@ -1,7 +1,5 @@
 <div class="living-style-guide container" data-bind="if: styles">
     <!-- ko with: styles -->
-
-
     <article>
         <h2 class="heading">Fonts</h2>
         <div class="fonts">
@@ -119,7 +117,8 @@
         <div class="samples">
             <!-- ko foreach: { data: $component.colors, as: 'color' } -->
             <div class="sample style-card" data-bind="stylable: color">
-                <a href="#" class="sample-color" data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
+                <a href="#" class="sample-color"
+                    data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
                 <span class="sample-name" data-bind="text: color.displayName"></span>
             </div>
             <!--/ko -->
@@ -153,7 +152,8 @@
                 <div class="style-card" data-bind="stylable: components.formControl.default">
                     <div class="form-group">
                         <label>Label</label>
-                        <input type="text" class="form-control" value="Input value" data-bind="styled: components.formControl.default" />
+                        <input type="text" class="form-control" value="Input value"
+                            data-bind="styled: components.formControl.default" />
                     </div>
                     <span class="sample-name" data-bind="text: components.formControl.default.displayName"></span>
                 </div>
@@ -207,22 +207,26 @@
 
     <article>
         <h2 class="heading">Navigation</h2>
-        <nav class="navbar navbar-expand" data-bind="styled: components.navbar.default, stylable: components.navbar.default">
-            <a class="navbar-brand" href="#">
-                <img src="https://cdn.paperbits.io/images/logo.svg" />
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand"
+            data-bind="styled: components.navbar.default, stylable: components.navbar.default">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse"></div>
             <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#" data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">Nav
-                    item</a>
-                <a class="nav-item nav-link active" href="#" data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">Nav
-                    item (Active) <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link disabled" href="#" data-bind="stylable: components.navbar.default.components.navLink,styled: components.navbar.default.components.navLink">Nav
-                    item (Disabled)</a>
+                <a class="nav-item nav-link" href="#"
+                    data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
+                    Nav item
+                </a>
+                <a class="nav-item nav-link" href="#"
+                    data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
+                    Nav item
+                </a>
+                <a class="nav-item nav-link" href="#"
+                    data-bind="stylable: components.navbar.default.components.navLink,styled: components.navbar.default.components.navLink">
+                    Nav item
+                </a>
             </div>
         </nav>
     </article>
