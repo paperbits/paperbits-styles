@@ -300,6 +300,10 @@ export class StyleCompiler {
             throw new Error(`Parameter "key" not specified.`);
         }
 
+        if (key.startsWith("globals/")) {
+            return null;
+        }
+
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
@@ -367,6 +371,10 @@ export class StyleCompiler {
             throw new Error(`Parameter "key" not specified.`);
         }
 
+        if (key.startsWith("globals/")) {
+            return null;
+        }
+
         const segments = key.split("/");
         const component = segments[1];
         const componentVariation = segments[2];
@@ -389,7 +397,6 @@ export class StyleCompiler {
         }
 
         // TODO: Consider a case: components/navbar/default/components/navlink
-
         const styles = await this.styleService.getStyles();
         const style = Objects.getObjectAt(key, styles);
 
