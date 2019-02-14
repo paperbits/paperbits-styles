@@ -35,8 +35,8 @@ export class ShadowEditor {
         if (shadow) {
             const styles = await this.styleService.getStyles();
 
-            const amimationContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, styles);
-            this.displayName(amimationContract.displayName);
+            const shadowContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, styles);
+            this.displayName(shadowContract.displayName);
 
             this.shadowKey(shadow.shadowKey);
         }
