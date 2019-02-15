@@ -64,7 +64,7 @@ export class StyleGuide {
                 name: "google-fonts",
                 params: {
                     onSelect: () => {
-                        this.viewManager.closeWidgetEditor();
+                        this.viewManager.closeView();
                         this.eventManager.dispatchEvent("onStyleChange");
                         this.applyChanges();
                     }
