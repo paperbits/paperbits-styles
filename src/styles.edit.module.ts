@@ -20,7 +20,7 @@ import { ShadowSelector } from "./workshops/shadows";
 import { ShadowEditor } from "./workshops/shadows/shadowEditor";
 import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
-import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylesheet";
+import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleSheet";
 import { BackgroundStylePlugin } from "./plugins/backgroundStylePlugin";
 import { StylePlugin } from "./plugins/stylePlugin";
 import "./ko/bindingHandlers/bindingHandlers.stylable";
