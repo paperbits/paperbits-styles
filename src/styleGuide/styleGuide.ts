@@ -97,7 +97,7 @@ export class StyleGuide {
 
     public selectColor(color: ColorContract): void {
         const view: IView = {
-            heading: "Color editor",
+            heading: "Color",
             component: {
                 name: "color-editor",
                 params: {
