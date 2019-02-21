@@ -133,7 +133,11 @@ export class StyleService {
         if (!styleKey) {
             throw new Error(`Parameter "styleKey" not specified.`);
         }
-        this.objectStorage.deleteObject(`${stylesPath}/${styleKey}`);
+        
+        const styles = await this.getStyles();
+        Objects.deleteNodeAt(`${styleKey}`, styles);
+        this.objectStorage.updateObject(`${stylesPath}`, styles);
+
         this.eventManager.dispatchEvent("onStyleChange");
     }
 
