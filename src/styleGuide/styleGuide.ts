@@ -363,6 +363,7 @@ export class StyleGuide {
                         onConfirm: async () => {
                             this.removeStyle(style);
                             this.viewManager.clearContextualEditors();
+                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
                         },
                         onDecline: () => {
                             this.viewManager.clearContextualEditors();
