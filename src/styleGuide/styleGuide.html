@@ -12,7 +12,12 @@
             </div>
             <!-- /ko -->
 
-            <a href="#" data-bind="click: $component.addFonts">Add fonts</a>
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addFonts"></button>
+                <div class="style-card-label">
+                    Add font
+                </div>
+            </div>
         </div>
     </article>
 
@@ -119,11 +124,14 @@
             <div class="sample style-card" data-bind="stylable: color">
                 <a href="#" class="sample-color"
                     data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
-                <span class="sample-name" data-bind="text: color.displayName"></span>
+                <span class="style-card-label" data-bind="text: color.displayName"></span>
             </div>
             <!--/ko -->
-            <div class="sample">
-                <a href="#" data-bind="click: $component.addColor">Add color</a>
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addColor"></button>
+                <div class="style-card-label">
+                    Add color
+                </div>
             </div>
         </div>
     </article>
@@ -135,11 +143,14 @@
                 <!--ko foreach: { data: $component.buttons, as: 'button' }-->
                 <div class="sample style-card" data-bind="stylable: button">
                     <button data-bind="styled: button">Button</button>
-                    <span class="sample-name" data-bind="text: button.displayName"></span>
+                    <span class="style-card-label" data-bind="text: button.displayName"></span>
                 </div>
                 <!--/ko-->
-                <div class="sample">
-                    <a href="#" data-bind="click: $component.addButtonVariation">Add variation</a>
+                <div class="style-card style-card-empty">
+                    <button class="btn-round" data-bind="click: $component.addButtonVariation"></button>
+                    <div class="style-card-label">
+                        Add variation
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,7 +166,7 @@
                         <input type="text" class="form-control" value="Input value"
                             data-bind="styled: components.formControl.default" />
                     </div>
-                    <span class="sample-name" data-bind="text: components.formControl.default.displayName"></span>
+                    <span class="style-card-label" data-bind="text: components.formControl.default.displayName"></span>
                 </div>
             </div>
         </div>
@@ -240,10 +251,15 @@
                     <h1>Card</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
                 </div>
-                <span class="sample-name" data-bind="text: card.displayName"></span>
+                <span class="style-card-label" data-bind="text: card.displayName"></span>
             </div>
             <!--/ko-->
-            <a href="#" class="samples" data-bind="click: $component.addCardVariation">Add variation</a>
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addCardVariation"></button>
+                <div class="style-card-label">
+                    Add variation
+                </div>
+            </div>
         </div>
     </article>
 
