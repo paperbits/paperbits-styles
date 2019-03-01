@@ -59,7 +59,7 @@ export class StyleGuide {
 
     public async addFonts(): Promise<void> {
         const view: IView = {
-            heading: "Google fonts",
+            heading: "Fonts",
             component: {
                 name: "google-fonts",
                 params: {

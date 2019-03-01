@@ -4,12 +4,23 @@
             placeholder="Search fonts..." />
     </div>
 </fieldset>
-<fieldset class="form flex-item flex-item-grow list fonts" data-bind="scrollable: { onEndReach: $component.loadNextPage }">
+
+<fieldset class="form flex-item flex-item-grow list fonts"
+    data-bind="scrollable: { onEndReach: $component.loadNextPage }">
     <!-- ko foreach: { data: fonts, as: 'font' } -->
-    <div class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
+    <div class="list-item font-box"
+        data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
         <style data-bind="jss: preview"></style>
-        <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
+        <a href="#" class="font-family"
+            data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
         </a>
     </div>
     <!--/ko -->
 </fieldset>
+
+<div class="flex-item btn-group">
+    <button class="btn" data-bind="click: uploadFont">
+        <i class="paperbits-icon paperbits-square-upload"></i>
+        Upload font
+    </button>
+</div>
