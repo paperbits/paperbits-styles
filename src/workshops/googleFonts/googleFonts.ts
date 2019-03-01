@@ -41,7 +41,7 @@ export class GoogleFonts {
     public searchPattern: ko.Observable<string>;
 
     private loadedContracts: GoogleFontContract[];
-    private searchTimeout;
+    private searchTimeout: any;
 
     constructor(
         private readonly styleService: StyleService,
@@ -113,18 +113,11 @@ export class GoogleFonts {
         // this.working(true);
 
         const styles = await this.styleService.getStyles();
-
         const file = files[0];
-
         const content = await Utils.readFileAsByteArray(file);
         const fontContract = await FontParser.parse(content);
-
-        const identifier = Utils.guid();
-        const contentType = mime.lookup(file.name);
+        const contentType = <string>mime.lookup(file.name);
         const fontVariant = fontContract.variants[0];
-
-        // fontVariant.file = file.name;
-
         const uploadPromise = this.mediaService.createMedia(file.name, content, contentType);
 
         this.viewManager.notifyProgress(uploadPromise, "Styles", `Uploading ${file.name}...`);
@@ -143,6 +136,7 @@ export class GoogleFonts {
         if (this.onSelect) {
             this.onSelect(fontContract);
         }
+
+        // this.working(false);
     }
-    // this.working(false);
 }
