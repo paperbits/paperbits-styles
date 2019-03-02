@@ -26,6 +26,7 @@ import { StylePlugin } from "./plugins/stylePlugin";
 import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
+import { StylesWorkshopSection } from "./workshops/stylesSection";
 
 
 export class StylingEditModule implements IInjectorModule {
@@ -49,5 +50,6 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
+        injector.bindToCollection("workshopSections", StylesWorkshopSection);
     }
 }
