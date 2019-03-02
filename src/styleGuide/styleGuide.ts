@@ -15,7 +15,7 @@ export interface ElementStyle {
 }
 
 @Component({
-    selector: "living-style-guide",
+    selector: "style-guide",
     template: template,
     injectable: "styleGuide"
 })
