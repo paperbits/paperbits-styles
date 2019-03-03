@@ -26,8 +26,12 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="font-primary">
-                    <div class="font-sample style-card" data-bind="styled: globals.body, stylable: globals.body">
-                        Abc
+                    <div class="font-sample style-card" data-bind="stylable: globals.body">
+                        <div class="style-card-body">
+                            <span data-bind="styled: globals.body">
+                                Abc
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,26 +41,38 @@
             <div class="col-md-6">
                 <article>
                     <div class="style-card" data-bind="stylable: globals.h1">
-                        <h1 data-bind="styled: globals.h1">Heading level 1</h1>
+                        <div class="style-card-body">
+                            <h1 data-bind="styled: globals.h1">Heading level 1</h1>
+                        </div>
                     </div>
                     <div class="style-card" data-bind="stylable: globals.h2">
-                        <h2 data-bind="styled: globals.h2">Heading level 2</h2>
+                        <div class="style-card-body">
+                            <h2 data-bind="styled: globals.h2">Heading level 2</h2>
+                        </div>
                     </div>
 
                     <div class="style-card" data-bind="stylable: globals.h3">
-                        <h3 data-bind="styled: globals.h3">Heading level 3</h3>
+                        <div class="style-card-body">
+                            <h3 data-bind="styled: globals.h3">Heading level 3</h3>
+                        </div>
                     </div>
 
                     <div class="style-card" data-bind="stylable: globals.h4">
-                        <h4 data-bind="styled: globals.h4">Heading level 4</h4>
+                        <div class="style-card-body">
+                            <h4 data-bind="styled: globals.h4">Heading level 4</h4>
+                        </div>
                     </div>
 
                     <div class="style-card" data-bind="stylable: globals.h5">
-                        <h5 data-bind="styled: globals.h5">Heading level 5</h5>
+                        <div class="style-card-body">
+                            <h5 data-bind="styled: globals.h5">Heading level 5</h5>
+                        </div>
                     </div>
 
                     <div class="style-card" data-bind="stylable: globals.h5">
-                        <h6 data-bind="styled: globals.h6">Heading level 6</h6>
+                        <div class="style-card-body">
+                            <h6 data-bind="styled: globals.h6">Heading level 6</h6>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -64,32 +80,40 @@
             <div class="col">
                 <article>
                     <div class="style-card" data-bind="stylable: globals.p">
-                        <p data-bind="styled: globals.p">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                            ut
-                            labore
-                            et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                            nisi ut
-                            aliquip
-                            ex ea
-                            commodo consequat.
-                        </p>
+                        <div class="style-card-body">
+                            <p data-bind="styled: globals.p">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                incididunt
+                                ut
+                                labore
+                                et
+                                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                nisi ut
+                                aliquip
+                                ex ea
+                                commodo consequat.
+                            </p>
+                        </div>
                     </div>
                 </article>
 
                 <article>
                     <div class="style-card" data-bind="stylable: globals.a">
-                        <a href="#" data-bind="styled: globals.a">Regular link</a>
+                        <div class="style-card-body">
+                            <a href="#" data-bind="styled: globals.a">Regular link</a>
+                        </div>
                     </div>
                 </article>
 
                 <article>
                     <div class="style-card" data-bind="stylable: globals.blockquote">
-                        <blockquote data-bind="styled: globals.blockquote">
-                            Typography is the craft of endowing human language with a durable visual form. <br />
-                            - Robert Bringhurst
-                        </blockquote>
+                        <div class="style-card-body">
+                            <blockquote data-bind="styled: globals.blockquote">
+                                Typography is the craft of endowing human language with a durable visual form. <br />
+                                - Robert Bringhurst
+                            </blockquote>
+                            div>
+                        </div>
                     </div>
                 </article>
             </div>
@@ -142,7 +166,9 @@
             <div class="col col-md-12 samples">
                 <!--ko foreach: { data: $component.buttons, as: 'button' }-->
                 <div class="sample style-card" data-bind="stylable: button">
-                    <button data-bind="styled: button">Button</button>
+                    <div class="style-card-body">
+                        <button data-bind="styled: button">Button</button>
+                    </div>
                     <span class="style-card-label" data-bind="text: button.displayName"></span>
                 </div>
                 <!--/ko-->
@@ -161,10 +187,12 @@
         <div class="row">
             <div class="col col-md-3">
                 <div class="style-card" data-bind="stylable: components.formControl.default">
-                    <div class="form-group">
-                        <label>Label</label>
-                        <input type="text" class="form-control" value="Input value"
-                            data-bind="styled: components.formControl.default" />
+                    <div class="style-card-body">
+                        <div class="form-group">
+                            <label>Label</label>
+                            <input type="text" class="form-control" value="Input value"
+                                data-bind="styled: components.formControl.default" />
+                        </div>
                     </div>
                     <span class="style-card-label" data-bind="text: components.formControl.default.displayName"></span>
                 </div>
@@ -218,28 +246,32 @@
 
     <article>
         <h2 class="heading">Navigation</h2>
-        <nav class="navbar navbar-expand"
-            data-bind="styled: components.navbar.default, stylable: components.navbar.default">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse"></div>
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#"
-                    data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
-                    Nav item
-                </a>
-                <a class="nav-item nav-link" href="#"
-                    data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
-                    Nav item
-                </a>
-                <a class="nav-item nav-link" href="#"
-                    data-bind="stylable: components.navbar.default.components.navLink,styled: components.navbar.default.components.navLink">
-                    Nav item
-                </a>
+        <div class="style-card" data-bind="stylable: components.navbar.default">
+            <div class="style-card-body">
+                <nav class="navbar navbar-expand" data-bind="styled: components.navbar.default">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse"></div>
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#"
+                            data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
+                            Nav item
+                        </a>
+                        <a class="nav-item nav-link" href="#"
+                            data-bind="stylable: components.navbar.default.components.navLink, styled: components.navbar.default.components.navLink">
+                            Nav item
+                        </a>
+                        <a class="nav-item nav-link" href="#"
+                            data-bind="stylable: components.navbar.default.components.navLink,styled: components.navbar.default.components.navLink">
+                            Nav item
+                        </a>
+                    </div>
+                </nav>
             </div>
-        </nav>
+            <span class="style-card-label" data-bind="text: components.navbar.default.displayName"></span>
+        </div>
     </article>
 
     <article>
@@ -247,9 +279,11 @@
         <div class="row">
             <!--ko foreach: { data: $component.cards, as: 'card' }-->
             <div class="col col-md-4 style-card" data-bind="stylable: card">
-                <div data-bind="styled: card">
-                    <h1>Card</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
+                <div class="style-card-body">
+                    <div data-bind="styled: card">
+                        <h1>Card</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
+                    </div>
                 </div>
                 <span class="style-card-label" data-bind="text: card.displayName"></span>
             </div>

@@ -272,7 +272,8 @@ export class StyleGuide {
             return;
         }
 
-        const style = element["stylable"].style;
+        const stylable = element["stylable"];
+        const style = stylable.style;
 
         if (!style) {
             return;
@@ -292,7 +293,7 @@ export class StyleGuide {
             }
         }
         else {
-            const contextualEditor = this.getContextualEditor(style);
+            const contextualEditor = this.getContextualEditor(stylable);
 
             if (!contextualEditor) {
                 return;
@@ -327,7 +328,9 @@ export class StyleGuide {
     }
 
 
-    private getContextualEditor(style): IContextCommandSet {
+    private getContextualEditor(stylable): IContextCommandSet {
+        const style = stylable.style;
+
         const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
             deleteCommand: null,
@@ -373,6 +376,16 @@ export class StyleGuide {
             };
         }
 
+        styleContextualEditor.selectionCommands.push({
+            tooltip: "Change background",
+            iconClass: "paperbits-drop",
+            position: "top right",
+            color: "#607d8b",
+            callback: () => {
+                stylable.toggleBackground();
+            }
+        });
+
         if (style.key.startsWith("colors/")) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Edit variation",
@@ -383,34 +396,32 @@ export class StyleGuide {
                     this.selectColor(style);
                 }
             });
-        } else {
-            if (!style.key.startsWith("fonts/")) {
-                styleContextualEditor.selectionCommands.push({
-                    tooltip: "Edit variation",
-                    iconClass: "paperbits-edit-72",
-                    position: "top right",
-                    color: "#607d8b",
-                    callback: () => {
-                        const view: IView = {
-                            heading: style.displayName,
-                            component: {
-                                name: "style-editor",
-                                params: {
-                                    elementStyle: style,
-                                    onUpdate: () => {
-                                        this.styleService.updateStyle(style);
-                                    }
-                                }
-                            },
-                            resize: "vertically horizontally"
-                        };
-
-                        this.viewManager.openViewAsPopup(view);
-                    }
-                });
-            }
         }
+        else if (!style.key.startsWith("fonts/")) {
+            styleContextualEditor.selectionCommands.push({
+                tooltip: "Edit variation",
+                iconClass: "paperbits-edit-72",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    const view: IView = {
+                        heading: style.displayName,
+                        component: {
+                            name: "style-editor",
+                            params: {
+                                elementStyle: style,
+                                onUpdate: () => {
+                                    this.styleService.updateStyle(style);
+                                }
+                            }
+                        },
+                        resize: "vertically horizontally"
+                    };
 
+                    this.viewManager.openViewAsPopup(view);
+                }
+            });
+        }
 
         return styleContextualEditor;
     }
@@ -442,7 +453,7 @@ export class StyleGuide {
             current = style;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextualEditor(style);
+            const contextualEditor = this.getContextualEditor(stylable);
 
             highlightColor = contextualEditor.color;
 
