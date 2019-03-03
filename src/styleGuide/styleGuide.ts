@@ -376,15 +376,18 @@ export class StyleGuide {
             };
         }
 
-        styleContextualEditor.selectionCommands.push({
-            tooltip: "Change background",
-            iconClass: "paperbits-drop",
-            position: "top right",
-            color: "#607d8b",
-            callback: () => {
-                stylable.toggleBackground();
-            }
-        });
+        if (!style.key.startsWith("colors/") &&
+            !style.key.startsWith("fonts/")) {
+            styleContextualEditor.selectionCommands.push({
+                tooltip: "Change background",
+                iconClass: "paperbits-drop",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    stylable.toggleBackground();
+                }
+            });
+        }
 
         if (style.key.startsWith("colors/")) {
             styleContextualEditor.selectionCommands.push({
