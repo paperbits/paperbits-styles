@@ -26,6 +26,8 @@ import { StylePlugin } from "./plugins/stylePlugin";
 import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
+import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
+import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 
 

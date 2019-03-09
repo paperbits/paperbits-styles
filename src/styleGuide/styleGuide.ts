@@ -7,12 +7,7 @@ import { IEventManager } from "@paperbits/common/events";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
-import { FontContract, ColorContract } from "../contracts";
-
-export interface ElementStyle {
-    key: string;
-    style: any;
-}
+import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
 
 @Component({
     selector: "style-guide",
@@ -34,6 +29,8 @@ export class StyleGuide {
     public cards: ko.ObservableArray<any>;
     public fonts: ko.ObservableArray<FontContract>;
     public colors: ko.ObservableArray<ColorContract>;
+    public shadows: ko.ObservableArray<ShadowContract>;
+    public gradients: ko.ObservableArray<LinearGradientContract>;
     public bodyFontDisplayName: ko.Observable<string>;
 
     constructor(
@@ -42,7 +39,9 @@ export class StyleGuide {
         private readonly eventManager: IEventManager
     ) {
         this.styles = ko.observable();
-        this.colors = ko.observableArray();
+        this.colors = ko.observableArray([]);
+        this.shadows = ko.observableArray([]);
+        this.gradients = ko.observableArray([]);
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
         this.cards = ko.observableArray([]);
@@ -162,11 +161,17 @@ export class StyleGuide {
             this.bodyFontDisplayName("Default");
         }
 
-        const fonts = Object.keys(styles.fonts).map(key => styles.fonts[key]);
+        const fonts = Object.values(styles.fonts);
         this.fonts(fonts);
 
-        const colors = Object.keys(styles.colors).map(key => styles.colors[key]);
+        const colors = Object.values(styles.colors);
         this.colors(this.sortByDisplayName(colors));
+
+        const gradients = Object.values(styles.gradients);
+        this.gradients(this.sortByDisplayName(gradients));
+
+        const shadows = Object.values(styles.shadows).filter(x => x.key !== "shadows/none");
+        this.shadows(this.sortByDisplayName(shadows));
 
         const cardVariations = await this.styleService.getComponentVariations("card");
         this.cards(this.sortByDisplayName(cardVariations));
@@ -285,7 +290,11 @@ export class StyleGuide {
             if (style.key.startsWith("colors/")) {
                 this.selectColor(style);
             }
-            else if (style.key.startsWith("fonts/")) {
+            else if (
+                style.key.startsWith("fonts/") ||
+                style.key.startsWith("shadows/") ||
+                style.key.startsWith("gradients/")
+            ) {
                 // do nothing
             }
             else {
@@ -327,7 +336,6 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
-
     private getContextualEditor(stylable): IContextCommandSet {
         const style = stylable.style;
 
@@ -338,6 +346,8 @@ export class StyleGuide {
         };
 
         if (!style.key.startsWith("globals/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/") &&
             style.key !== "colors/default" &&
             style.key !== "fonts/default" &&
             style.key !== "components/formControl/default" &&
@@ -377,7 +387,10 @@ export class StyleGuide {
         }
 
         if (!style.key.startsWith("colors/") &&
-            !style.key.startsWith("fonts/")) {
+            !style.key.startsWith("fonts/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/")
+        ) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Change background",
                 iconClass: "paperbits-drop",
@@ -400,7 +413,9 @@ export class StyleGuide {
                 }
             });
         }
-        else if (!style.key.startsWith("fonts/")) {
+        else if (!style.key.startsWith("fonts/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/")) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
