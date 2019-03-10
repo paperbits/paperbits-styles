@@ -23,15 +23,25 @@ export class Typography {
     public shadowKey: ko.Observable<any>;
     public textAlign: ko.Observable<any>;
     public textTransform: ko.Observable<any>;
+    public textDecoration: ko.Observable<any>;
     public fontName: ko.Observable<string>;
     public colorName: ko.Observable<string>;
     public shadowName: ko.Observable<string>;
 
     public textTransformOptions = [
         { value: undefined, text: "(Inherit)" },
+        { value: "none", text: "None" },
         { value: "capitalize", text: "Capitalize" },
         { value: "lowercase", text: "Lower-case" },
         { value: "uppercase", text: "Upper-case" }
+    ];
+
+    public textDecorationOptions = [
+        { value: undefined, text: "(Inherit)" },
+        { value: "none", text: "None" },
+        { value: "underline", text: "Underline" },
+        { value: "overline", text: "Overline" },
+        { value: "line-through", text: "Line through" }
     ];
 
     @Param()
@@ -51,6 +61,7 @@ export class Typography {
         this.shadowKey = ko.observable();
         this.textAlign = ko.observable();
         this.textTransform = ko.observable();
+        this.textDecoration = ko.observable();
         this.fontName = ko.observable();
         this.colorName = ko.observable();
         this.shadowName = ko.observable();
@@ -91,6 +102,7 @@ export class Typography {
         this.fontWeight(typographyContract.fontWeight);
         this.fontStyle(typographyContract.fontStyle);
         this.textTransform(typographyContract.textTransform);
+        this.textDecoration(typographyContract.textDecoration);
 
         if (typographyContract.shadowKey) {
             const shadowContract = Objects.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
@@ -126,6 +138,7 @@ export class Typography {
         this.shadowKey.subscribe(this.applyChanges);
         this.textAlign.subscribe(this.applyChanges);
         this.textTransform.subscribe(this.applyChanges);
+        this.textDecoration.subscribe(this.applyChanges);
         this.typography.subscribe(this.fillout);
     }
 
@@ -185,7 +198,8 @@ export class Typography {
                 colorKey: this.colorKey(),
                 shadowKey: this.shadowKey(),
                 textAlign: this.textAlign(),
-                textTransform: this.textTransform()
+                textTransform: this.textTransform(),
+                textDecoration: this.textDecoration()
             });
         }
     }
