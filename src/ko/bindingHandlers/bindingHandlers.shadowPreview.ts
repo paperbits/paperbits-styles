@@ -1,14 +1,16 @@
-import { ShadowContract } from "../../contracts/shadowContract";
-import * as ko from "knockout";
 import jss from "jss";
+import * as ko from "knockout";
+import * as Utils from "@paperbits/common/utils";
+import { ShadowContract } from "../../contracts/shadowContract";
 
 
 ko.bindingHandlers["shadowPreview"] = {
     update: (element: HTMLStyleElement, valueAccessor: () => ShadowContract) => {
         const shadowContract = ko.unwrap(valueAccessor());
+        const key = Utils.camelCaseToKebabCase(shadowContract.key).replace("/", "-");
 
         const jssObject = {
-            [shadowContract.key]: {
+            [key]: {
                 boxShadow: {
                     x: shadowContract.offsetX || 0,
                     y: shadowContract.offsetY || 0,

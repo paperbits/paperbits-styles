@@ -188,7 +188,9 @@ export class StyleGuide {
         return _.sortBy(items, ["displayName"]);
     }
 
-
+    public keyToClass(key: string): string {
+        return Utils.camelCaseToKebabCase(key).replace("/", "-");
+    }
 
 
 
