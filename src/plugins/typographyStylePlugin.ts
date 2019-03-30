@@ -82,6 +82,10 @@ export class TypographyStylePlugin extends StylePlugin {
             result["textTransform"] = typographyContract.textTransform;
         }
 
+        if (typographyContract.textDecoration) {
+            result["textDecoration"] = typographyContract.textDecoration;
+        }
+
         return result;
     }
 }

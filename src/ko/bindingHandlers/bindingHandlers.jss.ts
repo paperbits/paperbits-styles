@@ -1,6 +1,5 @@
 import * as ko from "knockout";
 import jss from "jss";
-import preset from "jss-preset-default";
 
 
 ko.bindingHandlers["jss"] = {

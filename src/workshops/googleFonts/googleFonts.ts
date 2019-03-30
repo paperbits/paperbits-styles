@@ -1,7 +1,12 @@
+import { FontParser } from "./../fonts/fontParser";
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common";
+import * as mime from "mime-types";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
+import { IMediaService } from "@paperbits/common/media";
+import { IViewManager } from "@paperbits/common/ui";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract, FontVariantContract } from "../../contracts/fontContract";
@@ -36,17 +41,14 @@ export class GoogleFonts {
     public searchPattern: ko.Observable<string>;
 
     private loadedContracts: GoogleFontContract[];
-    private searchTimeout;
+    private searchTimeout: any;
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly httpClient: HttpClient
+        private readonly httpClient: HttpClient,
+        private readonly viewManager: IViewManager,
+        private readonly mediaService: IMediaService
     ) {
-        this.loadGoogleFonts = this.loadGoogleFonts.bind(this);
-        this.loadNextPage = this.loadNextPage.bind(this);
-        this.selectFont = this.selectFont.bind(this);
-        this.searchFonts = this.searchFonts.bind(this);
-
         this.searchPattern = ko.observable("");
         this.fonts = ko.observableArray<GoogleFont>();
         this.selectedFont = ko.observable();
@@ -103,5 +105,38 @@ export class GoogleFonts {
         if (this.onSelect) {
             this.onSelect(fontContract);
         }
+    }
+
+    public async uploadFont(): Promise<void> {
+        const files = await this.viewManager.openUploadDialog();
+
+        // this.working(true);
+
+        const styles = await this.styleService.getStyles();
+        const file = files[0];
+        const content = await Utils.readFileAsByteArray(file);
+        const fontContract = await FontParser.parse(content);
+        const contentType = <string>mime.lookup(file.name);
+        const fontVariant = fontContract.variants[0];
+        const uploadPromise = this.mediaService.createMedia(file.name, content, contentType);
+
+        this.viewManager.notifyProgress(uploadPromise, "Styles", `Uploading ${file.name}...`);
+
+        const media = await uploadPromise;
+        fontVariant.sourceKey = media.key;
+
+        Objects.setValueAt(fontContract.key, styles, fontContract);
+
+        this.styleService.updateStyles(styles);
+
+        if (this.selectedFont) {
+            this.selectedFont(fontContract);
+        }
+
+        if (this.onSelect) {
+            this.onSelect(fontContract);
+        }
+
+        // this.working(false);
     }
 }

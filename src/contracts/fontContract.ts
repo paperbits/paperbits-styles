@@ -15,7 +15,7 @@ export interface FontVariantContract {
     file?: string;
 
     /**
-     * e.g. "files/abcdef".
+     * A key that is used to identify a font source.
      */
     sourceKey?: string;
 }

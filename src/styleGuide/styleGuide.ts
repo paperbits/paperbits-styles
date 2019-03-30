@@ -7,15 +7,10 @@ import { IEventManager } from "@paperbits/common/events";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
-import { FontContract, ColorContract } from "../contracts";
-
-export interface ElementStyle {
-    key: string;
-    style: any;
-}
+import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
 
 @Component({
-    selector: "living-style-guide",
+    selector: "style-guide",
     template: template,
     injectable: "styleGuide"
 })
@@ -34,6 +29,8 @@ export class StyleGuide {
     public cards: ko.ObservableArray<any>;
     public fonts: ko.ObservableArray<FontContract>;
     public colors: ko.ObservableArray<ColorContract>;
+    public shadows: ko.ObservableArray<ShadowContract>;
+    public gradients: ko.ObservableArray<LinearGradientContract>;
     public bodyFontDisplayName: ko.Observable<string>;
 
     constructor(
@@ -42,7 +39,9 @@ export class StyleGuide {
         private readonly eventManager: IEventManager
     ) {
         this.styles = ko.observable();
-        this.colors = ko.observableArray();
+        this.colors = ko.observableArray([]);
+        this.shadows = ko.observableArray([]);
+        this.gradients = ko.observableArray([]);
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
         this.cards = ko.observableArray([]);
@@ -59,7 +58,7 @@ export class StyleGuide {
 
     public async addFonts(): Promise<void> {
         const view: IView = {
-            heading: "Google fonts",
+            heading: "Fonts",
             component: {
                 name: "google-fonts",
                 params: {
@@ -97,7 +96,7 @@ export class StyleGuide {
 
     public selectColor(color: ColorContract): void {
         const view: IView = {
-            heading: "Color editor",
+            heading: "Color",
             component: {
                 name: "color-editor",
                 params: {
@@ -162,11 +161,17 @@ export class StyleGuide {
             this.bodyFontDisplayName("Default");
         }
 
-        const fonts = Object.keys(styles.fonts).map(key => styles.fonts[key]);
+        const fonts = Object.values(styles.fonts);
         this.fonts(fonts);
 
-        const colors = Object.keys(styles.colors).map(key => styles.colors[key]);
+        const colors = Object.values(styles.colors);
         this.colors(this.sortByDisplayName(colors));
+
+        const gradients = Object.values(styles.gradients);
+        this.gradients(this.sortByDisplayName(gradients));
+
+        const shadows = Object.values(styles.shadows).filter(x => x.key !== "shadows/none");
+        this.shadows(this.sortByDisplayName(shadows));
 
         const cardVariations = await this.styleService.getComponentVariations("card");
         this.cards(this.sortByDisplayName(cardVariations));
@@ -183,7 +188,9 @@ export class StyleGuide {
         return _.sortBy(items, ["displayName"]);
     }
 
-
+    public keyToClass(key: string): string {
+        return Utils.camelCaseToKebabCase(key).replace("/", "-");
+    }
 
 
 
@@ -272,7 +279,8 @@ export class StyleGuide {
             return;
         }
 
-        const style = element["stylable"].style;
+        const stylable = element["stylable"];
+        const style = stylable.style;
 
         if (!style) {
             return;
@@ -284,7 +292,11 @@ export class StyleGuide {
             if (style.key.startsWith("colors/")) {
                 this.selectColor(style);
             }
-            else if (style.key.startsWith("fonts/")) {
+            else if (
+                style.key.startsWith("fonts/") ||
+                style.key.startsWith("shadows/") ||
+                style.key.startsWith("gradients/")
+            ) {
                 // do nothing
             }
             else {
@@ -292,7 +304,7 @@ export class StyleGuide {
             }
         }
         else {
-            const contextualEditor = this.getContextualEditor(style);
+            const contextualEditor = this.getContextualEditor(stylable);
 
             if (!contextualEditor) {
                 return;
@@ -326,8 +338,9 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
+    private getContextualEditor(stylable): IContextCommandSet {
+        const style = stylable.style;
 
-    private getContextualEditor(style): IContextCommandSet {
         const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
             deleteCommand: null,
@@ -335,6 +348,8 @@ export class StyleGuide {
         };
 
         if (!style.key.startsWith("globals/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/") &&
             style.key !== "colors/default" &&
             style.key !== "fonts/default" &&
             style.key !== "components/formControl/default" &&
@@ -363,6 +378,7 @@ export class StyleGuide {
                         onConfirm: async () => {
                             this.removeStyle(style);
                             this.viewManager.clearContextualEditors();
+                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
                         },
                         onDecline: () => {
                             this.viewManager.clearContextualEditors();
@@ -370,6 +386,22 @@ export class StyleGuide {
                     }
                 }
             };
+        }
+
+        if (!style.key.startsWith("colors/") &&
+            !style.key.startsWith("fonts/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/")
+        ) {
+            styleContextualEditor.selectionCommands.push({
+                tooltip: "Change background",
+                iconClass: "paperbits-drop",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    stylable.toggleBackground();
+                }
+            });
         }
 
         if (style.key.startsWith("colors/")) {
@@ -382,34 +414,34 @@ export class StyleGuide {
                     this.selectColor(style);
                 }
             });
-        } else {
-            if (!style.key.startsWith("fonts/")) {
-                styleContextualEditor.selectionCommands.push({
-                    tooltip: "Edit variation",
-                    iconClass: "paperbits-edit-72",
-                    position: "top right",
-                    color: "#607d8b",
-                    callback: () => {
-                        const view: IView = {
-                            heading: style.displayName,
-                            component: {
-                                name: "style-editor",
-                                params: {
-                                    elementStyle: style,
-                                    onUpdate: () => {
-                                        this.styleService.updateStyle(style);
-                                    }
-                                }
-                            },
-                            resize: "vertically horizontally"
-                        };
-
-                        this.viewManager.openViewAsPopup(view);
-                    }
-                });
-            }
         }
+        else if (!style.key.startsWith("fonts/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/")) {
+            styleContextualEditor.selectionCommands.push({
+                tooltip: "Edit variation",
+                iconClass: "paperbits-edit-72",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    const view: IView = {
+                        heading: style.displayName,
+                        component: {
+                            name: "style-editor",
+                            params: {
+                                elementStyle: style,
+                                onUpdate: () => {
+                                    this.styleService.updateStyle(style);
+                                }
+                            }
+                        },
+                        resize: "vertically horizontally"
+                    };
 
+                    this.viewManager.openViewAsPopup(view);
+                }
+            });
+        }
 
         return styleContextualEditor;
     }
@@ -441,7 +473,7 @@ export class StyleGuide {
             current = style;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextualEditor(style);
+            const contextualEditor = this.getContextualEditor(stylable);
 
             highlightColor = contextualEditor.color;
 

@@ -37,7 +37,7 @@ export class StyleCompiler {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly mediaPermalinkResolver: IPermalinkResolver,
+        private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         this.plugins = {};
     }
@@ -75,7 +75,7 @@ export class StyleCompiler {
             "@global": {}
         };
 
-        const fontsPlugin = new FontsStylePlugin(themeContract);
+        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontsRules = await fontsPlugin.contractToJss();
         Utils.assign(allStyles, fontsRules);
 
@@ -241,7 +241,7 @@ export class StyleCompiler {
         const themeContract = await this.styleService.getStyles();
         const result = {};
 
-        const fontsPlugin = new FontsStylePlugin(themeContract);
+        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontsRules = await fontsPlugin.contractToJss();
 
         Utils.assign(result, fontsRules);

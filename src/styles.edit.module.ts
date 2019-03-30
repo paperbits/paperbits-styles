@@ -2,7 +2,7 @@
  * @license
  * Copyright Paperbits. All Rights Reserved.
  *
- * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license.
+ * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/mit.
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
@@ -26,6 +26,9 @@ import { StylePlugin } from "./plugins/stylePlugin";
 import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
+import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
+import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
+import { StylesWorkshopSection } from "./workshops/stylesSection";
 
 
 export class StylingEditModule implements IInjectorModule {
@@ -49,5 +52,6 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
+        injector.bindToCollection("workshopSections", StylesWorkshopSection);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "@paperbits/styles",
-    "version": "0.1.65",
+    "version": "0.1.82",
     "description": "Paperbits style editors.",
     "author": "Paperbits",
     "license": "MIT",
@@ -16,18 +16,20 @@
         "url": "https://github.com/paperbits/paperbits-styles/issues"
     },
     "dependencies": {
-        "@paperbits/common": "0.1.65",
+        "@paperbits/common": "0.1.82",
         "cropperjs": "^1.4.0",
         "google-maps": "^3.2.1",
+        "jss": "^9.8.7",
+        "jss-preset-default": "^4.5.0",
         "knockout": "^3.5.0-beta",
         "knockout.validation": "^2.0.3",
         "lity": "^2.3.0",
         "lodash": "^4.17.4",
+        "mime-types": "^2.1.22",
+        "opentype.js": "0.11.0",
         "perfect-scrollbar": "^1.2.0",
-        "xhr2": "^0.1.4",
-        "jss": "^9.8.7",
-        "jss-preset-default": "^4.5.0",
-        "pickr-widget": "^0.3.1"
+        "pickr-widget": "^0.3.1",
+        "xhr2": "^0.1.4"
     },
     "devDependencies": {
         "@types/google-maps": "^3.2.0",

@@ -57,8 +57,4 @@ export class ColorSelector {
             this.onSelect(null);
         }
     }
-
-    public addColor(): void {
-        debugger;
-    }
 }
