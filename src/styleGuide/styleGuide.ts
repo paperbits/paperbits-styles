@@ -27,6 +27,7 @@ export class StyleGuide {
     public textBlocks: ko.ObservableArray<any>;
     public buttons: ko.ObservableArray<any>;
     public cards: ko.ObservableArray<any>;
+    public pictures: ko.ObservableArray<any>;
     public fonts: ko.ObservableArray<FontContract>;
     public colors: ko.ObservableArray<ColorContract>;
     public shadows: ko.ObservableArray<ShadowContract>;
@@ -45,6 +46,7 @@ export class StyleGuide {
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
         this.cards = ko.observableArray([]);
+        this.pictures = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
         this.bodyFontDisplayName = ko.observable();
     }
@@ -175,6 +177,9 @@ export class StyleGuide {
 
         const cardVariations = await this.styleService.getComponentVariations("card");
         this.cards(this.sortByDisplayName(cardVariations));
+
+        const pictureVariations = await this.styleService.getComponentVariations("picture");
+        this.pictures(this.sortByDisplayName(pictureVariations));
 
         const buttonVariations = await this.styleService.getComponentVariations("button");
         this.buttons(this.sortByDisplayName(buttonVariations));
