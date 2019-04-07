@@ -303,16 +303,38 @@
         <h2 class="heading">Picture</h2>
         <div class="row">
             <!--ko foreach: { data: $component.pictures, as: 'picture' }-->
-            <div class="col col-md-4 style-picture" data-bind="stylable: picture">
+            <div class="col col-md-4 style-card" data-bind="stylable: picture">
                 <div class="style-card-body">
                     <img data-bind="styled: picture" />
                 </div>
                 <span class="style-card-label" data-bind="text: picture.displayName"></span>
             </div>
             <!--/ko-->
-            <div class="style-picture style-picture-empty">
-                <button class="btn-round" data-bind="click: $component.addpictureVariation"></button>
-                <div class="style-picture-label">
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addPictureVariation"></button>
+                <div class="style-card-label">
+                    Add variation
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <article>
+        <h2 class="heading">Video player</h2>
+        <div class="row">
+            <!--ko foreach: { data: $component.videoPlayers, as: 'videoPlayer' }-->
+            <div class="col col-md-4 style-card" data-bind="stylable: videoPlayer">
+                <div class="style-card-body">
+                    <video data-bind="styled: videoPlayer">
+                        <source src="https://cdn.paperbits.io/videos/planet-earth.mp4" />
+                    </video>
+                </div>
+                <span class="style-card-label" data-bind="text: videoPlayer.displayName"></span>
+            </div>
+            <!--/ko-->
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addVideoPlayerVariation"></button>
+                <div class="style-card-label">
                     Add variation
                 </div>
             </div>

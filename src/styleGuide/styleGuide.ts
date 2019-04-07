@@ -28,6 +28,7 @@ export class StyleGuide {
     public buttons: ko.ObservableArray<any>;
     public cards: ko.ObservableArray<any>;
     public pictures: ko.ObservableArray<any>;
+    public videoPlayers: ko.ObservableArray<any>;
     public fonts: ko.ObservableArray<FontContract>;
     public colors: ko.ObservableArray<ColorContract>;
     public shadows: ko.ObservableArray<ShadowContract>;
@@ -47,6 +48,7 @@ export class StyleGuide {
         this.buttons = ko.observableArray([]);
         this.cards = ko.observableArray([]);
         this.pictures = ko.observableArray([]);
+        this.videoPlayers = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
         this.bodyFontDisplayName = ko.observable();
     }
@@ -142,6 +144,14 @@ export class StyleGuide {
         await this.openInEditor("card");
     }
 
+    public async addPictureVariation(): Promise<void> {
+        await this.openInEditor("picture");
+    }
+
+    public async addVideoPlayerVariation(): Promise<void> {
+        await this.openInEditor("videoPlayer");
+    }
+
     private async openInEditor(componentName: string) {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
         const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
@@ -177,6 +187,9 @@ export class StyleGuide {
 
         const cardVariations = await this.styleService.getComponentVariations("card");
         this.cards(this.sortByDisplayName(cardVariations));
+
+        const videoPlayerVariations = await this.styleService.getComponentVariations("videoPlayer");
+        this.videoPlayers(this.sortByDisplayName(videoPlayerVariations));
 
         const pictureVariations = await this.styleService.getComponentVariations("picture");
         this.pictures(this.sortByDisplayName(pictureVariations));
