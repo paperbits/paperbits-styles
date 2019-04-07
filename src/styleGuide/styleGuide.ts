@@ -368,12 +368,7 @@ export class StyleGuide {
         if (!style.key.startsWith("globals/") &&
             !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/") &&
-            style.key !== "colors/default" &&
-            style.key !== "fonts/default" &&
-            style.key !== "components/formControl/default" &&
-            style.key !== "components/button/default" &&
-            style.key !== "components/navbar/default" &&
-            style.key !== "components/card/default"
+            !style.key.endsWith("/default")
         ) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
