@@ -1,3 +1,4 @@
+import { BorderStyleContract } from "./../../contracts/borderContract";
 import * as ko from "knockout";
 import template from "./boxEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -15,8 +16,8 @@ export class BoxEditor {
     public marginRight: ko.Observable<any>;
     public marginBottom: ko.Observable<any>;
 
-    public borderTop: ko.Observable<any>;
-    public borderLeft: ko.Observable<any>;
+    public borderTop: ko.Observable<BorderStyleContract>;
+    public borderLeft: ko.Observable<BorderStyleContract>;
     public borderRight: ko.Observable<any>;
     public borderBottom: ko.Observable<any>;
 
@@ -29,6 +30,11 @@ export class BoxEditor {
     public topRightRadius: ko.Observable<any>;
     public bottomLeftRadius: ko.Observable<any>;
     public bottomRightRadius: ko.Observable<any>;
+
+    public borderTopWidth: ko.Computed<any>;
+    public borderLeftWidth: ko.Computed<any>;
+    public borderRightWidth: ko.Computed<any>;
+    public borderBottomWidth: ko.Computed<any>;
 
     @Param()
     public elementStyle: ko.Observable<BoxContract>;
@@ -61,6 +67,11 @@ export class BoxEditor {
         this.topRightRadius = ko.observable();
         this.bottomLeftRadius = ko.observable();
         this.bottomRightRadius = ko.observable();
+
+        this.borderTopWidth = ko.computed(() => this.borderTop() ? this.borderTop().width : null);
+        this.borderLeftWidth = ko.computed(() => this.borderLeft() ? this.borderLeft().width : null);
+        this.borderRightWidth = ko.computed(() => this.borderRight() ? this.borderRight().width : null);
+        this.borderBottomWidth = ko.computed(() => this.borderBottom() ? this.borderBottom().width : null);
     }
 
     @OnMounted()
@@ -75,10 +86,10 @@ export class BoxEditor {
         }
 
         if (currentStyle.border) {
-            this.borderTop(currentStyle.border.top.width);
-            this.borderLeft(currentStyle.border.left.width);
-            this.borderRight(currentStyle.border.right.width);
-            this.borderBottom(currentStyle.border.bottom.width);
+            this.borderTop(currentStyle.border.top);
+            this.borderLeft(currentStyle.border.left);
+            this.borderRight(currentStyle.border.right);
+            this.borderBottom(currentStyle.border.bottom);
         }
 
         if (currentStyle.borderRadius) {
@@ -145,10 +156,10 @@ export class BoxEditor {
                 bottom: parseNumber(this.marginBottom())
             },
             border: {
-                top: { width: parseNumber(this.borderTop()), style: "solid", color: "orange" },
-                left: { width: parseNumber(this.borderLeft()), style: "solid", color: "orange" },
-                right: { width: parseNumber(this.borderRight()), style: "solid", color: "orange" },
-                bottom: { width: parseNumber(this.borderBottom()), style: "solid", color: "orange" }
+                top: this.borderTop(),
+                left: this.borderLeft(),
+                right: this.borderRight(),
+                bottom: this.borderBottom()
             },
             borderRadius: {
                 topLeftRadius: parseNumber(this.topLeftRadius()),

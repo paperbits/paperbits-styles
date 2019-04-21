@@ -62,7 +62,7 @@ export class StyleCompiler {
 
         this.plugins["padding"] = new PaddingStylePlugin();
         this.plugins["margin"] = new MarginStylePlugin();
-        this.plugins["border"] = new BorderStylePlugin();
+        this.plugins["border"] = new BorderStylePlugin(themeContract);
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
         this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.mediaPermalinkResolver);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);

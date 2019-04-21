@@ -2,6 +2,7 @@ export interface BorderStyleContract {
     width?: string | number;
     style?: string;
     color?: string;
+    colorKey?: string;
 }
 
 export interface BorderContract {

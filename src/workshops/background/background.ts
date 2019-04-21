@@ -14,7 +14,7 @@ import { BackgroundContract, ColorContract, LinearGradientContract } from "../..
     injectable: "background"
 })
 export class Background {
-    public readonly color: ko.Observable<string>;
+    public readonly color: ko.Observable<any>;
     public readonly colorKey: ko.Observable<string>;
     public readonly gradientKey: ko.Observable<string>;
     public readonly source: ko.Observable<string>;
@@ -46,7 +46,7 @@ export class Background {
 
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
-        this.color = ko.observable<string>();
+        this.color = ko.observable<any>();
         this.colorKey = ko.observable<string>();
         this.gradientKey = ko.observable<string>();
         this.repeat = ko.observable<string>();
@@ -71,7 +71,7 @@ export class Background {
             const colorContract = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, styles);
 
             if (colorContract) {
-                this.color(colorContract.value);
+                this.color(colorContract);
                 this.colorKey(backgroundContract.colorKey);
             }
             else {
@@ -119,7 +119,7 @@ export class Background {
     }
 
     public onColorSelected(color: ColorContract): void {
-        this.color(color ? color.value : "transparent");
+        this.color(color);
         this.colorKey(color ? color.key : undefined);
         this.applyChanges();
     }
@@ -130,7 +130,7 @@ export class Background {
     }
 
     public clearBackground(): void {
-        this.color("transparent");
+        this.color(undefined);
         this.colorKey(undefined);
         this.source("none");
         this.sourceKey(undefined);

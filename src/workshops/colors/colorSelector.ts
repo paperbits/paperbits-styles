@@ -16,7 +16,7 @@ export class ColorSelector {
     @Event()
     public readonly onSelect: (color: ColorContract) => void;
 
-    public colors: ko.ObservableArray<ColorContract>;
+    public readonly colors: ko.ObservableArray<ColorContract>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadColors = this.loadColors.bind(this);

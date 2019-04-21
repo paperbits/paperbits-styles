@@ -10,6 +10,7 @@ import { StyleModule } from "./styles.module";
 import { StyleEditor } from "./workshops/styleEditor";
 import { StyleGuide } from "./styleGuide/styleGuide";
 import { BoxEditor } from "./workshops/boxes/boxEditor";
+import { BorderEditor } from "./workshops/border";
 import { ColorSelector, ColorEditor } from "./workshops/colors";
 import { GradientSelector,  GradientEditor } from "./workshops/gradients";
 import { FontSelector } from "./workshops/fonts";
@@ -39,6 +40,7 @@ export class StylingEditModule implements IInjectorModule {
         injector.bind("typography", Typography);
         injector.bind("background", Background);
         injector.bind("boxEditor", BoxEditor);
+        injector.bind("borderEditor", BorderEditor);
         injector.bind("colorSelector", ColorSelector);
         injector.bind("colorEditor", ColorEditor);
         injector.bind("gradientSelector", GradientSelector);

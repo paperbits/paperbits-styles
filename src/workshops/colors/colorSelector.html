@@ -3,7 +3,7 @@
     <hr/>
 
     <ul class="palette">
-        <li class="color-box">
+        <li class="color-box" data-bind="css: { selected: !$component.selectedColor() }">
             <a href="#" title="Clear color" class="color" data-bind="click: $component.clearColors">
                 <i class="paperbits-icon paperbits-ban"></i>
             </a>
