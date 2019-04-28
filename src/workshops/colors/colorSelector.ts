@@ -11,6 +11,9 @@ import { ColorContract } from "../../contracts/colorContract";
 })
 export class ColorSelector {
     @Param()
+    public initColorKey: ko.Observable<string>;
+
+    @Param()
     public readonly selectedColor: ko.Observable<ColorContract>;
 
     @Event()
@@ -24,14 +27,18 @@ export class ColorSelector {
 
         this.colors = ko.observableArray();
         this.selectedColor = ko.observable();
+        this.initColorKey = ko.observable();
     }
 
     @OnMounted()
     public async loadColors(): Promise<void> {
         const themeContract = await this.styleService.getStyles();
-
+        const defaultColorKey = this.initColorKey();
         const colors = Object.keys(themeContract.colors).map((key) => {
             const colorContract = themeContract.colors[key];
+            if (defaultColorKey && colorContract.key === defaultColorKey) {
+                this.selectedColor(colorContract);
+            }
             return colorContract;
         });
 
