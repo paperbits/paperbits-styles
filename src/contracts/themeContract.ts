@@ -1,5 +1,5 @@
 import { Bag } from "@paperbits/common";
-import { BoxContract, ColorContract, ShadowContract, AnimationContract, FontContract, LinearGradientContract } from "./";
+import { ColorContract, ShadowContract, AnimationContract, FontContract, LinearGradientContract } from "./";
 
 export interface ThemeContract {
     fonts?: Bag<FontContract>;
@@ -7,7 +7,7 @@ export interface ThemeContract {
     gradients?: Bag<LinearGradientContract>;
     animations?: Bag<AnimationContract>;
     shadows?: Bag<ShadowContract>;
-    globals?: Bag<BoxContract>;
+    globals?: Object;
     components?: Object;
     instances?: Object;
     utils?: any;
