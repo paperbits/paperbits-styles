@@ -164,7 +164,7 @@ export class StyleGuide {
     public async applyChanges(): Promise<void> {
         const styles = await this.styleService.getStyles();
 
-        const bodyFont = Objects.getObjectAt<FontContract>(styles.globals.body.typography.fontKey, styles);
+        const bodyFont = Objects.getObjectAt<FontContract>(styles.globals["body"].default.typography.fontKey, styles);
 
         if (bodyFont) {
             this.bodyFontDisplayName(bodyFont.displayName);

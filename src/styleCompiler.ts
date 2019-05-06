@@ -86,12 +86,11 @@ export class StyleCompiler {
                 const defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
 
                 for (const variationName of Object.keys(componentConfig)) {
+                    if (variationName === "default") continue;
                     const variationStyles = await this.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
                     const key = `& .${componentName}-${variationName}`;
                     defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
                 }
-
-                delete defaultComponentStyles[componentName][`&.${componentName}-default`];
 
                 Utils.assign(allStyles, defaultComponentStyles);
             }
@@ -120,8 +119,25 @@ export class StyleCompiler {
 
         if (themeContract.globals) {
             for (const tagName of Object.keys(themeContract.globals)) {
-                const pluginRules = await this.getVariationClasses(themeContract.globals[tagName], tagName);
-                Utils.assign(allStyles["@global"], pluginRules);
+
+                const tagConfig = themeContract.globals[tagName];
+
+                let defaultComponentStyles = await this.getVariationClasses(tagConfig["default"], tagName, "default", false);
+
+                for (const variationName of Object.keys(tagConfig)) {
+                    if (variationName === "default") continue;
+                    const componentName = tagName === "body" ? "text" : tagName;
+                    const variationStyles = await this.getVariationClasses(tagConfig[variationName], componentName, variationName, true);
+                    
+                    const key = `& .${componentName}-${variationName}`;
+                    if (tagName === "body") {
+                        defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
+                    } else {
+                        defaultComponentStyles[tagName] = { ...defaultComponentStyles[tagName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                    }
+                }
+
+                Utils.assign(allStyles["@global"], defaultComponentStyles);
             }
         }
 
@@ -371,16 +387,21 @@ export class StyleCompiler {
             throw new Error(`Parameter "key" not specified.`);
         }
 
-        if (key.startsWith("globals/")) {
+        const segments = key.split("/");
+
+        if (key.startsWith("globals/") && segments[1] !== "body") {
             return null;
         }
 
-        const segments = key.split("/");
-        const component = segments[1];
+        let component = segments[1];
         const componentVariation = segments[2];
         const classNames = [];
 
-        classNames.push(Utils.camelCaseToKebabCase(component));
+        if (component === "body") {
+            component = "text";
+        } else {
+            classNames.push(Utils.camelCaseToKebabCase(component));
+        }
 
         if (componentVariation) {
             let className;
