@@ -44,15 +44,29 @@ export class StyleService {
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation: any = Objects.clone(styles["components"][componentName]["default"]);
+        const newVariation: any = Objects.clone(styles.components[componentName]["default"]);
         newVariation.key = `components/${componentName}/${variationName}`;
         newVariation.displayName = "< Unnammed >";
 
-        styles["components"][componentName][variationName] = newVariation;
+        styles.components[componentName][variationName] = newVariation;
 
         this.updateStyles(styles);
 
-        return `components/${componentName}/${variationName}`;
+        return newVariation.key;
+    }
+
+    public async addBodyFontVariation(variationName: string): Promise<string> {
+        const styles = await this.getStyles();
+
+        const newVariation: any = Objects.clone(styles.globals["body"]["default"]);
+        newVariation.key = `globals/body/${variationName}`;
+        newVariation.displayName = "< Unnammed >";
+
+        styles.globals["body"][variationName] = newVariation;
+
+        this.updateStyles(styles);
+
+        return newVariation.key;
     }
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
@@ -84,11 +98,10 @@ export class StyleService {
         let category, categoryStyles;
         if (subCategoryName) {
             categoryStyles = styles[categoryName][subCategoryName];
-            category = Object.keys(categoryStyles);
         } else {
             categoryStyles = styles[categoryName];
-            category = Object.keys(styles);
         }
+        category = Object.keys(categoryStyles);
         const variations = category.map(variationName => {
             const variationContract = categoryStyles[variationName];
             return variationContract;
