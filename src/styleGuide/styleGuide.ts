@@ -79,7 +79,7 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeStyle(contract): Promise<void> {
+    public async removeStyle(contract: any): Promise<void> {
         await this.styleService.removeStyle(contract.key);
         this.applyChanges();
     }
@@ -152,7 +152,7 @@ export class StyleGuide {
         await this.openInEditor("videoPlayer");
     }
 
-    private async openInEditor(componentName: string) {
+    private async openInEditor(componentName: string): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
         const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
