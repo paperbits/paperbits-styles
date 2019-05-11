@@ -74,15 +74,23 @@ export class StyleService {
         await this.updateStyles(styles);
     }
 
-    public async getVariations<TVariation>(categoryName: string): Promise<TVariation[]> {
+    public async getVariations<TVariation>(categoryName: string, subCategoryName?: string): Promise<TVariation[]> {
         if (!categoryName) {
             throw new Error(`Parameter "categoryName" not specified.`);
         }
 
         const styles = await this.getStyles();
 
-        const variations = Object.keys(styles[categoryName]).map(variationName => {
-            const variationContract = styles[categoryName][variationName];
+        let category, categoryStyles;
+        if (subCategoryName) {
+            categoryStyles = styles[categoryName][subCategoryName];
+            category = Object.keys(categoryStyles);
+        } else {
+            categoryStyles = styles[categoryName];
+            category = Object.keys(styles);
+        }
+        const variations = category.map(variationName => {
+            const variationContract = categoryStyles[variationName];
             return variationContract;
         });
 
