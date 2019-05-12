@@ -4,11 +4,11 @@
         <h2 class="heading">Fonts</h2>
         <div class="fonts">
             <!-- ko foreach: { data: $component.fonts, as: 'font' } -->
-            <div class="font" data-bind="stylable: font">
-                <div class="font-sample style-card" data-bind="style: { 'font-family': font.family }">
+            <div class="style-card font" data-bind="stylable: font">
+                <div class="font-sample" data-bind="style: { 'font-family': font.family }">
                     Abc
                 </div>
-                <div class="font-name" data-bind="text: font.displayName"></div>
+                <div class="style-card-label" data-bind="text: font.displayName"></div>
             </div>
             <!-- /ko -->
 
@@ -25,20 +25,20 @@
         <h2 class="heading">Typography</h2>
         <div class="row">
             <div class="col col-md-12 samples">
-                <!--ko foreach: { data: $component.bodyFonts, as: 'bodyFont' }-->
-                <div class="font-primary">
-                    <div class="font-sample style-card" data-bind="stylable: bodyFont">
+                <!--ko foreach: { data: $component.textStyles, as: 'textStyle' }-->
+                <div class="font">
+                    <div class="font-sample style-card" data-bind="stylable: textStyle">
                         <div class="style-card-body">
-                            <span data-bind="styled: bodyFont">
+                            <span data-bind="styled: textStyle">
                                 Abc
                             </span>
-                            <span class="style-card-label" data-bind="text: bodyFont.displayName"></span>
+                            <span class="style-card-label" data-bind="text: textStyle.displayName"></span>
                         </div>
                     </div>
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">
-                    <button class="btn-round" data-bind="click: $component.addBodyFontVariation"></button>
+                    <button class="btn-round" data-bind="click: $component.addTextStyleVariation"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>
@@ -126,27 +126,32 @@
                 </article>
             </div>
         </div>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-6">
-                <ul data-bind="styled: globals.ul">
-                    <li>
-                        List item 1
-                    </li>
-                    <li>
-                        List item 2
-                    </li>
-                    <li>
-                        List item 3
-                    </li>
-                    <li>
-                        List item 4
-                    </li>
-                    <li>
-                        List item 5
-                    </li>
-                </ul>
+                <div class="style-card" data-bind="stylable: globals.ul.default">
+                    <div class="style-card-body">
+                        <ul class="style-card" data-bind="styled: globals.ul.default">
+                            <li>
+                                List item 1
+                            </li>
+                            <li>
+                                List item 2
+                            </li>
+                            <li>
+                                List item 3
+                            </li>
+                            <li>
+                                List item 4
+                            </li>
+                            <li>
+                                List item 5
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
-        </div> -->
+        </div>
     </article>
 
     <article>
@@ -313,11 +318,13 @@
         <h2 class="heading">Picture</h2>
         <div class="row">
             <!--ko foreach: { data: $component.pictures, as: 'picture' }-->
-            <div class="col col-md-4 style-card" data-bind="stylable: picture">
-                <div class="style-card-body">
-                    <img data-bind="styled: picture" />
+            <div class="col col-md-4" >
+                <div class="style-card" data-bind="stylable: picture">
+                    <div class="style-card-body">
+                        <img src="http://cdn.paperbits.io/images/placeholder-340x190.jpg" data-bind="styled: picture" />
+                    </div>
+                    <span class="style-card-label" data-bind="text: picture.displayName"></span>
                 </div>
-                <span class="style-card-label" data-bind="text: picture.displayName"></span>
             </div>
             <!--/ko-->
             <div class="style-card style-card-empty">

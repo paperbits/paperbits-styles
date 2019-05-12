@@ -32,7 +32,7 @@ export class StyleGuide {
     public colors: ko.ObservableArray<ColorContract>;
     public shadows: ko.ObservableArray<ShadowContract>;
     public gradients: ko.ObservableArray<LinearGradientContract>;
-    public bodyFonts: ko.ObservableArray<any>;
+    public textStyles: ko.ObservableArray<any>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -49,7 +49,7 @@ export class StyleGuide {
         this.pictures = ko.observableArray([]);
         this.videoPlayers = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
-        this.bodyFonts = ko.observableArray([]);
+        this.textStyles = ko.observableArray([]);
     }
 
     @OnMounted()
@@ -135,9 +135,9 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async addBodyFontVariation(): Promise<void> {
+    public async addTextStyleVariation(): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addBodyFontVariation(variationName);
+        const addedStyleKey = await this.styleService.addTextStyleVariation(variationName);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
         this.selectStyle(addedStyle);
 
@@ -196,8 +196,8 @@ export class StyleGuide {
         const buttonVariations = await this.styleService.getComponentVariations("button");
         this.buttons(this.sortByDisplayName(buttonVariations));
 
-        const bodyFontsVariations = await this.styleService.getVariations("globals", "body");
-        this.bodyFonts(this.sortByDisplayName(bodyFontsVariations));
+        const textStylesVariations = await this.styleService.getVariations("globals", "body");
+        this.textStyles(this.sortByDisplayName(textStylesVariations));
 
         // this.styles.valueHasMutated();
 

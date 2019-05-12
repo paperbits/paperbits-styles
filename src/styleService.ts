@@ -55,7 +55,7 @@ export class StyleService {
         return newVariation.key;
     }
 
-    public async addBodyFontVariation(variationName: string): Promise<string> {
+    public async addTextStyleVariation(variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
         const newVariation: any = Objects.clone(styles.globals["body"]["default"]);
