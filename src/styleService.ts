@@ -1,6 +1,5 @@
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
-import { BreakpointValues } from "@paperbits/common/styles";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { IEventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract } from "./contracts";
@@ -44,29 +43,31 @@ export class StyleService {
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation: any = Objects.clone(styles.components[componentName]["default"]);
-        newVariation.key = `components/${componentName}/${variationName}`;
-        newVariation.displayName = "< Unnammed >";
+        const variation: any = {
+            key: `components/${componentName}/${variationName}`,
+            displayName: "< Unnammed >"
+        };
 
-        styles.components[componentName][variationName] = newVariation;
+        styles.components[componentName][variationName] = variation;
 
         this.updateStyles(styles);
 
-        return newVariation.key;
+        return variation.key;
     }
 
     public async addTextStyleVariation(variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation: any = Objects.clone(styles.globals["body"]["default"]);
-        newVariation.key = `globals/body/${variationName}`;
-        newVariation.displayName = "< Unnammed >";
+        const variation: any = {
+            key: `globals/body/${variationName}`,
+            displayName: "< Unnammed >"
+        };
 
-        styles.globals["body"][variationName] = newVariation;
+        styles.globals["body"][variationName] = variation;
 
         this.updateStyles(styles);
 
-        return newVariation.key;
+        return variation.key;
     }
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
@@ -154,7 +155,7 @@ export class StyleService {
         if (!styleKey) {
             throw new Error(`Parameter "styleKey" not specified.`);
         }
-        
+
         const styles = await this.getStyles();
         Objects.deleteNodeAt(`${styleKey}`, styles);
         this.objectStorage.updateObject(`${stylesPath}`, styles);

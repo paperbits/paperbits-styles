@@ -2,23 +2,24 @@
     <!-- ko with: styles -->
     <article>
         <h2 class="heading">Fonts</h2>
-        <div class="fonts">
-            <!-- ko foreach: { data: $component.fonts, as: 'font' } -->
-            <div class="style-card font" data-bind="stylable: font">
-                <div class="font-sample" data-bind="style: { 'font-family': font.family }">
-                    Abc
+        <div class="row">
+            <div class="col col-md-12 samples">
+                <!-- ko foreach: { data: $component.fonts, as: 'font' } -->
+                <div class="style-card font style-card-framed" data-bind="stylable: font">
+                    <div class="font-sample" data-bind="style: { 'font-family': font.family }">
+                        Abc
+                    </div>
+                    <div class="style-card-label" data-bind="text: font.displayName"></div>
                 </div>
-                <div class="style-card-label" data-bind="text: font.displayName"></div>
-            </div>
-            <!-- /ko -->
+                <!-- /ko -->
 
-            <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addFonts"></button>
-                <div class="style-card-label">
-                    Add font
+                <div class="style-card style-card-empty">
+                    <button class="btn-round" data-bind="click: $component.addFonts"></button>
+                    <div class="style-card-label">
+                        Add font
+                    </div>
                 </div>
             </div>
-        </div>
     </article>
 
     <article>
@@ -26,14 +27,12 @@
         <div class="row">
             <div class="col col-md-12 samples">
                 <!--ko foreach: { data: $component.textStyles, as: 'textStyle' }-->
-                <div class="font">
-                    <div class="font-sample style-card" data-bind="stylable: textStyle">
-                        <div class="style-card-body">
-                            <span data-bind="styled: textStyle">
-                                Abc
-                            </span>
-                            <span class="style-card-label" data-bind="text: textStyle.displayName"></span>
-                        </div>
+                <div class="style-card style-card-framed" data-bind="stylable: textStyle">
+                    <div class="style-card-body">
+                        <span data-bind="styled: textStyle">
+                            Abc
+                        </span>
+                        <span class="style-card-label" data-bind="text: textStyle.displayName"></span>
                     </div>
                 </div>
                 <!--/ko-->
@@ -318,7 +317,7 @@
         <h2 class="heading">Picture</h2>
         <div class="row">
             <!--ko foreach: { data: $component.pictures, as: 'picture' }-->
-            <div class="col col-md-4" >
+            <div class="col col-md-4">
                 <div class="style-card" data-bind="stylable: picture">
                     <div class="style-card-body">
                         <img src="http://cdn.paperbits.io/images/placeholder-340x190.jpg" data-bind="styled: picture" />

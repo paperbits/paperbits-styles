@@ -56,19 +56,19 @@
         </div>
 
         <div class="form-group">
-            <label for="textColor">Color</label>
+            <label for="textColor">Text color</label>
             <button id="textColor" class="btn" data-bind="text: $component.colorName, balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
             </button>
         </div>
 
         <div class="form-group">
-            <label for="textShadow">Shadow</label>
+            <label for="textShadow">Text shadow</label>
             <button id="textShadow" class="btn" data-bind="text: $component.shadowName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }">
             </button>
         </div>
 
         <div class="form-group">
-            <label for="textTransform">Transform</label>
+            <label for="textTransform">Transformation</label>
             <select id="textTransform" class="form-control" data-bind="options: textTransformOptions, optionsValue: 'value', optionsText: 'text', value: $component.textTransform"></select>
         </div>
 
