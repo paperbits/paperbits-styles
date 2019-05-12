@@ -1,10 +1,9 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common";
-import * as Objects from "@paperbits/common/objects";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { IEventManager } from "@paperbits/common/events";
-import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
+import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
@@ -33,7 +32,7 @@ export class StyleGuide {
     public colors: ko.ObservableArray<ColorContract>;
     public shadows: ko.ObservableArray<ShadowContract>;
     public gradients: ko.ObservableArray<LinearGradientContract>;
-    public bodyFontDisplayName: ko.Observable<string>;
+    public bodyFonts: ko.ObservableArray<any>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -50,7 +49,7 @@ export class StyleGuide {
         this.pictures = ko.observableArray([]);
         this.videoPlayers = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
-        this.bodyFontDisplayName = ko.observable();
+        this.bodyFonts = ko.observableArray([]);
     }
 
     @OnMounted()
@@ -136,6 +135,15 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
+    public async addBodyFontVariation(): Promise<void> {
+        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
+        const addedStyleKey = await this.styleService.addBodyFontVariation(variationName);
+        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+        this.selectStyle(addedStyle);
+
+        this.applyChanges();
+    }
+
     public async addButtonVariation(): Promise<void> {
         await this.openInEditor("button");
     }
@@ -164,15 +172,6 @@ export class StyleGuide {
     public async applyChanges(): Promise<void> {
         const styles = await this.styleService.getStyles();
 
-        const bodyFont = Objects.getObjectAt<FontContract>(styles.globals["body"].default.typography.fontKey, styles);
-
-        if (bodyFont) {
-            this.bodyFontDisplayName(bodyFont.displayName);
-        }
-        else {
-            this.bodyFontDisplayName("Default");
-        }
-
         const fonts = Object.values(styles.fonts);
         this.fonts(fonts);
 
@@ -196,6 +195,9 @@ export class StyleGuide {
 
         const buttonVariations = await this.styleService.getComponentVariations("button");
         this.buttons(this.sortByDisplayName(buttonVariations));
+
+        const bodyFontsVariations = await this.styleService.getVariations("globals", "body");
+        this.bodyFonts(this.sortByDisplayName(bodyFontsVariations));
 
         // this.styles.valueHasMutated();
 
@@ -356,7 +358,7 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
-    private getContextualEditor(stylable): IContextCommandSet {
+    private getContextualEditor(stylable: { style: any; toggleBackground: () => void; }): IContextCommandSet {
         const style = stylable.style;
 
         const styleContextualEditor: IContextCommandSet = {

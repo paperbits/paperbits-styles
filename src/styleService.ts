@@ -44,15 +44,29 @@ export class StyleService {
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
-        const newVariation: any = Objects.clone(styles["components"][componentName]["default"]);
+        const newVariation: any = Objects.clone(styles.components[componentName]["default"]);
         newVariation.key = `components/${componentName}/${variationName}`;
         newVariation.displayName = "< Unnammed >";
 
-        styles["components"][componentName][variationName] = newVariation;
+        styles.components[componentName][variationName] = newVariation;
 
         this.updateStyles(styles);
 
-        return `components/${componentName}/${variationName}`;
+        return newVariation.key;
+    }
+
+    public async addBodyFontVariation(variationName: string): Promise<string> {
+        const styles = await this.getStyles();
+
+        const newVariation: any = Objects.clone(styles.globals["body"]["default"]);
+        newVariation.key = `globals/body/${variationName}`;
+        newVariation.displayName = "< Unnammed >";
+
+        styles.globals["body"][variationName] = newVariation;
+
+        this.updateStyles(styles);
+
+        return newVariation.key;
     }
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
@@ -74,15 +88,22 @@ export class StyleService {
         await this.updateStyles(styles);
     }
 
-    public async getVariations<TVariation>(categoryName: string): Promise<TVariation[]> {
+    public async getVariations<TVariation>(categoryName: string, subCategoryName?: string): Promise<TVariation[]> {
         if (!categoryName) {
             throw new Error(`Parameter "categoryName" not specified.`);
         }
 
         const styles = await this.getStyles();
 
-        const variations = Object.keys(styles[categoryName]).map(variationName => {
-            const variationContract = styles[categoryName][variationName];
+        let category, categoryStyles;
+        if (subCategoryName) {
+            categoryStyles = styles[categoryName][subCategoryName];
+        } else {
+            categoryStyles = styles[categoryName];
+        }
+        category = Object.keys(categoryStyles);
+        const variations = category.map(variationName => {
+            const variationContract = categoryStyles[variationName];
             return variationContract;
         });
 
