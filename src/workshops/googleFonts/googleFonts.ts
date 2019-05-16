@@ -125,7 +125,7 @@ export class GoogleFonts {
         const media = await uploadPromise;
         fontVariant.sourceKey = media.key;
 
-        Objects.setValueAt(fontContract.key, styles, fontContract);
+        Objects.setValueWithCompensation(fontContract.key, styles, fontContract);
 
         this.styleService.updateStyles(styles);
 

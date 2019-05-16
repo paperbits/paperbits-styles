@@ -20,6 +20,10 @@ import {
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
+import { GridStylePlugin } from "./plugins/gridStylePlugin";
+import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
+import { IStyleCompiler, StyleCompilation } from "@paperbits/common/styles";
+import { StyleConfig } from "@paperbits/common/styles/styleConfig";
 
 const opts = preset();
 
@@ -32,7 +36,7 @@ opts.createGenerateClassName = () => {
 jss.setup(opts);
 
 
-export class StyleCompiler {
+export class StyleCompiler implements IStyleCompiler {
     public plugins: Bag<StylePlugin>;
 
     constructor(
@@ -40,6 +44,8 @@ export class StyleCompiler {
         private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         this.plugins = {};
+        this.plugins["grid"] = new GridStylePlugin();
+        this.plugins["grid-cell"] = new GridCellStylePlugin();
     }
 
     private isResponsive(variation: Object): boolean {
@@ -70,6 +76,8 @@ export class StyleCompiler {
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
         this.plugins["components"] = new ComponentsStylePlugin(this);
         this.plugins["states"] = new StatesStylePlugin(this);
+        this.plugins["grid"] = new GridStylePlugin();
+        this.plugins["grid-cell"] = new GridCellStylePlugin();
 
         const allStyles = {
             "@global": {}
@@ -233,6 +241,44 @@ export class StyleCompiler {
         return result;
     }
 
+    public getVariationClassNames(variationConfig, componentName: string, variationName: string = null): string[] {
+        const classNames = [];
+
+        if (!variationName) {
+            variationName = "default";
+        }
+
+        for (const pluginName of Object.keys(variationConfig)) {
+            const pluginConfig = variationConfig[pluginName];
+
+            if (this.isResponsive(pluginConfig)) {
+                for (const breakpoint of Object.keys(BreakpointValues)) {
+                    const breakpointConfig = pluginConfig[breakpoint];
+
+                    if (breakpointConfig) {
+                        let className;
+
+                        if (breakpoint === "xs") {
+                            className = `${componentName}-${variationName}`.replace("-default", "");
+                        }
+                        else {
+                            className = `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
+                        }
+
+                        classNames.push(className);
+                    }
+                }
+            }
+            else {
+                const className = `${componentName}-${variationName}`.replace("-default", "");
+                classNames.push(className);
+            }
+
+        }
+
+        return classNames;
+    }
+
     public async getStateClasses(stateConfig, stateName: string): Promise<object> {
         const result = {};
 
@@ -382,6 +428,70 @@ export class StyleCompiler {
         return classNames.join(" ");
     }
 
+    private randomClass(): string {
+        let result = "";
+        const possible = "abcdefghijklmnopqrstuvwxyz";
+
+        for (let i = 0; i < 10; i++) {
+            result += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+
+        return result;
+    }
+
+    public async getClassNamesByStyleConfigAsync2(styleConfig: any): Promise<StyleCompilation> {
+        const classNames = [];
+        let jss;
+
+        for (const category of Object.keys(styleConfig)) {
+            const categoryConfig = styleConfig[category];
+
+            if (category === "instance") {
+                const instanceClassName = categoryConfig.key || this.randomClass();
+                categoryConfig.key = instanceClassName;
+                jss = await this.getVariationClasses(categoryConfig, instanceClassName);
+
+                const instanceClassNames = await this.getVariationClassNames(categoryConfig, instanceClassName);
+                instanceClassNames.forEach(x => classNames.push(x));
+            }
+            else {
+                if (categoryConfig) {
+                    if (this.isResponsive2(categoryConfig)) {
+                        for (const breakpoint of Object.keys(categoryConfig)) {
+                            let className;
+
+                            if (breakpoint === "xs") {
+                                className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                            }
+                            else {
+                                className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                            }
+
+                            if (className) {
+                                classNames.push(className);
+                            }
+                        }
+                    }
+                    else {
+                        const className = await this.getClassNameByStyleKeyAsync(categoryConfig);
+
+                        if (className) {
+                            classNames.push(className);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        const result: StyleCompilation = {
+            classNames: classNames.join(" "),
+            css: await this.jssToCss(jss)
+        };
+
+        return result;
+    }
+
     public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
@@ -426,5 +536,10 @@ export class StyleCompiler {
         }
 
         return classNames.join(" ");
+    }
+
+    public jssToCss?(jssObject: object): string {
+        const styleSheet = jss.createStyleSheet(jssObject);
+        return styleSheet.toString();
     }
 }

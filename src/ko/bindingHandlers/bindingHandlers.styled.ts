@@ -24,7 +24,12 @@ export class StyledBindingHandler {
                         classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(styleConfig.key);
                     }
                     else {
-                        classNames = await this.styleCompiler.getClassNamesByStyleConfigAsync(styleConfig);
+                        const compilation = await this.styleCompiler.getClassNamesByStyleConfigAsync2(styleConfig);
+                        classNames = compilation.classNames;
+
+                        const styleElement = document.createElement("style");
+                        styleElement.innerHTML = await compilation.css;
+                        element.parentElement.insertBefore(styleElement, element);
                     }
                 }
 
