@@ -32,7 +32,7 @@ import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 
 
-export class StylingEditModule implements IInjectorModule {
+export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindModule(new StyleModule());
         injector.bind("fontSelector", FontSelector);
