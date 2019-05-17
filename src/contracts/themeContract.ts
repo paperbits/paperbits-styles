@@ -9,6 +9,5 @@ export interface ThemeContract {
     shadows?: Bag<ShadowContract>;
     globals?: Object;
     components?: Object;
-    instances?: Object;
     utils?: any;
 }

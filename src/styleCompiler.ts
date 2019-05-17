@@ -104,15 +104,6 @@ export class StyleCompiler implements IStyleCompiler {
             }
         }
 
-        if (themeContract.instances) {
-            for (const instanceName of Object.keys(themeContract.instances)) {
-                const instanceConfig = themeContract.instances[instanceName];
-
-                const pluginRules = await this.getVariationClasses(instanceConfig, instanceName);
-                Utils.assign(allStyles, pluginRules);
-            }
-        }
-
         if (themeContract.utils) {
             for (const variationName of Object.keys(themeContract.utils.text)) {
                 const classes = await this.getVariationClasses(themeContract.utils.text[variationName], "text", variationName);

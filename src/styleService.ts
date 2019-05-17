@@ -127,21 +127,6 @@ export class StyleService {
         return variations;
     }
 
-    public async setInstanceStyle(instanceKey: string, instanceStyles: Object): Promise<void> {
-        if (!instanceKey) {
-            throw new Error(`Parameter "instanceKey" not specified.`);
-        }
-
-        if (!instanceStyles) {
-            throw new Error(`Parameter "instanceStyles" not specified.`);
-        }
-
-        const styles = await this.getStyles();
-        Objects.mergeDeepAt(instanceKey, styles, instanceStyles);
-        this.updateStyles(styles);
-        this.eventManager.dispatchEvent("onStyleChange");
-    }
-
     public async getStyleByKey(styleKey: string): Promise<any> {
         if (!styleKey) {
             throw new Error(`Parameter "styleKey" not specified.`);
