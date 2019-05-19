@@ -10,3 +10,4 @@ export * from "./stylePlugin";
 export * from "./typographyStylePlugin";
 export * from "./componentsStylePlugin";
 export * from "./statesStylePlugin";
+export * from "./containerStylePlugin";

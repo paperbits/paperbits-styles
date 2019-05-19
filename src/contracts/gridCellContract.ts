@@ -1,9 +1,6 @@
 import { Contract, Breakpoints } from "@paperbits/common";
-
-export interface GridCellAlignment {
-    vertical: string;
-    horizontal: string;
-}
+import { ContentOverflow } from "./contentOverflow";
+import { ContentAlignment } from "./contentAlignment";
 
 export interface GridCellSpan {
     /**
@@ -22,11 +19,6 @@ export interface GridCellPosition {
     row?: number;
 }
 
-export interface GridCellOverflow {
-    vertical: string;
-    horizontal: string;
-}
-
 export interface GridCellContract extends Contract {
     /**
      * @examples ["article", "header", "aside", "content", "footer"]
@@ -34,6 +26,6 @@ export interface GridCellContract extends Contract {
     role: string;
     position: GridCellPosition;
     span?: GridCellSpan;
-    alignment?: GridCellAlignment;
-    overflow?: GridCellOverflow;
+    alignment?: ContentAlignment;
+    overflow?: ContentOverflow;
 }

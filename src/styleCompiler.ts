@@ -16,14 +16,15 @@ import {
     AnimationStylePlugin,
     TypographyStylePlugin,
     ComponentsStylePlugin,
-    StatesStylePlugin
+    StatesStylePlugin,
+    ContainerStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
-import { IStyleCompiler, StyleCompilation } from "@paperbits/common/styles";
-import { StyleConfig } from "@paperbits/common/styles/styleConfig";
+import { IStyleCompiler, StyleModel } from "@paperbits/common/styles";
+import { StyleContract } from "@paperbits/common/styles/styleConfig";
 
 const opts = preset();
 
@@ -78,6 +79,7 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["states"] = new StatesStylePlugin(this);
         this.plugins["grid"] = new GridStylePlugin();
         this.plugins["grid-cell"] = new GridCellStylePlugin();
+        this.plugins["container"] = new ContainerStylePlugin();
 
         const allStyles = {
             "@global": {}
@@ -127,7 +129,7 @@ export class StyleCompiler implements IStyleCompiler {
                     if (variationName === "default") continue;
                     const componentName = tagName === "body" ? "text" : tagName;
                     const variationStyles = await this.getVariationClasses(tagConfig[variationName], componentName, variationName, true);
-                    
+
                     const key = `& .${componentName}-${variationName}`;
                     if (tagName === "body") {
                         defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
@@ -422,27 +424,18 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames.join(" ");
     }
 
-    private randomClass(): string {
-        let result = "";
-        const possible = "abcdefghijklmnopqrstuvwxyz";
-
-        for (let i = 0; i < 10; i++) {
-            result += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-
-        return result;
-    }
-
-    public async getClassNamesByStyleConfigAsync2(styleConfig: any): Promise<StyleCompilation> {
+    public async getClassNamesByStyleConfigAsync2(styleConfig: any): Promise<StyleModel> {
         const classNames = [];
         let jss;
+        let key;
 
         for (const category of Object.keys(styleConfig)) {
             const categoryConfig = styleConfig[category];
 
             if (category === "instance") {
-                const instanceClassName = categoryConfig.key || this.randomClass();
+                const instanceClassName = categoryConfig.key || Utils.randomClassName();
                 categoryConfig.key = instanceClassName;
+                key = categoryConfig.key;
                 jss = await this.getVariationClasses(categoryConfig, instanceClassName);
 
                 const instanceClassNames = await this.getVariationClassNames(categoryConfig, instanceClassName);
@@ -478,7 +471,8 @@ export class StyleCompiler implements IStyleCompiler {
 
         }
 
-        const result: StyleCompilation = {
+        const result: StyleModel = {
+            key: key,
             classNames: classNames.join(" "),
             css: await this.jssToCss(jss)
         };
@@ -503,7 +497,8 @@ export class StyleCompiler implements IStyleCompiler {
 
         if (component === "body") {
             component = "text";
-        } else {
+        }
+        else {
             classNames.push(Utils.camelCaseToKebabCase(component));
         }
 

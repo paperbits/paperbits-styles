@@ -1,10 +1,8 @@
 import * as ko from "knockout";
-import { IStyleCompiler } from "@paperbits/common/styles";
 
-/* The task of this handler is to assign classes, not styles */
 
 export class StyledBindingHandler {
-    constructor(private readonly styleCompiler: IStyleCompiler) {
+    constructor() {
         ko.bindingHandlers["styled"] = {
             update: async (element: HTMLElement, valueAccessor) => {
                 const styleConfig = ko.unwrap(valueAccessor());
@@ -12,28 +10,24 @@ export class StyledBindingHandler {
                 if (!styleConfig) {
                     return;
                 }
-
-                let classNames: string;
                 const cssObservable = ko.observable();
 
-                if (typeof styleConfig === "string" || styleConfig instanceof String) {
-                    classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(<string>styleConfig);
-                }
-                else {
-                    if (styleConfig.key) {
-                        classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(styleConfig.key);
-                    }
-                    else {
-                        const compilation = await this.styleCompiler.getClassNamesByStyleConfigAsync2(styleConfig);
-                        classNames = compilation.classNames;
+                let styleElement = element.ownerDocument.getElementById(styleConfig.key);
 
-                        const styleElement = document.createElement("style");
-                        styleElement.innerHTML = await compilation.css;
+                if (styleConfig.css) {
+                    if (!styleElement) {
+                        styleElement = element.ownerDocument.createElement("style");
+                        styleElement.id = styleConfig.key;
                         element.parentElement.insertBefore(styleElement, element);
                     }
+                    
+                    styleElement.innerHTML = await styleConfig.css;
+                }
+                else if (styleElement) {
+                    styleElement.remove();
                 }
 
-                cssObservable(classNames);
+                cssObservable(styleConfig.classNames);
 
                 ko.applyBindingsToNode(element, { css: cssObservable }, null);
             }
