@@ -1,6 +1,6 @@
 import { Contract, Breakpoints } from "@paperbits/common";
-import { ContentAlignment } from "./ContentAlignment";
-import { ContentOverflow } from "./ContentOverflow";
+import { ContentAlignment } from "./contentAlignment";
+import { ContentOverflow } from "./contentOverflow";
 
 
 export interface ContainerContract extends Contract {
