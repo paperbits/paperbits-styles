@@ -48,9 +48,9 @@ export class StyleService {
             displayName: "< Unnammed >"
         };
 
-        const states = this.getAvailableStates(styles.components[componentName]);
+        const states = this.getAllowedStates(styles.components[componentName]);
         if (states) {
-            variation["availableStates"] = states;
+            variation["allowedStates"] = states;
         }
 
         styles.components[componentName][variationName] = variation;
@@ -108,12 +108,12 @@ export class StyleService {
             categoryStyles = styles[categoryName];
         }
         const category = Object.keys(categoryStyles);
-        const states = this.getAvailableStates(categoryStyles);  
+        const states = this.getAllowedStates(categoryStyles);  
 
         const variations = category.map(variationName => {
             const variationContract = categoryStyles[variationName];
             if (states && variationName !== "default") {
-                variationContract["availableStates"] = states;
+                variationContract["allowedStates"] = states;
             }
             return variationContract;
         });
@@ -121,8 +121,8 @@ export class StyleService {
         return variations;
     }
 
-    public getAvailableStates(styles: any): [] {
-        const states = styles["default"]["availableStates"];
+    public getAllowedStates(styles: any): [] {
+        const states = styles["default"]["allowedStates"];
         if (states) {
             return states;
         }
@@ -137,12 +137,12 @@ export class StyleService {
         const styles = await this.getStyles();
         const componentStyles = styles.components[componentName];
 
-        const states = this.getAvailableStates(componentStyles);        
+        const states = this.getAllowedStates(componentStyles);        
 
         const variations = Object.keys(componentStyles).map(variationName => {
             const variationContract = componentStyles[variationName];
             if (states && variationName !== "default") {
-                variationContract["availableStates"] = states;
+                variationContract["allowedStates"] = states;
             }
             return variationContract;
         });

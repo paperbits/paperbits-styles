@@ -55,7 +55,7 @@ export class StyleEditor {
         this.elementStyleAnimation(this.elementStyle.animation);
         this.elementStyleBox(this.elementStyle);
 
-        const states: [] = this.elementStyle["availableStates"];
+        const states: [] = this.elementStyle["allowedStates"];
         this.elementStates(states);
         if (states && states.length > 0) {
             this.selectedState.subscribe(this.onStateUpdate);
