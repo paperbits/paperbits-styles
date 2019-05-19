@@ -30,6 +30,7 @@ import "./ko/bindingHandlers/bindingHandlers.jss";
 import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
+import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
 
 
 export class StylesDesignModule implements IInjectorModule {
@@ -54,6 +55,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
+        injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);
     }
 }
