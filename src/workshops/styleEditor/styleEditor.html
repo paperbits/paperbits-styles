@@ -2,7 +2,7 @@
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" data-bind="collapse: '#miscellaneousCollapse'"></a>
-            <b>Miscellaneous</b>
+            <b>Main</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
             <div class="form-group">
@@ -10,18 +10,24 @@
                 <label>Style name</label>
                 <input type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName">
             </div>
+            <!-- ko if: elementStates -->
+            <div class="form-group">
+                <label for="textTransform">State</label>
+                <select id="textTransform" class="form-control" data-bind="options: elementStates, value: selectedState, optionsCaption: 'default'"></select>
+            </div>
+            <!--/ko -->
         </div>
     </div>
 
     <!-- <gradient-editor></gradient-editor> -->
 
-    <typography params="{ typography: elementStyle.typography, onUpdate: onTypographyUpdate }"></typography>
+    <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
 
-    <background params="{ background: elementStyle.background, onUpdate: onBackgroundUpdate }"></background>
+    <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
 
-    <shadow-editor params="{ shadow: elementStyle.shadow, onUpdate: onShadowUpdate }"></shadow-editor>
+    <shadow-editor params="{ shadow: elementStyleShadow, onUpdate: onShadowUpdate }"></shadow-editor>
 
-    <animation params="{ animation: elementStyle.animation, onUpdate: onAnimationUpdate }"></animation>
+    <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
 
-    <box-editor params="{ elementStyle: elementStyle, onUpdate: onBoxModelUpdate }"></box-editor>
+    <box-editor params="{ elementStyle: elementStyleBox, onUpdate: onBoxModelUpdate }"></box-editor>
 </fieldset>

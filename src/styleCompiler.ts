@@ -170,6 +170,9 @@ export class StyleCompiler implements IStyleCompiler {
         }
 
         for (const pluginName of Object.keys(variationConfig)) {
+            if (pluginName === "availableStates") {
+                continue;
+            }
             const plugin = this.plugins[pluginName];
 
             if (plugin) {
