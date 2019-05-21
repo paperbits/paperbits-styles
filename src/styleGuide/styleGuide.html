@@ -129,7 +129,7 @@
             <div class="col-md-6">
                 <div class="style-card" data-bind="stylable: globals.ul.default">
                     <div class="style-card-body">
-                        <ul class="style-card" data-bind="stylePreview:globals.ul.default">
+                        <ul class="style-card" data-bind="stylePreview: globals.ul.default">
                             <li>
                                 List item 1
                             </li>
@@ -138,12 +138,14 @@
                             </li>
                             <li>
                                 List item 3
-                            </li>
-                            <li>
-                                List item 4
-                            </li>
-                            <li>
-                                List item 5
+                                <ul>
+                                    <li>
+                                        Nested list item 1
+                                    </li>
+                                    <li>
+                                        Nested list item 2
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
@@ -161,12 +163,14 @@
                             </li>
                             <li>
                                 List item 3
-                            </li>
-                            <li>
-                                List item 4
-                            </li>
-                            <li>
-                                List item 5
+                                <ol>
+                                    <li>
+                                        Nested list item 1
+                                    </li>
+                                    <li>
+                                        Nested list item 2
+                                    </li>
+                                </ol>
                             </li>
                         </ol>
                     </div>
@@ -317,15 +321,15 @@
                     <div class="collapse navbar-collapse"></div>
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink, stylePreview:components.navbar.default.components.navLink">
+                            data-bind="stylable: components.navbar.default.components.navLink.default, stylePreview:components.navbar.default.components.navLink.default">
                             Nav item
                         </a>
                         <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink, stylePreview:components.navbar.default.components.navLink">
+                            data-bind="stylable: components.navbar.default.components.navLink.default, stylePreview:components.navbar.default.components.navLink.default">
                             Nav item
                         </a>
                         <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink,stylePreview:components.navbar.default.components.navLink">
+                            data-bind="stylable: components.navbar.default.components.navLink.default,stylePreview:components.navbar.default.components.navLink.default">
                             Nav item
                         </a>
                     </div>
@@ -342,7 +346,8 @@
             <div class="col col-md-4">
                 <div class="style-card" data-bind="stylable: picture">
                     <div class="style-card-body">
-                        <img src="http://cdn.paperbits.io/images/placeholder-340x190.jpg" data-bind="stylePreview:picture" />
+                        <img src="http://cdn.paperbits.io/images/placeholder-340x190.jpg"
+                            data-bind="stylePreview:picture" />
                     </div>
                     <span class="style-card-label" data-bind="text: picture.displayName"></span>
                 </div>
