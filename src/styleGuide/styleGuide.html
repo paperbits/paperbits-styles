@@ -184,9 +184,8 @@
         <div class="samples">
             <!-- ko foreach: { data: $component.colors, as: 'color' } -->
             <div class="sample style-card" data-bind="stylable: color">
-                <a href="#" class="style-card-round"
+                <a href="#" class="style-card-square"
                     data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
-                <span class="style-card-label text-uppercase" data-bind="text: color.value"></span>
                 <span class="style-card-label" data-bind="text: color.displayName"></span>
             </div>
             <!--/ko -->
@@ -205,7 +204,7 @@
             <!-- ko foreach: { data: $component.gradients, as: 'gradient' } -->
             <div class="sample style-card" data-bind="stylable: gradient">
                 <style data-bind="gradientPreview: gradient"></style>
-                <div class="style-card-round" data-bind="css: $component.keyToClass(gradient.key)"></div>
+                <div class="style-card-square" data-bind="css: $component.keyToClass(gradient.key)"></div>
                 <span class="style-card-label" data-bind="text: gradient.displayName"></span>
             </div>
             <!--/ko -->
