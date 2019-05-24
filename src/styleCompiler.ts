@@ -126,15 +126,22 @@ export class StyleCompiler implements IStyleCompiler {
                 let defaultComponentStyles = await this.getVariationClasses(tagConfig["default"], tagName, "default", false);
 
                 for (const variationName of Object.keys(tagConfig)) {
-                    if (variationName === "default") continue;
+                    if (variationName === "default") {
+                        continue;
+                    }
+
                     const componentName = tagName === "body" ? "text" : tagName;
                     const variationStyles = await this.getVariationClasses(tagConfig[variationName], componentName, variationName, true);
 
-                    const key = `& .${componentName}-${variationName}`;
-                    if (tagName === "body") {
-                        defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
-                    } else {
-                        defaultComponentStyles[tagName] = { ...defaultComponentStyles[tagName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                    if (variationStyles) {
+                        const key = `& .${componentName}-${variationName}`;
+                        
+                        if (tagName === "body") {
+                            defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
+                        }
+                        else {
+                            defaultComponentStyles[tagName] = { ...defaultComponentStyles[tagName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                        }
                     }
                 }
 
