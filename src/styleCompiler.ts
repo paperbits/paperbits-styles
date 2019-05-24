@@ -100,8 +100,16 @@ export class StyleCompiler implements IStyleCompiler {
                 }
 
                 for (const variationName of Object.keys(componentConfig)) {
-                    if (variationName === "default") continue;
+                    if (variationName === "default") {
+                        continue;
+                    }
+
                     const variationStyles = await this.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
+
+                    if (!variationStyles) {
+                        continue;
+                    }
+
                     const key = `& .${componentName}-${variationName}`;
                     defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
                 }
