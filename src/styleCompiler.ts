@@ -95,6 +95,10 @@ export class StyleCompiler implements IStyleCompiler {
 
                 const defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
 
+                if (!defaultComponentStyles) {
+                    continue;
+                }
+
                 for (const variationName of Object.keys(componentConfig)) {
                     if (variationName === "default") continue;
                     const variationStyles = await this.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
@@ -109,12 +113,18 @@ export class StyleCompiler implements IStyleCompiler {
         if (themeContract.utils) {
             for (const variationName of Object.keys(themeContract.utils.text)) {
                 const classes = await this.getVariationClasses(themeContract.utils.text[variationName], "text", variationName);
-                Utils.assign(allStyles, classes);
+
+                if (classes) {
+                    Utils.assign(allStyles, classes);
+                }
             }
 
             for (const variationName of Object.keys(themeContract.utils.content)) {
                 const classes = await this.getVariationClasses(themeContract.utils.content[variationName], "content", variationName);
-                Utils.assign(allStyles, classes);
+
+                if (classes) {
+                    Utils.assign(allStyles, classes);
+                }
             }
         }
 
@@ -124,6 +134,10 @@ export class StyleCompiler implements IStyleCompiler {
                 const tagConfig = themeContract.globals[tagName];
 
                 let defaultComponentStyles = await this.getVariationClasses(tagConfig["default"], tagName, "default", false);
+
+                if (!defaultComponentStyles) {
+                    continue;
+                }
 
                 for (const variationName of Object.keys(tagConfig)) {
                     if (variationName === "default") {
@@ -135,7 +149,7 @@ export class StyleCompiler implements IStyleCompiler {
 
                     if (variationStyles) {
                         const key = `& .${componentName}-${variationName}`;
-                        
+
                         if (tagName === "body") {
                             defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
                         }
@@ -171,7 +185,7 @@ export class StyleCompiler implements IStyleCompiler {
         return styleSheet.toString() + "\n" + responsiveStyleSheet.toString();
     }
 
-    public async getVariationClasses(variationConfig, componentName: string, variationName: string = null, isNested: boolean = false): Promise<object> {
+    public async getVariationClasses(variationConfig: any, componentName: string, variationName: string = null, isNested: boolean = false): Promise<object> {
         const result = {};
 
         if (!variationName) {
@@ -241,10 +255,10 @@ export class StyleCompiler implements IStyleCompiler {
             }
         }
 
-        return result;
+        return Object.keys(result).length > 0 ? result : null;
     }
 
-    public getVariationClassNames(variationConfig, componentName: string, variationName: string = null): string[] {
+    public getVariationClassNames(variationConfig: any, componentName: string, variationName: string = null): string[] {
         const classNames = [];
 
         if (!variationName) {

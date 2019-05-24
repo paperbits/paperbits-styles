@@ -19,6 +19,10 @@ export class ComponentsStylePlugin extends StylePlugin {
 
             const defaultComponentStyles = await this.styleCompiler.getVariationClasses(componentConfig["default"], componentName, "default", true);
 
+            if (!defaultComponentStyles) {
+                continue;
+            }
+
             for (const variationName of Object.keys(componentConfig)) {
                 if (variationName === "default") continue;
                 const variationStyles = await this.styleCompiler.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
