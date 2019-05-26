@@ -24,7 +24,6 @@ import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
 import { IStyleCompiler, StyleModel } from "@paperbits/common/styles";
-import { StyleContract } from "@paperbits/common/styles/styleConfig";
 
 const opts = preset();
 
@@ -93,13 +92,16 @@ export class StyleCompiler implements IStyleCompiler {
             for (const componentName of Object.keys(themeContract.components)) {
                 const componentConfig = themeContract.components[componentName];
 
-                const defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
+                let defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
+                const variations = Object.keys(componentConfig);
 
-                if (!defaultComponentStyles) {
+                if (!defaultComponentStyles && variations.length <= 1) {
                     continue;
+                } else {
+                    defaultComponentStyles = defaultComponentStyles || {};
                 }
 
-                for (const variationName of Object.keys(componentConfig)) {
+                for (const variationName of variations) {
                     if (variationName === "default") {
                         continue;
                     }
@@ -143,11 +145,15 @@ export class StyleCompiler implements IStyleCompiler {
 
                 let defaultComponentStyles = await this.getVariationClasses(tagConfig["default"], tagName, "default", false);
 
-                if (!defaultComponentStyles) {
+                const variations = Object.keys(tagConfig);
+
+                if (!defaultComponentStyles && variations.length <= 1) {
                     continue;
+                } else {
+                    defaultComponentStyles = defaultComponentStyles || {};
                 }
 
-                for (const variationName of Object.keys(tagConfig)) {
+                for (const variationName of variations) {
                     if (variationName === "default") {
                         continue;
                     }
@@ -304,7 +310,7 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames;
     }
 
-    public async getStateClasses(stateConfig, stateName: string): Promise<object> {
+    public async getStateClasses(stateConfig: { [x: string]: any; }, stateName: string): Promise<object> {
         const result = {};
 
         for (const pluginName of Object.keys(stateConfig)) {

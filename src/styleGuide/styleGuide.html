@@ -310,32 +310,45 @@
 
     <article>
         <h2 class="heading">Navigation</h2>
-        <div class="style-card" data-bind="stylable: components.navbar.default">
-            <div class="style-card-body">
-                <nav class="navbar navbar-expand" data-bind="stylePreview:components.navbar.default">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse"></div>
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink.default, stylePreview:components.navbar.default.components.navLink.default">
-                            Nav item
-                        </a>
-                        <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink.default, stylePreview:components.navbar.default.components.navLink.default">
-                            Nav item
-                        </a>
-                        <a class="nav-item nav-link" href="#"
-                            data-bind="stylable: components.navbar.default.components.navLink.default,stylePreview:components.navbar.default.components.navLink.default">
-                            Nav item
-                        </a>
+        <div class="row">
+            <div class="col col-md-12 samples">
+                <!--ko foreach: { data: $component.navBars, as: 'navbar' }-->
+                <div class="style-card" data-bind="stylable: navbar">
+                    <div class="style-card-body">
+                        <nav class="navbar navbar-expand" data-bind="stylePreview:navbar">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse"></div>
+                            <div class="navbar-nav">
+                                <a class="nav-item nav-link" href="#"
+                                    data-bind="stylable: navbar.components.navLink.default, stylePreview:navbar.components.navLink.default">
+                                    Nav item
+                                </a>
+                                <a class="nav-item nav-link" href="#"
+                                    data-bind="stylable: navbar.components.navLink.default, stylePreview:navbar.components.navLink.default">
+                                    Nav item
+                                </a>
+                                <a class="nav-item nav-link" href="#"
+                                    data-bind="stylable: navbar.components.navLink.default,stylePreview:navbar.components.navLink.default">
+                                    Nav item
+                                </a>
+                            </div>
+                        </nav>
                     </div>
-                </nav>
+                    <span class="style-card-label" data-bind="text: navbar.displayName"></span>
+                </div>
+                <!--/ko-->
+                <div class="style-card style-card-empty">
+                    <button class="btn-round" data-bind="click: $component.addNavbarVariation"></button>
+                    <div class="style-card-label">
+                        Add variation
+                    </div>
+                </div>
             </div>
-            <span class="style-card-label" data-bind="text: components.navbar.default.displayName"></span>
         </div>
+        
     </article>
 
     <article>

@@ -40,12 +40,42 @@ export class StyleService {
         return `colors/${variationName}`;
     }
 
+    public async addNavbarVariation(variationName: string): Promise<string> {
+        const styles = await this.getStyles();
+
+        const variation: any = {
+            key: `components/navbar/${variationName}`,
+            displayName: "< Unnammed >",
+            category: "appearance",
+            components: {
+                navLink : {
+                    default: {
+                        key: `components/navbar/${variationName}/components/navLink/default`,
+                        displayName: "List item"
+                    }
+                }
+            }
+        };
+
+        const states = this.getAllowedStates(styles.components["navbar"]);
+        if (states) {
+            variation["allowedStates"] = states;
+        }
+
+        styles.components["navbar"][variationName] = variation;
+
+        this.updateStyles(styles);
+
+        return variation.key;
+    }
+
     public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
         const styles = await this.getStyles();
 
         const variation: any = {
             key: `components/${componentName}/${variationName}`,
-            displayName: "< Unnammed >"
+            displayName: "< Unnammed >",
+            category: "appearance"
         };
 
         const states = this.getAllowedStates(styles.components[componentName]);
