@@ -33,6 +33,7 @@ export class StyleGuide {
     public shadows: ko.ObservableArray<ShadowContract>;
     public gradients: ko.ObservableArray<LinearGradientContract>;
     public textStyles: ko.ObservableArray<any>;
+    public navBars: ko.ObservableArray<any>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -50,6 +51,7 @@ export class StyleGuide {
         this.videoPlayers = ko.observableArray([]);
         this.textBlocks = ko.observableArray([]);
         this.textStyles = ko.observableArray([]);
+        this.navBars = ko.observableArray([]);
     }
 
     @OnMounted()
@@ -152,6 +154,15 @@ export class StyleGuide {
         await this.openInEditor("card");
     }
 
+    public async addNavbarVariation(): Promise<void> {
+        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
+        const addedStyleKey = await this.styleService.addNavbarVariation(variationName);
+        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+        this.selectStyle(addedStyle);
+
+        this.applyChanges();
+    }
+
     public async addPictureVariation(): Promise<void> {
         await this.openInEditor("picture");
     }
@@ -198,13 +209,16 @@ export class StyleGuide {
 
         const textStylesVariations = await this.styleService.getVariations("globals", "body");
         this.textStyles(this.sortByDisplayName(textStylesVariations));
+        
+        const navBarsVariations = await this.styleService.getComponentVariations("navbar");
+        this.navBars(this.sortByDisplayName(navBarsVariations));
 
         // this.styles.valueHasMutated();
 
         this.styles(styles);
     }
 
-    private sortByDisplayName(items: any[]) {
+    private sortByDisplayName(items: any[]): any [] {
         return _.sortBy(items, ["displayName"]);
     }
 
@@ -367,7 +381,7 @@ export class StyleGuide {
             selectionCommands: []
         };
 
-        if (!style.key.startsWith("globals/") &&
+        if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
             !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/") &&
             !style.key.endsWith("/default")
