@@ -57,6 +57,7 @@ export class StyleEditor {
 
         const states: [] = this.elementStyle["allowedStates"];
         this.elementStates(states);
+        
         if (states && states.length > 0) {
             this.selectedState.subscribe(this.onStateUpdate);
         }
@@ -133,7 +134,7 @@ export class StyleEditor {
         this.onUpdate(this.elementStyle);
     }
 
-    public onBoxModelUpdate(boxContract: BoxContract): void {
+    public onBoxUpdate(boxContract: BoxContract): void {
         const updateElement = this.getUpdateElement();
         Object.assign(updateElement, boxContract);
         this.onUpdate(this.elementStyle);

@@ -37,7 +37,7 @@ export class BoxEditor {
     public borderBottomWidth: ko.Computed<any>;
 
     @Param()
-    public elementStyle: ko.Observable<BoxContract>;
+    public box: ko.Observable<BoxContract>;
 
     @Event()
     public onUpdate: (contract: BoxContract) => void;
@@ -46,7 +46,7 @@ export class BoxEditor {
         this.init = this.init.bind(this);
         this.dispatchUpdates = this.dispatchUpdates.bind(this);
 
-        this.elementStyle = ko.observable();
+        this.box = ko.observable();
 
         this.marginTop = ko.observable();
         this.marginLeft = ko.observable();
@@ -76,7 +76,7 @@ export class BoxEditor {
 
     @OnMounted()
     public init(): void {
-        const currentStyle = this.elementStyle();
+        const currentStyle = this.box();
 
         if (currentStyle.margin) {
             this.marginTop(currentStyle.margin.top);
