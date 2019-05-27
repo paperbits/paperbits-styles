@@ -89,7 +89,7 @@ export class StyleCompiler implements IStyleCompiler {
         Utils.assign(allStyles, fontsRules);
 
         if (themeContract.components) {
-            for (const componentName of Object.keys(themeContract.components)) {
+            for (let componentName of Object.keys(themeContract.components)) {
                 const componentConfig = themeContract.components[componentName];
 
                 let defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
@@ -111,6 +111,7 @@ export class StyleCompiler implements IStyleCompiler {
                     if (!variationStyles) {
                         continue;
                     }
+                    componentName = Utils.camelCaseToKebabCase(componentName);
 
                     const key = `& .${componentName}-${variationName}`;
                     defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
@@ -158,7 +159,7 @@ export class StyleCompiler implements IStyleCompiler {
                         continue;
                     }
 
-                    const componentName = tagName === "body" ? "text" : tagName;
+                    const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
                     const variationStyles = await this.getVariationClasses(tagConfig[variationName], componentName, variationName, true);
 
                     if (variationStyles) {
@@ -205,7 +206,7 @@ export class StyleCompiler implements IStyleCompiler {
         if (!variationName) {
             variationName = "default";
         }
-
+      
         for (const pluginName of Object.keys(variationConfig)) {
             if (pluginName === "allowedStates") {
                 continue;
