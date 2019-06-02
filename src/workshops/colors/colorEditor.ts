@@ -1,7 +1,6 @@
 import * as ko from "knockout";
 import template from "./colorEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { StyleService } from "../../styleService";
 import { ColorContract } from "../../contracts/colorContract";
 
 @Component({
@@ -20,7 +19,7 @@ export class ColorEditor {
     @Event()
     public readonly onSelect: (color: ColorContract) => void;
 
-    constructor(private readonly styleService: StyleService) {
+    constructor() {
         this.loadColors = this.loadColors.bind(this);
         this.onColorChange = this.onColorChange.bind(this);
 
