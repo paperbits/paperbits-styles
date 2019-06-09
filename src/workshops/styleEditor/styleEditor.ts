@@ -10,8 +10,29 @@ import { BoxContract, ColorContract, AnimationContract, ShadowContract, Typograp
     injectable: "styleEditor"
 })
 export class StyleEditor {
+    private updateTimeout: any;
     private elementStates: ko.ObservableArray<string>;
     private currentState: string;
+
+    public readonly styleName: ko.Observable<string>;
+    public readonly selectedState: ko.Observable<string>;
+    public readonly elementStyleTypography: ko.Observable<TypographyContract>;
+    public readonly elementStyleBackground: ko.Observable<BackgroundContract>;
+    public readonly elementStyleShadow: ko.Observable<any>;
+    public readonly elementStyleAnimation: ko.Observable<any>;
+    public readonly elementStyleBox: ko.Observable<BoxContract>;
+    public readonly backgroundHasPicture: ko.Computed<boolean>;
+
+    constructor() {
+        this.styleName = ko.observable("New style");
+        this.selectedState = ko.observable();
+        this.elementStates = ko.observableArray();
+        this.elementStyleTypography = ko.observable();
+        this.elementStyleBackground = ko.observable();
+        this.elementStyleShadow = ko.observable();
+        this.elementStyleAnimation = ko.observable();
+        this.elementStyleBox = ko.observable();
+    }
 
     @Param()
     public elementStyle: any; // ko.Observable<any>;
@@ -22,33 +43,9 @@ export class StyleEditor {
     @Event()
     public onUpdate: (contract: any) => void;
 
-    public styleName: ko.Observable<string>;
-    public selectedState: ko.Observable<string>;
-
-    public elementStyleTypography: ko.Observable<TypographyContract>;
-    public elementStyleBackground: ko.Observable<BackgroundContract>;
-    public elementStyleShadow: ko.Observable<any>;
-    public elementStyleAnimation: ko.Observable<any>;
-    public elementStyleBox: ko.Observable<BoxContract>;
-
-    public readonly backgroundHasPicture: ko.Computed<boolean>;
-
-    constructor() {
-        this.styleName = ko.observable("New style");
-        this.selectedState = ko.observable();
-        this.elementStates = ko.observableArray();
-
-        this.elementStyleTypography = ko.observable();
-        this.elementStyleBackground = ko.observable();
-        this.elementStyleShadow = ko.observable();
-        this.elementStyleAnimation = ko.observable();
-        this.elementStyleBox = ko.observable();
-    }
-
     @OnMounted()
     public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
-
         this.elementStyleTypography(this.elementStyle.typography);
         this.elementStyleBackground(this.elementStyle.background);
         this.elementStyleShadow(this.elementStyle.shadow);
@@ -57,7 +54,7 @@ export class StyleEditor {
 
         const states: [] = this.elementStyle["allowedStates"];
         this.elementStates(states);
-        
+
         if (states && states.length > 0) {
             this.selectedState.subscribe(this.onStateUpdate);
         }
@@ -65,8 +62,14 @@ export class StyleEditor {
         this.styleName.subscribe(this.onStyleNameUpdate);
     }
 
+    private scheduleUpdate(): void {
+        clearTimeout(this.updateTimeout);
+        this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 500);
+    }
+
     public onStateUpdate(newState: string): void {
         const stateContract = this.elementStyle["states"] || {};
+
         if (newState && this.currentState !== newState) {
             const newStateContract = stateContract[newState] || {};
             this.elementStyleTypography(newStateContract.typography);
@@ -74,7 +77,8 @@ export class StyleEditor {
             this.elementStyleShadow(newStateContract.shadow);
             this.elementStyleAnimation(newStateContract.animation);
             this.elementStyleBox(newStateContract);
-        } else {
+        }
+        else {
             if (!newState) {
                 this.elementStyleTypography(this.elementStyle.typography);
                 this.elementStyleBackground(this.elementStyle.background);
@@ -97,17 +101,18 @@ export class StyleEditor {
 
     public onStyleNameUpdate(name: string): void {
         this.elementStyle["displayName"] = name;
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 
     public onBackgroundUpdate(background: BackgroundContract): void {
         const updateElement = this.getUpdateElement();
         updateElement["background"] = background;
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 
-    public onShadowUpdate(shadow): void {
+    public onShadowUpdate(shadow: any): void {
         const updateElement = this.getUpdateElement();
+
         if (shadow) {
             updateElement["shadow"] = { shadowKey: shadow.shadowKey };
         }
@@ -115,11 +120,12 @@ export class StyleEditor {
             delete updateElement["shadow"];
         }
 
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 
-    public onAnimationUpdate(animation): void {
+    public onAnimationUpdate(animation: any): void {
         const updateElement = this.getUpdateElement();
+
         if (animation) {
             updateElement["animation"] = {
                 animationKey: animation.animationKey,
@@ -131,18 +137,18 @@ export class StyleEditor {
             delete updateElement["animation"];
         }
 
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 
     public onBoxUpdate(boxContract: BoxContract): void {
         const updateElement = this.getUpdateElement();
         Object.assign(updateElement, boxContract);
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 
     public onTypographyUpdate(typographyContract: TypographyContract): void {
         const updateElement = this.getUpdateElement();
         updateElement["typography"] = typographyContract;
-        this.onUpdate(this.elementStyle);
+        this.scheduleUpdate();
     }
 }
