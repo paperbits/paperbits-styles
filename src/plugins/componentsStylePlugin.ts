@@ -37,8 +37,9 @@ export class ComponentsStylePlugin extends StylePlugin {
 
                 componentName = Utils.camelCaseToKebabCase(componentName);
 
-                const key = `& .${componentName}-${variationName}`;
-                defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                const key = `&.${componentName}-${variationName}`;
+
+                defaultComponentStyles[`& .${componentName}`][key] = variationStyles[`& .${componentName}-${variationName}`];
             }
 
             Utils.assign(result, defaultComponentStyles);
