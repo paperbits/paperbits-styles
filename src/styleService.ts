@@ -51,7 +51,21 @@ export class StyleService {
                 navLink : {
                     default: {
                         key: `components/navbar/${variationName}/components/navLink/default`,
-                        displayName: "List item"
+                        displayName: "Nav item",
+                        allowedStates: [
+                            "hover",
+                            "focus",
+                            "active"
+                        ]
+                    },
+                    active: {
+                        key: `components/navbar/${variationName}/components/navLink/active`,
+                        displayName: "Nav item (active)",
+                        allowedStates: [
+                            "hover",
+                            "focus",
+                            "active"
+                        ]
                     }
                 }
             }

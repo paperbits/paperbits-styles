@@ -39,6 +39,10 @@ export class ComponentsStylePlugin extends StylePlugin {
 
                 const key = `&.${componentName}-${variationName}`;
 
+                if (!defaultComponentStyles[`& .${componentName}`]) {
+                    defaultComponentStyles[`& .${componentName}`] = {};
+                }
+
                 defaultComponentStyles[`& .${componentName}`][key] = variationStyles[`& .${componentName}-${variationName}`];
             }
 
