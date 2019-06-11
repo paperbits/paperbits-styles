@@ -19,15 +19,13 @@
         </div>
     </div>
 
-    <!-- <gradient-editor></gradient-editor> -->
-
     <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
-
+    
+    <!-- ko if: allowBlockStyles -->
+    <!-- <gradient-editor></gradient-editor> -->
     <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
-
     <shadow-editor params="{ shadow: elementStyleShadow, onUpdate: onShadowUpdate }"></shadow-editor>
-
     <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
-
     <box-editor params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box-editor>
+    <!-- /ko -->
 </fieldset>

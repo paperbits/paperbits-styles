@@ -21,7 +21,8 @@ export class StyleEditor {
     public readonly elementStyleShadow: ko.Observable<any>;
     public readonly elementStyleAnimation: ko.Observable<any>;
     public readonly elementStyleBox: ko.Observable<BoxContract>;
-    public readonly backgroundHasPicture: ko.Computed<boolean>;
+    public allowBlockStyles: ko.Observable<boolean>;
+
 
     constructor() {
         this.styleName = ko.observable("New style");
@@ -32,13 +33,11 @@ export class StyleEditor {
         this.elementStyleShadow = ko.observable();
         this.elementStyleAnimation = ko.observable();
         this.elementStyleBox = ko.observable();
+        this.allowBlockStyles = ko.observable();
     }
 
     @Param()
     public elementStyle: any; // ko.Observable<any>;
-
-    @Param()
-    public styleKey: ko.Observable<string>;
 
     @Event()
     public onUpdate: (contract: any) => void;
@@ -51,6 +50,7 @@ export class StyleEditor {
         this.elementStyleShadow(this.elementStyle.shadow);
         this.elementStyleAnimation(this.elementStyle.animation);
         this.elementStyleBox(this.elementStyle);
+        this.allowBlockStyles(!this.elementStyle.key.startsWith("globals/body"));
 
         const states: [] = this.elementStyle["allowedStates"];
         this.elementStates(states);
