@@ -11,3 +11,4 @@ export * from "./typographyStylePlugin";
 export * from "./componentsStylePlugin";
 export * from "./statesStylePlugin";
 export * from "./containerStylePlugin";
+export * from "./sizeStylePlugin";

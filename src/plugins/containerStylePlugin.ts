@@ -3,7 +3,7 @@ import { ContainerContract } from "../contracts/containerContract";
 
 
 export class ContainerStylePlugin extends StylePlugin {
-    public displayName = "Container";
+    public displayName: string = "Container";
 
     constructor() {
         super();
@@ -14,7 +14,11 @@ export class ContainerStylePlugin extends StylePlugin {
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
-            alignContent: "center"
+            alignContent: "center",
+            minWidth: undefined,
+            minHeight: undefined,
+            maxWidth: undefined,
+            maxHeight: undefined
         };
 
         if (contract.alignment) {

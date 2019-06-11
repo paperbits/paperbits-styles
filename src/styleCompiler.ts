@@ -17,7 +17,8 @@ import {
     TypographyStylePlugin,
     ComponentsStylePlugin,
     StatesStylePlugin,
-    ContainerStylePlugin
+    ContainerStylePlugin,
+    SizeStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -79,6 +80,7 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["grid"] = new GridStylePlugin();
         this.plugins["grid-cell"] = new GridCellStylePlugin();
         this.plugins["container"] = new ContainerStylePlugin();
+        this.plugins["size"] = new SizeStylePlugin();
 
         const allStyles = {
             "@global": {}

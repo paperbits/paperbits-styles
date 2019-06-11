@@ -16,7 +16,8 @@ export class GridStylePlugin extends StylePlugin {
             gridTemplateRows: contract.rows.join(" "),
             gridColumnGap: contract.colGap,
             gridRowGap: contract.rowGap,
-            height: "100%"
+            width: "100%",
+            flex: 1
         };
 
         return result;
