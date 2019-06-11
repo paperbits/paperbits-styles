@@ -10,4 +10,17 @@ export abstract class StylePlugin {
 
         return styleSheet.toString();
     }
+
+    protected parseSize = (value: string | number): any => {
+        if (value === "auto" || value === "initial") {
+            return value;
+        }
+
+        if (value) {
+            return parseInt(<string>value);
+        }
+        else {
+            return undefined;
+        }
+    };
 }

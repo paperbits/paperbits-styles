@@ -7,10 +7,10 @@ export class MarginStylePlugin extends StylePlugin {
 
     public async contractToJss(contract: MarginContract): Promise<Object> {
         return {
-            marginTop: contract.top || 0,
-            marginLeft: contract.left || 0,
-            marginRight: contract.right || 0,
-            marginBottom: contract.bottom || 0
+            marginTop: this.parseSize(contract.top),
+            marginLeft: this.parseSize(contract.left),
+            marginRight: this.parseSize(contract.right),
+            marginBottom: this.parseSize(contract.bottom)
         };
     }
 }
