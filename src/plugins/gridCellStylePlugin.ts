@@ -1,26 +1,28 @@
 import { StylePlugin } from "./stylePlugin";
 import { GridCellContract } from "../contracts/gridCellContract";
+import { StyleRule } from "@paperbits/common/styles";
+
 
 export class GridCellStylePlugin extends StylePlugin {
-    public displayName = "Grid area";
+    public displayName: string = "Grid area";
 
     constructor() {
         super();
     }
 
-    public async contractToJss(contract: GridCellContract): Promise<Object> {
-        const result = {
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignContent: "center"
-        };
+    public async contractToStyleRules(contract: GridCellContract): Promise<StyleRule[]> {
+        const result = [
+            new StyleRule("display", "flex"),
+            new StyleRule("flexWrap", "wrap"),
+            new StyleRule("justifyContent", "center"),
+            new StyleRule("alignContent", "center")
+        ];
 
         if (contract.position) {
-            result["gridColumnStart"] = contract.position.col;
-            result["gridColumnEnd"] = contract.position.col + contract.span.cols;
-            result["gridRowStart"] = contract.position.row;
-            result["gridRowEnd"] = contract.position.row + contract.span.rows;
+            result.push(new StyleRule("gridColumnStart", contract.position.col));
+            result.push(new StyleRule("gridColumnEnd", contract.position.col + contract.span.cols));
+            result.push(new StyleRule("gridRowStart", contract.position.row));
+            result.push(new StyleRule("gridRowEnd", contract.position.row + contract.span.rows));
         }
 
         if (contract.alignment) {
@@ -35,7 +37,7 @@ export class GridCellStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.justifyContent = value;
+                result.push(new StyleRule("justifyContent", value));
             }
 
             if (contract.alignment.vertical) {
@@ -49,19 +51,19 @@ export class GridCellStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.alignContent = value;
+                result.push(new StyleRule("alignContent", value));
             }
         }
 
         if (contract.overflow) {
             if (contract.overflow.vertical && contract.overflow.horizontal) {
-                result["overflow"] = "auto";
+                result.push(new StyleRule("overflow", "auto"));
             }
             else if (contract.overflow.vertical) {
-                result["overflowY"] = "auto";
+                result.push(new StyleRule("overflowY", "auto"));
             }
             else {
-                result["overflowX"] = "auto";
+                result.push(new StyleRule("overflowX", "auto"));
             }
         }
 

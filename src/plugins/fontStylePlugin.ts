@@ -2,17 +2,16 @@ import { StylePlugin } from "./stylePlugin";
 import { ThemeContract } from "../contracts";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 
-export class FontsStylePlugin extends StylePlugin {
-    public displayName = "Font";
+export class FontsStylePlugin {
+    public displayName: string = "Font";
 
     constructor(
         private readonly permalinkResolver: IPermalinkResolver,
         private readonly themeContract: ThemeContract
     ) {
-        super();
     }
 
-    public async contractToJss(): Promise<Object> {
+    public async contractToStyleRules(): Promise<Object> {
         const fontFaceRules = [];
 
         for (const fontKey of Object.keys(this.themeContract.fonts)) {

@@ -24,11 +24,11 @@ export class StylePreviewBindingHandler {
                         classNames = await this.styleCompiler.getClassNameByStyleKeyAsync(styleConfig.key);
                     }
                     else {
-                        const compilation = await this.styleCompiler.getClassNamesByStyleConfigAsync2(styleConfig);
-                        classNames = compilation.classNames;
+                        const styleModel = await this.styleCompiler.getStyleModelAsync(styleConfig);
+                        classNames = styleModel.classNames;
 
                         const styleElement = document.createElement("style");
-                        styleElement.innerHTML = await compilation.css;
+                        styleElement.innerHTML = await styleModel.css;
                         element.parentElement.insertBefore(styleElement, element);
                     }
                 }

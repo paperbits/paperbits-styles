@@ -1,12 +1,12 @@
-
 import * as Objects from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "./stylePlugin";
 import { StyleService } from "../";
 import { BackgroundContract, ColorContract, LinearGradientContract, getLinearGradientString } from "../contracts";
+import { StyleRule } from "@paperbits/common/styles";
 
 export class BackgroundStylePlugin extends StylePlugin {
-    public readonly name = "background";
+    public readonly name: string = "background";
 
     constructor(
         private readonly styleService: StyleService,
@@ -15,8 +15,8 @@ export class BackgroundStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToJss(backgroundContract: BackgroundContract): Promise<Object> {
-        const background: any = {};
+    public async contractToStyleRules(backgroundContract: BackgroundContract): Promise<StyleRule[]> {
+        const rules = [];
         const backgroundImage = [];
         const backgroundPosition = [];
         const backgroundRepeat = [];
@@ -28,7 +28,7 @@ export class BackgroundStylePlugin extends StylePlugin {
             const color = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, themeContract);
 
             if (color) {
-                background.color = color.value;
+                rules.push(new StyleRule("backgroundColor", color.value));
             }
             else {
                 console.warn(`Color with key "${backgroundContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
@@ -64,21 +64,21 @@ export class BackgroundStylePlugin extends StylePlugin {
         }
 
         if (backgroundImage.length > 0) {
-            background.image = backgroundImage.join(",");
+            rules.push(new StyleRule("backgroundImage", backgroundImage.join(",")));
         }
 
         if (backgroundPosition.length > 0) {
-            background.position = backgroundPosition.join(",");
+            rules.push(new StyleRule("backgroundPosition", backgroundPosition.join(",")));
         }
 
         if (backgroundSize.length > 0) {
-            background.size = backgroundSize.join(",");
+            rules.push(new StyleRule("backgroundSize", backgroundSize.join(",")));
         }
 
         if (backgroundRepeat.length > 0) {
-            background.repeat = backgroundRepeat.join(",");
+            rules.push(new StyleRule("backgroundRepeat", backgroundRepeat.join(",")));
         }
 
-        return { background: background };
+        return rules;
     }
 }

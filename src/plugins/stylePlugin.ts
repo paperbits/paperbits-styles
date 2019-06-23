@@ -1,13 +1,23 @@
 import jss from "jss";
+import { Style, StyleRule } from "@paperbits/common/styles";
 
 export abstract class StylePlugin {
     protected name: string;
 
-    public abstract contractToJss(contract): Promise<object>;
+    public async contractToStyleRules?(contract: any): Promise<StyleRule[]> {
+        return [];
+    }
 
-    public jssToCss?(jssObject): string {
+    public async contractToNestedStyles?(contract: any): Promise<Style[]> {
+        return [];
+    }
+
+    public async contractToPseudoStyles?(contract: any): Promise<Style[]> {
+        return [];
+    }
+
+    public jssToCss?(jssObject: any): string {
         const styleSheet = jss.createStyleSheet(jssObject);
-
         return styleSheet.toString();
     }
 
@@ -17,7 +27,7 @@ export abstract class StylePlugin {
         }
 
         if (value) {
-            return parseInt(<string>value);
+            return parseInt(<string>value) + "px";
         }
         else {
             return undefined;

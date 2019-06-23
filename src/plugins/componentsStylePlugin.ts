@@ -1,54 +1,35 @@
-import * as Utils from "@paperbits/common/utils";
-import { StylePlugin } from "./stylePlugin";
 import { StyleCompiler } from "..";
+import { Style } from "@paperbits/common/styles";
+import { StylePlugin } from "./stylePlugin";
 
 export class ComponentsStylePlugin extends StylePlugin {
     public readonly name: string = "components";
 
-    constructor(private readonly styleCompiler: StyleCompiler) {
+    constructor(private readonly styleCompiler: StyleCompiler) { 
         super();
     }
 
-    public async contractToJss(componentsConfig: any): Promise<Object> {
-        const result = {};
+    public async contractToNestedStyles(componentsConfig: any): Promise<Style[]> {
+        const resultStyles: Style[] = [];
 
-        for (let componentName of Object.keys(componentsConfig)) {
+        for (const componentName of Object.keys(componentsConfig)) {
             const componentConfig = componentsConfig[componentName];
 
-            let defaultComponentStyles = await this.styleCompiler.getVariationClasses(componentConfig["default"], componentName, "default", true);
+            const componentStyle = await this.styleCompiler.getVariationStyle(componentConfig["default"], componentName);
             const variations = Object.keys(componentConfig);
-
-            if (!defaultComponentStyles && variations.length <= 1) {
-                continue;
-            } else {
-                defaultComponentStyles = defaultComponentStyles || {};
-            }
 
             for (const variationName of variations) {
                 if (variationName === "default") {
                     continue;
                 }
 
-                const variationStyles = await this.styleCompiler.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
-
-                if (!variationStyles) {
-                    continue;
-                }
-
-                componentName = Utils.camelCaseToKebabCase(componentName);
-
-                const key = `&.${componentName}-${variationName}`;
-
-                if (!defaultComponentStyles[`& .${componentName}`]) {
-                    defaultComponentStyles[`& .${componentName}`] = {};
-                }
-
-                defaultComponentStyles[`& .${componentName}`][key] = variationStyles[`& .${componentName}-${variationName}`];
+                const variationStyle = await this.styleCompiler.getVariationStyle(componentConfig[variationName], componentName, variationName);
+                componentStyle.modifierStyles.push(variationStyle);
             }
 
-            Utils.assign(result, defaultComponentStyles);
+            resultStyles.push(componentStyle);
         }
 
-        return result;
+        return resultStyles;
     }
 }

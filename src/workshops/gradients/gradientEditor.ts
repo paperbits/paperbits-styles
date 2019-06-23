@@ -29,7 +29,7 @@ export class GradientEditor {
     public async initialize(): Promise<void> {
         // const gradient = this.gradient();
 
-        // const jss = await this.backgroundStylePlugin.contractToJss(background);
+        // const jss = await this.backgroundStylePlugin.contractToStyleRules(background);
         // this.backgroundPreview({ backgroundPreview: jss });
 
         this.applyChanges();

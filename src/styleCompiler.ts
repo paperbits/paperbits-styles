@@ -24,7 +24,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
-import { IStyleCompiler, StyleModel } from "@paperbits/common/styles";
+import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
 
 const opts = preset();
 
@@ -45,15 +45,9 @@ export class StyleCompiler implements IStyleCompiler {
         private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         this.plugins = {};
-        this.plugins["grid"] = new GridStylePlugin();
-        this.plugins["grid-cell"] = new GridCellStylePlugin();
     }
 
     private isResponsive(variation: Object): boolean {
-        return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
-    }
-
-    private isResponsive2(variation: Object): boolean {
         if (!variation) {
             throw new Error(`Parameter "variation" not specified.`);
         }
@@ -82,78 +76,55 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["container"] = new ContainerStylePlugin();
         this.plugins["size"] = new SizeStylePlugin();
 
-        const allStyles = {
-            "@global": {}
-        };
+        const globalStyles = new StyleSheet();
+        const allStyles = new StyleSheet();
 
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontsRules = await fontsPlugin.contractToJss();
-        Utils.assign(allStyles, fontsRules);
+        const fontsRules = await fontsPlugin.contractToStyleRules();
+
+        const fontStyleSheet = jss.createStyleSheet(fontsRules);
 
         if (themeContract.components) {
-            for (let componentName of Object.keys(themeContract.components)) {
+            for (const componentName of Object.keys(themeContract.components)) {
                 const componentConfig = themeContract.components[componentName];
+                const componentStyle = await this.getVariationStyle(componentConfig["default"], componentName);
 
-                let defaultComponentStyles = await this.getVariationClasses(componentConfig["default"], componentName, "default", false);
                 const variations = Object.keys(componentConfig);
-
-                if (!defaultComponentStyles && variations.length <= 1) {
-                    continue;
-                } else {
-                    defaultComponentStyles = defaultComponentStyles || {};
-                }
 
                 for (const variationName of variations) {
                     if (variationName === "default") {
                         continue;
                     }
 
-                    const variationStyles = await this.getVariationClasses(componentConfig[variationName], componentName, variationName, true);
-
-                    if (!variationStyles) {
-                        continue;
-                    }
-                    componentName = Utils.camelCaseToKebabCase(componentName);
-
-                    const key = `& .${componentName}-${variationName}`;
-                    defaultComponentStyles[componentName] = { ...defaultComponentStyles[componentName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                    const variationStyle = await this.getVariationStyle(componentConfig[variationName], componentName, variationName);
+                    componentStyle.modifierStyles.push(variationStyle);
                 }
 
-                Utils.assign(allStyles, defaultComponentStyles);
+                allStyles.styles.push(componentStyle);
             }
         }
 
         if (themeContract.utils) {
             for (const variationName of Object.keys(themeContract.utils.text)) {
-                const classes = await this.getVariationClasses(themeContract.utils.text[variationName], "text", variationName);
-
-                if (classes) {
-                    Utils.assign(allStyles, classes);
-                }
+                const textStyle = await this.getVariationStyle(themeContract.utils.text[variationName], "text", variationName);
+                allStyles.styles.push(textStyle);
             }
 
             for (const variationName of Object.keys(themeContract.utils.content)) {
-                const classes = await this.getVariationClasses(themeContract.utils.content[variationName], "content", variationName);
-
-                if (classes) {
-                    Utils.assign(allStyles, classes);
-                }
+                const contentStyle = await this.getVariationStyle(themeContract.utils.content[variationName], "content", variationName);
+                allStyles.styles.push(contentStyle);
             }
         }
 
         if (themeContract.globals) {
             for (const tagName of Object.keys(themeContract.globals)) {
-
                 const tagConfig = themeContract.globals[tagName];
 
-                let defaultComponentStyles = await this.getVariationClasses(tagConfig["default"], tagName, "default", false);
-
+                const defaultComponentStyle = await this.getVariationStyle(tagConfig["default"], tagName, "default");
                 const variations = Object.keys(tagConfig);
 
-                if (!defaultComponentStyles && variations.length <= 1) {
+                if (!defaultComponentStyle && variations.length <= 1) {
                     continue;
-                } else {
-                    defaultComponentStyles = defaultComponentStyles || {};
                 }
 
                 for (const variationName of variations) {
@@ -162,117 +133,131 @@ export class StyleCompiler implements IStyleCompiler {
                     }
 
                     const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
-                    const variationStyles = await this.getVariationClasses(tagConfig[variationName], componentName, variationName, true);
+                    const variationJss = await this.getVariationStyle(tagConfig[variationName], componentName, variationName);
 
-                    if (variationStyles) {
+                    if (variationJss) {
                         const key = `& .${componentName}-${variationName}`;
 
                         if (tagName === "body") {
-                            defaultComponentStyles = { ...defaultComponentStyles, [`.${componentName}-${variationName}`]: variationStyles[key] };
+                            //  defaultComponentStyle = { ...defaultComponentStyle, [`.${componentName}-${variationName}`]: variationJss[key] };
+
                         }
                         else {
-                            defaultComponentStyles[tagName] = { ...defaultComponentStyles[tagName], [`&.${componentName}-${variationName}`]: variationStyles[key] };
+                            defaultComponentStyle[tagName] = { ...defaultComponentStyle[tagName], [`&.${componentName}-${variationName}`]: variationJss[key] };
+
                         }
                     }
+
+                    defaultComponentStyle.modifierStyles.push(variationJss);
                 }
 
-                Utils.assign(allStyles["@global"], defaultComponentStyles);
+                globalStyles.styles.push(defaultComponentStyle);
             }
         }
 
         if (themeContract.colors) {
             for (const colorName of Object.keys(themeContract.colors)) {
-                allStyles[`colors-${Utils.camelCaseToKebabCase(colorName)}`] = { color: themeContract.colors[colorName].value };
+                const colorStyleSelector = `colors-${Utils.camelCaseToKebabCase(colorName)}`;
+                const colorStyle = new Style(colorStyleSelector);
+                colorStyle.rules.push(new StyleRule("color", themeContract.colors[colorName].value));
+                allStyles.styles.push(colorStyle);
             }
         }
 
-        const responsiveStyleRules = {};
+        const jssObject = JSON.parse(allStyles.toJssString());
+        const styleSheet = jss.createStyleSheet(jssObject);
+        const globalJssObject = JSON.parse(globalStyles.toJssString());
+        const globalStyleSheet = jss.createStyleSheet({ "@global": globalJssObject });
+        const fontCss = fontStyleSheet.toString();
+        const css = styleSheet.toString();
+        const globalCss = globalStyleSheet.toString();
 
-        for (const breakpoint of Object.keys(BreakpointValues)) {
-            const breakpointValue = BreakpointValues[breakpoint];
-            const breakpointKey = `@media (min-width: ${breakpointValue}px)`;
-            responsiveStyleRules[breakpointKey] = allStyles[breakpointKey];
-            delete allStyles[breakpointKey];
-        }
-
-        const styleSheet = jss.createStyleSheet(allStyles);
-        const responsiveStyleSheet = jss.createStyleSheet(responsiveStyleRules);
-
-        /* We have to ensure that responsive style rules come after regular ones */
-        return styleSheet.toString() + "\n" + responsiveStyleSheet.toString();
+        return fontCss + " " + globalCss + " " + css;
     }
 
-    public async getVariationClasses(variationConfig: any, componentName: string, variationName: string = null, isNested: boolean = false): Promise<object> {
-        const result = {};
+    public async getVariationStyle(variationConfig: any, componentName: string, variationName: string = null): Promise<Style> {
+        const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
+        const resultStyle = new Style(selector);
 
         if (!variationName) {
             variationName = "default";
         }
-      
+
+        const mediaQueries = {};
+
         for (const pluginName of Object.keys(variationConfig)) {
             if (pluginName === "allowedStates") {
                 continue;
             }
+
             const plugin = this.plugins[pluginName];
 
-            if (plugin) {
-                const pluginConfig = variationConfig[pluginName];
+            if (!plugin) {
+                // console.warn(`Plugin "${pluginName}" not registered.`);
+                continue;
+            }
 
-                if (this.isResponsive(pluginConfig)) {
-                    /**
-                     * Ensure that media-queried classes rendered after regular ones.
-                     */
-                    for (const breakpoint of Object.keys(BreakpointValues)) {
-                        const breakpointConfig = pluginConfig[breakpoint];
+            const pluginConfig = variationConfig[pluginName];
 
-                        if (breakpointConfig) {
-                            if (breakpoint === "xs") { // No need media query
-                                let className = `${componentName}-${variationName}`.replace("-default", "");
+            if (!this.isResponsive(pluginConfig)) {
+                const rules = await plugin.contractToStyleRules(pluginConfig);
+                resultStyle.rules.push(...rules);
 
-                                if (isNested) {
-                                    className = `& .${Utils.camelCaseToKebabCase(className)}`;
-                                }
+                const pseudoStyles = await plugin.contractToPseudoStyles(pluginConfig);
+                resultStyle.pseudoStyles.push(...pseudoStyles);
 
-                                const pluginRules = await plugin.contractToJss(breakpointConfig);
-                                result[className] = result[className] || {};
+                const nestedStyles = await plugin.contractToNestedStyles(pluginConfig);
+                resultStyle.nestedStyles.push(...nestedStyles);
+            }
 
-                                Utils.assign(result[className], pluginRules);
-                            }
-                            else {
-                                const mediaQuerKey = `@media (min-width: ${BreakpointValues[breakpoint]}px)`;
-                                result[mediaQuerKey] = result[mediaQuerKey] || {};
+            for (const breakpoint of Object.keys(BreakpointValues)) {
+                const breakpointConfig = pluginConfig[breakpoint];
 
-                                const pluginRules = await plugin.contractToJss(breakpointConfig);
+                if (!breakpointConfig) {
+                    continue;
+                }
 
-                                let className = `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
+                if (breakpoint === "xs") { // No need media query
+                    const pluginRules = await plugin.contractToStyleRules(breakpointConfig);
+                    resultStyle.rules.push(...pluginRules);
 
-                                if (isNested) {
-                                    className = `& .${Utils.camelCaseToKebabCase(className)}`;
-                                }
+                    const pseudoStyles = await plugin.contractToPseudoStyles(breakpointConfig);
+                    resultStyle.pseudoStyles.push(...pseudoStyles);
 
-                                result[mediaQuerKey][className] = result[mediaQuerKey][className] || {};
+                    const nestedStyles = await plugin.contractToNestedStyles(breakpointConfig);
+                    resultStyle.nestedStyles.push(...nestedStyles);
+                    continue;
+                }
 
-                                Utils.assign(result[mediaQuerKey][className], pluginRules);
-                            }
-                        }
-                    }
+                const selector = `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
+
+                let mediaQuery = mediaQueries[breakpoint];
+                let style;
+
+                if (!mediaQuery) {
+                    mediaQuery = new StyleMediaQuery(BreakpointValues[breakpoint]);
+                    mediaQueries[breakpoint] = mediaQuery;
+                    resultStyle.nestedMediaQueries.push(mediaQuery);
+
+                    style = new Style(selector);
+                    mediaQuery.styles.push(style);
                 }
                 else {
-                    let className = `${componentName}-${variationName}`.replace("-default", "");
-
-                    if (isNested) {
-                        className = `& .${Utils.camelCaseToKebabCase(className)}`;
-                    }
-
-                    const pluginRules = await plugin.contractToJss(pluginConfig);
-                    result[className] = result[className] || {};
-
-                    Utils.assign(result[className], pluginRules);
+                    style = mediaQuery.styles[0];
                 }
+
+                const pluginRules = await plugin.contractToStyleRules(breakpointConfig);
+                style.rules.push(...pluginRules);
+
+                const pseudoStyles = await plugin.contractToPseudoStyles(breakpointConfig);
+                style.pseudoStyles.push(...pseudoStyles);
+
+                const nestedStyles = await plugin.contractToNestedStyles(breakpointConfig);
+                style.nestedStyles.push(...nestedStyles);
             }
         }
 
-        return Object.keys(result).length > 0 ? result : null;
+        return resultStyle;
     }
 
     public getVariationClassNames(variationConfig: any, componentName: string, variationName: string = null): string[] {
@@ -313,24 +298,24 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames;
     }
 
-    public async getStateClasses(stateConfig: { [x: string]: any; }, stateName: string): Promise<object> {
-        const result = {};
+    public async getStateStyle(stateConfig: { [x: string]: any; }, stateName: string): Promise<Style> {
+        const stateStyle = new Style(stateName);
 
         for (const pluginName of Object.keys(stateConfig)) {
             const plugin = this.plugins[pluginName];
 
             if (plugin) {
                 const pluginConfig = stateConfig[pluginName];
-                const className = `&:${stateName}`;
-                const pluginRules = await plugin.contractToJss(pluginConfig);
 
-                result[className] = result[className] || {};
+                const pluginRules = await plugin.contractToStyleRules(pluginConfig);
+                stateStyle.rules.push(...pluginRules);
 
-                Utils.assign(result[className], pluginRules);
+                const nestedStyles = await plugin.contractToNestedStyles(pluginConfig);
+                stateStyle.nestedStyles.push(...nestedStyles);
             }
         }
 
-        return result;
+        return stateStyle;
     }
 
     public async getFontsStyles(): Promise<string> {
@@ -338,7 +323,7 @@ export class StyleCompiler implements IStyleCompiler {
         const result = {};
 
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontsRules = await fontsPlugin.contractToJss();
+        const fontsRules = await fontsPlugin.contractToStyleRules();
 
         Utils.assign(result, fontsRules);
 
@@ -358,7 +343,7 @@ export class StyleCompiler implements IStyleCompiler {
             const categoryConfig = styleConfig[category];
 
             if (categoryConfig) {
-                if (this.isResponsive2(categoryConfig)) {
+                if (this.isResponsive(categoryConfig)) {
                     for (const breakpoint of Object.keys(categoryConfig)) {
                         let className;
 
@@ -433,7 +418,7 @@ export class StyleCompiler implements IStyleCompiler {
             const categoryConfig = styleConfig[category];
 
             if (categoryConfig) {
-                if (this.isResponsive2(categoryConfig)) {
+                if (this.isResponsive(categoryConfig)) {
                     for (const breakpoint of Object.keys(categoryConfig)) {
                         let className;
 
@@ -462,9 +447,9 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames.join(" ");
     }
 
-    public async getClassNamesByStyleConfigAsync2(styleConfig: any): Promise<StyleModel> {
+    public async getStyleModelAsync(styleConfig: any): Promise<StyleModel> {
         const classNames = [];
-        let jss;
+        let variationStyle: Style;
         let key;
 
         for (const category of Object.keys(styleConfig)) {
@@ -474,14 +459,14 @@ export class StyleCompiler implements IStyleCompiler {
                 const instanceClassName = categoryConfig.key || Utils.randomClassName();
                 categoryConfig.key = instanceClassName;
                 key = categoryConfig.key;
-                jss = await this.getVariationClasses(categoryConfig, instanceClassName);
+                variationStyle = await this.getVariationStyle(categoryConfig, instanceClassName);
 
                 const instanceClassNames = await this.getVariationClassNames(categoryConfig, instanceClassName);
                 instanceClassNames.forEach(x => classNames.push(x));
             }
             else {
                 if (categoryConfig) {
-                    if (this.isResponsive2(categoryConfig)) {
+                    if (this.isResponsive(categoryConfig)) {
                         for (const breakpoint of Object.keys(categoryConfig)) {
                             let className;
 
@@ -512,7 +497,7 @@ export class StyleCompiler implements IStyleCompiler {
         const result: StyleModel = {
             key: key,
             classNames: classNames.join(" "),
-            css: await this.jssToCss(jss)
+            css: await this.jssToCss(variationStyle)
         };
 
         return result;
@@ -565,7 +550,17 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames.join(" ");
     }
 
-    public jssToCss?(jssObject: object): string {
+    public jssToCss?(style: Style): string {
+        if (!style) {
+            return "";
+        }
+
+        const styleSheetC = new StyleSheet();
+        styleSheetC.styles.push(style);
+
+        const jssString = styleSheetC.toJssString();
+        const jssObject = JSON.parse(jssString);
+
         const styleSheet = jss.createStyleSheet(jssObject);
         return styleSheet.toString();
     }

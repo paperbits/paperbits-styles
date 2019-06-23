@@ -1,3 +1,4 @@
+import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
 import { SizeContract } from "../contracts/sizeContract";
 
@@ -9,28 +10,23 @@ export class SizeStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToJss(contract: SizeContract): Promise<Object> {
-        const result = {
-            minWidth: undefined,
-            minHeight: undefined,
-            maxWidth: undefined,
-            maxHeight: undefined
-        };
+    public async contractToStyleRules(contract: SizeContract): Promise<StyleRule[]> {
+        const result = [];
 
         if (contract.minWidth) {
-            result.minWidth = contract.minWidth + "px";
+            result.push(new StyleRule("minWidth", this.parseSize(contract.minWidth)));
         }
 
         if (contract.minHeight) {
-            result.minHeight = contract.minHeight + "px";
+            result.push(new StyleRule("minHeight", this.parseSize(contract.minHeight)));
         }
 
         if (contract.maxWidth) {
-            result.maxWidth = contract.maxWidth + "px";
+            result.push(new StyleRule("maxWidth", this.parseSize(contract.maxWidth)));
         }
 
         if (contract.maxHeight) {
-            result.maxHeight = contract.maxHeight + "px";
+            result.push(new StyleRule("maxHeight", this.parseSize(contract.maxHeight)));
         }
 
         return result;

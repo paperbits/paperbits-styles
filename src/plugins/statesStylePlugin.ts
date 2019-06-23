@@ -1,23 +1,26 @@
+import * as Utils from "@paperbits/common/utils";
+import { Style, StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
 import { StyleCompiler } from "..";
 
+
 export class StatesStylePlugin extends StylePlugin {
-    public name = "states";
+    public name: string = "states";
 
     constructor(private readonly styleCompiler: StyleCompiler) {
         super();
     }
 
-    public async contractToJss(statesConfig): Promise<Object> {
-        const result = {};
+    public async contractToPseudoStyles(statesConfig: any): Promise<Style[]> {
+        const stateStyles: Style[] = [];
 
         for (const stateName of Object.keys(statesConfig)) {
             const stateConfig = statesConfig[stateName];
-            const pluginRules = await this.styleCompiler.getStateClasses(stateConfig, stateName);
+            const stateStyle = await this.styleCompiler.getStateStyle(stateConfig, stateName);
 
-            Object.assign(result, pluginRules);
+            stateStyles.push(stateStyle);
         }
 
-        return result;
+        return stateStyles;
     }
 }

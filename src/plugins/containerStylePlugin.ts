@@ -1,5 +1,6 @@
 import { StylePlugin } from "./stylePlugin";
 import { ContainerContract } from "../contracts/containerContract";
+import { StyleRule } from "@paperbits/common/styles";
 
 
 export class ContainerStylePlugin extends StylePlugin {
@@ -9,17 +10,13 @@ export class ContainerStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToJss(contract: ContainerContract): Promise<Object> {
-        const result = {
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignContent: "center",
-            minWidth: undefined,
-            minHeight: undefined,
-            maxWidth: undefined,
-            maxHeight: undefined
-        };
+    public async contractToStyleRules(contract: ContainerContract): Promise<StyleRule[]> {
+        const rules = [
+            new StyleRule("display", "flex"),
+            new StyleRule("flexWrap", "wrap"),
+            new StyleRule("justifyContent", "center"),
+            new StyleRule("alignContent", "center")
+        ];
 
         if (contract.alignment) {
             if (contract.alignment.horizontal) {
@@ -33,7 +30,7 @@ export class ContainerStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.justifyContent = value;
+                rules.push(new StyleRule("justifyContent", value));
             }
 
             if (contract.alignment.vertical) {
@@ -47,22 +44,22 @@ export class ContainerStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.alignContent = value;
+                rules.push(new StyleRule("alignContent", value));
             }
         }
 
         if (contract.overflow) {
             if (contract.overflow.vertical && contract.overflow.horizontal) {
-                result["overflow"] = "auto";
+                rules.push(new StyleRule("overflow", "auto"));
             }
             else if (contract.overflow.vertical) {
-                result["overflowY"] = "auto";
+                rules.push(new StyleRule("overflowY", "auto"));
             }
             else {
-                result["overflowX"] = "auto";
+                rules.push(new StyleRule("overflowX", "auto"));
             }
         }
 
-        return result;
+        return rules;
     }
 }

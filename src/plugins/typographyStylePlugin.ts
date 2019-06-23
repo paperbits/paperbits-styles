@@ -1,34 +1,35 @@
 import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, TypographyContract, FontContract, ColorContract, ShadowContract } from "../contracts";
+import { StyleRule } from "@paperbits/common/styles";
 
 export class TypographyStylePlugin extends StylePlugin {
-    public readonly name = "typography";
+    public readonly name: string = "typography";
 
     constructor(private readonly themeContract: ThemeContract) {
         super();
     }
 
-    public async contractToJss(typographyContract: TypographyContract): Promise<Object> {
-        const result = {};
+    public async contractToStyleRules(typographyContract: TypographyContract): Promise<StyleRule[]> {
+        const result = [];
 
         if (typographyContract.fontWeight) {
-            result["fontWeight"] = typographyContract.fontWeight;
+            result.push(new StyleRule("fontWeight", typographyContract.fontWeight));
         }
 
         if (typographyContract.fontStyle) {
-            result["fontStyle"] = typographyContract.fontStyle;
+            result.push(new StyleRule("fontStyle", typographyContract.fontStyle));
         }
 
         if (typographyContract.fontSize) {
-            result["fontSize"] = typographyContract.fontSize;
+            result.push(new StyleRule("fontSize", this.parseSize(typographyContract.fontSize)));
         }
 
         if (typographyContract.fontKey) {
             const fontContract = Objects.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);
 
             if (fontContract) {
-                result["fontFamily"] = fontContract.family;
+                result.push(new StyleRule("fontFamily", fontContract.family));
             }
             else {
                 console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
@@ -36,14 +37,14 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.lineHeight) {
-            result["lineHeight"] = typographyContract.lineHeight;
+            result.push(new StyleRule("lineHeight", this.parseSize(typographyContract.lineHeight)));
         }
 
         if (typographyContract.colorKey) {
             const colorContract = Objects.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
 
             if (colorContract) {
-                result["color"] = colorContract.value || "transparent";
+                result.push(new StyleRule("color", colorContract.value || "transparent"));
             }
             else {
                 console.warn(`Color with key "${typographyContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
@@ -54,12 +55,12 @@ export class TypographyStylePlugin extends StylePlugin {
             const shadowContract = Objects.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
 
             if (shadowContract) {
-                result["textShadow"] = {
-                    x: shadowContract.offsetX || 0,
-                    y: shadowContract.offsetY || 0,
-                    blur: shadowContract.blur || 0,
-                    color: shadowContract.color || "#000"
-                };
+                const x = this.parseSize(shadowContract.offsetX);
+                const y = this.parseSize(shadowContract.offsetY);
+                const blur = this.parseSize(shadowContract.blur);
+                const color = shadowContract.color || "#000";
+
+                result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));
 
                 // Text inset shadow example:
                 // background-color: #565656;
@@ -75,15 +76,15 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.textAlign) {
-            result["textAlign"] = typographyContract.textAlign;
+            result.push(new StyleRule("textAlign", typographyContract.textAlign));
         }
 
         if (typographyContract.textTransform) {
-            result["textTransform"] = typographyContract.textTransform;
+            result.push(new StyleRule("textTransform", typographyContract.textTransform));
         }
 
         if (typographyContract.textDecoration) {
-            result["textDecoration"] = typographyContract.textDecoration;
+            result.push(new StyleRule("textDecoration", typographyContract.textDecoration));
         }
 
         return result;

@@ -1,5 +1,6 @@
 import { StylePlugin } from "./stylePlugin";
 import { GridContract } from "../contracts/gridContract";
+import { StyleRule } from "@paperbits/common/styles";
 
 
 export class GridStylePlugin extends StylePlugin {
@@ -9,16 +10,16 @@ export class GridStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToJss(contract: GridContract): Promise<Object> {
-        const result = {
-            display: "grid",
-            gridTemplateColumns: contract.cols.join(" "),
-            gridTemplateRows: contract.rows.join(" "),
-            gridColumnGap: contract.colGap,
-            gridRowGap: contract.rowGap,
-            width: "100%",
-            flex: 1
-        };
+    public async contractToStyleRules(contract: GridContract): Promise<StyleRule[]> {
+        const result = [
+            new StyleRule("display", "grid"),
+            new StyleRule("gridTemplateColumns", contract.cols.join(" ")),
+            new StyleRule("gridTemplateRows", contract.rows.join(" ")),
+            new StyleRule("gridColumnGap", contract.colGap),
+            new StyleRule("gridRowGap", contract.rowGap),
+            new StyleRule("width", "100%"),
+            new StyleRule("flex", 1)
+        ];
 
         return result;
     }

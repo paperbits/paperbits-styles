@@ -62,7 +62,7 @@ export class Background {
             return;
         }
 
-        const jss = await this.backgroundStylePlugin.contractToJss(backgroundContract);
+        const jss = await this.backgroundStylePlugin.contractToStyleRules(backgroundContract);
         this.backgroundPreview({ backgroundPreview: jss });
 
         const styles = await this.styleService.getStyles();
@@ -163,7 +163,7 @@ export class Background {
 
             this.onUpdate(updates);
 
-            const jss = await this.backgroundStylePlugin.contractToJss(updates);
+            const jss = await this.backgroundStylePlugin.contractToStyleRules(updates);
             this.backgroundPreview({ backgroundPreview: jss });
         }
     }
