@@ -1,6 +1,7 @@
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract } from "../contracts";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
+import { FontFace } from "@paperbits/common/styles";
 
 export class FontsStylePlugin {
     public displayName: string = "Font";
@@ -11,8 +12,8 @@ export class FontsStylePlugin {
     ) {
     }
 
-    public async contractToStyleRules(): Promise<Object> {
-        const fontFaceRules = [];
+    public async contractToFontFaces(): Promise<FontFace[]> {
+        const fontFaces = [];
 
         for (const fontKey of Object.keys(this.themeContract.fonts)) {
             const fontContract = this.themeContract.fonts[fontKey];
@@ -30,19 +31,16 @@ export class FontsStylePlugin {
                     throw new Error("Font variant URL is empty.");
                 }
 
-                fontFaceRules.push({
-                    fontFamily: fontContract.family,
-                    src: `url(${fontVariantUrl})`,
-                    fontStyle: variant.style || "normal",
-                    fontWeight: variant.weight || "normal"
-                });
+                const fontFace = new FontFace();
+                fontFace.fontFamily = fontContract.family;
+                fontFace.src = fontVariantUrl;
+                fontFace.fontStyle = variant.style || "normal";
+                fontFace.fontWeight = variant.weight || "normal";
+
+                fontFaces.push(fontFace);
             }
         }
 
-        const result = {
-            "@font-face": fontFaceRules
-        };
-
-        return result;
+        return fontFaces;
     }
 }

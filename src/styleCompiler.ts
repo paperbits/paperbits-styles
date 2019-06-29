@@ -80,9 +80,8 @@ export class StyleCompiler implements IStyleCompiler {
         const allStyles = new StyleSheet();
 
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontsRules = await fontsPlugin.contractToStyleRules();
-
-        const fontStyleSheet = jss.createStyleSheet(fontsRules);
+        const fontFaces = await fontsPlugin.contractToFontFaces();
+        globalStyles.fontFaces.push(...fontFaces);
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
@@ -168,11 +167,10 @@ export class StyleCompiler implements IStyleCompiler {
         const styleSheet = jss.createStyleSheet(jssObject);
         const globalJssObject = JSON.parse(globalStyles.toJssString());
         const globalStyleSheet = jss.createStyleSheet({ "@global": globalJssObject });
-        const fontCss = fontStyleSheet.toString();
         const css = styleSheet.toString();
         const globalCss = globalStyleSheet.toString();
 
-        return fontCss + " " + globalCss + " " + css;
+        return globalCss + " " + css;
     }
 
     public async getVariationStyle(variationConfig: any, componentName: string, variationName: string = null): Promise<Style> {
@@ -323,7 +321,7 @@ export class StyleCompiler implements IStyleCompiler {
         const result = {};
 
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontsRules = await fontsPlugin.contractToStyleRules();
+        const fontsRules = await fontsPlugin.contractToFontFaces();
 
         Utils.assign(result, fontsRules);
 

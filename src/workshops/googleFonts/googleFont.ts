@@ -3,6 +3,7 @@ import * as ko from "knockout";
 import { Bag } from "@paperbits/common";
 import { FontContract, FontVariantContract } from "./../../contracts/fontContract";
 import { GoogleFontContract } from "./googleFontsParser";
+import { StyleSheet, FontFace } from "@paperbits/common/styles";
 
 export class GoogleFont {
     public identifier: string;
@@ -37,16 +38,16 @@ export class GoogleFont {
 
         const fileName = this.files["regular"] || this.files["400"] || this.files[this.variants[0]];
 
-        const jss = {
-            "@font-face": {
-                fontFamily: this.family,
-                src: `url(${fileName.replace("http://", "https://")})`,
-                fontStyle: "normal",
-                fontWeight: "normal"
-            }
-        };
+        const fontFace = new FontFace();
+        fontFace.fontFamily = this.family;
+        fontFace.src = fileName.replace("http://", "https://");
+        fontFace.fontStyle = "normal";
+        fontFace.fontWeight = "normal";
 
-        this.preview(jss);
+        const styleSheet = new StyleSheet();
+        styleSheet.fontFaces.push(fontFace);
+
+        this.preview(styleSheet);
     }
 
     public toContract(): FontContract {

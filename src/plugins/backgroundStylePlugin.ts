@@ -44,7 +44,7 @@ export class BackgroundStylePlugin extends StylePlugin {
                     continue;
                 }
 
-                backgroundImage.push(`url("${imageUrl}")`);
+                backgroundImage.push(`url('${imageUrl}')`);
                 backgroundPosition.push(image.position || "unset");
                 backgroundSize.push(image.size || "unset");
                 backgroundRepeat.push(image.repeat || "no-repeat");

@@ -6,6 +6,7 @@ import { StyleService } from "../..";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { BackgroundContract, ColorContract, LinearGradientContract } from "../../contracts";
+import { Style, StyleSheet } from "@paperbits/common/styles";
 
 
 @Component({
@@ -22,14 +23,7 @@ export class Background {
     public readonly repeat: ko.Observable<string>;
     public readonly size: ko.Observable<string>;
     public readonly position: ko.Observable<string>;
-
     public readonly backgroundPreview: ko.Observable<Object>;
-
-    @Param()
-    public background: ko.Observable<BackgroundContract>;
-
-    @Event()
-    public onUpdate: (contract: BackgroundContract) => void;
 
     constructor(
         private readonly styleService: StyleService,
@@ -57,13 +51,34 @@ export class Background {
         this.backgroundPreview = ko.observable<string>();
     }
 
+    @Param()
+    public background: ko.Observable<BackgroundContract>;
+
+    @Event()
+    public onUpdate: (contract: BackgroundContract) => void;
+
+    @OnMounted()
+    public async initialize(): Promise<void> {
+        const background = this.background();
+
+        await this.fillout(background);
+
+        this.background.subscribe(this.fillout);
+    }
+
     private async fillout(backgroundContract: BackgroundContract): Promise<void> {
         if (!backgroundContract) {
             return;
         }
 
-        const jss = await this.backgroundStylePlugin.contractToStyleRules(backgroundContract);
-        this.backgroundPreview({ backgroundPreview: jss });
+        const styleRules = await this.backgroundStylePlugin.contractToStyleRules(backgroundContract);
+        const style = new Style("background-preview");
+        style.rules.push(...styleRules);
+
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
+
+        this.backgroundPreview(styleSheet);
 
         const styles = await this.styleService.getStyles();
 
@@ -94,19 +109,6 @@ export class Background {
         if (backgroundContract.gradientKey) {
             this.gradientKey(backgroundContract.gradientKey);
         }
-    }
-
-    @OnMounted()
-    public async initialize(): Promise<void> {
-        const background = this.background();
-
-        await this.fillout(background);
-
-        this.size.subscribe(this.applyChanges);
-        this.position.subscribe(this.applyChanges);
-        this.colorKey.subscribe(this.applyChanges);
-        this.repeat.subscribe(this.applyChanges);
-        this.background.subscribe(this.fillout);
     }
 
     public onMediaSelected(media: MediaContract): void {
@@ -141,30 +143,36 @@ export class Background {
     }
 
     private async applyChanges(): Promise<void> {
+        let images;
+
+        if (this.sourceKey()) {
+            images = [];
+
+            images.push({
+                sourceKey: this.sourceKey(),
+                position: this.position(),
+                size: this.size(),
+                repeat: this.repeat()
+            });
+        }
+
+        const updates = {
+            colorKey: this.colorKey(),
+            gradientKey: this.gradientKey(),
+            images: images
+        };
+
+        const styleRules = await this.backgroundStylePlugin.contractToStyleRules(updates);
+        const style = new Style("background-preview");
+        style.rules.push(...styleRules);
+
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
+
+        this.backgroundPreview(styleSheet);
+
         if (this.onUpdate) {
-            let images;
-
-            if (this.sourceKey()) {
-                images = [];
-
-                images.push({
-                    sourceKey: this.sourceKey(),
-                    position: this.position(),
-                    size: this.size(),
-                    repeat: this.repeat()
-                });
-            }
-
-            const updates = {
-                colorKey: this.colorKey(),
-                gradientKey: this.gradientKey(),
-                images: images
-            };
-
             this.onUpdate(updates);
-
-            const jss = await this.backgroundStylePlugin.contractToStyleRules(updates);
-            this.backgroundPreview({ backgroundPreview: jss });
         }
     }
 }
