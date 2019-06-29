@@ -1,13 +1,48 @@
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" data-bind="collapse: '#shadowCollapse'"></a>
-        <b>Shadow</b>
-    </label>
-
-    <div id="shadowCollapse" class="collapse form-group-collapse">
-        <div class="form-group">
-            <label for="shadowType">Type</label>
-            <button id="shadowType" class="btn" data-bind="text: $component.displayName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.shadowKey } } }"></button>
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: {}">
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" data-bind="collapse: '#mainCollapse'"></a>
+            <b>Main</b>
+        </label>
+        <div id="mainCollapse" class="collapse form-group-collapse">
+            <div class="form-group">
+                <button class="btn btn-info" type="button" data-bind="infoMessageToggle: 'Name of the style'"></button>
+                <label for="style-name">Style name</label>
+                <input id="style-name" type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName">
+            </div>
+            <!-- ko if: colorValue -->
+            <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
+            <!-- /ko -->
         </div>
     </div>
-</div>
+
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" data-bind="collapse: '#miscellaneousCollapse'"></a>
+            <b>Miscellaneous</b>
+        </label>
+        <div id="miscellaneousCollapse" class="collapse form-group-collapse">
+            <div class="form-group">
+                <label for="blur">Shadow blur radius (in px)</label>
+                <input id="blur" type="number" class="form-control" min="1" data-bind="textInput: blur" />
+            </div>
+            <div class="form-group">
+                <label for="spread">Shadow spread radius (in px)</label>
+                <input id="spread" type="number" class="form-control" min="1" data-bind="textInput: spread" />
+            </div>
+            <div class="form-group">
+                <label for="offsetX">Shadow offset X (in px)</label>
+                <input id="offsetX" type="number" class="form-control" min="0" data-bind="textInput: offsetX" />
+            </div>
+            <div class="form-group">
+                <label for="offsetY">Shadow offset Y (in px)</label>
+                <input id="offsetY" type="number" class="form-control" min="0" data-bind="textInput: offsetY" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <input name="scrollOnOverlow" type="checkbox" data-bind="checked: inset" /> Display the shadow inset
+                </label>
+            </div>
+        </div>
+    </div>
+</fieldset>

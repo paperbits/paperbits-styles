@@ -90,8 +90,17 @@ export class StyleGuide {
         const addedColorKey = await this.styleService.addColorVariation(variationName);
         this.applyChanges();
 
-        const color = await this.styleService.getColorByKey(addedColorKey);
+        const color = await this.styleService.getStyleByKey(addedColorKey);
         this.selectColor(color);
+    }
+
+    public async addShadow(): Promise<void> {
+        const variationName = `${Utils.identifier()}`;
+        const addedKey = await this.styleService.addShadowVariation(variationName);
+        this.applyChanges();
+
+        const shadow = await this.styleService.getStyleByKey(addedKey);
+        this.selectShadow(shadow);
     }
 
     public async removeColor(color: ColorContract): Promise<void> {
@@ -99,7 +108,7 @@ export class StyleGuide {
         this.applyChanges();
     }
 
-    public selectColor(color: ColorContract): void {
+    public selectColor(color: ColorContract): boolean {
         const view: IView = {
             heading: "Color",
             component: {
@@ -116,9 +125,30 @@ export class StyleGuide {
         };
 
         this.viewManager.openViewAsPopup(view);
+        return true;
     }
 
-    public selectStyle(style: any): void {
+    public selectShadow(shadow: ShadowContract): boolean {
+        const view: IView = {
+            heading: "Shadow",
+            component: {
+                name: "shadow-editor",
+                params: {
+                    selectedShadow: shadow,
+                    onSelect: async (shadow: ShadowContract) => {
+                        await this.styleService.updateStyle(shadow);
+                        this.applyChanges();
+                    }
+                }
+            },
+            resize: "vertically horizontally"
+        };
+
+        this.viewManager.openViewAsPopup(view);
+        return true;
+    }
+
+    public selectStyle(style: any): boolean {
         const view: IView = {
             heading: style.displayName,
             component: {
@@ -135,6 +165,7 @@ export class StyleGuide {
         };
 
         this.viewManager.openViewAsPopup(view);
+        return true;
     }
 
     public async addTextStyleVariation(): Promise<void> {
@@ -323,19 +354,10 @@ export class StyleGuide {
         const selectedElement = this.viewManager.getSelectedElement();
 
         if (selectedElement && selectedElement.element === element) {
-            if (style.key.startsWith("colors/")) {
-                this.selectColor(style);
-            }
-            else if (
-                style.key.startsWith("fonts/") ||
-                style.key.startsWith("shadows/") ||
-                style.key.startsWith("gradients/")
-            ) {
-                // do nothing
-            }
-            else {
-                this.selectStyle(style);
-            }
+            const select = 
+                (style.key.startsWith("colors/") && this.selectColor(style)) || 
+                (style.key.startsWith("shadows/") && this.selectShadow(style)) || 
+                this.selectStyle(style);            
         }
         else {
             const contextualEditor = this.getContextualEditor(stylable);
@@ -382,9 +404,8 @@ export class StyleGuide {
         };
 
         if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
-            !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/") &&
-            !style.key.endsWith("/default")
+            !style.key.endsWith("/default") && style.key.indexOf("/navbar/default/") === -1
         ) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
@@ -433,20 +454,18 @@ export class StyleGuide {
             });
         }
 
-        if (style.key.startsWith("colors/")) {
+        if (style.key.startsWith("colors/") || style.key.startsWith("shadows/")) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
-                    this.selectColor(style);
+                    style.key.startsWith("colors/") ? this.selectColor(style) : this.selectShadow(style);
                 }
             });
         }
-        else if (!style.key.startsWith("fonts/") &&
-            !style.key.startsWith("shadows/") &&
-            !style.key.startsWith("gradients/")) {
+        else if (!style.key.startsWith("fonts/") && !style.key.startsWith("gradients/")) {
             styleContextualEditor.selectionCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",

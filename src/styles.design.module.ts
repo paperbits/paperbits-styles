@@ -17,8 +17,7 @@ import { FontSelector } from "./workshops/fonts";
 import { GoogleFonts } from "./workshops/googleFonts";
 import { AnimationSelector } from "./workshops/animations";
 import { AnimationEditor } from "./workshops/animations/animationEditor";
-import { ShadowSelector } from "./workshops/shadows";
-import { ShadowEditor } from "./workshops/shadows/shadowEditor";
+import { ShadowSelector, ShadowEditorGroup, ShadowEditor } from "./workshops/shadows";
 import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleSheet";
@@ -31,7 +30,6 @@ import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
-
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -48,6 +46,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("gradientEditor", GradientEditor);
         injector.bind("shadowSelector", ShadowSelector);
         injector.bind("shadowEditor", ShadowEditor);
+        injector.bind("shadowEditorGroup", ShadowEditorGroup);
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("animationEditor", AnimationEditor);
         injector.bind("styleEditor", StyleEditor);
