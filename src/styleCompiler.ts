@@ -318,16 +318,14 @@ export class StyleCompiler implements IStyleCompiler {
 
     public async getFontsStyles(): Promise<string> {
         const themeContract = await this.styleService.getStyles();
-        const result = {};
-
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontsRules = await fontsPlugin.contractToFontFaces();
+        const fontFaces = await fontsPlugin.contractToFontFaces();
+        
+        const styleSheet = new StyleSheet();
+        styleSheet.fontFaces.push(...fontFaces);
 
-        Utils.assign(result, fontsRules);
-
-        const styleSheet = jss.createStyleSheet(result);
-
-        return styleSheet.toString();
+        const jssObject = JSON.parse(styleSheet.toJssString());
+        return jss.createStyleSheet(jssObject).toString();
     }
 
     public getClassNamesByStyleConfig(styleConfig: any): string {
@@ -495,7 +493,7 @@ export class StyleCompiler implements IStyleCompiler {
         const result: StyleModel = {
             key: key,
             classNames: classNames.join(" "),
-            css: await this.jssToCss(variationStyle)
+            css: await this.styleToCss(variationStyle)
         };
 
         return result;
@@ -548,7 +546,7 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames.join(" ");
     }
 
-    public jssToCss?(style: Style): string {
+    public styleToCss?(style: Style): string {
         if (!style) {
             return "";
         }
