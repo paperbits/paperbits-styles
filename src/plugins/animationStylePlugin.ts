@@ -10,7 +10,7 @@ export class AnimationStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(animation): Promise<StyleRule[]> {
+    public async configToStyleRules(animation): Promise<StyleRule[]> {
         const contract = Objects.getObjectAt<AnimationContract>(animation.animationKey, this.themeContract);
 
         const result = [

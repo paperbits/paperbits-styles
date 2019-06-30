@@ -71,7 +71,7 @@ export class Background {
             return;
         }
 
-        const styleRules = await this.backgroundStylePlugin.contractToStyleRules(backgroundContract);
+        const styleRules = await this.backgroundStylePlugin.configToStyleRules(backgroundContract);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 
@@ -162,7 +162,7 @@ export class Background {
             images: images
         };
 
-        const styleRules = await this.backgroundStylePlugin.contractToStyleRules(updates);
+        const styleRules = await this.backgroundStylePlugin.configToStyleRules(updates);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 

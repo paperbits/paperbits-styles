@@ -1,27 +1,21 @@
-import jss from "jss";
 import { Style, StyleRule } from "@paperbits/common/styles";
 
 export abstract class StylePlugin {
     protected name: string;
 
-    public async contractToStyleRules?(contract: any): Promise<StyleRule[]> {
+    public async configToStyleRules?(config: any): Promise<StyleRule[]> {
         return [];
     }
 
-    public async contractToNestedStyles?(contract: any): Promise<Style[]> {
+    public async configToNestedStyles?(config: any): Promise<Style[]> {
         return [];
     }
 
-    public async contractToPseudoStyles?(contract: any): Promise<Style[]> {
+    public async configToPseudoStyles?(config: any): Promise<Style[]> {
         return [];
     }
 
-    public jssToCss?(jssObject: any): string {
-        const styleSheet = jss.createStyleSheet(jssObject);
-        return styleSheet.toString();
-    }
-
-    protected parseSize = (value: string | number): any => {
+    public static parseSize = (value: string | number): any => {
         if (value === "auto" || value === "initial") {
             return value;
         }

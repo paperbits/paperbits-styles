@@ -15,7 +15,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(backgroundContract: BackgroundContract): Promise<StyleRule[]> {
+    public async configToStyleRules(backgroundContract: BackgroundContract): Promise<StyleRule[]> {
         const rules = [];
         const backgroundImage = [];
         const backgroundPosition = [];

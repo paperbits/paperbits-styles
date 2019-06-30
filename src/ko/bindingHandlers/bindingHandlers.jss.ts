@@ -1,10 +1,10 @@
 import * as ko from "knockout";
-import jss from "jss";
-import { Style } from "@paperbits/common/styles";
+import { StyleSheet } from "@paperbits/common/styles";
+import { JssCompiler } from "../../jssCompiler";
 
 
 ko.bindingHandlers["jss"] = {
-    update: (element: HTMLStyleElement, valueAccessor: () => Style) => {
+    update: (element: HTMLStyleElement, valueAccessor: () => StyleSheet) => {
         const styleSheet = ko.unwrap(valueAccessor());
 
         if (!styleSheet) {
@@ -12,9 +12,9 @@ ko.bindingHandlers["jss"] = {
             return;
         }
 
-        const jssObject = JSON.parse(styleSheet.toJssString());
-        const styleSheetCss = jss.createStyleSheet(jssObject).toString();
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(styleSheet);
 
-        element.innerHTML = styleSheetCss;
+        element.innerHTML = css;
     }
 };

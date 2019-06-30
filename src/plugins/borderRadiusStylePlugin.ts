@@ -6,12 +6,12 @@ import { BorderRadiusContract } from "../contracts";
 export class BorderRadiusStylePlugin extends StylePlugin {
     public readonly name: string = "borderRadius";
 
-    public async contractToStyleRules(contract: BorderRadiusContract): Promise<StyleRule[]> {
+    public async configToStyleRules(contract: BorderRadiusContract): Promise<StyleRule[]> {
         const result = [
-            new StyleRule("borderTopLeftRadius", this.parseSize(contract.topLeftRadius)),
-            new StyleRule("borderTopRightRadius", this.parseSize(contract.topRightRadius)),
-            new StyleRule("borderBottomLeftRadius", this.parseSize(contract.bottomLeftRadius)),
-            new StyleRule("borderBottomRightRadius", this.parseSize(contract.bottomRightRadius))
+            new StyleRule("borderTopLeftRadius", StylePlugin.parseSize(contract.topLeftRadius)),
+            new StyleRule("borderTopRightRadius", StylePlugin.parseSize(contract.topRightRadius)),
+            new StyleRule("borderBottomLeftRadius", StylePlugin.parseSize(contract.bottomLeftRadius)),
+            new StyleRule("borderBottomRightRadius", StylePlugin.parseSize(contract.bottomRightRadius))
         ];
 
         return result;

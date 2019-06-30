@@ -9,7 +9,7 @@ export class ComponentsStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToNestedStyles(componentsConfig: any): Promise<Style[]> {
+    public async configToNestedStyles(componentsConfig: any): Promise<Style[]> {
         const resultStyles: Style[] = [];
 
         for (const componentName of Object.keys(componentsConfig)) {

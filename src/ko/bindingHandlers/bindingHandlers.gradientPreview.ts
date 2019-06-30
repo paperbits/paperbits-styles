@@ -1,7 +1,8 @@
-import jss from "jss";
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import { LinearGradientContract, getLinearGradientString } from "./../../contracts/linearGradientContract";
+import { Style, StyleRule, StyleSheet } from "@paperbits/common/styles";
+import { JssCompiler } from "../../jssCompiler";
 
 
 ko.bindingHandlers["gradientPreview"] = {
@@ -9,14 +10,15 @@ ko.bindingHandlers["gradientPreview"] = {
         const linearGradientContract = ko.unwrap(valueAccessor());
         const key = Utils.camelCaseToKebabCase(linearGradientContract.key).replace("/", "-");
 
-        const jssObject = {
-            [key]: {
-                backgroundImage: getLinearGradientString(linearGradientContract)
-            }
-        };
+        const gradientStyleRule = new StyleRule("background-image", getLinearGradientString(linearGradientContract));
+        const style = new Style(key);
+        style.rules.push(gradientStyleRule);
 
-        const styleSheet = jssObject ? jss.createStyleSheet(jssObject).toString() : "";
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
 
-        element.innerHTML = styleSheet;
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(styleSheet);
+        element.innerHTML = css;
     }
 };

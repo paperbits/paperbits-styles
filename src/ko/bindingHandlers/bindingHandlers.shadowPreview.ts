@@ -1,7 +1,9 @@
-import jss from "jss";
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import { ShadowContract } from "../../contracts/shadowContract";
+import { ShadowStylePlugin } from "../../plugins";
+import { Style, StyleSheet } from "@paperbits/common/styles";
+import { JssCompiler } from "../../jssCompiler";
 
 
 ko.bindingHandlers["shadowPreview"] = {
@@ -9,21 +11,15 @@ ko.bindingHandlers["shadowPreview"] = {
         const shadowContract = ko.unwrap(valueAccessor());
         const key = Utils.camelCaseToKebabCase(shadowContract.key).replace("/", "-");
 
-        const jssObject = {
-            [key]: {
-                boxShadow: {
-                    x: shadowContract.offsetX || 0,
-                    y: shadowContract.offsetY || 0,
-                    blur: shadowContract.blur || 0,
-                    spread: shadowContract.spread || 0,
-                    color: shadowContract.color || "#000",
-                    inset: shadowContract.inset ? "inset" : undefined
-                }
-            }
-        };
+        const shadowStyleRules = ShadowStylePlugin.contractToStyleRules(shadowContract);
+        const style = new Style(key);
+        style.rules.push(...shadowStyleRules);
 
-        const styleSheet = jssObject ? jss.createStyleSheet(jssObject).toString() : "";
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
 
-        element.innerHTML = styleSheet;
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(styleSheet);
+        element.innerHTML = css;
     }
 };

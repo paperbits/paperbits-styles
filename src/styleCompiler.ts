@@ -25,6 +25,7 @@ import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
 import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
+import { JssCompiler } from "./jssCompiler";
 
 const opts = preset();
 
@@ -132,22 +133,22 @@ export class StyleCompiler implements IStyleCompiler {
                     }
 
                     const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
-                    const variationJss = await this.getVariationStyle(tagConfig[variationName], componentName, variationName);
+                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName);
 
-                    if (variationJss) {
+                    if (variationStyle) {
                         const key = `& .${componentName}-${variationName}`;
 
                         if (tagName === "body") {
                             //  defaultComponentStyle = { ...defaultComponentStyle, [`.${componentName}-${variationName}`]: variationJss[key] };
-
+                            debugger;
                         }
                         else {
-                            defaultComponentStyle[tagName] = { ...defaultComponentStyle[tagName], [`&.${componentName}-${variationName}`]: variationJss[key] };
+                            defaultComponentStyle[tagName] = { ...defaultComponentStyle[tagName], [`&.${componentName}-${variationName}`]: variationStyle[key] };
 
                         }
                     }
 
-                    defaultComponentStyle.modifierStyles.push(variationJss);
+                    defaultComponentStyle.modifierStyles.push(variationStyle);
                 }
 
                 globalStyles.styles.push(defaultComponentStyle);
@@ -163,11 +164,12 @@ export class StyleCompiler implements IStyleCompiler {
             }
         }
 
-        const jssObject = JSON.parse(allStyles.toJssString());
-        const styleSheet = jss.createStyleSheet(jssObject);
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(allStyles);
+
+
         const globalJssObject = JSON.parse(globalStyles.toJssString());
         const globalStyleSheet = jss.createStyleSheet({ "@global": globalJssObject });
-        const css = styleSheet.toString();
         const globalCss = globalStyleSheet.toString();
 
         return globalCss + " " + css;
@@ -198,13 +200,13 @@ export class StyleCompiler implements IStyleCompiler {
             const pluginConfig = variationConfig[pluginName];
 
             if (!this.isResponsive(pluginConfig)) {
-                const rules = await plugin.contractToStyleRules(pluginConfig);
+                const rules = await plugin.configToStyleRules(pluginConfig);
                 resultStyle.rules.push(...rules);
 
-                const pseudoStyles = await plugin.contractToPseudoStyles(pluginConfig);
+                const pseudoStyles = await plugin.configToPseudoStyles(pluginConfig);
                 resultStyle.pseudoStyles.push(...pseudoStyles);
 
-                const nestedStyles = await plugin.contractToNestedStyles(pluginConfig);
+                const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
                 resultStyle.nestedStyles.push(...nestedStyles);
             }
 
@@ -216,13 +218,13 @@ export class StyleCompiler implements IStyleCompiler {
                 }
 
                 if (breakpoint === "xs") { // No need media query
-                    const pluginRules = await plugin.contractToStyleRules(breakpointConfig);
+                    const pluginRules = await plugin.configToStyleRules(breakpointConfig);
                     resultStyle.rules.push(...pluginRules);
 
-                    const pseudoStyles = await plugin.contractToPseudoStyles(breakpointConfig);
+                    const pseudoStyles = await plugin.configToPseudoStyles(breakpointConfig);
                     resultStyle.pseudoStyles.push(...pseudoStyles);
 
-                    const nestedStyles = await plugin.contractToNestedStyles(breakpointConfig);
+                    const nestedStyles = await plugin.configToNestedStyles(breakpointConfig);
                     resultStyle.nestedStyles.push(...nestedStyles);
                     continue;
                 }
@@ -244,13 +246,13 @@ export class StyleCompiler implements IStyleCompiler {
                     style = mediaQuery.styles[0];
                 }
 
-                const pluginRules = await plugin.contractToStyleRules(breakpointConfig);
+                const pluginRules = await plugin.configToStyleRules(breakpointConfig);
                 style.rules.push(...pluginRules);
 
-                const pseudoStyles = await plugin.contractToPseudoStyles(breakpointConfig);
+                const pseudoStyles = await plugin.configToPseudoStyles(breakpointConfig);
                 style.pseudoStyles.push(...pseudoStyles);
 
-                const nestedStyles = await plugin.contractToNestedStyles(breakpointConfig);
+                const nestedStyles = await plugin.configToNestedStyles(breakpointConfig);
                 style.nestedStyles.push(...nestedStyles);
             }
         }
@@ -305,10 +307,10 @@ export class StyleCompiler implements IStyleCompiler {
             if (plugin) {
                 const pluginConfig = stateConfig[pluginName];
 
-                const pluginRules = await plugin.contractToStyleRules(pluginConfig);
+                const pluginRules = await plugin.configToStyleRules(pluginConfig);
                 stateStyle.rules.push(...pluginRules);
 
-                const nestedStyles = await plugin.contractToNestedStyles(pluginConfig);
+                const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
                 stateStyle.nestedStyles.push(...nestedStyles);
             }
         }
@@ -320,7 +322,7 @@ export class StyleCompiler implements IStyleCompiler {
         const themeContract = await this.styleService.getStyles();
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
-        
+
         const styleSheet = new StyleSheet();
         styleSheet.fontFaces.push(...fontFaces);
 

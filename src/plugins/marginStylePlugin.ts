@@ -6,12 +6,12 @@ import { MarginContract } from "../contracts";
 export class MarginStylePlugin extends StylePlugin {
     public readonly name: string = "margin";
 
-    public async contractToStyleRules(contract: MarginContract): Promise<StyleRule[]> {
+    public async configToStyleRules(contract: MarginContract): Promise<StyleRule[]> {
         const result = [
-            new StyleRule("marginTop", this.parseSize(contract.top)),
-            new StyleRule("marginLeft", this.parseSize(contract.left)),
-            new StyleRule("marginRight", this.parseSize(contract.right)),
-            new StyleRule("marginBottom", this.parseSize(contract.bottom))
+            new StyleRule("marginTop", StylePlugin.parseSize(contract.top)),
+            new StyleRule("marginLeft", StylePlugin.parseSize(contract.left)),
+            new StyleRule("marginRight", StylePlugin.parseSize(contract.right)),
+            new StyleRule("marginBottom", StylePlugin.parseSize(contract.bottom))
         ];
 
         return result;

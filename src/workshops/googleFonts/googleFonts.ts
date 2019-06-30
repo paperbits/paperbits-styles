@@ -12,18 +12,7 @@ import { StyleService } from "../../styleService";
 import { FontContract, FontVariantContract } from "../../contracts/fontContract";
 import { GoogleFontContract, GoogleFontsResult } from "./googleFontsParser";
 import { GoogleFont } from "./googleFont";
-import jss from "jss";
-import preset from "jss-preset-default";
 
-const opts = preset();
-
-opts.createGenerateClassName = () => {
-    return (rule, sheet) => {
-        return Utils.camelCaseToKebabCase(rule.key);
-    };
-};
-
-jss.setup(opts);
 
 @Component({
     selector: "google-fonts",

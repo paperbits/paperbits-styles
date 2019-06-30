@@ -10,7 +10,7 @@ export class TypographyStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(typographyContract: TypographyContract): Promise<StyleRule[]> {
+    public async configToStyleRules(typographyContract: TypographyContract): Promise<StyleRule[]> {
         const result = [];
 
         if (typographyContract.fontWeight) {
@@ -22,7 +22,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.fontSize) {
-            result.push(new StyleRule("fontSize", this.parseSize(typographyContract.fontSize)));
+            result.push(new StyleRule("fontSize", StylePlugin.parseSize(typographyContract.fontSize)));
         }
 
         if (typographyContract.fontKey) {
@@ -37,7 +37,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (typographyContract.lineHeight) {
-            result.push(new StyleRule("lineHeight", this.parseSize(typographyContract.lineHeight)));
+            result.push(new StyleRule("lineHeight", StylePlugin.parseSize(typographyContract.lineHeight)));
         }
 
         if (typographyContract.colorKey) {
@@ -55,9 +55,9 @@ export class TypographyStylePlugin extends StylePlugin {
             const shadowContract = Objects.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
 
             if (shadowContract) {
-                const x = this.parseSize(shadowContract.offsetX);
-                const y = this.parseSize(shadowContract.offsetY);
-                const blur = this.parseSize(shadowContract.blur);
+                const x = StylePlugin.parseSize(shadowContract.offsetX);
+                const y = StylePlugin.parseSize(shadowContract.offsetY);
+                const blur = StylePlugin.parseSize(shadowContract.blur);
                 const color = shadowContract.color || "#000";
 
                 result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));

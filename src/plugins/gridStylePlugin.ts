@@ -10,7 +10,7 @@ export class GridStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(contract: GridContract): Promise<StyleRule[]> {
+    public async configToStyleRules(contract: GridContract): Promise<StyleRule[]> {
         const result = [
             new StyleRule("display", "grid"),
             new StyleRule("gridTemplateColumns", contract.cols.join(" ")),

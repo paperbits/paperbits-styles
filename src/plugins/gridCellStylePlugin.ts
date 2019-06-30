@@ -10,7 +10,7 @@ export class GridCellStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(contract: GridCellContract): Promise<StyleRule[]> {
+    public async configToStyleRules(contract: GridCellContract): Promise<StyleRule[]> {
         const result = [
             new StyleRule("display", "flex"),
             new StyleRule("flexWrap", "wrap"),

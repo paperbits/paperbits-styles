@@ -11,7 +11,7 @@ export class StatesStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToPseudoStyles(statesConfig: any): Promise<Style[]> {
+    public async configToPseudoStyles(statesConfig: any): Promise<Style[]> {
         const stateStyles: Style[] = [];
 
         for (const stateName of Object.keys(statesConfig)) {

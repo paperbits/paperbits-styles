@@ -10,7 +10,7 @@ export class ContainerStylePlugin extends StylePlugin {
         super();
     }
 
-    public async contractToStyleRules(contract: ContainerContract): Promise<StyleRule[]> {
+    public async configToStyleRules(contract: ContainerContract): Promise<StyleRule[]> {
         const rules = [
             new StyleRule("display", "flex"),
             new StyleRule("flexWrap", "wrap"),
