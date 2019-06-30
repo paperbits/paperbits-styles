@@ -3,7 +3,7 @@ import * as Objects from "@paperbits/common";
 import template from "./typography.html";
 import { StyleService } from "../../styleService";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { TypographyContract, FontContract, ColorContract, ShadowContract } from "../../contracts";
+import { TypographyStylePluginConfig, FontContract, ColorContract, ShadowContract } from "../../contracts";
 
 
 const inheritLabel = "(Inherit)";
@@ -45,10 +45,10 @@ export class Typography {
     ];
 
     @Param()
-    public typography: ko.Observable<TypographyContract>;
+    public typography: ko.Observable<TypographyStylePluginConfig>;
 
     @Event()
-    public onUpdate: (contract: TypographyContract) => void;
+    public onUpdate: (contract: TypographyStylePluginConfig) => void;
 
     constructor(private readonly styleService: StyleService) {
          this.typography = ko.observable();
@@ -67,7 +67,7 @@ export class Typography {
         this.shadowName = ko.observable();
     }
 
-    private async fillout(typographyContract: TypographyContract): Promise<void> {
+    private async fillout(typographyContract: TypographyStylePluginConfig): Promise<void> {
         if (!typographyContract) {
             return;
         }

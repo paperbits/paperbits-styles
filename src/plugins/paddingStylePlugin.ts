@@ -1,17 +1,17 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
-import { PaddingContract } from "../contracts";
+import { PaddingStylePluginConfig } from "../contracts";
 
 
 export class PaddingStylePlugin extends StylePlugin {
     public readonly name: string = "padding";
 
-    public async configToStyleRules(contract: PaddingContract): Promise<StyleRule[]> {
+    public async configToStyleRules(pluginConfig: PaddingStylePluginConfig): Promise<StyleRule[]> {
         const rules = [
-            new StyleRule("paddingTop", StylePlugin.parseSize(contract.top)),
-            new StyleRule("paddingLeft", StylePlugin.parseSize(contract.left)),
-            new StyleRule("paddingRight", StylePlugin.parseSize(contract.right)),
-            new StyleRule("paddingBottom", StylePlugin.parseSize(contract.bottom))
+            new StyleRule("paddingTop", StylePlugin.parseSize(pluginConfig.top)),
+            new StyleRule("paddingLeft", StylePlugin.parseSize(pluginConfig.left)),
+            new StyleRule("paddingRight", StylePlugin.parseSize(pluginConfig.right)),
+            new StyleRule("paddingBottom", StylePlugin.parseSize(pluginConfig.bottom))
         ];
 
         return rules;

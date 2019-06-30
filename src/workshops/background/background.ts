@@ -1,11 +1,11 @@
-import { BackgroundStylePlugin } from "./../../plugins/backgroundStylePlugin";
+import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common";
 import template from "./background.html";
 import { StyleService } from "../..";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BackgroundContract, ColorContract, LinearGradientContract } from "../../contracts";
+import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract } from "../../contracts";
 import { Style, StyleSheet } from "@paperbits/common/styles";
 
 
@@ -44,7 +44,7 @@ export class Background {
         this.colorKey = ko.observable<string>();
         this.gradientKey = ko.observable<string>();
         this.repeat = ko.observable<string>();
-        this.background = ko.observable<BackgroundContract>();
+        this.background = ko.observable<BackgroundStylePluginConfig>();
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
 
@@ -52,10 +52,10 @@ export class Background {
     }
 
     @Param()
-    public background: ko.Observable<BackgroundContract>;
+    public background: ko.Observable<BackgroundStylePluginConfig>;
 
     @Event()
-    public onUpdate: (contract: BackgroundContract) => void;
+    public onUpdate: (contract: BackgroundStylePluginConfig) => void;
 
     @OnMounted()
     public async initialize(): Promise<void> {
@@ -66,12 +66,12 @@ export class Background {
         this.background.subscribe(this.fillout);
     }
 
-    private async fillout(backgroundContract: BackgroundContract): Promise<void> {
-        if (!backgroundContract) {
+    private async fillout(backgroundPluginConfig: any): Promise<void> {
+        if (!backgroundPluginConfig) {
             return;
         }
 
-        const styleRules = await this.backgroundStylePlugin.configToStyleRules(backgroundContract);
+        const styleRules = await this.backgroundStylePlugin.configToStyleRules(backgroundPluginConfig);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 
@@ -82,20 +82,20 @@ export class Background {
 
         const styles = await this.styleService.getStyles();
 
-        if (backgroundContract.colorKey) {
-            const colorContract = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, styles);
+        if (backgroundPluginConfig.colorKey) {
+            const colorContract = Objects.getObjectAt<ColorContract>(backgroundPluginConfig.colorKey, styles);
 
             if (colorContract) {
                 this.color(colorContract);
-                this.colorKey(backgroundContract.colorKey);
+                this.colorKey(backgroundPluginConfig.colorKey);
             }
             else {
-                console.warn(`Color with key "${backgroundContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Color with key "${backgroundPluginConfig.colorKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
-        if (backgroundContract.images && backgroundContract.images.length > 0) {
-            const image = backgroundContract.images[0];
+        if (backgroundPluginConfig.images && backgroundPluginConfig.images.length > 0) {
+            const image = backgroundPluginConfig.images[0];
 
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
@@ -106,8 +106,8 @@ export class Background {
             this.source(`url("${media.downloadUrl}")`);
         }
 
-        if (backgroundContract.gradientKey) {
-            this.gradientKey(backgroundContract.gradientKey);
+        if (backgroundPluginConfig.gradientKey) {
+            this.gradientKey(backgroundPluginConfig.gradientKey);
         }
     }
 
@@ -156,13 +156,13 @@ export class Background {
             });
         }
 
-        const updates = {
+        const updatedPluginConfig = {
             colorKey: this.colorKey(),
             gradientKey: this.gradientKey(),
             images: images
         };
 
-        const styleRules = await this.backgroundStylePlugin.configToStyleRules(updates);
+        const styleRules = await this.backgroundStylePlugin.configToStyleRules(updatedPluginConfig);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 
@@ -172,7 +172,7 @@ export class Background {
         this.backgroundPreview(styleSheet);
 
         if (this.onUpdate) {
-            this.onUpdate(updates);
+            this.onUpdate(updatedPluginConfig);
         }
     }
 }

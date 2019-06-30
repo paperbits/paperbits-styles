@@ -22,8 +22,8 @@ import {
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
-import { GridStylePlugin } from "./plugins/gridStylePlugin";
-import { GridCellStylePlugin } from "./plugins/gridCellStylePlugin";
+import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
+import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
 import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 
@@ -553,13 +553,12 @@ export class StyleCompiler implements IStyleCompiler {
             return "";
         }
 
-        const styleSheetC = new StyleSheet();
-        styleSheetC.styles.push(style);
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
 
-        const jssString = styleSheetC.toJssString();
-        const jssObject = JSON.parse(jssString);
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(styleSheet);
 
-        const styleSheet = jss.createStyleSheet(jssObject);
-        return styleSheet.toString();
+        return css;
     }
 }

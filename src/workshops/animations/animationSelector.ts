@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import template from "./animationSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
-import { AnimationContract } from "../../contracts/animationContract";
+import { AnimationContract } from "../../plugins/animation/animationContract";
 
 
 @Component({

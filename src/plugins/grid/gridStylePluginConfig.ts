@@ -1,7 +1,7 @@
 /**
- * Grid style contract
+ * Grid style plugin configuration.
  */
-export interface GridContract {
+export interface GridStylePluginConfig {
     /**
      * Row dimensions, e.g. ["1fr", "2fr", "1fr"].
      */

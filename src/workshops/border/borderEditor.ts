@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./borderEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BorderStyleContract } from "../../contracts/borderContract";
+import { BorderStyle } from "../../contracts/borderContract";
 import { ColorContract } from "../../contracts";
 import { StyleService } from "../..";
 
@@ -20,10 +20,10 @@ export class BorderEditor {
     public readonly colors: ko.ObservableArray<ColorContract>;
 
     @Param()
-    public readonly borderStyle: ko.Observable<BorderStyleContract>;
+    public readonly borderStyle: ko.Observable<BorderStyle>;
 
     @Event()
-    public readonly onChange: (contract: BorderStyleContract) => void;
+    public readonly onChange: (contract: BorderStyle) => void;
 
     
 
@@ -92,7 +92,7 @@ export class BorderEditor {
         const borderLineStyle = this.borderLineStyle();
         const borderLineWidth = this.borderLineWidth();
 
-        let borderStyle: BorderStyleContract;
+        let borderStyle: BorderStyle;
 
         if (colorKey && borderLineStyle && borderLineWidth) {
             borderStyle = {

@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyContract, BackgroundContract } from "../../contracts";
+import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig } from "../../contracts";
 
 
 @Component({
@@ -16,8 +16,8 @@ export class StyleEditor {
 
     public readonly styleName: ko.Observable<string>;
     public readonly selectedState: ko.Observable<string>;
-    public readonly elementStyleTypography: ko.Observable<TypographyContract>;
-    public readonly elementStyleBackground: ko.Observable<BackgroundContract>;
+    public readonly elementStyleTypography: ko.Observable<TypographyStylePluginConfig>;
+    public readonly elementStyleBackground: ko.Observable<BackgroundStylePluginConfig>;
     public readonly elementStyleShadow: ko.Observable<any>;
     public readonly elementStyleAnimation: ko.Observable<any>;
     public readonly elementStyleBox: ko.Observable<BoxContract>;
@@ -104,7 +104,7 @@ export class StyleEditor {
         this.scheduleUpdate();
     }
 
-    public onBackgroundUpdate(background: BackgroundContract): void {
+    public onBackgroundUpdate(background: BackgroundStylePluginConfig): void {
         const updateElement = this.getUpdateElement();
         updateElement["background"] = background;
         this.scheduleUpdate();
@@ -146,7 +146,7 @@ export class StyleEditor {
         this.scheduleUpdate();
     }
 
-    public onTypographyUpdate(typographyContract: TypographyContract): void {
+    public onTypographyUpdate(typographyContract: TypographyStylePluginConfig): void {
         const updateElement = this.getUpdateElement();
         updateElement["typography"] = typographyContract;
         this.scheduleUpdate();

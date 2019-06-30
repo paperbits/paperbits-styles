@@ -1,4 +1,4 @@
-export interface BackgroundImageContract {
+export interface BackgroundImage {
     sourceKey?: string;
 
     /**
@@ -17,7 +17,7 @@ export interface BackgroundImageContract {
     repeat?: string;
 }
 
-export interface BackgroundContract {
+export interface BackgroundStylePluginConfig {
     /**
      * e.g. "colors/default"
      */
@@ -28,5 +28,5 @@ export interface BackgroundContract {
      */
     gradientKey?: string;
 
-    images?: BackgroundImageContract[];
+    images?: BackgroundImage[];
 }

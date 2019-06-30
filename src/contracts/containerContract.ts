@@ -1,9 +1,9 @@
-import { Contract, Breakpoints } from "@paperbits/common";
+import { Contract } from "@paperbits/common";
 import { ContentAlignment } from "./contentAlignment";
 import { ContentOverflow } from "./contentOverflow";
 
 
-export interface ContainerContract extends Contract {
+export interface ContainerStylePluginConfig extends Contract {
     alignment?: ContentAlignment;
     overflow?: ContentOverflow;
 }

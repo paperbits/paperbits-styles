@@ -1,22 +1,29 @@
-import { StylePlugin } from "./stylePlugin";
-import { ContainerStylePluginConfig } from "../contracts/containerContract";
+import { StylePlugin } from "../stylePlugin";
 import { StyleRule } from "@paperbits/common/styles";
+import { GridCellStylePluginConfig } from "./gridCellStylePluginConfig";
 
 
-export class ContainerStylePlugin extends StylePlugin {
-    public displayName: string = "Container";
+export class GridCellStylePlugin extends StylePlugin {
+    public displayName: string = "Grid area";
 
     constructor() {
         super();
     }
 
-    public async configToStyleRules(pluginConfig: ContainerStylePluginConfig): Promise<StyleRule[]> {
-        const rules = [
+    public async configToStyleRules(pluginConfig: GridCellStylePluginConfig): Promise<StyleRule[]> {
+        const result = [
             new StyleRule("display", "flex"),
             new StyleRule("flexWrap", "wrap"),
             new StyleRule("justifyContent", "center"),
             new StyleRule("alignContent", "center")
         ];
+
+        if (pluginConfig.position) {
+            result.push(new StyleRule("gridColumnStart", pluginConfig.position.col));
+            result.push(new StyleRule("gridColumnEnd", pluginConfig.position.col + pluginConfig.span.cols));
+            result.push(new StyleRule("gridRowStart", pluginConfig.position.row));
+            result.push(new StyleRule("gridRowEnd", pluginConfig.position.row + pluginConfig.span.rows));
+        }
 
         if (pluginConfig.alignment) {
             if (pluginConfig.alignment.horizontal) {
@@ -30,7 +37,7 @@ export class ContainerStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                rules.push(new StyleRule("justifyContent", value));
+                result.push(new StyleRule("justifyContent", value));
             }
 
             if (pluginConfig.alignment.vertical) {
@@ -44,22 +51,22 @@ export class ContainerStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                rules.push(new StyleRule("alignContent", value));
+                result.push(new StyleRule("alignContent", value));
             }
         }
 
         if (pluginConfig.overflow) {
             if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
-                rules.push(new StyleRule("overflow", "auto"));
+                result.push(new StyleRule("overflow", "auto"));
             }
             else if (pluginConfig.overflow.vertical) {
-                rules.push(new StyleRule("overflowY", "auto"));
+                result.push(new StyleRule("overflowY", "auto"));
             }
             else {
-                rules.push(new StyleRule("overflowX", "auto"));
+                result.push(new StyleRule("overflowX", "auto"));
             }
         }
 
-        return rules;
+        return result;
     }
 }

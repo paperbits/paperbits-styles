@@ -1,4 +1,4 @@
-export interface TypographyContract {
+export interface TypographyStylePluginConfig {
     fontKey?: string;
     fontSize?: string | number;
     fontWeight?: string | number;

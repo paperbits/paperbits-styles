@@ -1,4 +1,4 @@
-import { BorderStyleContract } from "./../../contracts/borderContract";
+import { BorderStyle } from "./../../contracts/borderContract";
 import * as ko from "knockout";
 import template from "./boxEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -16,8 +16,8 @@ export class BoxEditor {
     public marginRight: ko.Observable<any>;
     public marginBottom: ko.Observable<any>;
 
-    public borderTop: ko.Observable<BorderStyleContract>;
-    public borderLeft: ko.Observable<BorderStyleContract>;
+    public borderTop: ko.Observable<BorderStyle>;
+    public borderLeft: ko.Observable<BorderStyle>;
     public borderRight: ko.Observable<any>;
     public borderBottom: ko.Observable<any>;
 

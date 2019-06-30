@@ -1,6 +1,6 @@
 import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
-import { ThemeContract, ShadowContract } from "../contracts";
+import { ThemeContract, ShadowContract, ShadowStylePluginConfig } from "../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 
 export class ShadowStylePlugin extends StylePlugin {
@@ -25,18 +25,18 @@ export class ShadowStylePlugin extends StylePlugin {
         return [new StyleRule("boxShadow", [offsetX, offsetY, blur, spread, color, inset].join(" "))];
     }
 
-    public async configToStyleRules(shadow: any): Promise<StyleRule[]> {
-        if (!shadow || !shadow.shadowKey) {
+    public async configToStyleRules(pluginConfig: ShadowStylePluginConfig): Promise<StyleRule[]> {
+        if (!pluginConfig || !pluginConfig.shadowKey) {
             return [];
         }
 
-        const shadowContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, this.themeContract);
+        const shadowContract = Objects.getObjectAt<ShadowContract>(pluginConfig.shadowKey, this.themeContract);
 
         if (shadowContract) {
             return ShadowStylePlugin.contractToStyleRules(shadowContract);
         }
         else {
-            console.warn(`Shadow with key "${shadow.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
+            console.warn(`Shadow with key "${pluginConfig.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
             return [];
         }
     }

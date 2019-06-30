@@ -21,8 +21,8 @@ import { ShadowSelector, ShadowEditorGroup, ShadowEditor } from "./workshops/sha
 import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleSheet";
-import { BackgroundStylePlugin } from "./plugins/backgroundStylePlugin";
-import { StylePlugin } from "./plugins/stylePlugin";
+import { BackgroundStylePlugin } from "./plugins/background/backgroundStylePlugin";
+import { StylePlugin } from "./plugins";
 import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";

@@ -1,4 +1,4 @@
-export * from "./animationContract";
+export * from "../plugins/animation/animationContract";
 export * from "./backgroundContract";
 export * from "./linearGradientContract";
 export * from "./borderContract";

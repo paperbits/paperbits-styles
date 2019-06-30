@@ -1,18 +1,18 @@
-export interface BorderStyleContract {
+export interface BorderStyle {
     width?: string | number;
     style?: string;
     color?: string;
     colorKey?: string;
 }
 
-export interface BorderContract {
-    top?: BorderStyleContract;
-    left?: BorderStyleContract;
-    right?: BorderStyleContract;
-    bottom?: BorderStyleContract;
+export interface BorderStylePluginConfig {
+    top?: BorderStyle;
+    left?: BorderStyle;
+    right?: BorderStyle;
+    bottom?: BorderStyle;
 }
 
-export interface BorderRadiusContract {
+export interface BorderRadiusStylePluginConfig {
     topLeftRadius?: string | number;
     topRightRadius?: string | number;
     bottomLeftRadius?: string | number;

@@ -1,11 +1,16 @@
-import { PaddingContract, MarginContract, BorderContract, BorderRadiusContract, ShadowContract, TypographyContract } from "./";
+import {
+    PaddingStylePluginConfig,
+    MarginStylePluginConfig,
+    BorderStylePluginConfig,
+    BorderRadiusStylePluginConfig,
+    TypographyStylePluginConfig
+} from "./";
 
 export interface BoxContract {
     displayName?: string;
-    padding?: PaddingContract;
-    margin?: MarginContract;
-    border?: BorderContract;
-    borderRadius?: BorderRadiusContract;
-    shadow?: string;
-    typography?: TypographyContract;
+    padding?: PaddingStylePluginConfig;
+    margin?: MarginStylePluginConfig;
+    border?: BorderStylePluginConfig;
+    borderRadius?: BorderRadiusStylePluginConfig;
+    typography?: TypographyStylePluginConfig;
 }

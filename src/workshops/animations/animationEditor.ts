@@ -3,7 +3,7 @@ import * as Objects from "@paperbits/common";
 import template from "./animationEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
-import { AnimationContract } from "../../contracts/animationContract";
+import { AnimationContract } from "../../plugins/animation/animationContract";
 
 const inheritLabel = "(Inherit)";
 

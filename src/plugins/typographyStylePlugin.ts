@@ -1,6 +1,6 @@
 import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
-import { ThemeContract, TypographyContract, FontContract, ColorContract, ShadowContract } from "../contracts";
+import { ThemeContract, TypographyStylePluginConfig, FontContract, ColorContract, ShadowContract } from "../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 
 export class TypographyStylePlugin extends StylePlugin {
@@ -10,49 +10,49 @@ export class TypographyStylePlugin extends StylePlugin {
         super();
     }
 
-    public async configToStyleRules(typographyContract: TypographyContract): Promise<StyleRule[]> {
+    public async configToStyleRules(pluginConfig: TypographyStylePluginConfig): Promise<StyleRule[]> {
         const result = [];
 
-        if (typographyContract.fontWeight) {
-            result.push(new StyleRule("fontWeight", typographyContract.fontWeight));
+        if (pluginConfig.fontWeight) {
+            result.push(new StyleRule("fontWeight", pluginConfig.fontWeight));
         }
 
-        if (typographyContract.fontStyle) {
-            result.push(new StyleRule("fontStyle", typographyContract.fontStyle));
+        if (pluginConfig.fontStyle) {
+            result.push(new StyleRule("fontStyle", pluginConfig.fontStyle));
         }
 
-        if (typographyContract.fontSize) {
-            result.push(new StyleRule("fontSize", StylePlugin.parseSize(typographyContract.fontSize)));
+        if (pluginConfig.fontSize) {
+            result.push(new StyleRule("fontSize", StylePlugin.parseSize(pluginConfig.fontSize)));
         }
 
-        if (typographyContract.fontKey) {
-            const fontContract = Objects.getObjectAt<FontContract>(typographyContract.fontKey, this.themeContract);
+        if (pluginConfig.fontKey) {
+            const fontContract = Objects.getObjectAt<FontContract>(pluginConfig.fontKey, this.themeContract);
 
             if (fontContract) {
                 result.push(new StyleRule("fontFamily", fontContract.family));
             }
             else {
-                console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Font with key "${pluginConfig.fontKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
-        if (typographyContract.lineHeight) {
-            result.push(new StyleRule("lineHeight", StylePlugin.parseSize(typographyContract.lineHeight)));
+        if (pluginConfig.lineHeight) {
+            result.push(new StyleRule("lineHeight", StylePlugin.parseSize(pluginConfig.lineHeight)));
         }
 
-        if (typographyContract.colorKey) {
-            const colorContract = Objects.getObjectAt<ColorContract>(typographyContract.colorKey, this.themeContract);
+        if (pluginConfig.colorKey) {
+            const colorContract = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
 
             if (colorContract) {
                 result.push(new StyleRule("color", colorContract.value || "transparent"));
             }
             else {
-                console.warn(`Color with key "${typographyContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Color with key "${pluginConfig.colorKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
-        if (typographyContract.shadowKey) {
-            const shadowContract = Objects.getObjectAt<ShadowContract>(typographyContract.shadowKey, this.themeContract);
+        if (pluginConfig.shadowKey) {
+            const shadowContract = Objects.getObjectAt<ShadowContract>(pluginConfig.shadowKey, this.themeContract);
 
             if (shadowContract) {
                 const x = StylePlugin.parseSize(shadowContract.offsetX);
@@ -71,20 +71,20 @@ export class TypographyStylePlugin extends StylePlugin {
                 //         background-clip: text;
             }
             else {
-                console.warn(`Shadow with key "${typographyContract.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Shadow with key "${pluginConfig.shadowKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
-        if (typographyContract.textAlign) {
-            result.push(new StyleRule("textAlign", typographyContract.textAlign));
+        if (pluginConfig.textAlign) {
+            result.push(new StyleRule("textAlign", pluginConfig.textAlign));
         }
 
-        if (typographyContract.textTransform) {
-            result.push(new StyleRule("textTransform", typographyContract.textTransform));
+        if (pluginConfig.textTransform) {
+            result.push(new StyleRule("textTransform", pluginConfig.textTransform));
         }
 
-        if (typographyContract.textDecoration) {
-            result.push(new StyleRule("textDecoration", typographyContract.textDecoration));
+        if (pluginConfig.textDecoration) {
+            result.push(new StyleRule("textDecoration", pluginConfig.textDecoration));
         }
 
         return result;

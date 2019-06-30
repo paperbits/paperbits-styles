@@ -3,15 +3,15 @@ import { Style, StyleRule } from "@paperbits/common/styles";
 export abstract class StylePlugin {
     protected name: string;
 
-    public async configToStyleRules?(config: any): Promise<StyleRule[]> {
+    public async configToStyleRules?(pluginConfig: any): Promise<StyleRule[]> {
         return [];
     }
 
-    public async configToNestedStyles?(config: any): Promise<Style[]> {
+    public async configToNestedStyles?(pluginConfig: any): Promise<Style[]> {
         return [];
     }
 
-    public async configToPseudoStyles?(config: any): Promise<Style[]> {
+    public async configToPseudoStyles?(pluginConfig: any): Promise<Style[]> {
         return [];
     }
 

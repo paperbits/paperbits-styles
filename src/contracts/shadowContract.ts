@@ -39,3 +39,7 @@ export interface ShadowContract {
      */
     inset?: boolean;
 }
+
+export interface ShadowStylePluginConfig {
+    shadowKey: string;
+}

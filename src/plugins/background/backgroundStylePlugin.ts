@@ -1,8 +1,8 @@
 import * as Objects from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
-import { StylePlugin } from "./stylePlugin";
-import { StyleService } from "../";
-import { BackgroundContract, ColorContract, LinearGradientContract, getLinearGradientString } from "../contracts";
+import { StylePlugin } from "../stylePlugin";
+import { StyleService } from "../..";
+import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, getLinearGradientString } from "../../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 
 export class BackgroundStylePlugin extends StylePlugin {
@@ -15,7 +15,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         super();
     }
 
-    public async configToStyleRules(backgroundContract: BackgroundContract): Promise<StyleRule[]> {
+    public async configToStyleRules(pluginConfig: BackgroundStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
         const backgroundImage = [];
         const backgroundPosition = [];
@@ -24,19 +24,19 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         const themeContract = await this.styleService.getStyles();
 
-        if (backgroundContract.colorKey) {
-            const color = Objects.getObjectAt<ColorContract>(backgroundContract.colorKey, themeContract);
+        if (pluginConfig.colorKey) {
+            const color = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, themeContract);
 
             if (color) {
                 rules.push(new StyleRule("backgroundColor", color.value));
             }
             else {
-                console.warn(`Color with key "${backgroundContract.colorKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Color with key "${pluginConfig.colorKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
-        if (backgroundContract.images && backgroundContract.images.length > 0) {
-            for (const image of backgroundContract.images) {
+        if (pluginConfig.images && pluginConfig.images.length > 0) {
+            for (const image of pluginConfig.images) {
                 const imageUrl = await this.mediaPermalinkResolver.getUrlByTargetKey(image.sourceKey);
 
                 if (!imageUrl) {
@@ -51,15 +51,15 @@ export class BackgroundStylePlugin extends StylePlugin {
             }
         }
 
-        if (backgroundContract.gradientKey) {
-            const gradient = Objects.getObjectAt<LinearGradientContract>(backgroundContract.gradientKey, themeContract);
+        if (pluginConfig.gradientKey) {
+            const gradient = Objects.getObjectAt<LinearGradientContract>(pluginConfig.gradientKey, themeContract);
 
             if (gradient) {
                 backgroundImage.push(getLinearGradientString(gradient));
             }
             else {
                 backgroundImage.push("none");
-                console.warn(`Gradient with key "${backgroundContract.gradientKey}" not found. Elements using it will fallback to parent's definition.`);
+                console.warn(`Gradient with key "${pluginConfig.gradientKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
 
