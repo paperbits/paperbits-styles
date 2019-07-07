@@ -7,7 +7,6 @@ import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import {
     StylePlugin,
     FontsStylePlugin,
-    PaddingStylePlugin,
     MarginStylePlugin,
     BorderStylePlugin,
     BorderRadiusStylePlugin,
@@ -26,6 +25,8 @@ import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
 import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
+import { PaddingStylePlugin } from "./plugins/padding";
+import { TransformStylePlugin } from "./plugins/transform";
 
 const opts = preset();
 
@@ -76,6 +77,7 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["grid-cell"] = new GridCellStylePlugin();
         this.plugins["container"] = new ContainerStylePlugin();
         this.plugins["size"] = new SizeStylePlugin();
+        this.plugins["transform"] = new TransformStylePlugin();
 
         const globalStyles = new StyleSheet();
         const allStyles = new StyleSheet();

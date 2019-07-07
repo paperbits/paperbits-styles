@@ -30,6 +30,7 @@ import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
+import { Transform } from "./workshops/transform/transform";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -38,6 +39,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("googleFonts", GoogleFonts);
         injector.bind("typography", Typography);
         injector.bind("background", Background);
+        injector.bind("transform", Transform);
         injector.bind("boxEditor", BoxEditor);
         injector.bind("borderEditor", BorderEditor);
         injector.bind("colorSelector", ColorSelector);

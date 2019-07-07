@@ -1,0 +1,36 @@
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" data-bind="collapse: '#transformCollapse'"></a>
+        <b>Transform</b>
+        <button class="btn btn-info" type="button" data-bind="infoMessageToggle: 'Manage element transformations'"></button>
+    </label>
+
+    <div id="transformCollapse" class="collapse form-group-collapse">
+        <div class="form-group">
+            <label for="translateX">Translate X (px)</label>
+            <input id="translateX" type="number" class="form-control" placeholder="(Inherit)"
+                data-bind="textInput: $component.translateX" />
+        </div>
+        <div class="form-group">
+            <label for="translateY">Translate Y (px)</label>
+            <input id="translateY" type="number" class="form-control" placeholder="(Inherit)"
+                data-bind="textInput: $component.translateY" />
+        </div>
+        <div class="form-group">
+            <label for="scaleX">Scale X</label>
+            <input id="scaleeX" type="number" class="form-control" placeholder="(Inherit)"
+                data-bind="textInput: $component.scaleX" />
+        </div>
+        <div class="form-group">
+            <label for="scaleY">Scale Y</label>
+            <input id="scaleY" type="number" class="form-control" placeholder="(Inherit)"
+                data-bind="textInput: $component.scaleY" />
+        </div>
+        <div class="form-group">
+            <label for="rotate">Rotate (degrees)</label>
+            <input id="rotate" type="number" class="form-control" placeholder="(Inherit)"
+                data-bind="textInput: $component.rotate" />
+        </div>
+    </div>
+    </div>
+</div>

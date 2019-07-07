@@ -1,6 +1,6 @@
 import { StyleRule } from "@paperbits/common/styles";
-import { StylePlugin } from "./stylePlugin";
-import { PaddingStylePluginConfig } from "../contracts";
+import { StylePlugin } from "../stylePlugin";
+import { PaddingStylePluginConfig } from ".";
 
 
 export class PaddingStylePlugin extends StylePlugin {

@@ -2,6 +2,7 @@ import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig } from "../../contracts";
+import { TransformStylePluginConfig } from "../../plugins/transform";
 
 
 @Component({
@@ -21,6 +22,7 @@ export class StyleEditor {
     public readonly elementStyleShadow: ko.Observable<any>;
     public readonly elementStyleAnimation: ko.Observable<any>;
     public readonly elementStyleBox: ko.Observable<BoxContract>;
+    public readonly elementStyleTransform: ko.Observable<TransformStylePluginConfig>;
     public allowBlockStyles: ko.Observable<boolean>;
 
 
@@ -29,6 +31,7 @@ export class StyleEditor {
         this.selectedState = ko.observable();
         this.elementStates = ko.observableArray();
         this.elementStyleTypography = ko.observable();
+        this.elementStyleTransform = ko.observable();
         this.elementStyleBackground = ko.observable();
         this.elementStyleShadow = ko.observable();
         this.elementStyleAnimation = ko.observable();
@@ -46,6 +49,7 @@ export class StyleEditor {
     public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
         this.elementStyleTypography(this.elementStyle.typography);
+        this.elementStyleTransform(this.elementStyle.transform)
         this.elementStyleBackground(this.elementStyle.background);
         this.elementStyleShadow(this.elementStyle.shadow);
         this.elementStyleAnimation(this.elementStyle.animation);
@@ -73,6 +77,7 @@ export class StyleEditor {
         if (newState && this.currentState !== newState) {
             const newStateContract = stateContract[newState] || {};
             this.elementStyleTypography(newStateContract.typography);
+            this.elementStyleTransform(newStateContract.transform);
             this.elementStyleBackground(newStateContract.background);
             this.elementStyleShadow(newStateContract.shadow);
             this.elementStyleAnimation(newStateContract.animation);
@@ -81,6 +86,7 @@ export class StyleEditor {
         else {
             if (!newState) {
                 this.elementStyleTypography(this.elementStyle.typography);
+                this.elementStyleTransform(this.elementStyle.transform);
                 this.elementStyleBackground(this.elementStyle.background);
                 this.elementStyleShadow(this.elementStyle.shadow);
                 this.elementStyleAnimation(this.elementStyle.animation);
@@ -149,6 +155,12 @@ export class StyleEditor {
     public onTypographyUpdate(typographyContract: TypographyStylePluginConfig): void {
         const updateElement = this.getUpdateElement();
         updateElement["typography"] = typographyContract;
+        this.scheduleUpdate();
+    }
+
+    public onTransformUpdate(pluginConfig: TransformStylePluginConfig): void {
+        const updateElement = this.getUpdateElement();
+        updateElement["transform"] = pluginConfig;
         this.scheduleUpdate();
     }
 }

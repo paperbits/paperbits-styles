@@ -51,7 +51,7 @@ export class Typography {
     public onUpdate: (contract: TypographyStylePluginConfig) => void;
 
     constructor(private readonly styleService: StyleService) {
-         this.typography = ko.observable();
+        this.typography = ko.observable();
         this.fontKey = ko.observable();
         this.fontSize = ko.observable();
         this.fontWeight = ko.observable();

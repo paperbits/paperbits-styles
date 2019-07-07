@@ -6,7 +6,6 @@ export * from "./boxContract";
 export * from "./colorContract";
 export * from "./fontContract";
 export * from "./marginContract";
-export * from "./paddingContract";
 export * from "./shadowContract";
 export * from "./themeContract";
 export * from "./typographyContract";

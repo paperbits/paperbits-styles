@@ -1,5 +1,5 @@
+import { PaddingStylePluginConfig } from "../plugins/padding";
 import {
-    PaddingStylePluginConfig,
     MarginStylePluginConfig,
     BorderStylePluginConfig,
     BorderRadiusStylePluginConfig,

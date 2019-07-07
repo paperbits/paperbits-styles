@@ -4,7 +4,6 @@ export * from "./border/borderRadiusStylePlugin";
 export * from "./border/borderStylePlugin";
 export * from "./fontStylePlugin";
 export * from "./margin/marginStylePlugin";
-export * from "./paddingStylePlugin";
 export * from "./shadowStylePlugin";
 export * from "./stylePlugin";
 export * from "./typographyStylePlugin";
