@@ -138,19 +138,8 @@ export class StyleCompiler implements IStyleCompiler {
                     const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName);
 
                     if (variationStyle) {
-                        const key = `& .${componentName}-${variationName}`;
-
-                        if (tagName === "body") {
-                            //  defaultComponentStyle = { ...defaultComponentStyle, [`.${componentName}-${variationName}`]: variationJss[key] };
-                            debugger;
-                        }
-                        else {
-                            defaultComponentStyle[tagName] = { ...defaultComponentStyle[tagName], [`&.${componentName}-${variationName}`]: variationStyle[key] };
-
-                        }
+                        defaultComponentStyle.nestedStyles.push(variationStyle);
                     }
-
-                    defaultComponentStyle.modifierStyles.push(variationStyle);
                 }
 
                 globalStyles.styles.push(defaultComponentStyle);
@@ -168,7 +157,6 @@ export class StyleCompiler implements IStyleCompiler {
 
         const compiler = new JssCompiler();
         const css = compiler.styleSheetToCss(allStyles);
-
 
         const globalJssObject = JSON.parse(globalStyles.toJssString());
         const globalStyleSheet = jss.createStyleSheet({ "@global": globalJssObject });
@@ -195,7 +183,6 @@ export class StyleCompiler implements IStyleCompiler {
             const plugin = this.plugins[pluginName];
 
             if (!plugin) {
-                // console.warn(`Plugin "${pluginName}" not registered.`);
                 continue;
             }
 
