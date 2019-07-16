@@ -57,10 +57,11 @@ export class StyleCompiler implements IStyleCompiler {
         return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
     }
 
-    /**
-     * Returns compliled CSS.
-     */
-    public async compile(): Promise<string> {
+    private async initializePlugins(): Promise<void> {
+        if (Object.keys(this.plugins).length > 0) {
+            return;
+        }
+
         const themeContract = await this.styleService.getStyles();
 
         this.plugins["padding"] = new PaddingStylePlugin();
@@ -78,6 +79,15 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["container"] = new ContainerStylePlugin();
         this.plugins["size"] = new SizeStylePlugin();
         this.plugins["transform"] = new TransformStylePlugin();
+    }
+
+    /**
+     * Returns compliled CSS.
+     */
+    public async compile(): Promise<string> {
+        await this.initializePlugins();
+
+        const themeContract = await this.styleService.getStyles();
 
         const globalStyles = new StyleSheet();
         const allStyles = new StyleSheet();
@@ -166,6 +176,8 @@ export class StyleCompiler implements IStyleCompiler {
     }
 
     public async getVariationStyle(variationConfig: any, componentName: string, variationName: string = null): Promise<Style> {
+        await this.initializePlugins();
+
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
         const resultStyle = new Style(selector);
 
@@ -478,7 +490,6 @@ export class StyleCompiler implements IStyleCompiler {
                     }
                 }
             }
-
         }
 
         const result: StyleModel = {
@@ -547,7 +558,6 @@ export class StyleCompiler implements IStyleCompiler {
 
         const compiler = new JssCompiler();
         const css = compiler.styleSheetToCss(styleSheet);
-
         return css;
     }
 }
