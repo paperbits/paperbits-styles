@@ -30,14 +30,6 @@ export class Background {
         private readonly mediaService: IMediaService,
         private readonly backgroundStylePlugin: BackgroundStylePlugin
     ) {
-        this.initialize = this.initialize.bind(this);
-        this.fillout = this.fillout.bind(this);
-        this.applyChanges = this.applyChanges.bind(this);
-        this.onMediaSelected = this.onMediaSelected.bind(this);
-        this.onColorSelected = this.onColorSelected.bind(this);
-        this.onGradientSelected = this.onGradientSelected.bind(this);
-        this.clearBackground = this.clearBackground.bind(this);
-
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
         this.color = ko.observable<any>();
@@ -47,7 +39,6 @@ export class Background {
         this.background = ko.observable<BackgroundStylePluginConfig>();
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
-
         this.backgroundPreview = ko.observable<string>();
     }
 
@@ -63,7 +54,8 @@ export class Background {
 
         await this.fillout(background);
 
-        this.background.subscribe(this.fillout);
+        this.position.subscribe(this.applyChanges);
+        this.size.subscribe(this.applyChanges);
     }
 
     private async fillout(backgroundPluginConfig: any): Promise<void> {

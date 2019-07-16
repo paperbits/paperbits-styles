@@ -39,7 +39,7 @@ export class BorderStylePlugin extends StylePlugin {
 
         if (pluginConfig.bottom && pluginConfig.bottom.width && pluginConfig.bottom.style && pluginConfig.bottom.colorKey) {
             const borderBottomColorpluginConfig = Objects.getObjectAt<ColorContract>(pluginConfig.bottom.colorKey, this.themeContract);
-            result.push(new StyleRule("borderBottom", `${StylePlugin.parseSize(pluginConfig.bottom.width)} ${pluginConfig.bottom.style}, ${borderBottomColorpluginConfig.value}`));
+            result.push(new StyleRule("borderBottom", `${StylePlugin.parseSize(pluginConfig.bottom.width)} ${pluginConfig.bottom.style} ${borderBottomColorpluginConfig.value}`));
         }
         else {
             result.push(new StyleRule("borderBottom", "none"));
