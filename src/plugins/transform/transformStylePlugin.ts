@@ -10,14 +10,14 @@ export class TransformStylePlugin extends StylePlugin {
         const transformOperations = [];
 
         if (pluginConfig.translate) {
-            const translateX = pluginConfig.translate.x ? StylePlugin.parseSize(pluginConfig.translate.x) : 0;
-            const translateY = pluginConfig.translate.y ? StylePlugin.parseSize(pluginConfig.translate.y) : 0;
+            const translateX = StylePlugin.parseSize(pluginConfig.translate.x);
+            const translateY = StylePlugin.parseSize(pluginConfig.translate.y);
             transformOperations.push(`translate(${translateX},${translateY})`);
         }
 
         if (pluginConfig.scale) {
-            const scaleX = pluginConfig.scale.x ? pluginConfig.scale.x : 1;
-            const scaleY = pluginConfig.scale.y ? pluginConfig.scale.y : 1;
+            const scaleX = pluginConfig.scale.x || 1;
+            const scaleY = pluginConfig.scale.y || 1;
             transformOperations.push(`scale(${scaleX},${scaleY})`);
         }
 
