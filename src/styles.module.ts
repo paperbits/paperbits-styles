@@ -14,7 +14,7 @@ import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.style
 export class StyleModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("styleService", StyleService);
-        injector.bindSingleton("stylePublisher", StylePublisher);
+        injector.bindToCollection("publishers", StylePublisher);
         injector.bindSingleton("styleCompiler", StyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);
     }

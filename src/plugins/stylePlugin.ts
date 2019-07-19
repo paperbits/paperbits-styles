@@ -15,8 +15,8 @@ export abstract class StylePlugin {
         return [];
     }
 
-    public static parseSize = (value: string | number): any => {
-        if (value === "auto" || value === "initial") {
+    public static parseSize = (value: string | number, fallback: string | number = 0): any => {
+        if (value === "auto" || value === "initial" || value === "inherit") {
             return value;
         }
 
@@ -24,7 +24,7 @@ export abstract class StylePlugin {
             return parseInt(<string>value) + "px";
         }
         else {
-            return undefined;
+            return fallback;
         }
     };
 }
