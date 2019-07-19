@@ -331,83 +331,8 @@ export class StyleCompiler implements IStyleCompiler {
         return jss.createStyleSheet(jssObject).toString();
     }
 
-    public getClassNamesByStyleConfig(styleConfig: any): string {
-        if (!styleConfig) {
-            throw new Error(`Parameter "styleConfig" not specified.`);
-        }
-
-        const classNames = [];
-
-        for (const category of Object.keys(styleConfig)) {
-            const categoryConfig = styleConfig[category];
-
-            if (categoryConfig) {
-                if (this.isResponsive(categoryConfig)) {
-                    for (const breakpoint of Object.keys(categoryConfig)) {
-                        let className;
-
-                        if (breakpoint === "xs") {
-                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint]);
-                        }
-                        else {
-                            className = this.getClassNameByStyleKey(categoryConfig[breakpoint], breakpoint);
-                        }
-
-                        if (className) {
-                            classNames.push(className);
-                        }
-                    }
-                }
-                else {
-                    const className = this.getClassNameByStyleKey(categoryConfig);
-
-                    if (className) {
-                        classNames.push(className);
-                    }
-                }
-            }
-        }
-
-        return classNames.join(" ");
-    }
-
     public getClassNameByColorKey(colorKey: string): string {
         return Utils.camelCaseToKebabCase(colorKey.replaceAll("/", "-"));
-    }
-
-    public getClassNameByStyleKey(key: string, breakpoint?: string): string {
-        if (!key) {
-            throw new Error(`Parameter "key" not specified.`);
-        }
-
-        if (key.startsWith("globals/")) {
-            return null;
-        }
-
-        const segments = key.split("/");
-        const component = segments[1];
-        const componentVariation = segments[2];
-        const classNames = [];
-
-        classNames.push(Utils.camelCaseToKebabCase(component));
-
-        if (componentVariation) {
-            let className;
-
-            if (breakpoint) {
-                className = `${component}-${breakpoint}-${componentVariation}`;
-            }
-            else {
-                className = `${component}-${componentVariation}`;
-            }
-
-            className = Utils.camelCaseToKebabCase(className);
-            classNames.push(className);
-        }
-
-        // TODO: Consider a case: components/navbar/default/components/navlink
-
-        return classNames.join(" ");
     }
 
     public async getClassNamesByStyleConfigAsync(styleConfig: any): Promise<string> {
