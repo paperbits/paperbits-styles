@@ -7,26 +7,30 @@
 
     <div id="backgroundCollapse" class="collapse form-group-collapse">
         <div class="tabs">
-            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }" title="No background">
+            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }"
+                title="No background">
                 <a href="#" data-bind="click: clearBackground">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }" title="Background picture">
-                <a href="#" data-bind="balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
+                <a href="#"
+                    data-bind="balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
                     <i class="paperbits-icon paperbits-image-2"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': colorKey }" title="Background color">
-                <a href="#" data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.color } } }">
+                <a href="#"
+                    data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.color } } }">
                     <i class="paperbits-icon paperbits-paint-bucket-40"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }" title="Background gradient">
-                <a href="#" data-bind="balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradient: $component.gradientKey } } }">
+                <a href="#"
+                    data-bind="balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradient: $component.gradientKey } } }">
                     <i class="paperbits-icon paperbits-gradient"></i>
                 </a>
             </div>
@@ -70,14 +74,15 @@
         <!-- ko if: sourceKey() -->
         <label class="form-label">
             Background picture sizing
-            <button class="btn btn-info" type="button" data-bind="infoMessageToggle: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Resize the background image to make sure the image is fully visible.</p>'"></button>
+            <button class="btn btn-info" type="button"
+                data-bind="infoMessageToggle: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Resize the background image to make sure the image is fully visible.</p>'"></button>
         </label>
         <div class="form-group">
             <label class="form-label">
-                <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
+                <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
             </label>
             <label class="form-label">
-                <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
+                <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
             </label>
         </div>
         <!-- /ko -->

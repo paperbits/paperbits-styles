@@ -9,6 +9,8 @@ import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract } fr
 import { Style, StyleSheet } from "@paperbits/common/styles";
 
 
+const defaultBackgroundSize = "cover";
+
 @Component({
     selector: "background",
     template: template,
@@ -91,7 +93,7 @@ export class Background {
 
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
-            this.size(image.size || "contain");
+            this.size(image.size || defaultBackgroundSize);
             this.position(image.position || "center");
 
             const media = await this.mediaService.getMediaByKey(image.sourceKey);
@@ -107,7 +109,7 @@ export class Background {
         this.source(media ? `url("${media.downloadUrl}")` : "none");
         this.sourceKey(media ? media.key : undefined);
         this.repeat(this.repeat() || "no-repeat");
-        this.size(this.size() || "contain");
+        this.size(this.size() || defaultBackgroundSize);
         this.position(this.position() || "center center");
         this.applyChanges();
     }
