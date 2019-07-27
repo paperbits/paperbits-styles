@@ -9,3 +9,4 @@ export * from "./marginContract";
 export * from "./shadowContract";
 export * from "./themeContract";
 export * from "./typographyContract";
+export * from "./containerContract";

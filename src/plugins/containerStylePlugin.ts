@@ -1,5 +1,5 @@
 import { StylePlugin } from "./stylePlugin";
-import { ContainerStylePluginConfig } from "../contracts/containerContract";
+import { ContainerStylePluginConfig } from "../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 
 
