@@ -209,8 +209,11 @@ export class StyleCompiler implements IStyleCompiler {
 
                 const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
                 resultStyle.nestedStyles.push(...nestedStyles);
+
+                continue;
             }
 
+            /* Processing responsive styles */
             for (const breakpoint of Object.keys(BreakpointValues)) {
                 const breakpointConfig = pluginConfig[breakpoint];
 
