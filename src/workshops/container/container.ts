@@ -30,11 +30,16 @@ export class Container {
 
     @OnMounted()
     public initialize(): void {
-        this.setObservables(this.config());
-        this.config.subscribe(this.setObservables);
+        this.updateObservables(this.config());
+        this.config.subscribe(this.updateObservables);
+        this.scrollOnOverlow.subscribe(this.onOverflowChange);
     }
 
-    private setObservables(stylePluginConfig: ContainerStylePluginConfig): void {
+    private updateObservables(stylePluginConfig: ContainerStylePluginConfig): void {
+        if (!stylePluginConfig) {
+            return;
+        }
+
         const overflowStyle = stylePluginConfig.overflow;
 
         if (overflowStyle) {
@@ -144,7 +149,7 @@ export class Container {
         this.applyChanges();
     }
 
-    public toggleOverflow(): void {
+    public onOverflowChange(): void {
         this.applyChanges();
     }
 }
