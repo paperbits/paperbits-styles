@@ -19,24 +19,24 @@
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" data-bind="collapse: '#miscellaneousCollapse'"></a>
-            <b>Miscellaneous</b>
+            <b>Shadow</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
             <div class="form-group">
-                <label for="blur">Shadow blur radius (in px)</label>
-                <input id="blur" type="number" class="form-control" min="1" data-bind="textInput: blur" />
+                <label for="blur">Blur radius (in px)</label>
+                <input id="blur" type="range" class="form-control" min="1" max="50" data-bind="textInput: blur" />
             </div>
             <div class="form-group">
-                <label for="spread">Shadow spread radius (in px)</label>
-                <input id="spread" type="number" class="form-control" min="1" data-bind="textInput: spread" />
+                <label for="spread">Spread radius (in px)</label>
+                <input id="spread" type="range" class="form-control" min="1" max="50" data-bind="textInput: spread" />
             </div>
             <div class="form-group">
-                <label for="offsetX">Shadow offset X (in px)</label>
-                <input id="offsetX" type="number" class="form-control" data-bind="textInput: offsetX" />
+                <label for="offsetX">Offset X (in px)</label>
+                <input id="offsetX" type="range" min="-50" max="50" class="form-control" data-bind="textInput: offsetX" />
             </div>
             <div class="form-group">
-                <label for="offsetY">Shadow offset Y (in px)</label>
-                <input id="offsetY" type="number" class="form-control" data-bind="textInput: offsetY" />
+                <label for="offsetY">Offset Y (in px)</label>
+                <input id="offsetY" type="range" min="-50" max="50" class="form-control" data-bind="textInput: offsetY" />
             </div>
             <div class="form-group">
                 <label class="form-label">
