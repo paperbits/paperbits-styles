@@ -18,9 +18,16 @@ export class StylePublisher implements IPublisher {
     ) { }
 
     public async publish(): Promise<void> {
-        const css = await this.styleCompiler.compile();
-        const bytes = Utils.stringToUnit8Array(css);
+        try {
+            console.log("Publishing styles...");
 
-        await this.outputBlobStorage.uploadBlob(`styles/customizations.css`, bytes, "text/css");
+            const css = await this.styleCompiler.compile();
+            const bytes = Utils.stringToUnit8Array(css);
+
+            await this.outputBlobStorage.uploadBlob(`styles/customizations.css`, bytes, "text/css");
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 }

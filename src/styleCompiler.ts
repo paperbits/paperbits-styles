@@ -17,7 +17,8 @@ import {
     ComponentsStylePlugin,
     StatesStylePlugin,
     ContainerStylePlugin,
-    SizeStylePlugin
+    SizeStylePlugin,
+    TransitionStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -79,6 +80,7 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["container"] = new ContainerStylePlugin();
         this.plugins["size"] = new SizeStylePlugin();
         this.plugins["transform"] = new TransformStylePlugin();
+        this.plugins["transition"] = new TransitionStylePlugin();
     }
 
     /**

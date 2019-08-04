@@ -31,6 +31,7 @@ import { StylePlugin } from "./plugins";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
 import { Transform } from "./workshops/transform/transform";
+import { Transition } from "./workshops/transitions/transition";
 import { Container } from "./workshops/container/container";
 
 
@@ -43,6 +44,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("container", Container);
         injector.bind("background", Background);
         injector.bind("transform", Transform);
+        injector.bind("transition", Transition);
         injector.bind("boxEditor", BoxEditor);
         injector.bind("borderEditor", BorderEditor);
         injector.bind("colorSelector", ColorSelector);
