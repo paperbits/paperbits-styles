@@ -17,6 +17,7 @@ export class Transition {
     public readonly duration: ko.Observable<number>;
     public readonly property: ko.Observable<string>;
     public readonly timingFunction: ko.Observable<string>;
+    public readonly enabled: ko.Computed<boolean>;
 
     public timingFunctionOptions: any[] = [
         { value: undefined, text: "(Inherit)" },
@@ -33,6 +34,7 @@ export class Transition {
         this.duration = ko.observable();
         this.property = ko.observable();
         this.timingFunction = ko.observable();
+        this.enabled = ko.computed(() => this.timingFunction() && this.timingFunction() !== "none");
     }
 
     @Param()
