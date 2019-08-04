@@ -3,6 +3,7 @@ import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig } from "../../contracts";
 import { TransformStylePluginConfig } from "../../plugins/transform";
+import { TransitionStylePluginConfig } from "../../plugins/transition";
 
 
 @Component({
@@ -23,6 +24,7 @@ export class StyleEditor {
     public readonly elementStyleAnimation: ko.Observable<any>;
     public readonly elementStyleBox: ko.Observable<BoxContract>;
     public readonly elementStyleTransform: ko.Observable<TransformStylePluginConfig>;
+    public readonly elementStyleTransition: ko.Observable<TransitionStylePluginConfig>;
     public allowBlockStyles: ko.Observable<boolean>;
 
 
@@ -32,6 +34,7 @@ export class StyleEditor {
         this.elementStates = ko.observableArray();
         this.elementStyleTypography = ko.observable();
         this.elementStyleTransform = ko.observable();
+        this.elementStyleTransition = ko.observable();
         this.elementStyleBackground = ko.observable();
         this.elementStyleShadow = ko.observable();
         this.elementStyleAnimation = ko.observable();
@@ -49,7 +52,8 @@ export class StyleEditor {
     public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
         this.elementStyleTypography(this.elementStyle.typography);
-        this.elementStyleTransform(this.elementStyle.transform)
+        this.elementStyleTransform(this.elementStyle.transform);
+        this.elementStyleTransition(this.elementStyle.transition);
         this.elementStyleBackground(this.elementStyle.background);
         this.elementStyleShadow(this.elementStyle.shadow);
         this.elementStyleAnimation(this.elementStyle.animation);
@@ -78,6 +82,7 @@ export class StyleEditor {
             const newStateContract = stateContract[newState] || {};
             this.elementStyleTypography(newStateContract.typography);
             this.elementStyleTransform(newStateContract.transform);
+            this.elementStyleTransition(newStateContract.transition);
             this.elementStyleBackground(newStateContract.background);
             this.elementStyleShadow(newStateContract.shadow);
             this.elementStyleAnimation(newStateContract.animation);
@@ -87,6 +92,7 @@ export class StyleEditor {
             if (!newState) {
                 this.elementStyleTypography(this.elementStyle.typography);
                 this.elementStyleTransform(this.elementStyle.transform);
+                this.elementStyleTransition(this.elementStyle.transition);
                 this.elementStyleBackground(this.elementStyle.background);
                 this.elementStyleShadow(this.elementStyle.shadow);
                 this.elementStyleAnimation(this.elementStyle.animation);
@@ -161,6 +167,12 @@ export class StyleEditor {
     public onTransformUpdate(pluginConfig: TransformStylePluginConfig): void {
         const updateElement = this.getUpdateElement();
         updateElement["transform"] = pluginConfig;
+        this.scheduleUpdate();
+    }
+
+    public onTransitionUpdate(pluginConfig: TransitionStylePluginConfig): void {
+        const updateElement = this.getUpdateElement();
+        updateElement["transition"] = pluginConfig;
         this.scheduleUpdate();
     }
 }
