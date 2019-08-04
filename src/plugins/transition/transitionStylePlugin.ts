@@ -1,7 +1,6 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
 import { TransitionStylePluginConfig } from "./";
-import { ThemeContract } from "../../contracts";
 
 
 export class TransitionStylePlugin extends StylePlugin {
