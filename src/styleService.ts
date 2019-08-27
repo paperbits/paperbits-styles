@@ -53,7 +53,7 @@ export class StyleService {
 
         const variation: any = {
             key: `components/navbar/${variationName}`,
-            displayName: "< Unnammed >",
+            displayName: "< Unnamed >",
             category: "appearance",
             components: {
                 navLink : {
@@ -96,7 +96,7 @@ export class StyleService {
 
         const variation: any = {
             key: `components/${componentName}/${variationName}`,
-            displayName: "< Unnammed >",
+            displayName: "< Unnamed >",
             category: "appearance"
         };
 
@@ -117,7 +117,7 @@ export class StyleService {
 
         const variation: any = {
             key: `globals/body/${variationName}`,
-            displayName: "< Unnammed >"
+            displayName: "< Unnamed >"
         };
 
         styles.globals["body"][variationName] = variation;
