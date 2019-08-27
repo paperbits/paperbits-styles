@@ -4,16 +4,16 @@
     <h1>Font family</h1>
     <hr />
 
-    <ul class="list fonts">
-        <li class="list-item font-box">
-            <a href="#" title="Clear font" class="font-family" data-bind="click: $component.clearFonts">
+    <div class="list fonts" role="list">
+        <a href="#" role="listitem" class="list-item font-box" title="Clear font" data-bind="click: $component.clearFonts, focus: 'auto'">
+            <span class="font-family">
                 (Inherit)
-            </a>
-        </li>
+            </span>
+        </a>
         <!-- ko foreach: { data: fonts, as: 'font' } -->
-        <li class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }">
-            <a href="#" class="font-family" data-bind="click: $component.selectFont, text: font.displayName, style: { 'font-family': font.family }"></a>
-        </li>
+        <a href="#" role="listitem" class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, click: $component.selectFont">
+            <span class="font-family" data-bind="text: font.displayName, style: { 'font-family': font.family }"></span>
+        </a>
         <!--/ko -->
-    </ul>
+    </div>
 </div>
