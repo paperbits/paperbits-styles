@@ -1,13 +1,19 @@
 <fieldset class="flex-item form">
     <div class="form-group">
-        <input class="form-control" type="search" data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true"
-            placeholder="Search fonts..." aria-label="Search fonts" />
+        <input class="form-control" type="search" role="searchbox"
+            data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true" placeholder="Search fonts..."
+            aria-label="Search fonts" aria-controls="searchResult" />
+        <p id="searchResult" class="text-hide" role="region" aria-live="polite"
+            data-bind="text: `Fonts found: ${fonts().length}`">
+        </p>
     </div>
 </fieldset>
 
-<fieldset class="form flex-item flex-item-grow list fonts" role="list" data-bind="scrollable: { onEndReach: $component.loadNextPage }" aria-live="polite">
+<fieldset class="form flex-item flex-item-grow list fonts" role="list"
+    data-bind="scrollable: { onEndReach: $component.loadNextPage }" aria-live="polite">
     <!-- ko foreach: { data: fonts, as: 'font' } -->
-    <div class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
+    <div class="list-item font-box"
+        data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
         <style data-bind="jss: preview"></style>
         <a href="#" role="listitem" class="font-family"
             data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
