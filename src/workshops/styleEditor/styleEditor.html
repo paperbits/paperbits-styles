@@ -1,4 +1,4 @@
-<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: {}">
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" data-bind="collapse: '#miscellaneousCollapse'"></a>
@@ -8,7 +8,7 @@
             <div class="form-group">
                 <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>
-                <input id="styleName" type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName, focus: 'auto'">
+                <input id="styleName" type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName, focus: true">
             </div>
             <!-- ko if: elementStates -->
             <div class="form-group">
