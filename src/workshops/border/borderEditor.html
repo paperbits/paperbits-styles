@@ -4,27 +4,27 @@
 
     <div class="form">
         <div class="form-group">
-            <label>Line width</label>
-            <input type="number" class="form-control" placeholder="(Inherit)" min="1" max="100"
+            <label for="borderLineWidth">Line width</label>
+            <input id="borderLineWidth" type="number" class="form-control" placeholder="(Inherit)" min="1" max="100"
                 data-bind="textInput: borderLineWidth" />
         </div>
 
         <div class="form-group">
-            <label>Line style</label>
-            <select class="form-control"
+            <label for="borderLineStyle">Line style</label>
+            <select id="borderLineStyle" class="form-control"
                 data-bind="options: borderLineStyles, value: borderLineStyle, optionsText: 'name', optionsValue: 'value'"></select>
         </div>
 
         <ul class="palette">
             <li class="color-box" data-bind="css: { selected: !$component.borderColor() }">
-                <a href="#" title="Clear color" class="color" data-bind="click: $component.clearColor">
+                <a href="#" title="Clear color" class="color" role="button" data-bind="click: $component.clearColor">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
             </li>
 
             <!-- ko foreach: { data: colors, as: 'color' } -->
             <li class="color-box" data-bind="css: { selected: color === $component.borderColor }">
-                <a href="#" class="color"
+                <a href="#" class="color" role="button"
                     data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
             </li>
             <!--/ko -->

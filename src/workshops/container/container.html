@@ -2,22 +2,22 @@
     <label class="form-label">
         <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#alignmentCollapse'"></a>
         <b>Content alignment</b>
-        <button class="btn btn-info" type="button"
-            title="Help" data-bind="tooltipToggle: 'Align content inside the container. Depending on viewport, the alignment can be different, following mobile-first approach. If not specified in current one, container applies configuration from closest smaller viewports.'"></button>
+        <button class="btn btn-info" type="button" title="Help"
+            data-bind="tooltipToggle: 'Align content inside the container. Depending on viewport, the alignment can be different, following mobile-first approach. If not specified in current one, container applies configuration from closest smaller viewports.'"></button>
     </label>
 
     <div id="alignmentCollapse" class="collapse form-group-collapse">
         <div class="form-group">
             <label>Horizontal</label>
-            <a href="#" class="toolbox-btn"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignLeft, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'start' }">
                 <i class="paperbits-icon paperbits-align-left"></i>
             </a>
-            <a href="#" class="toolbox-btn"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignCenter, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'center' || horizontalAlignment() === 'around' || horizontalAlignment() === 'between' }">
                 <i class="paperbits-icon paperbits-align-center-horizontal"></i>
             </a>
-            <a href="#" class="toolbox-btn"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignRight, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'end' }">
                 <i class="paperbits-icon paperbits-align-right"></i>
             </a>
@@ -25,15 +25,15 @@
 
         <div class="form-group">
             <label>Vertical</label>
-            <a href="#" class="toolbox-btn"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignTop, css: { 'toolbox-btn-is-active': verticalAlignment() === 'start' }">
                 <i class="paperbits-icon paperbits-align-top"></i>
             </a>
-            <a href="#" class="toolbox-btn toolbox-btn-is-active"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignMiddle, css: { 'toolbox-btn-is-active': verticalAlignment() === 'center' || verticalAlignment() === 'around' || verticalAlignment() === 'between' }">
                 <i class="paperbits-icon paperbits-align-center-vertical"></i>
             </a>
-            <a href="#" class="toolbox-btn"
+            <a href="#" class="toolbox-btn" role="button"
                 data-bind="click: alignBottom, css: { 'toolbox-btn-is-active': verticalAlignment() === 'end' }">
                 <i class="paperbits-icon paperbits-align-bottom"></i>
             </a>
@@ -45,13 +45,12 @@
     <label class="form-label">
         <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#contentFlowCollapse'"></a>
         <b>Content flow</b>
-        <button class="btn btn-info" type="button"
-            title="Help" data-bind="tooltipToggle: 'Manage scrolling settings for container'"></button>
+        <button class="btn btn-info" type="button" title="Help"
+            data-bind="tooltipToggle: 'Manage scrolling settings for container'"></button>
     </label>
     <div id="contentFlowCollapse" class="collapse form-group-collapse">
         <label class="form-label">
-            <input name="scrollOnOverlow" type="checkbox"
-                data-bind="checked: scrollOnOverlow" />Scroll on overflow
+            <input name="scrollOnOverlow" type="checkbox" data-bind="checked: scrollOnOverlow" />Scroll on overflow
         </label>
     </div>
 </div>
