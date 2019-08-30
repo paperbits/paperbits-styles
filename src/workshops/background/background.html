@@ -9,27 +9,27 @@
         <div class="tabs">
             <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }"
                 title="No background">
-                <a href="#" data-bind="click: clearBackground">
+                <a href="#" role="button" aria-label="Clear background" data-bind="click: clearBackground">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }" title="Background picture">
-                <a href="#"
+                <a href="#" role="button" aria-label="Background picture" aria-haspopup="true"
                     data-bind="balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
                     <i class="paperbits-icon paperbits-image-2"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': colorKey }" title="Background color">
-                <a href="#"
+                <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
                     data-bind="balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.color } } }">
                     <i class="paperbits-icon paperbits-paint-bucket-40"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }" title="Background gradient">
-                <a href="#"
+                <a href="#" role="button" aria-label="Background gradient" aria-haspopup="true"
                     data-bind="balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradient: $component.gradientKey } } }">
                     <i class="paperbits-icon paperbits-gradient"></i>
                 </a>
