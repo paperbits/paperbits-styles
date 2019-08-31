@@ -108,7 +108,7 @@
                 <article>
                     <div class="style-card" data-bind="stylable: globals.a.default">
                         <div class="style-card-body">
-                            <a href="#" data-bind="stylePreview:globals.a.default">Regular link</a>
+                            <a href="#" class="no-pointer-events" data-bind="stylePreview:globals.a.default">Regular link</a>
                         </div>
                     </div>
                 </article>
@@ -195,8 +195,8 @@
         <div class="samples">
             <!-- ko foreach: { data: $component.colors, as: 'color' } -->
             <div class="sample style-card" data-bind="stylable: color">
-                <a href="#" class="style-card-square"
-                    data-bind="attr: { title: color.displayName }, style: { background: color.value }"></a>
+                <div tabindex="0" class="style-card-square"
+                    data-bind="attr: { title: color.displayName }, style: { background: color.value }"></div>
                 <span class="style-card-label" data-bind="text: color.displayName"></span>
             </div>
             <!--/ko -->
@@ -271,7 +271,7 @@
                     <div class="style-card-body">
                         <div class="form-group">
                             <label>Label</label>
-                            <input type="text" class="form-control" value="Input value"
+                            <input type="text" class="form-control no-pointer-events" value="Input value"
                                 data-bind="stylePreview:components.formControl.default" />
                         </div>
                     </div>
@@ -339,11 +339,11 @@
                             </button>
                             <div class="collapse navbar-collapse"></div>
                             <div class="navbar-nav">
-                                <a class="nav-item nav-link" href="#"
+                                <a class="nav-item nav-link no-pointer-events" href="#"
                                     data-bind="stylable: navbar.components.navLink.default, stylePreview:navbar.components.navLink.default">
                                     Nav item
                                 </a>
-                                <a class="nav-item nav-link nav-link-active" href="#"
+                                <a class="nav-item nav-link nav-link-active no-pointer-events" href="#"
                                     data-bind="stylable: navbar.components.navLink.active, stylePreview:navbar.components.navLink.active">
                                     Nav item (active)
                                 </a>
@@ -392,7 +392,7 @@
             <!--ko foreach: { data: $component.videoPlayers, as: 'videoPlayer' }-->
             <div class="col col-md-4 style-card" data-bind="stylable: videoPlayer">
                 <div class="style-card-body">
-                    <video data-bind="stylePreview:videoPlayer">
+                    <video class="no-pointer-events" data-bind="stylePreview:videoPlayer">
                         <source src="https://cdn.paperbits.io/videos/planet-earth.mp4" />
                     </video>
                 </div>
@@ -414,7 +414,7 @@
             <!--ko foreach: { data: $component.cards, as: 'card' }-->
             <div class="col col-md-4 style-card" data-bind="stylable: card">
                 <div class="style-card-body">
-                    <div data-bind="stylePreview:card">
+                    <div class="no-pointer-events" data-bind="stylePreview:card">
                         <h1>Card</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
                     </div>
