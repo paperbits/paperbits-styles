@@ -1,9 +1,10 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig } from "../../contracts";
+import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig } from "../../contracts";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
+import { AnimationStylePluginConfig } from "../../plugins/animation";
 
 
 @Component({
@@ -25,7 +26,8 @@ export class StyleEditor {
     public readonly elementStyleBox: ko.Observable<BoxContract>;
     public readonly elementStyleTransform: ko.Observable<TransformStylePluginConfig>;
     public readonly elementStyleTransition: ko.Observable<TransitionStylePluginConfig>;
-    public allowBlockStyles: ko.Observable<boolean>;
+    public readonly allowBlockStyles: ko.Observable<boolean>;
+    public readonly working: ko.Observable<boolean>;
 
 
     constructor() {
@@ -40,6 +42,7 @@ export class StyleEditor {
         this.elementStyleAnimation = ko.observable();
         this.elementStyleBox = ko.observable();
         this.allowBlockStyles = ko.observable();
+        this.working = ko.observable(true);
     }
 
     @Param()
@@ -51,20 +54,14 @@ export class StyleEditor {
     @OnMounted()
     public initialize(): void {
         this.styleName(this.elementStyle["displayName"]);
-        this.elementStyleTypography(this.elementStyle.typography);
-        this.elementStyleTransform(this.elementStyle.transform);
-        this.elementStyleTransition(this.elementStyle.transition);
-        this.elementStyleBackground(this.elementStyle.background);
-        this.elementStyleShadow(this.elementStyle.shadow);
-        this.elementStyleAnimation(this.elementStyle.animation);
-        this.elementStyleBox(this.elementStyle);
         this.allowBlockStyles(!this.elementStyle.key.startsWith("globals/body"));
+        this.resetEditors(this.elementStyle);
 
         const states: [] = this.elementStyle["allowedStates"];
         this.elementStates(states);
 
         if (states && states.length > 0) {
-            this.selectedState.subscribe(this.onStateUpdate);
+            this.selectedState.subscribe(this.onStateSelected);
         }
 
         this.styleName.subscribe(this.onStyleNameUpdate);
@@ -75,40 +72,44 @@ export class StyleEditor {
         this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 500);
     }
 
-    public onStateUpdate(newState: string): void {
-        const stateContract = this.elementStyle["states"] || {};
-
-        if (newState && this.currentState !== newState) {
-            const newStateContract = stateContract[newState] || {};
-            this.elementStyleTypography(newStateContract.typography);
-            this.elementStyleTransform(newStateContract.transform);
-            this.elementStyleTransition(newStateContract.transition);
-            this.elementStyleBackground(newStateContract.background);
-            this.elementStyleShadow(newStateContract.shadow);
-            this.elementStyleAnimation(newStateContract.animation);
-            this.elementStyleBox(newStateContract);
-        }
-        else {
-            if (!newState) {
-                this.elementStyleTypography(this.elementStyle.typography);
-                this.elementStyleTransform(this.elementStyle.transform);
-                this.elementStyleTransition(this.elementStyle.transition);
-                this.elementStyleBackground(this.elementStyle.background);
-                this.elementStyleShadow(this.elementStyle.shadow);
-                this.elementStyleAnimation(this.elementStyle.animation);
-                this.elementStyleBox(this.elementStyle);
-            }
-        }
-        this.currentState = newState;
+    public resetEditors(style: any): void {
+        this.working(true);
+        this.elementStyleTypography(style.typography);
+        this.elementStyleTransform(style.transform);
+        this.elementStyleTransition(style.transition);
+        this.elementStyleBackground(style.background);
+        this.elementStyleShadow(style.shadow);
+        this.elementStyleAnimation(style.animation);
+        this.elementStyleBox(style);
+        this.working(false);
     }
 
-    private getUpdateElement(): any {
-        if (this.currentState) {
-            this.elementStyle.states = this.elementStyle.states || {};
-            this.elementStyle.states[this.currentState] = this.elementStyle.states[this.currentState] || {};
-            return this.elementStyle.states[this.currentState];
+    public onStateSelected(state: string): void {
+        this.currentState = state;
+        const style = this.getStyleForSelectedState();
+        this.resetEditors(style);
+    }
+
+    private getStyleForSelectedState(): any {
+        let style;
+
+        if (!this.currentState) {
+            style = this.elementStyle;
         }
-        return this.elementStyle;
+        else if (this.elementStyle.states) {
+            if (!this.elementStyle.states[this.currentState]) {
+                this.elementStyle.states[this.currentState] = {};
+            }
+
+            style = this.elementStyle.states[this.currentState];
+        }
+        else {
+            style = {};
+            this.elementStyle.states = {};
+            this.elementStyle.states[this.currentState] = style;
+        }
+
+        return style;
     }
 
     public onStyleNameUpdate(name: string): void {
@@ -117,62 +118,62 @@ export class StyleEditor {
     }
 
     public onBackgroundUpdate(background: BackgroundStylePluginConfig): void {
-        const updateElement = this.getUpdateElement();
-        updateElement["background"] = background;
+        const style = this.getStyleForSelectedState();
+        style["background"] = background;
         this.scheduleUpdate();
     }
 
-    public onShadowUpdate(shadow: any): void {
-        const updateElement = this.getUpdateElement();
+    public onShadowUpdate(shadow: ShadowStylePluginConfig): void {
+        const style = this.getStyleForSelectedState();
 
         if (shadow) {
-            updateElement["shadow"] = { shadowKey: shadow.shadowKey };
+            style["shadow"] = { shadowKey: shadow.shadowKey };
         }
         else {
-            delete updateElement["shadow"];
+            delete style["shadow"];
         }
 
         this.scheduleUpdate();
     }
 
-    public onAnimationUpdate(animation: any): void {
-        const updateElement = this.getUpdateElement();
+    public onAnimationUpdate(animation: AnimationStylePluginConfig): void {
+        const style = this.getStyleForSelectedState();
 
         if (animation) {
-            updateElement["animation"] = {
+            style["animation"] = {
                 animationKey: animation.animationKey,
                 duration: animation.duration,
                 iterationCount: animation.iterationCount
             };
         }
         else {
-            delete updateElement["animation"];
+            delete style["animation"];
         }
 
         this.scheduleUpdate();
     }
 
     public onBoxUpdate(boxContract: BoxContract): void {
-        const updateElement = this.getUpdateElement();
-        Object.assign(updateElement, boxContract);
+        const style = this.getStyleForSelectedState();
+        Object.assign(style, boxContract);
         this.scheduleUpdate();
     }
 
     public onTypographyUpdate(typographyContract: TypographyStylePluginConfig): void {
-        const updateElement = this.getUpdateElement();
-        updateElement["typography"] = typographyContract;
+        const style = this.getStyleForSelectedState();
+        style["typography"] = typographyContract;
         this.scheduleUpdate();
     }
 
     public onTransformUpdate(pluginConfig: TransformStylePluginConfig): void {
-        const updateElement = this.getUpdateElement();
-        updateElement["transform"] = pluginConfig;
+        const style = this.getStyleForSelectedState();
+        style["transform"] = pluginConfig;
         this.scheduleUpdate();
     }
 
     public onTransitionUpdate(pluginConfig: TransitionStylePluginConfig): void {
-        const updateElement = this.getUpdateElement();
-        updateElement["transition"] = pluginConfig;
+        const style = this.getStyleForSelectedState();
+        style["transition"] = pluginConfig;
         this.scheduleUpdate();
     }
 }

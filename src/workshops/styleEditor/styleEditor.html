@@ -1,26 +1,32 @@
 <fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
     <div class="form-group form-group-collapsible">
         <label class="form-label">
-            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#miscellaneousCollapse'"></a>
+            <a href="#" class="form-group-toggle" title="Toggle section"
+                data-bind="collapse: '#miscellaneousCollapse'"></a>
             <b>Main</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
             <div class="form-group">
-                <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Name of the style'"></button>
+                <button class="btn btn-info" type="button" title="Help"
+                    data-bind="tooltipToggle: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>
-                <input id="styleName" type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName, focus: true">
+                <input id="styleName" type="text" class="form-control" spellcheck="false"
+                    data-bind="textInput: styleName, focus: true">
             </div>
             <!-- ko if: elementStates -->
             <div class="form-group">
                 <label for="textTransform">State</label>
-                <select id="textTransform" class="form-control" data-bind="options: elementStates, value: selectedState, optionsCaption: 'default'"></select>
+                <select id="textTransform" class="form-control"
+                    data-bind="options: elementStates, value: selectedState, optionsCaption: 'default'"></select>
             </div>
             <!--/ko -->
         </div>
     </div>
 
+    <!-- ko ifnot: working -->
+
     <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
-    
+
     <!-- ko if: allowBlockStyles -->
     <!-- <gradient-editor></gradient-editor> -->
     <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
@@ -29,5 +35,7 @@
     <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
     <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
     <box-editor params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box-editor>
+    <!-- /ko -->
+
     <!-- /ko -->
 </fieldset>
