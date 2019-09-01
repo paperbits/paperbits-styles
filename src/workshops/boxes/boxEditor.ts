@@ -2,7 +2,7 @@ import { BorderStyle } from "./../../contracts/borderContract";
 import * as ko from "knockout";
 import template from "./boxEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxContract } from "../../contracts";
+import { BoxStylePluginConfig } from "../../contracts";
 
 
 @Component({
@@ -37,10 +37,10 @@ export class BoxEditor {
     public borderBottomWidth: ko.Computed<any>;
 
     @Param()
-    public box: ko.Observable<BoxContract>;
+    public box: ko.Observable<BoxStylePluginConfig>;
 
     @Event()
-    public onUpdate: (contract: BoxContract) => void;
+    public onUpdate: (contract: BoxStylePluginConfig) => void;
 
     constructor() {
         this.init = this.init.bind(this);

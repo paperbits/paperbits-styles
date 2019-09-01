@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxContract, ColorContract, AnimationContract, ShadowContract, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig } from "../../contracts";
+import { BoxStylePluginConfig, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig } from "../../contracts";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
 import { AnimationStylePluginConfig } from "../../plugins/animation";
@@ -23,7 +23,7 @@ export class StyleEditor {
     public readonly elementStyleBackground: ko.Observable<BackgroundStylePluginConfig>;
     public readonly elementStyleShadow: ko.Observable<any>;
     public readonly elementStyleAnimation: ko.Observable<any>;
-    public readonly elementStyleBox: ko.Observable<BoxContract>;
+    public readonly elementStyleBox: ko.Observable<BoxStylePluginConfig>;
     public readonly elementStyleTransform: ko.Observable<TransformStylePluginConfig>;
     public readonly elementStyleTransition: ko.Observable<TransitionStylePluginConfig>;
     public readonly allowBlockStyles: ko.Observable<boolean>;
@@ -153,7 +153,7 @@ export class StyleEditor {
         this.scheduleUpdate();
     }
 
-    public onBoxUpdate(boxContract: BoxContract): void {
+    public onBoxUpdate(boxContract: BoxStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
         Object.assign(style, boxContract);
         this.scheduleUpdate();

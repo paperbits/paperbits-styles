@@ -6,7 +6,7 @@ import {
     TypographyStylePluginConfig
 } from "./";
 
-export interface BoxContract {
+export interface BoxStylePluginConfig {
     displayName?: string;
     padding?: PaddingStylePluginConfig;
     margin?: MarginStylePluginConfig;
