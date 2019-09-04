@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@paperbits/common": "0.1.147",
+        "@simonwep/pickr": "^1.4.1",
         "cropperjs": "^1.4.0",
         "google-maps": "^3.2.1",
         "jss": "^9.8.7",
@@ -28,7 +29,6 @@
         "mime-types": "^2.1.22",
         "opentype.js": "0.11.0",
         "perfect-scrollbar": "^1.2.0",
-        "pickr-widget": "^0.3.1",
         "xhr2": "^0.1.4"
     },
     "devDependencies": {

@@ -1,11 +1,14 @@
-<div class="form">
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
     <div class="form-group">
         <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Name of the color'"></button>
         <label for="colorName">Color name</label>
-        <input id="colorName" type="text" class="form-control" spellcheck="false" data-bind="textInput: colorName, focus: true">
+        <input id="colorName" type="text" class="form-control" spellcheck="false"
+            data-bind="textInput: colorName, focus: true">
     </div>
 
-    <!-- ko if: colorValue -->
-    <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
-    <!-- /ko -->
-</div>
+    <div class="color-picker">
+        <!-- ko if: colorValue -->
+        <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
+        <!-- /ko -->
+    </div>
+</fieldset>
