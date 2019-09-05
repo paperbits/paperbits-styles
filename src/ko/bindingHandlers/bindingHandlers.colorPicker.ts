@@ -26,11 +26,12 @@ ko.bindingHandlers["colorPicker"] = {
                     clear: false,
                     save: false
                 }
-            },
-            onChange(hsva: any): void {
-                if (config.selectedColor) {
-                    config.selectedColor(hsva.toRGBA().toString());
-                }
+            }
+        });
+
+        pickr.on("change", (color: any) => {
+            if (config.selectedColor) {
+                config.selectedColor(color.toRGBA().toString());
             }
         });
     }
