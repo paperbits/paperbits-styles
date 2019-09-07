@@ -240,7 +240,7 @@ export class StyleGuide {
 
         const textStylesVariations = await this.styleService.getVariations("globals", "body");
         this.textStyles(this.sortByDisplayName(textStylesVariations));
-        
+
         const navBarsVariations = await this.styleService.getComponentVariations("navbar");
         this.navBars(this.sortByDisplayName(navBarsVariations));
 
@@ -249,7 +249,7 @@ export class StyleGuide {
         this.styles(styles);
     }
 
-    private sortByDisplayName(items: any[]): any [] {
+    private sortByDisplayName(items: any[]): any[] {
         return _.sortBy(items, ["displayName"]);
     }
 
@@ -354,15 +354,15 @@ export class StyleGuide {
         const selectedElement = this.viewManager.getSelectedElement();
 
         if (selectedElement && selectedElement.element === element) {
-            const select = 
-                (style.key.startsWith("colors/") && this.selectColor(style)) || 
-                (style.key.startsWith("shadows/") && this.selectShadow(style)) || 
-                this.selectStyle(style);            
+            const select =
+                (style.key.startsWith("colors/") && this.selectColor(style)) ||
+                (style.key.startsWith("shadows/") && this.selectShadow(style)) ||
+                this.selectStyle(style);
         }
         else {
             const contextualEditor = this.getContextualEditor(stylable);
 
-            if (!contextualEditor) {
+            if (!contextualEditor || contextualEditor.selectCommands.length === 0) {
                 return;
             }
 
@@ -400,7 +400,7 @@ export class StyleGuide {
         const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
             deleteCommand: null,
-            selectionCommands: []
+            selectCommands: []
         };
 
         if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
@@ -443,7 +443,7 @@ export class StyleGuide {
             !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/")
         ) {
-            styleContextualEditor.selectionCommands.push({
+            styleContextualEditor.selectCommands.push({
                 tooltip: "Change background",
                 iconClass: "paperbits-drop",
                 position: "top right",
@@ -455,7 +455,7 @@ export class StyleGuide {
         }
 
         if (style.key.startsWith("colors/") || style.key.startsWith("shadows/")) {
-            styleContextualEditor.selectionCommands.push({
+            styleContextualEditor.selectCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
@@ -466,7 +466,7 @@ export class StyleGuide {
             });
         }
         else if (!style.key.startsWith("fonts/") && !style.key.startsWith("gradients/")) {
-            styleContextualEditor.selectionCommands.push({
+            styleContextualEditor.selectCommands.push({
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
@@ -498,9 +498,8 @@ export class StyleGuide {
         let highlightedElement: HTMLElement;
         let highlightedText: string;
         let highlightColor: string;
-        const tobeDeleted = Object.keys(this.actives);
 
-        let current = null;
+        const tobeDeleted = Object.keys(this.actives);
 
         for (let i = elements.length - 1; i >= 0; i--) {
             const element = elements[i];
@@ -517,8 +516,6 @@ export class StyleGuide {
 
             highlightedElement = element;
             highlightedText = style.displayName;
-
-            current = style;
 
             const active = this.actives[style.key];
             const contextualEditor = this.getContextualEditor(stylable);
