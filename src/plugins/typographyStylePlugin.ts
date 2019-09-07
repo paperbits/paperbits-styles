@@ -6,8 +6,12 @@ import { StyleRule } from "@paperbits/common/styles";
 export class TypographyStylePlugin extends StylePlugin {
     public readonly name: string = "typography";
 
-    constructor(private readonly themeContract: ThemeContract) {
+    constructor(private themeContract: ThemeContract) {
         super();
+    }
+
+    public setThemeContract(themeContract: ThemeContract): void {
+        this.themeContract = themeContract;
     }
 
     public async configToStyleRules(pluginConfig: TypographyStylePluginConfig): Promise<StyleRule[]> {

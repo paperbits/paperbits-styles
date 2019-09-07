@@ -28,6 +28,7 @@ import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRu
 import { JssCompiler } from "./jssCompiler";
 import { PaddingStylePlugin } from "./plugins/padding";
 import { TransformStylePlugin } from "./plugins/transform";
+import { ThemeContract } from "./contracts/themeContract";
 
 const opts = preset();
 
@@ -41,6 +42,7 @@ jss.setup(opts);
 
 
 export class StyleCompiler implements IStyleCompiler {
+    private styles: ThemeContract;
     public plugins: Bag<StylePlugin>;
 
     constructor(
@@ -58,18 +60,41 @@ export class StyleCompiler implements IStyleCompiler {
         return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
     }
 
+    public setStyles(styles: ThemeContract) {
+        this.styles = styles;
+    }
+
+    private async getStyles(): Promise<ThemeContract> {
+        if (!this.styles && !this.styleService) {
+            console.error("Styles provider is not set!!!");
+        }
+        const result = this.styles || await this.styleService.getStyles();
+        return result;
+    }
+
+    private pluginsToRefresh = ["border","background","shadow","animation","typography"];
+
     private async initializePlugins(): Promise<void> {
+        const themeContract = await this.getStyles();
         if (Object.keys(this.plugins).length > 0) {
+            if (themeContract) {
+                this.pluginsToRefresh.map(pluginName => {
+                    const plugin = this.plugins[pluginName];
+                    if (plugin.setThemeContract){
+                        plugin.setThemeContract(themeContract);
+                    } else {
+                        console.error(`Plugin ${pluginName} does not support setThemeContract`);
+                    }
+                });
+            }
             return;
         }
-
-        const themeContract = await this.styleService.getStyles();
 
         this.plugins["padding"] = new PaddingStylePlugin();
         this.plugins["margin"] = new MarginStylePlugin();
         this.plugins["border"] = new BorderStylePlugin(themeContract);
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(this.styleService, this.mediaPermalinkResolver);
+        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
@@ -89,7 +114,7 @@ export class StyleCompiler implements IStyleCompiler {
     public async compile(): Promise<string> {
         await this.initializePlugins();
 
-        const themeContract = await this.styleService.getStyles();
+        const themeContract = await this.getStyles();
 
         const globalStyles = new StyleSheet();
         const allStyles = new StyleSheet();
@@ -325,7 +350,7 @@ export class StyleCompiler implements IStyleCompiler {
     }
 
     public async getFontsStyles(): Promise<string> {
-        const themeContract = await this.styleService.getStyles();
+        const themeContract = await this.getStyles();
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
 
@@ -468,7 +493,7 @@ export class StyleCompiler implements IStyleCompiler {
         }
 
         // TODO: Consider a case: components/navbar/default/components/navlink
-        const styles = await this.styleService.getStyles();
+        const styles = await this.getStyles();
         const style = Objects.getObjectAt(key, styles);
 
         if (style && style["class"]) {
@@ -478,7 +503,7 @@ export class StyleCompiler implements IStyleCompiler {
         return classNames.join(" ");
     }
 
-    public styleToCss?(style: Style): string {
+    public styleToCss(style: Style): string {
         if (!style) {
             return "";
         }

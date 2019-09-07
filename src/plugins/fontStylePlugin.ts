@@ -15,6 +15,10 @@ export class FontsStylePlugin {
     public async contractToFontFaces(): Promise<FontFace[]> {
         const fontFaces = [];
 
+        if(!this.themeContract.fonts) {
+            return fontFaces;
+        }
+
         for (const fontKey of Object.keys(this.themeContract.fonts)) {
             const fontContract = this.themeContract.fonts[fontKey];
 

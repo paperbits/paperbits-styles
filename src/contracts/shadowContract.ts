@@ -1,14 +1,6 @@
-export interface ShadowContract {
-    /**
-     * Own key.
-     */
-    key: string;
+import { StyleItemContract } from ".";
 
-    /**
-     * Display name of the shadow that is shown in editors.
-     */
-    displayName: string;
-
+export interface ShadowContract extends StyleItemContract {
     /**
      * Shadow offset X.
      */

@@ -1,7 +1,6 @@
 import { ContentOverflow } from "../../contracts/contentOverflow";
 import { ContentAlignment } from "../../contracts/contentAlignment";
 
-
 export interface GridCellSpan {
     /**
      * Column span is useful when only on horizontal position (left or right) specified.

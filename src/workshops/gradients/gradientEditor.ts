@@ -45,7 +45,7 @@ export class GradientEditor {
     }
 
     private async applyChanges(): Promise<void> {
-        const abc = getLinearGradientString({ direction: `${this.direction()}deg`, colorStops: this.colorStops() });
+        const abc = getLinearGradientString({ key: "", displayName: "", direction: `${this.direction()}deg`, colorStops: this.colorStops() });
 
         this.gradientPreview({
             gradientPreview: {

@@ -6,8 +6,12 @@ import { StyleRule } from "@paperbits/common/styles";
 export class ShadowStylePlugin extends StylePlugin {
     public readonly name: string = "shadow";
 
-    constructor(private readonly themeContract: ThemeContract) {
+    constructor(private themeContract: ThemeContract) {
         super();
+    }
+
+    public setThemeContract(themeContract: ThemeContract): void {
+        this.themeContract = themeContract;
     }
 
     public static contractToStyleRules(contract: ShadowContract): StyleRule[] {

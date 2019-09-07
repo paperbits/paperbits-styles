@@ -1,18 +1,27 @@
 import * as Objects from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "../stylePlugin";
-import { StyleService } from "../..";
-import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, getLinearGradientString } from "../../contracts";
+import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, getLinearGradientString, ThemeContract } from "../../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 
 export class BackgroundStylePlugin extends StylePlugin {
     public readonly name: string = "background";
 
     constructor(
-        private readonly styleService: StyleService,
+        private themeContract: ThemeContract,
         private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         super();
+        if(!themeContract) {
+            console.error("ThemeContract is empty");
+        }
+        if(!mediaPermalinkResolver) {
+            console.error("mediaPermalinkResolver is empty");
+        }
+    }
+
+    public setThemeContract(themeContract: ThemeContract): void {
+        this.themeContract = themeContract;
     }
 
     public async configToStyleRules(pluginConfig: BackgroundStylePluginConfig): Promise<StyleRule[]> {
@@ -22,10 +31,8 @@ export class BackgroundStylePlugin extends StylePlugin {
         const backgroundRepeat = [];
         const backgroundSize = [];
 
-        const themeContract = await this.styleService.getStyles();
-
         if (pluginConfig.colorKey) {
-            const color = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, themeContract);
+            const color = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
 
             if (color) {
                 rules.push(new StyleRule("backgroundColor", color.value));
@@ -52,7 +59,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.gradientKey) {
-            const gradient = Objects.getObjectAt<LinearGradientContract>(pluginConfig.gradientKey, themeContract);
+            const gradient = Objects.getObjectAt<LinearGradientContract>(pluginConfig.gradientKey, this.themeContract);
 
             if (gradient) {
                 backgroundImage.push(getLinearGradientString(gradient));

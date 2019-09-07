@@ -1,0 +1,23 @@
+<div class="editor">
+    <h1>Snippets</h1>
+    <hr/>
+    
+    <div class="flex-container flex-container-column list-container">
+        <!--ko if: $component.working()-->
+        <spinner></spinner>
+        <!--/ko-->
+        <ul class="flex-item flex-item-grow list" data-bind="foreach: { data: snippets, as: 'snippet' }, scrollable: {}">
+            <li class="list-item" data-bind="css: { selected: snippet.hasFocus }, click: $component.selectSnippet, event: { keydown: $component.keydown }, attr: { title: snippet.displayName }">
+                <style-snippet params="{ snippetItem: snippet }">
+                    <button data-bind="css: classNames, text: displayName"></button>
+                </style-snippet>
+            </li>
+        </ul>
+
+        <div class="flex-item btn-group">
+            <button class="btn" data-bind="click: addSnippet, enable: !!selectedSnippet()">
+                <i class="paperbits-icon paperbits-simple-add"></i> Add
+            </button>
+        </div>
+    </div>
+</div>

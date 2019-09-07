@@ -7,6 +7,7 @@ import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
+import { StyleItem } from "../models/styleItem";
 
 @Component({
     selector: "style-guide",
@@ -181,6 +182,12 @@ export class StyleGuide {
         await this.openInEditor("button");
     }
 
+    public async onSnippetSelected(snippet: StyleItem) {
+        console.log("Snippet selected: ", snippet);
+        await this.styleService.mergeStyles(snippet.stylesConfig);
+        await this.openInEditor("button", snippet);
+    }
+
     public async addCardVariation(): Promise<void> {
         await this.openInEditor("card");
     }
@@ -202,9 +209,9 @@ export class StyleGuide {
         await this.openInEditor("videoPlayer");
     }
 
-    private async openInEditor(componentName: string): Promise<void> {
+    private async openInEditor(componentName: string, snippet?: any): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName);
+        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, snippet);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
         this.selectStyle(addedStyle);
 

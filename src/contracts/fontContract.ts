@@ -1,3 +1,5 @@
+import { StyleItemContract } from ".";
+
 export interface FontVariantContract {
     /**
      * e.g. "400", "bold", etc.
@@ -20,11 +22,7 @@ export interface FontVariantContract {
     sourceKey?: string;
 }
 
-export interface FontContract {
-    key: string;
-
-    displayName: string;
-
+export interface FontContract extends StyleItemContract {
     /**
      * e.g. "webfonts#webfont".
      */

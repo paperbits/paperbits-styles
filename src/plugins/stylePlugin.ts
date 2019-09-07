@@ -1,4 +1,5 @@
 import { Style, StyleRule } from "@paperbits/common/styles";
+import { ThemeContract } from "../contracts/themeContract";
 
 export abstract class StylePlugin {
     protected name: string;
@@ -27,4 +28,6 @@ export abstract class StylePlugin {
             return fallback;
         }
     };
+
+    public setThemeContract?(themeContract: ThemeContract): void;
 }
