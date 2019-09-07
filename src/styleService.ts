@@ -2,7 +2,9 @@ import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { IEventManager } from "@paperbits/common/events";
-import { ThemeContract, ColorContract } from "./contracts";
+import { ThemeContract } from "./contracts";
+import { StyleItem } from "./models/styleItem";
+import * as _ from "lodash";
 
 const stylesPath = "styles";
 
@@ -91,19 +93,24 @@ export class StyleService {
         return variation.key;
     }
 
-    public async addComponentVariation(componentName: string, variationName: string): Promise<string> {
+    public async addComponentVariation(componentName: string, variationName: string, snippet?: StyleItem): Promise<string> {
         const styles = await this.getStyles();
 
-        const variation: any = {
-            key: `components/${componentName}/${variationName}`,
-            displayName: "< Unnamed >",
-            category: "appearance"
-        };
-
-        const states = this.getAllowedStates(styles.components[componentName]);
-        if (states) {
-            variation["allowedStates"] = states;
+        const variation: any = snippet && snippet.itemConfig || {};
+        if (snippet && snippet.key) {
+            const parts = snippet.key.split("/");
+            variation.key = snippet.key;
+            componentName = parts[1];
+            variationName = parts[2];
+        } else {
+            variation.key = `components/${componentName}/${variationName}`;
+            const states = this.getAllowedStates(styles.components[componentName]);
+            if (states) {
+                variation["allowedStates"] = states;
+            }
         }
+        variation.displayName = "< Unnamed >";
+        variation.category = "appearance";        
 
         styles.components[componentName][variationName] = variation;
 
@@ -130,6 +137,11 @@ export class StyleService {
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
         this.objectStorage.updateObject(stylesPath, updatedStyles);
         this.eventManager.dispatchEvent("onStyleChange");
+    }
+
+    public async mergeStyles(appendStyles: ThemeContract): Promise<void> {
+        const styles = await this.getStyles();
+        await this.updateStyles(_.merge(styles, appendStyles));
     }
 
     public async updateStyle(style: any): Promise<void> {

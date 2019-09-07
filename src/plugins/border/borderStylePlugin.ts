@@ -6,8 +6,12 @@ import { StyleRule } from "@paperbits/common/styles";
 export class BorderStylePlugin extends StylePlugin {
     public readonly name: string = "border";
 
-    constructor(private readonly themeContract: ThemeContract) {
+    constructor(private themeContract: ThemeContract) {
         super();
+    }
+
+    public setThemeContract(themeContract: ThemeContract): void {
+        this.themeContract = themeContract;
     }
 
     public async configToStyleRules(pluginConfig: BorderStylePluginConfig): Promise<StyleRule[]> {

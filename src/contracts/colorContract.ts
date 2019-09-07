@@ -1,5 +1,5 @@
-export interface ColorContract {
-    key: string;
-    displayName: string;
+import { StyleItemContract } from ".";
+
+export interface ColorContract extends StyleItemContract {
     value?: string;
 }

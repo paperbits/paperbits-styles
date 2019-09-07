@@ -1,3 +1,5 @@
+import { StyleItemContract } from ".";
+
 export interface LinearGradientColorStopContract {
     /**
      * e.g. #fff.
@@ -10,17 +12,7 @@ export interface LinearGradientColorStopContract {
     length: number;
 }
 
-export interface LinearGradientContract {
-    /**
-     * Unique identifier.
-     */
-    key?: string;
-
-    /**
-     * Display name.
-     */
-    displayName?: string;
-
+export interface LinearGradientContract extends StyleItemContract {
     /**
      * Direction of the gradient, e.g. 45deg.
      */

@@ -8,8 +8,12 @@ import { ThemeContract } from "../../contracts";
 export class AnimationStylePlugin extends StylePlugin {
     public name: string = "animation";
 
-    constructor(private readonly themeContract: ThemeContract) {
+    constructor(private themeContract: ThemeContract) {
         super();
+    }
+
+    public setThemeContract(themeContract: ThemeContract): void {
+        this.themeContract = themeContract;
     }
 
     public async configToStyleRules(pluginConfig: AnimationStylePluginConfig): Promise<StyleRule[]> {

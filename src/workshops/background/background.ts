@@ -5,8 +5,9 @@ import template from "./background.html";
 import { StyleService } from "../..";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract } from "../../contracts";
+import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
 import { Style, StyleSheet } from "@paperbits/common/styles";
+import { IPermalinkResolver } from "@paperbits/common/permalinks/IPermalinkResolver";
 
 
 const defaultBackgroundSize = "cover";
@@ -27,10 +28,12 @@ export class Background {
     public readonly position: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
 
+    private backgroundStylePlugin: BackgroundStylePlugin;
+
     constructor(
         private readonly styleService: StyleService,
         private readonly mediaService: IMediaService,
-        private readonly backgroundStylePlugin: BackgroundStylePlugin
+        private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
@@ -60,12 +63,21 @@ export class Background {
         this.size.subscribe(this.applyChanges);
     }
 
+    private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
+        if(!this.backgroundStylePlugin) {
+            this.backgroundStylePlugin = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
+        }
+        return this.backgroundStylePlugin;
+    }
+
     private async fillout(backgroundPluginConfig: any): Promise<void> {
         if (!backgroundPluginConfig) {
             return;
         }
 
-        const styleRules = await this.backgroundStylePlugin.configToStyleRules(backgroundPluginConfig);
+        const styles = await this.styleService.getStyles();
+
+        const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(backgroundPluginConfig);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 
@@ -73,8 +85,6 @@ export class Background {
         styleSheet.styles.push(style);
 
         this.backgroundPreview(styleSheet);
-
-        const styles = await this.styleService.getStyles();
 
         if (backgroundPluginConfig.colorKey) {
             const colorContract = Objects.getObjectAt<ColorContract>(backgroundPluginConfig.colorKey, styles);
@@ -156,7 +166,8 @@ export class Background {
             images: images
         };
 
-        const styleRules = await this.backgroundStylePlugin.configToStyleRules(updatedPluginConfig);
+        const styles = await this.styleService.getStyles();
+        const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(updatedPluginConfig);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
 

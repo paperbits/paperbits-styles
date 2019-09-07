@@ -10,6 +10,7 @@ import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
 import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
+import "./ko/bindingHandlers/bindingHandlers.itemTemplate";
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { StyleModule } from "./styles.module";
 import { StyleEditor } from "./workshops/styleEditor";
@@ -26,7 +27,6 @@ import { ShadowSelector, ShadowEditorGroup, ShadowEditor } from "./workshops/sha
 import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleSheet";
-import { BackgroundStylePlugin } from "./plugins/background/backgroundStylePlugin";
 import { StylePlugin } from "./plugins";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
@@ -34,6 +34,10 @@ import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
 import { Container } from "./workshops/container/container";
 
+import { StyleSnippetSelector } from "./workshops/snippets/styleSnippetSelector";
+import { StyleSnippetService } from "./styleSnippetService";
+import { StyleSnippet } from "./workshops/snippets/styleSnippet";
+import { StyleAppearanceSelector } from "./workshops/snippets/styleAppearanceSelector";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -59,7 +63,10 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("styleEditor", StyleEditor);
         injector.bind("styleGuide", StyleGuide);
         injector.bind("stylePlugin", StylePlugin);
-        injector.bind("backgroundStylePlugin", BackgroundStylePlugin);
+        injector.bind("styleSnippet", StyleSnippet);
+        // injector.bind("styleSnippetSelector", StyleSnippetSelector);
+        injector.bind("styleAppearanceSelector", StyleAppearanceSelector);
+        // injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);
