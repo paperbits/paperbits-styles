@@ -1,6 +1,6 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
-import { SizeStylePluginConfig } from "./sizeContract";
+import { SizeStylePluginConfig } from "./sizeStylePluginConfig";
 
 
 export class SizeStylePlugin extends StylePlugin {

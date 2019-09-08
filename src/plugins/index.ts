@@ -12,3 +12,6 @@ export * from "./statesStylePlugin";
 export * from "./containerStylePlugin";
 export * from "./size/sizeStylePlugin";
 export * from "./transition/transitionStylePlugin";
+export * from "./stickToStylePlugin";
+export * from "./transform/transformStylePlugin";
+export * from "./padding/paddingStylePlugin";

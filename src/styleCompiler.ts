@@ -18,7 +18,10 @@ import {
     StatesStylePlugin,
     ContainerStylePlugin,
     SizeStylePlugin,
-    TransitionStylePlugin
+    TransitionStylePlugin,
+    StickToStylePlugin,
+    PaddingStylePlugin,
+    TransformStylePlugin
 } from "./plugins";
 import jss from "jss";
 import preset from "jss-preset-default";
@@ -26,8 +29,6 @@ import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
 import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
-import { PaddingStylePlugin } from "./plugins/padding";
-import { TransformStylePlugin } from "./plugins/transform";
 import { ThemeContract } from "./contracts/themeContract";
 
 const opts = preset();
@@ -60,7 +61,7 @@ export class StyleCompiler implements IStyleCompiler {
         return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
     }
 
-    public setStyles(styles: ThemeContract) {
+    public setStyles(styles: ThemeContract): void {
         this.styles = styles;
     }
 
@@ -72,7 +73,7 @@ export class StyleCompiler implements IStyleCompiler {
         return result;
     }
 
-    private pluginsToRefresh = ["border","background","shadow","animation","typography"];
+    private pluginsToRefresh = ["border", "background", "shadow", "animation", "typography"];
 
     private async initializePlugins(): Promise<void> {
         const themeContract = await this.getStyles();
@@ -80,7 +81,7 @@ export class StyleCompiler implements IStyleCompiler {
             if (themeContract) {
                 this.pluginsToRefresh.map(pluginName => {
                     const plugin = this.plugins[pluginName];
-                    if (plugin.setThemeContract){
+                    if (plugin.setThemeContract) {
                         plugin.setThemeContract(themeContract);
                     } else {
                         console.error(`Plugin ${pluginName} does not support setThemeContract`);
@@ -106,6 +107,7 @@ export class StyleCompiler implements IStyleCompiler {
         this.plugins["size"] = new SizeStylePlugin();
         this.plugins["transform"] = new TransformStylePlugin();
         this.plugins["transition"] = new TransitionStylePlugin();
+        this.plugins["stickTo"] = new StickToStylePlugin();
     }
 
     /**
