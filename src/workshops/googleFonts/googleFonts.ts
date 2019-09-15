@@ -85,7 +85,7 @@ export class GoogleFonts {
 
         styles.fonts[googleFont.identifier] = fontContract;
 
-        this.styleService.updateStyles(styles);
+        await this.styleService.updateStyles(styles);
 
         if (this.selectedFont) {
             this.selectedFont(fontContract);
