@@ -8,6 +8,7 @@ import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommand
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
+import { ComponentStyle } from "../contracts/componentStyle";
 
 @Component({
     selector: "style-guide",
@@ -35,6 +36,7 @@ export class StyleGuide {
     public gradients: ko.ObservableArray<LinearGradientContract>;
     public textStyles: ko.ObservableArray<any>;
     public navBars: ko.ObservableArray<any>;
+    public uiComponents: ko.ObservableArray<ComponentStyle>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -53,6 +55,7 @@ export class StyleGuide {
         this.textBlocks = ko.observableArray([]);
         this.textStyles = ko.observableArray([]);
         this.navBars = ko.observableArray([]);
+        this.uiComponents = ko.observableArray([]);
     }
 
     @OnMounted()
@@ -178,40 +181,17 @@ export class StyleGuide {
         this.applyChanges();
     }
 
-    public async addButtonVariation(): Promise<void> {
-        await this.openInEditor("button");
-    }
-
-    public async onSnippetSelected(snippet: StyleItem) {
+    public async onSnippetSelected(snippet: StyleItem): Promise<void> {
         console.log("Snippet selected: ", snippet);
         await this.styleService.mergeStyles(snippet.stylesConfig);
-        await this.openInEditor("button", snippet);
+        await this.openInEditor(snippet.stylesType.split("/").pop(), snippet);
     }
 
-    public async addCardVariation(): Promise<void> {
-        await this.openInEditor("card");
-    }
-
-    public async addNavbarVariation(): Promise<void> {
+    public async openInEditor(componentName: string, snippet?: any): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addNavbarVariation(variationName);
-        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
-        this.selectStyle(addedStyle);
-
-        this.applyChanges();
-    }
-
-    public async addPictureVariation(): Promise<void> {
-        await this.openInEditor("picture");
-    }
-
-    public async addVideoPlayerVariation(): Promise<void> {
-        await this.openInEditor("videoPlayer");
-    }
-
-    private async openInEditor(componentName: string, snippet?: any): Promise<void> {
-        const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, snippet);
+        const addedStyleKey = componentName !== "navbar" ? 
+            await this.styleService.addComponentVariation(componentName, variationName, snippet) :
+            await this.styleService.addNavbarVariation(variationName);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
         this.selectStyle(addedStyle);
 
@@ -233,23 +213,11 @@ export class StyleGuide {
         const shadows = Object.values(styles.shadows).filter(x => x.key !== "shadows/none");
         this.shadows(this.sortByDisplayName(shadows));
 
-        const cardVariations = await this.styleService.getComponentVariations("card");
-        this.cards(this.sortByDisplayName(cardVariations));
-
-        const videoPlayerVariations = await this.styleService.getComponentVariations("videoPlayer");
-        this.videoPlayers(this.sortByDisplayName(videoPlayerVariations));
-
-        const pictureVariations = await this.styleService.getComponentVariations("picture");
-        this.pictures(this.sortByDisplayName(pictureVariations));
-
-        const buttonVariations = await this.styleService.getComponentVariations("button");
-        this.buttons(this.sortByDisplayName(buttonVariations));
-
         const textStylesVariations = await this.styleService.getVariations("globals", "body");
         this.textStyles(this.sortByDisplayName(textStylesVariations));
 
-        const navBarsVariations = await this.styleService.getComponentVariations("navbar");
-        this.navBars(this.sortByDisplayName(navBarsVariations));
+        const components = await this.styleService.getComponentsStyles();
+        this.uiComponents(components);
 
         // this.styles.valueHasMutated();
 

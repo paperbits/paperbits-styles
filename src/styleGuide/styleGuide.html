@@ -242,31 +242,6 @@
     </article>
 
     <article>
-        <h2 class="heading">Buttons</h2>
-        <div class="row">
-            <div class="col col-md-12 samples">
-                <!--ko foreach: { data: $component.buttons, as: 'button' }-->
-                <div class="sample style-card" data-bind="stylable: button">
-                    <div class="style-card-body">
-                        <button data-bind="stylePreview:button">Button</button>
-                    </div>
-                    <span class="style-card-label" data-bind="text: button.displayName"></span>
-                </div>
-                <!--/ko-->
-                <div class="style-card style-card-empty">
-                    <!-- <a href="#" class="btn-round" data-bind="balloon: { component: { name: 'style-snippet-selector', params: { snippetType: 'components/button', onSelect: $component.onSnippetSelected } } }">
-                        <i class="paperbits-icon paperbits-color"></i>
-                    </a> -->
-                    <button class="btn-round" data-bind="click: $component.addButtonVariation"></button>
-                    <div class="style-card-label">
-                        Add variation
-                    </div>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <article>
         <h2 class="heading">Form controls</h2>
         <div class="row">
             <div class="col col-md-3">
@@ -328,111 +303,30 @@
 
     </article>
 
+    <!--ko foreach: { data: $component.uiComponents, as: 'item' }-->
     <article>
-        <h2 class="heading">Navigation</h2>
+        <h2 class="heading" data-bind="text: item.displayName">Component</h2>
         <div class="row">
             <div class="col col-md-12 samples">
-                <!--ko foreach: { data: $component.navBars, as: 'navbar' }-->
-                <div class="style-card" data-bind="stylable: navbar">
-                    <div class="style-card-body">
-                        <nav class="navbar navbar-expand" data-bind="stylePreview:navbar">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
-                                aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse"></div>
-                            <div class="navbar-nav">
-                                <a class="nav-item nav-link no-pointer-events" href="#"
-                                    data-bind="stylable: navbar.components.navLink.default, stylePreview:navbar.components.navLink.default">
-                                    Nav item
-                                </a>
-                                <a class="nav-item nav-link nav-link-active no-pointer-events" href="#"
-                                    data-bind="stylable: navbar.components.navLink.active, stylePreview:navbar.components.navLink.active">
-                                    Nav item (active)
-                                </a>
-                            </div>
-                        </nav>
-                    </div>
-                    <span class="style-card-label" data-bind="text: navbar.displayName"></span>
+                <!--ko foreach: { data: item.variations, as: 'variant' }-->
+                <div class="sample style-card" data-bind="stylable: variant">
+                    <div class="style-card-body" data-bind="itemTemplate: $parent.itemTemplate"></div>
+                    <span class="style-card-label" data-bind="text: variant.displayName"></span>
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">
-                    <button class="btn-round" data-bind="click: $component.addNavbarVariation"></button>
+                    <!-- <a href="#" class="btn-round" data-bind="balloon: { component: { name: 'style-snippet-selector', params: { snippetType: 'components/' + item.name, onSelect: $component.onSnippetSelected } } }">
+                        <i class="paperbits-icon paperbits-color"></i>
+                    </a> -->
+                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>
                 </div>
             </div>
         </div>
-        
     </article>
-
-    <article>
-        <h2 class="heading">Picture</h2>
-        <div class="row">
-            <!--ko foreach: { data: $component.pictures, as: 'picture' }-->
-            <div class="col col-md-4">
-                <div class="style-card" data-bind="stylable: picture">
-                    <div class="style-card-body">
-                        <img src="https://cdn.paperbits.io/images/placeholder-340x190.jpg" alt="Picture" data-bind="stylePreview: picture" width="340px" height="190px" />
-                    </div>
-                    <span class="style-card-label" data-bind="text: picture.displayName"></span>
-                </div>
-            </div>
-            <!--/ko-->
-            <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addPictureVariation"></button>
-                <div class="style-card-label">
-                    Add variation
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <article>
-        <h2 class="heading">Video player</h2>
-        <div class="row">
-            <!--ko foreach: { data: $component.videoPlayers, as: 'videoPlayer' }-->
-            <div class="col col-md-4 style-card" data-bind="stylable: videoPlayer">
-                <div class="style-card-body">
-                    <video class="no-pointer-events" data-bind="stylePreview:videoPlayer">
-                        <source src="https://cdn.paperbits.io/videos/planet-earth.mp4" />
-                    </video>
-                </div>
-                <span class="style-card-label" data-bind="text: videoPlayer.displayName"></span>
-            </div>
-            <!--/ko-->
-            <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addVideoPlayerVariation"></button>
-                <div class="style-card-label">
-                    Add variation
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <article>
-        <h2 class="heading">Cards</h2>
-        <div class="row">
-            <!--ko foreach: { data: $component.cards, as: 'card' }-->
-            <div class="col col-md-4 style-card" data-bind="stylable: card">
-                <div class="style-card-body">
-                    <div class="no-pointer-events" data-bind="stylePreview:card">
-                        <h1>Card</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                    </div>
-                </div>
-                <span class="style-card-label" data-bind="text: card.displayName"></span>
-            </div>
-            <!--/ko-->
-            <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addCardVariation"></button>
-                <div class="style-card-label">
-                    Add variation
-                </div>
-            </div>
-        </div>
-    </article>
+    <!--/ko-->
 
     <!-- /ko -->
 </div>

@@ -10,6 +10,7 @@ import { ThemeContract } from "../../contracts/themeContract";
 import { identifier } from "@paperbits/common/utils";
 import { getObjectAt } from "@paperbits/common/objects";
 import * as _ from "lodash";
+import { IStyleGroup } from "@paperbits/common/styles/IStyleGroup";
 
 @Component({
     selector: "style-snippet-selector",
@@ -21,6 +22,7 @@ export class StyleSnippetSelector {
     public readonly selectedSnippet: ko.Observable<StyleItem>;
     public readonly snippets: ko.ObservableArray<StyleItem>;
     public existingSnippetKeys: string[];
+    public itemTemplate: string;
 
     private readonly snippetStyleCompiler: StyleCompiler;
     private isThemeSelected: boolean;
@@ -31,11 +33,10 @@ export class StyleSnippetSelector {
     @Event()
     public readonly onSelect: (snippet: StyleItemContract) => void;
 
-    //private readonly styleService: StyleService;
-
     constructor(
         private readonly styleSnippetService: StyleSnippetService,
-        private readonly mediaPermalinkResolver: IPermalinkResolver) {
+        private readonly mediaPermalinkResolver: IPermalinkResolver,
+        private readonly styleGroups: IStyleGroup[]) {
 
         this.snippetStyleCompiler = new StyleCompiler(undefined, this.mediaPermalinkResolver);
         this.loadSnippets = this.loadSnippets.bind(this);
@@ -58,12 +59,13 @@ export class StyleSnippetSelector {
             await this.initSnippetService();
         }
         
-        const snippetsByType = await this.styleSnippetService.getStyleByKey(this.snippetType); //this.styleService.getStyleByKey(this.snippetType);
+        const snippetsByType = await this.styleSnippetService.getStyleByKey(this.snippetType);
+        this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
         for (const it of Object.values(snippetsByType)) {
             const item = <StyleItemContract>it;
             const subTheme = await this.loadThemeForItem(item);
-            const styleItem = new StyleItem(item, subTheme); 
+            const styleItem = new StyleItem(item, subTheme, this.snippetType); 
             const compiller = this.getStyleCompiler(subTheme);
             styleItem.stylesContent = await compiller.compile();
             styleItem.classNames = await compiller.getClassNameByStyleKeyAsync(item.key);
@@ -74,9 +76,14 @@ export class StyleSnippetSelector {
         this.working(false);
     }
 
+    private getSnippetTypeTemplate(snippetType: string): string {
+        const group = this.styleGroups.find(item => item.name === snippetType.replaceAll("/", "_"));
+        return group ? group.selectorTemplate : "";
+    }
+
     private async initSnippetService(): Promise<void> {
         const selected = this.styleSnippetService.getSelectedThemeName();
-        if(!selected) {
+        if (!selected) {
             const items = await this.styleSnippetService.getThemesNames();
             this.isThemeSelected = await this.styleSnippetService.selectCurrentTheme(items[0]); // TODO: remove selection the first theme
         }
@@ -87,15 +94,15 @@ export class StyleSnippetSelector {
         const isComponent = parts[0] === "components";
         let stylesKeys = this.getAllStyleKeys(item);
         if (isComponent && parts[2] !== "default") {
-            const defaultKey = `${parts[0]}/${parts[1]}/default`
-            const defaultItem = await this.styleSnippetService.getStyleByKey(defaultKey); //this.styleService.getStyleByKey(defaultKey); 
+            const defaultKey = `${parts[0]}/${parts[1]}/default`;
+            const defaultItem = await this.styleSnippetService.getStyleByKey(defaultKey);
             const defaultKeys = this.getAllStyleKeys(defaultItem);
             stylesKeys.push(... defaultKeys);
         }
         const subTheme = {};
         stylesKeys = stylesKeys.filter((item, index, source) => source.indexOf(item) === index);
         for (const stylesKey of stylesKeys) {
-            const styleValue = await this.styleSnippetService.getStyleByKey(stylesKey); //this.styleService.getStyleByKey(stylesKey);
+            const styleValue = await this.styleSnippetService.getStyleByKey(stylesKey);
             if (styleValue) {
                 this.mergeNestedObj(subTheme, stylesKey, styleValue);
             } else {
@@ -107,7 +114,7 @@ export class StyleSnippetSelector {
     }
 
     private mergeNestedObj(source: any, path: string, value: any) {
-        const keys = path.split('/');
+        const keys = path.split("/");
         const lastKey = keys.pop();
         const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source); 
         lastObj[lastKey] = value;
@@ -119,7 +126,7 @@ export class StyleSnippetSelector {
     }
 
     private getAllStyleKeys(source: any): string[] {
-        let result: string[] = [];
+        const result: string[] = [];
         if (Array.isArray(source)) {
             source.every(x => result.push(... this.getAllStyleKeys(x)));
         } else if (typeof source === "object") {

@@ -5,13 +5,16 @@ import { IEventManager } from "@paperbits/common/events";
 import { ThemeContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import * as _ from "lodash";
+import { ComponentStyle } from "./contracts/componentStyle";
+import { IStyleGroup } from "@paperbits/common/styles/IStyleGroup";
 
 const stylesPath = "styles";
 
 export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: IEventManager,
+        private readonly styleGroups: IStyleGroup[]
     ) { }
 
     public async getStyles(): Promise<ThemeContract> {
@@ -212,6 +215,28 @@ export class StyleService {
         });
 
         return variations;
+    }
+
+    public async getComponentsStyles(): Promise<ComponentStyle[]> {
+        const styles = await this.getStyles();
+        const result = Object.keys(styles.components).map<ComponentStyle>(componentName => {
+            const groupMetadata = this.styleGroups.find(item => item.name === `components_${componentName}`);
+            if (!groupMetadata || !groupMetadata.styleTemplate) {
+                // console.warn("metadata not found for component:", componentName);
+                return undefined;
+            }
+            const componentStyles = styles.components[componentName];
+            const states = this.getAllowedStates(componentStyles);  
+            const variations = Object.keys(componentStyles).map(variationName => {
+                const variationContract = componentStyles[variationName];
+                if (states && variationName !== "default") {
+                    variationContract["allowedStates"] = states;
+                }
+                return variationContract;
+            });
+            return { name: componentName, displayName: groupMetadata.groupName, variations: variations, itemTemplate: groupMetadata.styleTemplate };
+        }).filter(item => item !== undefined);
+        return result;
     }
 
     public async getStyleByKey(styleKey: string): Promise<any> {

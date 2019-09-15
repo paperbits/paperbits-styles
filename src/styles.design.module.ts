@@ -64,9 +64,9 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("styleGuide", StyleGuide);
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("styleSnippet", StyleSnippet);
-        // injector.bind("styleSnippetSelector", StyleSnippetSelector);
+        injector.bind("styleSnippetSelector", StyleSnippetSelector);
         injector.bind("styleAppearanceSelector", StyleAppearanceSelector);
-        // injector.bindSingleton("styleSnippetService", StyleSnippetService);
+        injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);

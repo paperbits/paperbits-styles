@@ -9,11 +9,13 @@ export class StyleItem implements StyleItemContract {
     public itemConfig: object;
     public classNames: string; 
     public stylesContent: string; 
+    public stylesType: string; 
 
-    constructor(contract: StyleItemContract, stylesConfig: ThemeContract) {
+    constructor(contract: StyleItemContract, stylesConfig: ThemeContract, stylesType: string) {
         this.key = contract.key;
         this.displayName = contract.displayName;
         this.hasFocus =  ko.observable();
         this.stylesConfig = stylesConfig;
+        this.stylesType = stylesType;
     }
 }
