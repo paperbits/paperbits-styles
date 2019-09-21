@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { IEventManager } from "@paperbits/common/events";
 import { Component, OnMounted } from "@paperbits/common/ko/decorators";
+import { IStyleGroup } from "@paperbits/common/styles";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
@@ -41,7 +42,8 @@ export class StyleGuide {
     constructor(
         private readonly styleService: StyleService,
         private readonly viewManager: IViewManager,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: IEventManager,
+        private readonly styleGroups: IStyleGroup[]
     ) {
         this.styles = ko.observable();
         this.colors = ko.observableArray([]);
@@ -216,12 +218,33 @@ export class StyleGuide {
         const textStylesVariations = await this.styleService.getVariations("globals", "body");
         this.textStyles(this.sortByDisplayName(textStylesVariations));
 
-        const components = await this.styleService.getComponentsStyles();
+        const components = await this.getComponentsStyles();
         this.uiComponents(components);
 
-        // this.styles.valueHasMutated();
 
         this.styles(styles);
+    }
+
+    public async getComponentsStyles(): Promise<ComponentStyle[]> {
+        const styles = await this.styleService.getStyles();
+        const result = Object.keys(styles.components).map<ComponentStyle>(componentName => {
+            const groupMetadata = this.styleGroups.find(item => item.name === `components_${componentName}`);
+            if (!groupMetadata || !groupMetadata.styleTemplate) {
+                // console.warn("metadata not found for component:", componentName);
+                return undefined;
+            }
+            const componentStyles = styles.components[componentName];
+            const states = this.styleService.getAllowedStates(componentStyles);  
+            const variations = Object.keys(componentStyles).map(variationName => {
+                const variationContract = componentStyles[variationName];
+                if (states && variationName !== "default") {
+                    variationContract["allowedStates"] = states;
+                }
+                return variationContract;
+            });
+            return { name: componentName, displayName: groupMetadata.groupName, variations: variations, itemTemplate: groupMetadata.styleTemplate };
+        }).filter(item => item !== undefined);
+        return result;
     }
 
     private sortByDisplayName(items: any[]): any[] {
