@@ -113,7 +113,7 @@ export class StyleSnippetSelector {
         return subTheme;
     }
 
-    private mergeNestedObj(source: any, path: string, value: any) {
+    private mergeNestedObj(source: any, path: string, value: any): void {
         const keys = path.split("/");
         const lastKey = keys.pop();
         const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source); 

@@ -3,7 +3,7 @@ import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { IEventManager } from "@paperbits/common/events";
-import { ThemeContract } from "./contracts";
+import { ThemeContract, ColorContract, ShadowContract, StyleItemContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 
 
@@ -25,7 +25,7 @@ export class StyleService {
         return stylesObject;
     }
 
-    public async addColorVariation(variationName: string): Promise<string> {
+    public async addColorVariation(variationName: string): Promise<ColorContract> {
         const styles = await this.getStyles();
         const newVariation: any = Objects.clone(styles["colors"]["default"]);
         newVariation.key = `colors/${variationName}`;
@@ -35,10 +35,10 @@ export class StyleService {
 
         this.updateStyles(styles);
 
-        return `colors/${variationName}`;
+        return newVariation;
     }
 
-    public async addShadowVariation(variationName: string): Promise<string> {
+    public async addShadowVariation(variationName: string): Promise<ShadowContract> {
         const styles = await this.getStyles();
         const newVariation: any = { blur: 1, spread: 1, color: "rgba(0, 0, 0, 0.1)", inset: false, offsetX: 1, offsetY: 1 };
         newVariation.key = `shadows/${variationName}`;
@@ -48,7 +48,7 @@ export class StyleService {
 
         this.updateStyles(styles);
 
-        return `shadows/${variationName}`;
+        return newVariation;
     }
 
     public async addNavbarVariation(variationName: string): Promise<string> {
@@ -120,7 +120,7 @@ export class StyleService {
         return variation.key;
     }
 
-    public async addTextStyleVariation(variationName: string): Promise<string> {
+    public async addTextStyleVariation(variationName: string): Promise<StyleItemContract> {
         const styles = await this.getStyles();
 
         const variation: any = {
@@ -132,7 +132,7 @@ export class StyleService {
 
         this.updateStyles(styles);
 
-        return variation.key;
+        return variation;
     }
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {

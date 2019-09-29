@@ -10,14 +10,14 @@ export class StyleSnippetService implements IStyleSnippetService {
 
     constructor(private readonly httpClient: HttpClient) {}
 
-    private async getThemes() {
-        if(!this.themes) {
+    private async getThemes(): Promise<Bag<ThemeContract>> {
+        if (!this.themes) {
             await this.loadThemes();
         }
         return this.themes;
     }
 
-    private async loadThemes() {
+    private async loadThemes(): Promise<void> {
         const response = await this.httpClient.send({
             url: "/data/themes.json",
             method: "GET"
@@ -56,10 +56,10 @@ export class StyleSnippetService implements IStyleSnippetService {
         return this.getObjectByPath(this.styles, key);
     }
 
-    private getObjectByPath(obj, pathKey: string) {
-        for (var i=0, path = pathKey.split("/"), len = path.length; i < len; i++){
+    private getObjectByPath(obj: any, pathKey: string): any {
+        for (let i = 0, path = pathKey.split("/"), len = path.length; i < len; i++) {
             obj = obj[path[i]];
-        };
+        }
         return obj;
     }
 }

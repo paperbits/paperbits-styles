@@ -7,7 +7,7 @@ import { Component, OnMounted } from "@paperbits/common/ko/decorators";
 import { IStyleGroup } from "@paperbits/common/styles";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
-import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
+import { FontContract, ColorContract, ShadowContract, LinearGradientContract, StyleItemContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
 import { ComponentStyle } from "../contracts/componentStyle";
 
@@ -86,27 +86,37 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeStyle(contract: any): Promise<void> {
+    public async removeStyle(contract: StyleItemContract): Promise<void> {
         await this.styleService.removeStyle(contract.key);
-        this.applyChanges();
+        if (contract.key.startsWith("components/")) {
+            const parts = contract.key.split("/");
+            const componentName = parts[1];
+            await this.onUpdateStyle(componentName);
+        } else {
+            this.applyChanges();
+        }
     }
 
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
-        const addedColorKey = await this.styleService.addColorVariation(variationName);
-        this.applyChanges();
+        const addedItem = await this.styleService.addColorVariation(variationName);
+        
+        const colors = this.colors(); 
+        colors.push(addedItem);
+        this.colors(this.sortByDisplayName(colors));
 
-        const color = await this.styleService.getStyleByKey(addedColorKey);
-        this.selectColor(color);
+        this.selectColor(addedItem);
     }
 
     public async addShadow(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
-        const addedKey = await this.styleService.addShadowVariation(variationName);
-        this.applyChanges();
+        const addedItem = await this.styleService.addShadowVariation(variationName);
+        
+        const shadows = this.shadows(); 
+        shadows.push(addedItem);
+        this.shadows(this.sortByDisplayName(shadows));
 
-        const shadow = await this.styleService.getStyleByKey(addedKey);
-        this.selectShadow(shadow);
+        this.selectShadow(addedItem);
     }
 
     public async removeColor(color: ColorContract): Promise<void> {
@@ -154,16 +164,22 @@ export class StyleGuide {
         return true;
     }
 
-    public selectStyle(style: any): boolean {
+    public selectStyle(style: StyleItemContract): boolean {
         const view: IView = {
             heading: style.displayName,
             component: {
                 name: "style-editor",
                 params: {
                     elementStyle: style,
-                    onUpdate: () => {
+                    onUpdate: async () => {
                         this.styleService.updateStyle(style);
-                        this.applyChanges();
+                        if (style.key.startsWith("components/")) {
+                            const parts = style.key.split("/");
+                            const componentName = parts[1];
+                            await this.onUpdateStyle(componentName);
+                        } else {
+                            this.applyChanges();
+                        }
                     }
                 }
             },
@@ -176,11 +192,13 @@ export class StyleGuide {
 
     public async addTextStyleVariation(): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addTextStyleVariation(variationName);
-        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
-        this.selectStyle(addedStyle);
+        const addedItem = await this.styleService.addTextStyleVariation(variationName);
 
-        this.applyChanges();
+        const textStyles = this.textStyles(); 
+        textStyles.push(addedItem);
+        this.textStyles(this.sortByDisplayName(textStyles));
+
+        this.selectStyle(addedItem);
     }
 
     public async onSnippetSelected(snippet: StyleItem): Promise<void> {
@@ -197,7 +215,17 @@ export class StyleGuide {
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
         this.selectStyle(addedStyle);
 
-        this.applyChanges();
+        await this.onUpdateStyle(componentName);
+    }
+
+    private async onUpdateStyle(componentName: string): Promise<void> {
+        const components = this.uiComponents();
+        const old = components.find(c => c.name === componentName);
+        if (old) {
+            const updated = await this.getComponentsStyles();
+            const updatedItem = updated.find(c => c.name === componentName);
+            this.uiComponents.replace(old, updatedItem);
+        }
     }
 
     public async applyChanges(): Promise<void> {
@@ -476,8 +504,15 @@ export class StyleGuide {
                             name: "style-editor",
                             params: {
                                 elementStyle: style,
-                                onUpdate: () => {
+                                onUpdate: async () => {                                    
                                     this.styleService.updateStyle(style);
+                                    if (style.key.startsWith("components/")) {
+                                        const parts = style.key.split("/");
+                                        const componentName = parts[1];
+                                        await this.onUpdateStyle(componentName);
+                                    } else {
+                                        this.applyChanges();
+                                    }
                                 }
                             }
                         },
