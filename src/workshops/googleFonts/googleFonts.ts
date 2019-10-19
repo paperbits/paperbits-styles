@@ -6,7 +6,7 @@ import * as mime from "mime-types";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { IMediaService } from "@paperbits/common/media";
-import { IViewManager } from "@paperbits/common/ui";
+import { ViewManager } from "@paperbits/common/ui";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract, FontVariantContract } from "../../contracts/fontContract";
@@ -35,7 +35,7 @@ export class GoogleFonts {
     constructor(
         private readonly styleService: StyleService,
         private readonly httpClient: HttpClient,
-        private readonly viewManager: IViewManager,
+        private readonly viewManager: ViewManager,
         private readonly mediaService: IMediaService
     ) {
         this.searchPattern = ko.observable("");

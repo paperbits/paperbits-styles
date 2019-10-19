@@ -5,7 +5,7 @@ import template from "./styleGuide.html";
 import { EventManager } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
 import { IStyleGroup } from "@paperbits/common/styles";
-import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
+import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract, StyleItemContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
@@ -41,7 +41,7 @@ export class StyleGuide {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly viewManager: IViewManager,
+        private readonly viewManager: ViewManager,
         private readonly eventManager: EventManager,
         private readonly styleGroups: IStyleGroup[]
     ) {
@@ -68,7 +68,7 @@ export class StyleGuide {
     }
 
     public async addFonts(): Promise<void> {
-        const view: IView = {
+        const view: View = {
             heading: "Fonts",
             component: {
                 name: "google-fonts",
@@ -125,7 +125,7 @@ export class StyleGuide {
     }
 
     public selectColor(color: ColorContract): boolean {
-        const view: IView = {
+        const view: View = {
             heading: "Color",
             component: {
                 name: "color-editor",
@@ -145,7 +145,7 @@ export class StyleGuide {
     }
 
     public selectShadow(shadow: ShadowContract): boolean {
-        const view: IView = {
+        const view: View = {
             heading: "Shadow",
             component: {
                 name: "shadow-editor",
@@ -165,7 +165,7 @@ export class StyleGuide {
     }
 
     public selectStyle(style: StyleItemContract): boolean {
-        const view: IView = {
+        const view: View = {
             heading: style.displayName,
             component: {
                 name: "style-editor",
@@ -511,7 +511,7 @@ export class StyleGuide {
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
-                    const view: IView = {
+                    const view: View = {
                         heading: style.displayName,
                         component: {
                             name: "style-editor",
