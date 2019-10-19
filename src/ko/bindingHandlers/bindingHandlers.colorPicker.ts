@@ -5,7 +5,7 @@ ko.bindingHandlers["colorPicker"] = {
     init: (element: HTMLElement, valueAccessor) => {
         const config = valueAccessor();
 
-        const pickr = Pickr.create({
+        const pickr = (<any>Pickr).create({
             el: element,
             theme: "classic", 
             container: element.parentElement,
