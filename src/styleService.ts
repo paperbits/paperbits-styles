@@ -6,6 +6,7 @@ import { EventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract, ShadowContract, StyleItemContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
+import { IStyleGroup } from "@paperbits/common/styles";
 
 
 const stylesPath = "styles";
@@ -13,7 +14,8 @@ const stylesPath = "styles";
 export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly eventManager: EventManager
+        private readonly eventManager: EventManager,
+        private readonly styleGroups: IStyleGroup[]
     ) { }
 
     public async getStyles(): Promise<ThemeContract> {
@@ -22,6 +24,14 @@ export class StyleService {
         if (!stylesObject) {
             throw new Error("Data doesn't contain styles.");
         }
+
+        this.styleGroups.forEach(x => {
+            if (stylesObject.components[x.key]) {
+                return;
+            }
+
+            stylesObject.components[x.key] = x.defaultStyles;
+        });
 
         return stylesObject;
     }
@@ -193,7 +203,7 @@ export class StyleService {
         else {
             categoryStyles = styles[categoryName];
         }
-        
+
         const category = Object.keys(categoryStyles);
         const states = this.getAllowedStates(categoryStyles);
 

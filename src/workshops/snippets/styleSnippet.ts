@@ -1,13 +1,13 @@
 import * as ko from "knockout";
 import template from "./styleSnippet.html";
-import { Component, Param, OnMounted } from "@paperbits/common/ko/decorators";
+import { Component, Param, OnMounted, Encapsulation } from "@paperbits/common/ko/decorators";
 import { StyleItem } from "../../models/styleItem";
 
 @Component({
     selector: "style-snippet",
     template: template,
     injectable: "styleSnippet",
-    encapsulation: "shadowDom"
+    encapsulation: Encapsulation.shadowDom
 })
 export class StyleSnippet {
     public classNames: string;
