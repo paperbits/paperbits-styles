@@ -17,7 +17,7 @@
     },
     "dependencies": {
         "@paperbits/common": "0.1.157",
-        "@simonwep/pickr": "^1.4.1",
+        "@simonwep/pickr": "^1.4.5",
         "cropperjs": "^1.4.0",
         "google-maps": "^3.2.1",
         "jss": "^9.8.7",
