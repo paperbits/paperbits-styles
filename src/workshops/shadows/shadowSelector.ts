@@ -11,13 +11,7 @@ import { ShadowContract } from "../../contracts/shadowContract";
     injectable: "shadowSelector"
 })
 export class ShadowSelector {
-    @Param()
-    public readonly selectedShadow: ko.Observable<ShadowContract>;
-
-    @Event()
-    public readonly onSelect: (shadow: ShadowContract) => void;
-
-    public shadows: ko.ObservableArray<ShadowContract>;
+    public readonly shadows: ko.ObservableArray<ShadowContract>;
 
     constructor(private readonly styleService: StyleService) {
         this.loadShadows = this.loadShadows.bind(this);
@@ -26,6 +20,12 @@ export class ShadowSelector {
         this.shadows = ko.observableArray();
         this.selectedShadow = ko.observable();
     }
+
+    @Param()
+    public readonly selectedShadow: ko.Observable<ShadowContract>;
+
+    @Event()
+    public readonly onSelect: (shadow: ShadowContract) => void;
 
     @OnMounted()
     public async loadShadows(): Promise<void> {

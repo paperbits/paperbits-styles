@@ -16,7 +16,7 @@ export class ShadowStylePlugin extends StylePlugin {
 
     public static contractToStyleRules(contract: ShadowContract): StyleRule[] {
         if (!contract.color) {
-            return [];
+            return [new StyleRule("boxShadow", "none")];
         }
 
         const offsetX = StylePlugin.parseSize(contract.offsetX);

@@ -5,7 +5,12 @@ export interface StyleItemContract {
     key: string;
 
     /**
-     * Display name.
+     * Style display name.
      */
     displayName: string;
+
+    /**
+     * Style category, e.g. "appearance".
+     */
+    category?: string;
 }

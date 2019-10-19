@@ -59,12 +59,17 @@ export class TypographyStylePlugin extends StylePlugin {
             const shadowContract = Objects.getObjectAt<ShadowContract>(pluginConfig.shadowKey, this.themeContract);
 
             if (shadowContract) {
-                const x = StylePlugin.parseSize(shadowContract.offsetX);
-                const y = StylePlugin.parseSize(shadowContract.offsetY);
-                const blur = StylePlugin.parseSize(shadowContract.blur);
-                const color = shadowContract.color || "#000";
-
-                result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));
+                if (!shadowContract.color) {
+                    result.push(new StyleRule("textShadow", "none"));
+                }
+                else {
+                    const x = StylePlugin.parseSize(shadowContract.offsetX);
+                    const y = StylePlugin.parseSize(shadowContract.offsetY);
+                    const blur = StylePlugin.parseSize(shadowContract.blur);
+                    const color = shadowContract.color || "#000";
+    
+                    result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));
+                }
 
                 // Text inset shadow example:
                 // background-color: #565656;

@@ -1,13 +1,13 @@
 import * as ko from "knockout";
 import { StyleCompiler } from "../../styleCompiler";
-import { IEventManager } from "@paperbits/common/events";
+import { EventManager } from "@paperbits/common/events";
 
 
 // @BindingHandlers("stylesheet")
 export class StylesheetBindingHandler {
     constructor(
         private readonly styleCompiler: StyleCompiler,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: EventManager
     ) {
         ko.bindingHandlers["styleSheet"] = {
             update: (element: HTMLStyleElement, valueAccessor) => {

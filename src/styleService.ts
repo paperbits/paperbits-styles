@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
-import { IEventManager } from "@paperbits/common/events";
+import { EventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract, ShadowContract, StyleItemContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
+import { ComponentStyle } from "./contracts/componentStyle";
 
 
 const stylesPath = "styles";
@@ -12,7 +13,7 @@ const stylesPath = "styles";
 export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly eventManager: IEventManager
+        private readonly eventManager: EventManager
     ) { }
 
     public async getStyles(): Promise<ThemeContract> {
@@ -59,7 +60,7 @@ export class StyleService {
             displayName: "< Unnamed >",
             category: "appearance",
             components: {
-                navLink : {
+                navLink: {
                     default: {
                         key: `components/navbar/${variationName}/components/navLink/default`,
                         displayName: "Nav item",
@@ -94,24 +95,42 @@ export class StyleService {
         return variation.key;
     }
 
-    public async addComponentVariation(componentName: string, variationName: string, snippet?: StyleItem): Promise<string> {
+    private rewriteVariationKeysRecursively(variation: Object, parentKey: string): void {
+        variation["key"] = parentKey;
+
+        if (!variation["components"]) {
+            return;
+        }
+
+        Object.keys(variation["components"]).forEach(componentKey => {
+            const subComponent = variation["components"][componentKey];
+
+            Object.keys(subComponent).forEach(subComponentVariationKey => {
+                const subComponentVariation = subComponent[subComponentVariationKey];
+                const key = `${parentKey}/components/${componentKey}/${subComponentVariationKey}`;
+
+                this.rewriteVariationKeysRecursively(subComponentVariation, key);
+            });
+        });
+    }
+
+    public async addComponentVariation(componentName: string, variationName: string, snippet?: ComponentStyle): Promise<string> {
         const styles = await this.getStyles();
 
-        const variation: any = snippet && snippet.itemConfig || {};
-        if (snippet && snippet.key) {
-            const parts = snippet.key.split("/");
-            variation.key = snippet.key;
-            componentName = parts[1];
-            variationName = parts[2];
-        } else {
-            variation.key = `components/${componentName}/${variationName}`;
-            const states = this.getAllowedStates(styles.components[componentName]);
-            if (states) {
-                variation["allowedStates"] = states;
-            }
+        const defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
+
+        if (!defaultVariation) {
+            throw new Error(`Default variation for component "${componentName}" not found.`);
         }
+
+        const variation: StyleItem = Objects.clone(defaultVariation);
+        const key = `components/${componentName}/${variationName}`;
+
+        this.rewriteVariationKeysRecursively(variation, key);
+
+        variation.key = key;
         variation.displayName = "< Unnamed >";
-        variation.category = "appearance";        
+        variation.category = "appearance";
 
         styles.components[componentName][variationName] = variation;
 
@@ -167,19 +186,24 @@ export class StyleService {
         const styles = await this.getStyles();
 
         let categoryStyles: { [x: string]: any; };
+
         if (subCategoryName) {
             categoryStyles = styles[categoryName][subCategoryName];
-        } else {
+        }
+        else {
             categoryStyles = styles[categoryName];
         }
+        
         const category = Object.keys(categoryStyles);
-        const states = this.getAllowedStates(categoryStyles);  
+        const states = this.getAllowedStates(categoryStyles);
 
         const variations = category.map(variationName => {
             const variationContract = categoryStyles[variationName];
+
             if (states && variationName !== "default") {
                 variationContract["allowedStates"] = states;
             }
+
             return variationContract;
         });
 
@@ -202,7 +226,7 @@ export class StyleService {
         const styles = await this.getStyles();
         const componentStyles = styles.components[componentName];
 
-        const states = this.getAllowedStates(componentStyles);        
+        const states = this.getAllowedStates(componentStyles);
 
         const variations = Object.keys(componentStyles).map(variationName => {
             const variationContract = componentStyles[variationName];

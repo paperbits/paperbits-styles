@@ -2,8 +2,8 @@ import * as ko from "knockout";
 import * as Utils from "@paperbits/common";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
-import { IEventManager } from "@paperbits/common/events";
-import { Component, OnMounted } from "@paperbits/common/ko/decorators";
+import { EventManager } from "@paperbits/common/events";
+import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
 import { IStyleGroup } from "@paperbits/common/styles";
 import { IView, IViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
@@ -42,7 +42,7 @@ export class StyleGuide {
     constructor(
         private readonly styleService: StyleService,
         private readonly viewManager: IViewManager,
-        private readonly eventManager: IEventManager,
+        private readonly eventManager: EventManager,
         private readonly styleGroups: IStyleGroup[]
     ) {
         this.styles = ko.observable();
@@ -209,10 +209,9 @@ export class StyleGuide {
 
     public async openInEditor(componentName: string, snippet?: any): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = componentName !== "navbar" ? 
-            await this.styleService.addComponentVariation(componentName, variationName, snippet) :
-            await this.styleService.addNavbarVariation(variationName);
+        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, snippet);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+
         this.selectStyle(addedStyle);
 
         await this.onUpdateStyle(componentName);
@@ -255,23 +254,38 @@ export class StyleGuide {
 
     public async getComponentsStyles(): Promise<ComponentStyle[]> {
         const styles = await this.styleService.getStyles();
-        const result = Object.keys(styles.components).map<ComponentStyle>(componentName => {
-            const groupMetadata = this.styleGroups.find(item => item.name === `components_${componentName}`);
-            if (!groupMetadata || !groupMetadata.styleTemplate) {
-                // console.warn("metadata not found for component:", componentName);
-                return undefined;
-            }
-            const componentStyles = styles.components[componentName];
-            const states = this.styleService.getAllowedStates(componentStyles);  
-            const variations = Object.keys(componentStyles).map(variationName => {
-                const variationContract = componentStyles[variationName];
-                if (states && variationName !== "default") {
-                    variationContract["allowedStates"] = states;
+
+        const result = Object.keys(styles.components)
+            .map<ComponentStyle>(componentName => {
+                const groupMetadata = this.styleGroups.find(item => item.name === `components_${componentName}`);
+
+                if (!groupMetadata || !groupMetadata.styleTemplate) {
+                    // console.warn("metadata not found for component:", componentName);
+                    return undefined;
                 }
-                return variationContract;
-            });
-            return { name: componentName, displayName: groupMetadata.groupName, variations: variations, itemTemplate: groupMetadata.styleTemplate };
-        }).filter(item => item !== undefined);
+
+                const componentStyles = styles.components[componentName];
+                const states = this.styleService.getAllowedStates(componentStyles);
+
+                const variations = Object.keys(componentStyles).map(variationName => {
+                    const variationContract = componentStyles[variationName];
+
+                    if (states && variationName !== "default") {
+                        variationContract["allowedStates"] = states;
+                    }
+
+                    return variationContract;
+                });
+
+                return {
+                    name: componentName,
+                    displayName: groupMetadata.groupName,
+                    variations: variations,
+                    itemTemplate: groupMetadata.styleTemplate
+                };
+            })
+            .filter(item => item !== undefined);
+
         return result;
     }
 
@@ -305,6 +319,7 @@ export class StyleGuide {
         // this.ownerDocument.addEventListener("keydown", this.onKeyDown);
     }
 
+    @OnDestroyed()
     public dispose(): void {
         this.ownerDocument.removeEventListener("mousemove", this.onPointerMove.bind(this), true);
         this.ownerDocument.removeEventListener("scroll", this.onWindowScroll.bind(this));
@@ -342,7 +357,7 @@ export class StyleGuide {
 
         const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
 
-        this.rerenderEditors(this.pointerX, this.pointerY, elements);
+        this.rerenderEditors(elements);
     }
 
     private onPointerDown(event: MouseEvent): void {
@@ -364,7 +379,9 @@ export class StyleGuide {
 
         const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
 
-        const element = elements.find(x => x["stylable"]);
+        const element = this.activeHighlightedElement;
+
+        // const element = elements.find(x => x["stylable"]);
 
         if (!element || !element["stylable"]) {
             return;
@@ -386,7 +403,7 @@ export class StyleGuide {
                 this.selectStyle(style);
         }
         else {
-            const contextualEditor = this.getContextualEditor(stylable);
+            const contextualEditor = this.getContextualEditor(element, stylable);
 
             if (!contextualEditor || contextualEditor.selectCommands.length === 0) {
                 return;
@@ -398,7 +415,7 @@ export class StyleGuide {
                 color: contextualEditor.color
             };
 
-            contextualEditor.element = element;
+            // contextualEditor.element = element;
 
             this.viewManager.setSelectedElement(config, contextualEditor);
         }
@@ -411,22 +428,17 @@ export class StyleGuide {
         this.pointerX = event.clientX;
         this.pointerY = event.clientY;
 
-        const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
-
-        if (elements.length === 0) {
-            return;
-        }
-
         this.renderHighlightedElements();
     }
 
-    private getContextualEditor(stylable: { style: any; toggleBackground: () => void; }): IContextCommandSet {
+    private getContextualEditor(element: HTMLElement, stylable: { style: any; toggleBackground: () => void; }): IContextCommandSet {
         const style = stylable.style;
 
         const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
             deleteCommand: null,
-            selectCommands: []
+            selectCommands: [],
+            element: element
         };
 
         if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
@@ -467,7 +479,8 @@ export class StyleGuide {
         if (!style.key.startsWith("colors/") &&
             !style.key.startsWith("fonts/") &&
             !style.key.startsWith("shadows/") &&
-            !style.key.startsWith("gradients/")
+            !style.key.startsWith("gradients/") &&
+            !style.key.contains("/components/") // sub-components
         ) {
             styleContextualEditor.selectCommands.push({
                 tooltip: "Change background",
@@ -527,7 +540,7 @@ export class StyleGuide {
         return styleContextualEditor;
     }
 
-    private async rerenderEditors(pointerX: number, pointerY: number, elements: HTMLElement[]): Promise<void> {
+    private async rerenderEditors(elements: HTMLElement[]): Promise<void> {
         let highlightedElement: HTMLElement;
         let highlightedText: string;
         let highlightColor: string;
@@ -551,7 +564,7 @@ export class StyleGuide {
             highlightedText = style.displayName;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextualEditor(stylable);
+            const contextualEditor = this.getContextualEditor(element, stylable);
 
             highlightColor = contextualEditor.color;
 
