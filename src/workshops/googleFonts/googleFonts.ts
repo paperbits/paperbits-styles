@@ -7,9 +7,10 @@ import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { IMediaService } from "@paperbits/common/media";
 import { ViewManager } from "@paperbits/common/ui";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
-import { FontContract, FontVariantContract } from "../../contracts/fontContract";
+import { FontContract } from "../../contracts/fontContract";
 import { GoogleFontContract, GoogleFontsResult } from "./googleFontsParser";
 import { GoogleFont } from "./googleFont";
 
@@ -20,17 +21,10 @@ import { GoogleFont } from "./googleFont";
     injectable: "googleFonts"
 })
 export class GoogleFonts {
-    @Param()
-    public readonly selectedFont: ko.Observable<FontContract>;
-
-    @Event()
-    public readonly onSelect: (font: FontContract) => void;
-
-    public fonts: ko.ObservableArray<GoogleFont>;
-    public searchPattern: ko.Observable<string>;
+    public readonly fonts: ko.ObservableArray<GoogleFont>;
+    public readonly searchPattern: ko.Observable<string>;
 
     private loadedContracts: GoogleFontContract[];
-    private searchTimeout: any;
 
     constructor(
         private readonly styleService: StyleService,
@@ -39,9 +33,15 @@ export class GoogleFonts {
         private readonly mediaService: IMediaService
     ) {
         this.searchPattern = ko.observable("");
-        this.fonts = ko.observableArray<GoogleFont>();
+        this.fonts = ko.observableArray();
         this.selectedFont = ko.observable();
     }
+
+    @Param()
+    public readonly selectedFont: ko.Observable<FontContract>;
+
+    @Event()
+    public readonly onSelect: (font: FontContract) => void;
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
@@ -53,27 +53,24 @@ export class GoogleFonts {
         });
 
         this.loadedContracts = response.toObject().items;
-        this.loadNextPage();
 
-        this.searchPattern.subscribe(this.searchFonts);
+        await this.searchFonts();
+
+        this.searchPattern
+            .extend(ChangeRateLimit)
+            .subscribe(this.searchFonts);
     }
-
-    public searchFonts(pattern: string): void {
+  
+    public async searchFonts(pattern: string = ""): Promise<void> {
         this.fonts([]);
 
-        clearTimeout(this.searchTimeout);
-        this.searchTimeout = setTimeout(this.loadNextPage, 500);
-    }
-
-    public async loadNextPage(): Promise<void> {
         if (!this.loadedContracts) {
             return;
         }
-        const loadedCount = this.fonts().length;
-        const pattern = this.searchPattern().toLowerCase();
 
+        const loadedCount = this.fonts().length;
         const fonts = this.loadedContracts
-            .filter(x => x.family.toLowerCase().contains(pattern))
+            .filter(x => x.family.toLowerCase().contains(pattern.toLowerCase()))
             .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
 
         this.fonts.push(...fonts);
