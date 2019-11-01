@@ -100,8 +100,8 @@ export class StyleGuide {
     public async addColor(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         const addedItem = await this.styleService.addColorVariation(variationName);
-        
-        const colors = this.colors(); 
+
+        const colors = this.colors();
         colors.push(addedItem);
         this.colors(this.sortByDisplayName(colors));
 
@@ -111,8 +111,8 @@ export class StyleGuide {
     public async addShadow(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         const addedItem = await this.styleService.addShadowVariation(variationName);
-        
-        const shadows = this.shadows(); 
+
+        const shadows = this.shadows();
         shadows.push(addedItem);
         this.shadows(this.sortByDisplayName(shadows));
 
@@ -194,7 +194,7 @@ export class StyleGuide {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
         const addedItem = await this.styleService.addTextStyleVariation(variationName);
 
-        const textStyles = this.textStyles(); 
+        const textStyles = this.textStyles();
         textStyles.push(addedItem);
         this.textStyles(this.sortByDisplayName(textStyles));
 
@@ -247,7 +247,6 @@ export class StyleGuide {
 
         const components = await this.getComponentsStyles();
         this.uiComponents(components);
-
 
         this.styles(styles);
     }
@@ -405,7 +404,7 @@ export class StyleGuide {
         else {
             const contextualEditor = this.getContextualEditor(element, stylable);
 
-            if (!contextualEditor || contextualEditor.selectCommands.length === 0) {
+            if (!contextualEditor || ((contextualEditor.selectCommands.concat(contextualEditor.deleteCommand)).length === 0)) {
                 return;
             }
 
@@ -517,7 +516,7 @@ export class StyleGuide {
                             name: "style-editor",
                             params: {
                                 elementStyle: style,
-                                onUpdate: async () => {                                    
+                                onUpdate: async () => {
                                     this.styleService.updateStyle(style);
                                     if (style.key.startsWith("components/")) {
                                         const parts = style.key.split("/");
