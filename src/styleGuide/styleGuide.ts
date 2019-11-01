@@ -62,6 +62,7 @@ export class StyleGuide {
 
     @OnMounted()
     public async loadStyles(): Promise<void> {
+        this.viewManager.mode = ViewManagerMode.selecting;
         this.applyChanges();
         this.ownerDocument = this.viewManager.getHostDocument();
         this.attach();
@@ -376,11 +377,7 @@ export class StyleGuide {
             return;
         }
 
-        const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
-
         const element = this.activeHighlightedElement;
-
-        // const element = elements.find(x => x["stylable"]);
 
         if (!element || !element["stylable"]) {
             return;
@@ -413,8 +410,6 @@ export class StyleGuide {
                 text: style["displayName"],
                 color: contextualEditor.color
             };
-
-            // contextualEditor.element = element;
 
             this.viewManager.setSelectedElement(config, contextualEditor);
         }
