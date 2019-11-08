@@ -33,7 +33,7 @@ import { ThemeContract } from "./contracts/themeContract";
 
 const opts = preset();
 
-opts.createGenerateClassName = () => {
+opts.createGenerateId = () => {
     return (rule, sheet) => {
         return Utils.camelCaseToKebabCase(rule.key);
     };

@@ -5,7 +5,7 @@ import { Style, StyleSheet, StyleMediaQuery, BreakpointValues } from "@paperbits
 
 const opts = preset();
 
-opts.createGenerateClassName = () => {
+opts.createGenerateId = () => {
     return (rule, sheet) => {
         return Utils.camelCaseToKebabCase(rule.key);
     };
