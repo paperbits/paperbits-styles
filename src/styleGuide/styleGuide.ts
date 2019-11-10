@@ -360,6 +360,16 @@ export class StyleGuide {
         this.rerenderEditors(elements);
     }
 
+    private isStyleBeingEdited(): boolean {
+        const session = this.viewManager.getOpenView();
+
+        if (!session) {
+            return false;
+        }
+
+        return true;
+    }
+
     private onPointerDown(event: MouseEvent): void {
         if (this.viewManager.mode === ViewManagerMode.pause) {
             event.preventDefault();
@@ -379,40 +389,52 @@ export class StyleGuide {
 
         const element = this.activeHighlightedElement;
 
-        if (!element || !element["stylable"]) {
+        if (!element) {
+            this.viewManager.closeView();
             return;
         }
 
         const stylable = element["stylable"];
+
+        if (!stylable) {
+            return;
+        }
+
         const style = stylable.style;
 
         if (!style) {
             return;
         }
 
+        if (this.isStyleBeingEdited()) {
+            return;
+        }
+
         const selectedElement = this.viewManager.getSelectedElement();
 
         if (selectedElement && selectedElement.element === element) {
-            const select =
-                (style.key.startsWith("colors/") && this.selectColor(style)) ||
-                (style.key.startsWith("shadows/") && this.selectShadow(style)) ||
-                this.selectStyle(style);
-        }
-        else {
             const contextualEditor = this.getContextualEditor(element, stylable);
+            const editCommand = contextualEditor.selectCommands.find(command => command.name === "edit");
 
-            if (!contextualEditor || ((contextualEditor.selectCommands.concat(contextualEditor.deleteCommand)).length === 0)) {
-                return;
+            if (editCommand) {
+                editCommand.callback();
             }
-
-            const config: IHighlightConfig = {
-                element: element,
-                text: style["displayName"],
-                color: contextualEditor.color
-            };
-
-            this.viewManager.setSelectedElement(config, contextualEditor);
+            return;
         }
+
+        const contextualEditor = this.getContextualEditor(element, stylable);
+
+        if (!contextualEditor || ((contextualEditor.selectCommands.concat(contextualEditor.deleteCommand)).length === 0)) {
+            return;
+        }
+
+        const config: IHighlightConfig = {
+            element: element,
+            text: style["displayName"],
+            color: contextualEditor.color
+        };
+
+        this.viewManager.setSelectedElement(config, contextualEditor);
     }
 
     private onPointerMove(event: MouseEvent): void {
@@ -477,6 +499,7 @@ export class StyleGuide {
             !style.key.contains("/components/") // sub-components
         ) {
             styleContextualEditor.selectCommands.push({
+                name: "background",
                 tooltip: "Change background",
                 iconClass: "paperbits-drop",
                 position: "top right",
@@ -489,6 +512,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("colors/") || style.key.startsWith("shadows/")) {
             styleContextualEditor.selectCommands.push({
+                name: "edit",
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
@@ -500,6 +524,7 @@ export class StyleGuide {
         }
         else if (!style.key.startsWith("fonts/") && !style.key.startsWith("gradients/")) {
             styleContextualEditor.selectCommands.push({
+                name: "edit",
                 tooltip: "Edit variation",
                 iconClass: "paperbits-edit-72",
                 position: "top right",
@@ -513,11 +538,13 @@ export class StyleGuide {
                                 elementStyle: style,
                                 onUpdate: async () => {
                                     this.styleService.updateStyle(style);
+
                                     if (style.key.startsWith("components/")) {
                                         const parts = style.key.split("/");
                                         const componentName = parts[1];
                                         await this.onUpdateStyle(componentName);
-                                    } else {
+                                    }
+                                    else {
                                         this.applyChanges();
                                     }
                                 }
