@@ -60,17 +60,36 @@ export class GoogleFonts {
             .extend(ChangeRateLimit)
             .subscribe(this.searchFonts);
     }
-  
-    public async searchFonts(pattern: string = ""): Promise<void> {
-        this.fonts([]);
 
+    // public async searchFonts(pattern: string = ""): Promise<void> {
+    //     this.fonts([]);
+
+    //     if (!this.loadedContracts) {
+    //         return;
+    //     }
+
+    //     const loadedCount = this.fonts().length;
+    //     const fonts = this.loadedContracts
+    //         .filter(x => x.family.toLowerCase().contains(pattern.toLowerCase()))
+    //         .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
+
+    //     this.fonts.push(...fonts);
+    // }
+
+    public searchFonts(pattern: string = ""): void {
+        this.fonts([]);
+        this.loadNextPage();
+    }
+
+    public async loadNextPage(): Promise<void> {
         if (!this.loadedContracts) {
             return;
         }
-
         const loadedCount = this.fonts().length;
+        const pattern = this.searchPattern().toLowerCase();
+
         const fonts = this.loadedContracts
-            .filter(x => x.family.toLowerCase().contains(pattern.toLowerCase()))
+            .filter(x => x.family.toLowerCase().contains(pattern))
             .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
 
         this.fonts.push(...fonts);
