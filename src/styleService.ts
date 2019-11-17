@@ -62,49 +62,6 @@ export class StyleService {
         return newVariation;
     }
 
-    public async addNavbarVariation(variationName: string): Promise<string> {
-        const styles = await this.getStyles();
-
-        const variation: any = {
-            key: `components/navbar/${variationName}`,
-            displayName: "< Unnamed >",
-            category: "appearance",
-            components: {
-                navLink: {
-                    default: {
-                        key: `components/navbar/${variationName}/components/navLink/default`,
-                        displayName: "Nav item",
-                        allowedStates: [
-                            "hover",
-                            "focus",
-                            "active"
-                        ]
-                    },
-                    active: {
-                        key: `components/navbar/${variationName}/components/navLink/active`,
-                        displayName: "Nav item (active)",
-                        allowedStates: [
-                            "hover",
-                            "focus",
-                            "active"
-                        ]
-                    }
-                }
-            }
-        };
-
-        const states = this.getAllowedStates(styles.components["navbar"]);
-        if (states) {
-            variation["allowedStates"] = states;
-        }
-
-        styles.components["navbar"][variationName] = variation;
-
-        this.updateStyles(styles);
-
-        return variation.key;
-    }
-
     private rewriteVariationKeysRecursively(variation: Object, parentKey: string): void {
         variation["key"] = parentKey;
 

@@ -387,6 +387,10 @@ export class StyleGuide {
 
         const element = this.activeHighlightedElement;
 
+        if (!element) {
+            return;
+        }
+
         const stylable: Styleable = element["stylable"];
 
         if (!stylable) {
