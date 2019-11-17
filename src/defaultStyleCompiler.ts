@@ -27,7 +27,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
-import { Style, StyleSheet, StyleMediaQuery, IStyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
+import { Style, StyleSheet, StyleMediaQuery, StyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
 
@@ -42,7 +42,7 @@ opts.createGenerateId = () => {
 jss.setup(opts);
 
 
-export class StyleCompiler implements IStyleCompiler {
+export class DefaultStyleCompiler implements StyleCompiler {
     private styles: ThemeContract;
     public plugins: Bag<StylePlugin>;
 
@@ -113,7 +113,7 @@ export class StyleCompiler implements IStyleCompiler {
     /**
      * Returns compliled CSS.
      */
-    public async compile(): Promise<string> {
+    public async compileCss(): Promise<string> {
         await this.initializePlugins();
 
         const themeContract = await this.getStyles();
@@ -325,7 +325,6 @@ export class StyleCompiler implements IStyleCompiler {
                 const className = `${componentName}-${variationName}`.replace("-default", "");
                 classNames.push(className);
             }
-
         }
 
         return classNames;
@@ -351,7 +350,7 @@ export class StyleCompiler implements IStyleCompiler {
         return stateStyle;
     }
 
-    public async getFontsStyles(): Promise<string> {
+    public async getFontsStylesCss(): Promise<string> {
         const themeContract = await this.getStyles();
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();

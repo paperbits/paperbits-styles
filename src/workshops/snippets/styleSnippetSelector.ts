@@ -1,16 +1,17 @@
 import * as ko from "knockout";
+import * as _ from "lodash";
 import template from "./styleSnippetSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleItemContract } from "../../contracts/styleItemContract";
 import { StyleSnippetService } from "../../styleSnippetService";
 import { StyleItem } from "../../models/styleItem";
-import { StyleCompiler } from "../../styleCompiler";
+import { DefaultStyleCompiler } from "../../defaultStyleCompiler";
 import { IPermalinkResolver } from "@paperbits/common/permalinks/IPermalinkResolver";
 import { ThemeContract } from "../../contracts/themeContract";
 import { identifier } from "@paperbits/common/utils";
 import { getObjectAt } from "@paperbits/common/objects";
-import * as _ from "lodash";
 import { IStyleGroup } from "@paperbits/common/styles/IStyleGroup";
+import { StyleCompiler } from "@paperbits/common/styles";
 
 @Component({
     selector: "style-snippet-selector",
@@ -24,7 +25,7 @@ export class StyleSnippetSelector {
     public existingSnippetKeys: string[];
     public itemTemplate: string;
 
-    private readonly snippetStyleCompiler: StyleCompiler;
+    private readonly snippetStyleCompiler: DefaultStyleCompiler;
     private isThemeSelected: boolean;
 
     @Param()
@@ -38,7 +39,7 @@ export class StyleSnippetSelector {
         private readonly mediaPermalinkResolver: IPermalinkResolver,
         private readonly styleGroups: IStyleGroup[]) {
 
-        this.snippetStyleCompiler = new StyleCompiler(undefined, this.mediaPermalinkResolver);
+        this.snippetStyleCompiler = new DefaultStyleCompiler(undefined, this.mediaPermalinkResolver);
         this.loadSnippets = this.loadSnippets.bind(this);
         this.selectSnippet = this.selectSnippet.bind(this);
 
@@ -62,12 +63,13 @@ export class StyleSnippetSelector {
         const snippetsByType = await this.styleSnippetService.getStyleByKey(this.snippetType);
         this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
+        
         for (const it of Object.values(snippetsByType)) {
             const item = <StyleItemContract>it;
             const subTheme = await this.loadThemeForItem(item);
             const styleItem = new StyleItem(item, subTheme, this.snippetType); 
             const compiller = this.getStyleCompiler(subTheme);
-            styleItem.stylesContent = await compiller.compile();
+            styleItem.stylesContent = await compiller.compileCss();
             styleItem.classNames = await compiller.getClassNameByStyleKeyAsync(item.key);
             loadedSnippets.push(styleItem);
         }

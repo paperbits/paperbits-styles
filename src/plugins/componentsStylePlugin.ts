@@ -1,5 +1,4 @@
-import { StyleCompiler } from "..";
-import { Style } from "@paperbits/common/styles";
+import { Style, StyleCompiler } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
 
 export class ComponentsStylePlugin extends StylePlugin {

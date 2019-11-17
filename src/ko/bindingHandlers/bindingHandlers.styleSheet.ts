@@ -1,6 +1,6 @@
 import * as ko from "knockout";
-import { StyleCompiler } from "../../styleCompiler";
 import { EventManager } from "@paperbits/common/events";
+import { StyleCompiler } from "@paperbits/common/styles";
 
 
 // @BindingHandlers("stylesheet")
@@ -12,7 +12,7 @@ export class StylesheetBindingHandler {
         ko.bindingHandlers["styleSheet"] = {
             update: (element: HTMLStyleElement, valueAccessor) => {
                 const applyStyles = async () => {
-                    const newStyles = await this.styleCompiler.compile();
+                    const newStyles = await this.styleCompiler.compileCss();
                     const styleElement = <HTMLStyleElement>element;
                     styleElement.innerHTML = newStyles;
                 };

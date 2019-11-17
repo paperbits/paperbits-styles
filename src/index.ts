@@ -1,2 +1,2 @@
-export * from "./styleCompiler";
+export * from "./defaultStyleCompiler";
 export * from "./styleService";

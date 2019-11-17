@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { EventManager } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
-import { IStyleGroup } from "@paperbits/common/styles";
+import { IStyleGroup, Styleable } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract, StyleItemContract } from "../contracts";
@@ -351,7 +351,7 @@ export class StyleGuide {
     }
 
     private renderHighlightedElements(): void {
-        if (this.scrolling || (this.viewManager.mode !== ViewManagerMode.selecting && this.viewManager.mode !== ViewManagerMode.selected)) {
+        if (this.scrolling) {
             return;
         }
 
@@ -360,14 +360,12 @@ export class StyleGuide {
         this.rerenderEditors(elements);
     }
 
-    private isStyleBeingEdited(): boolean {
-        const session = this.viewManager.getOpenView();
-
-        if (!session) {
+    private isStyleSelectable(contextualEditor: IContextCommandSet): boolean {
+        if (!contextualEditor) {
             return false;
         }
 
-        return true;
+        return contextualEditor.selectCommands.concat(contextualEditor.deleteCommand).length > 0;
     }
 
     private onPointerDown(event: MouseEvent): void {
@@ -389,12 +387,7 @@ export class StyleGuide {
 
         const element = this.activeHighlightedElement;
 
-        if (!element) {
-            this.viewManager.closeView();
-            return;
-        }
-
-        const stylable = element["stylable"];
+        const stylable: Styleable = element["stylable"];
 
         if (!stylable) {
             return;
@@ -403,10 +396,6 @@ export class StyleGuide {
         const style = stylable.style;
 
         if (!style) {
-            return;
-        }
-
-        if (this.isStyleBeingEdited()) {
             return;
         }
 
@@ -424,7 +413,7 @@ export class StyleGuide {
 
         const contextualEditor = this.getContextualEditor(element, stylable);
 
-        if (!contextualEditor || ((contextualEditor.selectCommands.concat(contextualEditor.deleteCommand)).length === 0)) {
+        if (!this.isStyleSelectable(contextualEditor)) {
             return;
         }
 

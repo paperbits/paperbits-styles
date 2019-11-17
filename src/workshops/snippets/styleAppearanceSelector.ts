@@ -1,13 +1,14 @@
 import * as ko from "knockout";
 import template from "./styleAppearanceSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { IStyleGroup } from "@paperbits/common/styles/IStyleGroup";
+import { StyleCompiler, IStyleGroup } from "@paperbits/common/styles";
 import { StyleItemContract } from "../../contracts/styleItemContract";
 import { StyleItem } from "../../models/styleItem";
-import { StyleCompiler } from "../../styleCompiler";
-import { IPermalinkResolver } from "@paperbits/common/permalinks/IPermalinkResolver";
+import { DefaultStyleCompiler } from "../../defaultStyleCompiler";
+import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { ThemeContract } from "../../contracts/themeContract";
 import { StyleService } from "../../styleService";
+
 
 @Component({
     selector: "style-appearance-selector",
@@ -33,7 +34,7 @@ export class StyleAppearanceSelector {
         private readonly mediaPermalinkResolver: IPermalinkResolver,
         private readonly styleGroups: IStyleGroup[]) {
 
-        this.snippetStyleCompiler = new StyleCompiler(undefined, this.mediaPermalinkResolver);
+        this.snippetStyleCompiler = new DefaultStyleCompiler(undefined, this.mediaPermalinkResolver);
         this.loadSnippets = this.loadSnippets.bind(this);
         this.selectSnippet = this.selectSnippet.bind(this);
 
@@ -57,7 +58,7 @@ export class StyleAppearanceSelector {
             const subTheme = await this.loadThemeForItem(item);
             const styleItem = new StyleItem(item, subTheme, this.snippetType); 
             const compiller = this.getStyleCompiler(subTheme);
-            styleItem.stylesContent = await compiller.compile();
+            styleItem.stylesContent = await compiller.compileCss();
             styleItem.classNames = await compiller.getClassNameByStyleKeyAsync(item.key);
             loadedSnippets.push(styleItem);
         }

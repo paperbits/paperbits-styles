@@ -1,7 +1,5 @@
-import * as Utils from "@paperbits/common/utils";
-import { Style, StyleRule } from "@paperbits/common/styles";
+import { Style, StyleCompiler } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
-import { StyleCompiler } from "..";
 
 
 export class StatesStylePlugin extends StylePlugin {

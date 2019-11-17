@@ -1,7 +1,7 @@
-import { StyleCompiler } from "./../../styleCompiler";
 import * as ko from "knockout";
 import template from "./fontSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
+import { StyleCompiler } from "@paperbits/common/styles";
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
 
@@ -36,7 +36,7 @@ export class FontSelector {
 
     @OnMounted()
     public async loadAvailableFonts(): Promise<void> {
-        const styles = await this.styleCompiler.getFontsStyles();
+        const styles = await this.styleCompiler.getFontsStylesCss();
         this.compiledFontStyles(styles);
 
         const fonts = await this.styleService.getVariations<FontContract>("fonts");

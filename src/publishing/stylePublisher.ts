@@ -9,11 +9,11 @@
 import * as Utils from "@paperbits/common/utils";
 import { IPublisher } from "@paperbits/common/publishing";
 import { IBlobStorage } from "@paperbits/common/persistence";
-import { StyleCompiler } from "../styleCompiler";
+import { DefaultStyleCompiler } from "../defaultStyleCompiler";
 
 export class StylePublisher implements IPublisher {
     constructor(
-        private readonly styleCompiler: StyleCompiler,
+        private readonly styleCompiler: DefaultStyleCompiler,
         private readonly outputBlobStorage: IBlobStorage,
     ) { }
 
@@ -21,7 +21,7 @@ export class StylePublisher implements IPublisher {
         try {
             console.log("Publishing styles...");
 
-            const css = await this.styleCompiler.compile();
+            const css = await this.styleCompiler.compileCss();
             const bytes = Utils.stringToUnit8Array(css);
 
             await this.outputBlobStorage.uploadBlob(`styles/customizations.css`, bytes, "text/css");
