@@ -29,6 +29,10 @@ export class SizeStylePlugin extends StylePlugin {
             result.push(new StyleRule("maxHeight", StylePlugin.parseSize(pluginConfig.maxHeight)));
         }
 
+        if (pluginConfig.stretch) {
+            result.push(new StyleRule("flexGrow", 1));
+        }
+
         return result;
     }
 }
