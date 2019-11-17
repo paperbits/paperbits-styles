@@ -48,7 +48,7 @@ export class TypographyStylePlugin extends StylePlugin {
             const colorContract = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
 
             if (colorContract) {
-                result.push(new StyleRule("color", colorContract.value || "transparent"));
+                result.push(new StyleRule("color", `${colorContract.value} !important` || "transparent"));
             }
             else {
                 console.warn(`Color with key "${pluginConfig.colorKey}" not found. Elements using it will fallback to parent's definition.`);
