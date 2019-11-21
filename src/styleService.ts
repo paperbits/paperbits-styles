@@ -26,6 +26,10 @@ export class StyleService {
         }
 
         this.defaultStyles.forEach(x => {
+            if (x.migrate) {
+                x.migrate(stylesObject.components[x.key]);
+            }
+
             if (stylesObject.components[x.key]) {
                 return;
             }
