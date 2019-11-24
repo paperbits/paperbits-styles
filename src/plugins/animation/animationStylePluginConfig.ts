@@ -1,4 +1,6 @@
-export interface AnimationStylePluginConfig {
+import { StylePluginConfig } from "@paperbits/common/styles";
+
+export interface AnimationStylePluginConfig extends StylePluginConfig {
     /**
      * Key of animation.
      */

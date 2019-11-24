@@ -1,4 +1,4 @@
-import { Style, StyleCompiler } from "@paperbits/common/styles";
+import { Style, StyleCompiler, ComponentsContract } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
 
 export class ComponentsStylePlugin extends StylePlugin {
@@ -8,16 +8,16 @@ export class ComponentsStylePlugin extends StylePlugin {
         super();
     }
 
-    public async configToNestedStyles(componentsConfig: any): Promise<Style[]> {
+    public async configToNestedStyles(componentsConfig: ComponentsContract): Promise<Style[]> {
         const resultStyles: Style[] = [];
 
         for (const componentName of Object.keys(componentsConfig)) {
             const componentConfig = componentsConfig[componentName];
 
             const componentStyle = await this.styleCompiler.getVariationStyle(componentConfig["default"], componentName);
-            const variations = Object.keys(componentConfig);
+            const variationNames = Object.keys(componentConfig);
 
-            for (const variationName of variations) {
+            for (const variationName of variationNames) {
                 if (variationName === "default") {
                     continue;
                 }

@@ -4,10 +4,10 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { EventManager } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
-import { IStyleGroup, Styleable } from "@paperbits/common/styles";
+import { IStyleGroup, Styleable, StyleContract } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
-import { FontContract, ColorContract, ShadowContract, LinearGradientContract, StyleItemContract } from "../contracts";
+import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
 import { ComponentStyle } from "../contracts/componentStyle";
 
@@ -25,19 +25,19 @@ export class StyleGuide {
     private actives: object = {};
     private ownerDocument: Document;
 
-    public styles: ko.Observable<any>;
-    public textBlocks: ko.ObservableArray<any>;
-    public buttons: ko.ObservableArray<any>;
-    public cards: ko.ObservableArray<any>;
-    public pictures: ko.ObservableArray<any>;
-    public videoPlayers: ko.ObservableArray<any>;
-    public fonts: ko.ObservableArray<FontContract>;
-    public colors: ko.ObservableArray<ColorContract>;
-    public shadows: ko.ObservableArray<ShadowContract>;
-    public gradients: ko.ObservableArray<LinearGradientContract>;
-    public textStyles: ko.ObservableArray<any>;
-    public navBars: ko.ObservableArray<any>;
-    public uiComponents: ko.ObservableArray<ComponentStyle>;
+    public readonly styles: ko.Observable<any>;
+    public readonly textBlocks: ko.ObservableArray<any>;
+    public readonly buttons: ko.ObservableArray<any>;
+    public readonly cards: ko.ObservableArray<any>;
+    public readonly pictures: ko.ObservableArray<any>;
+    public readonly videoPlayers: ko.ObservableArray<any>;
+    public readonly fonts: ko.ObservableArray<FontContract>;
+    public readonly colors: ko.ObservableArray<ColorContract>;
+    public readonly shadows: ko.ObservableArray<ShadowContract>;
+    public readonly gradients: ko.ObservableArray<LinearGradientContract>;
+    public readonly textStyles: ko.ObservableArray<any>;
+    public readonly navBars: ko.ObservableArray<any>;
+    public readonly uiComponents: ko.ObservableArray<ComponentStyle>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -87,7 +87,7 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeStyle(contract: StyleItemContract): Promise<void> {
+    public async removeStyle(contract: StyleContract): Promise<void> {
         await this.styleService.removeStyle(contract.key);
         if (contract.key.startsWith("components/")) {
             const parts = contract.key.split("/");
@@ -165,7 +165,7 @@ export class StyleGuide {
         return true;
     }
 
-    public selectStyle(style: StyleItemContract): boolean {
+    public selectStyle(style: StyleContract): boolean {
         const view: View = {
             heading: style.displayName,
             component: {
@@ -221,6 +221,7 @@ export class StyleGuide {
     private async onUpdateStyle(componentName: string): Promise<void> {
         const components = this.uiComponents();
         const old = components.find(c => c.name === componentName);
+        
         if (old) {
             const updated = await this.getComponentsStyles();
             const updatedItem = updated.find(c => c.name === componentName);
@@ -391,13 +392,13 @@ export class StyleGuide {
             return;
         }
 
-        const stylable: Styleable = element["stylable"];
+        const styleable: Styleable = element["styleable"];
 
-        if (!stylable) {
+        if (!styleable) {
             return;
         }
 
-        const style = stylable.style;
+        const style = styleable.style;
 
         if (!style) {
             return;
@@ -406,7 +407,7 @@ export class StyleGuide {
         const selectedElement = this.viewManager.getSelectedElement();
 
         if (selectedElement && selectedElement.element === element) {
-            const contextualEditor = this.getContextualEditor(element, stylable);
+            const contextualEditor = this.getContextualEditor(element, styleable);
             const editCommand = contextualEditor.selectCommands.find(command => command.name === "edit");
 
             if (editCommand) {
@@ -415,7 +416,7 @@ export class StyleGuide {
             return;
         }
 
-        const contextualEditor = this.getContextualEditor(element, stylable);
+        const contextualEditor = this.getContextualEditor(element, styleable);
 
         if (!this.isStyleSelectable(contextualEditor)) {
             return;
@@ -440,8 +441,8 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
-    private getContextualEditor(element: HTMLElement, stylable: { style: any; toggleBackground: () => void; }): IContextCommandSet {
-        const style = stylable.style;
+    private getContextualEditor(element: HTMLElement, styleable: Styleable): IContextCommandSet {
+        const style = styleable.style;
 
         const styleContextualEditor: IContextCommandSet = {
             color: "#607d8b",
@@ -498,7 +499,7 @@ export class StyleGuide {
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
-                    stylable.toggleBackground();
+                    styleable.toggleBackground();
                 }
             });
         }
@@ -563,13 +564,13 @@ export class StyleGuide {
 
         for (let i = elements.length - 1; i >= 0; i--) {
             const element = elements[i];
-            const stylable = element["stylable"];
+            const styleable = element["styleable"];
 
-            if (!stylable) {
+            if (!styleable) {
                 continue;
             }
 
-            const style = stylable.style;
+            const style = styleable.style;
 
             const index = tobeDeleted.indexOf(style.key);
             tobeDeleted.splice(index, 1);
@@ -578,7 +579,7 @@ export class StyleGuide {
             highlightedText = style.displayName;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextualEditor(element, stylable);
+            const contextualEditor = this.getContextualEditor(element, styleable);
 
             highlightColor = contextualEditor.color;
 

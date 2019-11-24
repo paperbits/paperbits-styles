@@ -1,5 +1,6 @@
 import { ContentOverflow } from "../../contracts/contentOverflow";
 import { ContentAlignment } from "../../contracts/contentAlignment";
+import { StylePluginConfig } from "@paperbits/common/styles";
 
 export interface GridCellSpan {
     /**
@@ -18,7 +19,7 @@ export interface GridCellPosition {
     row?: number;
 }
 
-export interface GridCellStylePluginConfig {
+export interface GridCellStylePluginConfig extends StylePluginConfig {
     position: GridCellPosition;
     span?: GridCellSpan;
     alignment?: ContentAlignment;

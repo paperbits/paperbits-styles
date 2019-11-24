@@ -27,7 +27,7 @@ import jss from "jss";
 import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
-import { Style, StyleSheet, StyleMediaQuery, StyleCompiler, StyleModel, StyleRule } from "@paperbits/common/styles";
+import { Style, StyleSheet, StyleMediaQuery, StyleCompiler, StyleModel, StyleRule, VariationsContract, StatesContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
 
@@ -44,7 +44,7 @@ jss.setup(opts);
 
 export class DefaultStyleCompiler implements StyleCompiler {
     private styles: ThemeContract;
-    public plugins: Bag<StylePlugin>;
+    public readonly plugins: Bag<StylePlugin>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -58,7 +58,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
             throw new Error(`Parameter "variation" not specified.`);
         }
 
-        return Object.keys(variation).some(x => Object.keys(BreakpointValues).includes(x));
+        return Object.keys(variation).some(props => Object.keys(BreakpointValues).includes(props));
     }
 
     public setStyles(styles: ThemeContract): void {
@@ -73,17 +73,20 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return result;
     }
 
-    private pluginsToRefresh = ["border", "background", "shadow", "animation", "typography"];
+    private pluginsToRefresh: string[] = ["border", "background", "shadow", "animation", "typography"];
 
     private async initializePlugins(): Promise<void> {
         const themeContract = await this.getStyles();
+
         if (Object.keys(this.plugins).length > 0) {
             if (themeContract) {
                 this.pluginsToRefresh.map(pluginName => {
                     const plugin = this.plugins[pluginName];
+
                     if (plugin.setThemeContract) {
                         plugin.setThemeContract(themeContract);
-                    } else {
+                    }
+                    else {
                         console.error(`Plugin ${pluginName} does not support setThemeContract`);
                     }
                 });
@@ -204,7 +207,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return globalCss + " " + css;
     }
 
-    public async getVariationStyle(variationConfig: any, componentName: string, variationName: string = null): Promise<Style> {
+    public async getVariationStyle(variationConfig: VariationsContract, componentName: string, variationName: string = null): Promise<Style> {
         await this.initializePlugins();
 
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
@@ -293,15 +296,15 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return resultStyle;
     }
 
-    public getVariationClassNames(variationConfig: any, componentName: string, variationName: string = null): string[] {
+    public getVariationClassNames(variations: VariationsContract, componentName: string, variationName: string = null): string[] {
         const classNames = [];
 
         if (!variationName) {
             variationName = "default";
         }
 
-        for (const pluginName of Object.keys(variationConfig)) {
-            const pluginConfig = variationConfig[pluginName];
+        for (const pluginName of Object.keys(variations)) {
+            const pluginConfig = variations[pluginName];
 
             if (this.isResponsive(pluginConfig)) {
                 for (const breakpoint of Object.keys(BreakpointValues)) {
@@ -330,14 +333,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames;
     }
 
-    public async getStateStyle(stateConfig: { [x: string]: any; }, stateName: string): Promise<Style> {
+    public async getStateStyle(states: StatesContract, stateName: string): Promise<Style> {
         const stateStyle = new Style(stateName);
 
-        for (const pluginName of Object.keys(stateConfig)) {
+        for (const pluginName of Object.keys(states)) {
             const plugin = this.plugins[pluginName];
 
             if (plugin) {
-                const pluginConfig = stateConfig[pluginName];
+                const pluginConfig = states[pluginName];
 
                 const pluginRules = await plugin.configToStyleRules(pluginConfig);
                 stateStyle.rules.push(...pluginRules);
@@ -366,22 +369,80 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return Utils.camelCaseToKebabCase(colorKey.replaceAll("/", "-"));
     }
 
-    public async getClassNamesByStyleConfigAsync(styleConfig: any): Promise<string> {
+    public async getClassNamesForLocalStylesAsync(styleConfig: LocalStyles): Promise<string> {
         const classNames = [];
 
         for (const category of Object.keys(styleConfig)) {
             const categoryConfig = styleConfig[category];
 
-            if (categoryConfig) {
+            if (!categoryConfig) {
+                continue;
+            }
+
+            if (this.isResponsive(categoryConfig)) {
+                for (const breakpoint of Object.keys(categoryConfig)) {
+                    let className;
+
+                    if (breakpoint === "xs") {
+                        className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                    }
+                    else {
+                        className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                    }
+
+                    if (className) {
+                        classNames.push(className);
+                    }
+                }
+                continue;
+            }
+
+            const styleKey = <string>categoryConfig;
+            const className = await this.getClassNameByStyleKeyAsync(styleKey);
+
+            if (className) {
+                classNames.push(className);
+            }
+        }
+
+        return classNames.join(" ");
+    }
+
+    public async getStyleModelAsync(styleConfig: LocalStyles): Promise<StyleModel> {
+        const classNames = [];
+        let variationStyle: Style;
+        let key;
+
+        for (const category of Object.keys(styleConfig)) {
+            const categoryConfig = styleConfig[category];
+
+            if (!categoryConfig) {
+                continue;
+            }
+
+            if (category === "instance") {
+                const pluginBag = <PluginBag>categoryConfig;
+                const instanceClassName = pluginBag.key || Utils.randomClassName();
+                pluginBag.key = instanceClassName;
+                key = pluginBag.key;
+
+                variationStyle = await this.getVariationStyle(pluginBag, instanceClassName);
+
+                const instanceClassNames = await this.getVariationClassNames(pluginBag, instanceClassName);
+                classNames.push(...instanceClassNames);
+            }
+            else {
                 if (this.isResponsive(categoryConfig)) {
-                    for (const breakpoint of Object.keys(categoryConfig)) {
+                    const pluginBag = <PluginBag>categoryConfig;
+
+                    for (const breakpoint of Object.keys(pluginBag)) {
                         let className;
 
                         if (breakpoint === "xs") {
-                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                            className = await this.getClassNameByStyleKeyAsync(pluginBag[breakpoint]);
                         }
                         else {
-                            className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                            className = await this.getClassNameByStyleKeyAsync(pluginBag[breakpoint], breakpoint);
                         }
 
                         if (className) {
@@ -390,61 +451,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     }
                 }
                 else {
-                    const className = await this.getClassNameByStyleKeyAsync(categoryConfig);
+                    const styleKey = <string>categoryConfig;
+                    const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
                     if (className) {
                         classNames.push(className);
                     }
                 }
-            }
-        }
 
-        return classNames.join(" ");
-    }
-
-    public async getStyleModelAsync(styleConfig: any): Promise<StyleModel> {
-        const classNames = [];
-        let variationStyle: Style;
-        let key;
-
-        for (const category of Object.keys(styleConfig)) {
-            const categoryConfig = styleConfig[category];
-
-            if (category === "instance") {
-                const instanceClassName = categoryConfig.key || Utils.randomClassName();
-                categoryConfig.key = instanceClassName;
-                key = categoryConfig.key;
-                variationStyle = await this.getVariationStyle(categoryConfig, instanceClassName);
-
-                const instanceClassNames = await this.getVariationClassNames(categoryConfig, instanceClassName);
-                instanceClassNames.forEach(x => classNames.push(x));
-            }
-            else {
-                if (categoryConfig) {
-                    if (this.isResponsive(categoryConfig)) {
-                        for (const breakpoint of Object.keys(categoryConfig)) {
-                            let className;
-
-                            if (breakpoint === "xs") {
-                                className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
-                            }
-                            else {
-                                className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
-                            }
-
-                            if (className) {
-                                classNames.push(className);
-                            }
-                        }
-                    }
-                    else {
-                        const className = await this.getClassNameByStyleKeyAsync(categoryConfig);
-
-                        if (className) {
-                            classNames.push(className);
-                        }
-                    }
-                }
             }
         }
 

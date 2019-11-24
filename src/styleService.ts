@@ -3,10 +3,10 @@ import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { EventManager } from "@paperbits/common/events";
-import { ThemeContract, ColorContract, ShadowContract, StyleItemContract } from "./contracts";
+import { ThemeContract, ColorContract, ShadowContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
-import { DefaultStyle } from "@paperbits/common/styles";
+import { StyleHandler, StyleContract } from "@paperbits/common/styles";
 
 
 const stylesPath = "styles";
@@ -15,7 +15,7 @@ export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly eventManager: EventManager,
-        private readonly defaultStyles: DefaultStyle[]
+        private readonly styleHandlers: StyleHandler[]
     ) { }
 
     public async getStyles(): Promise<ThemeContract> {
@@ -25,19 +25,45 @@ export class StyleService {
             throw new Error("Data doesn't contain styles.");
         }
 
-        this.defaultStyles.forEach(x => {
-            if (x.migrate) {
-                x.migrate(stylesObject.components[x.key]);
+        this.styleHandlers.forEach(styleHandler => {
+            if (styleHandler.migrate) {
+                styleHandler.migrate(stylesObject.components[styleHandler.key]);
             }
 
-            if (stylesObject.components[x.key]) {
+            if (stylesObject.components[styleHandler.key]) {
                 return;
             }
 
-            stylesObject.components[x.key] = x.style;
+            stylesObject.components[styleHandler.key] = styleHandler.getDefaultStyle();
         });
 
         return stylesObject;
+    }
+
+    public async getStyleByKey(styleKey: string): Promise<any> {
+        if (!styleKey) {
+            throw new Error(`Parameter "styleKey" not specified.`);
+        }
+
+        const styles = await this.getStyles();
+
+        // TODO: If no style found, try to take default one
+
+        const style = Objects.getObjectAt<any>(styleKey, styles);
+
+        if (style) {
+            return style;
+        }
+
+        const defaultStyle = this.styleHandlers
+            .map(handler => handler.getDefaultStyle(styleKey))
+            .find(x => !!x);
+
+        if (defaultStyle) {
+            return defaultStyle;
+        }
+
+        throw new Error(`Neither style nor default can be fetched by key "${styleKey}".`);
     }
 
     public async addColorVariation(variationName: string): Promise<ColorContract> {
@@ -110,7 +136,7 @@ export class StyleService {
         return variation.key;
     }
 
-    public async addTextStyleVariation(variationName: string): Promise<StyleItemContract> {
+    public async addTextStyleVariation(variationName: string): Promise<StyleContract> {
         const styles = await this.getStyles();
 
         const variation: any = {
@@ -135,7 +161,7 @@ export class StyleService {
         await this.updateStyles(_.merge(styles, appendStyles));
     }
 
-    public async updateStyle(style: any): Promise<void> {
+    public async updateStyle(style: StyleContract): Promise<void> {
         if (!style) {
             throw new Error("Style cannot be empty.");
         }
@@ -145,7 +171,9 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
+        
         Objects.mergeDeepAt(style.key, styles, style);
+
         await this.updateStyles(styles);
     }
 
@@ -208,15 +236,6 @@ export class StyleService {
         });
 
         return variations;
-    }
-
-    public async getStyleByKey(styleKey: string): Promise<any> {
-        if (!styleKey) {
-            throw new Error(`Parameter "styleKey" not specified.`);
-        }
-
-        const styles = await this.getStyles();
-        return Objects.getObjectAt<any>(styleKey, styles);
     }
 
     public async removeStyle(styleKey: string): Promise<void> {

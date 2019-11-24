@@ -1,5 +1,5 @@
-import { StyleItemContract } from ".";
+import { StyleContract } from "@paperbits/common/styles";
 
-export interface ColorContract extends StyleItemContract {
+export interface ColorContract extends StyleContract {
     value?: string;
 }

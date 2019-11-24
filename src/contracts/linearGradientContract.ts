@@ -1,4 +1,4 @@
-import { StyleItemContract } from ".";
+import { StyleContract } from "@paperbits/common/styles";
 
 export interface LinearGradientColorStopContract {
     /**
@@ -12,7 +12,7 @@ export interface LinearGradientColorStopContract {
     length: number;
 }
 
-export interface LinearGradientContract extends StyleItemContract {
+export interface LinearGradientContract extends StyleContract {
     /**
      * Direction of the gradient, e.g. 45deg.
      */

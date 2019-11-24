@@ -7,7 +7,7 @@ import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
 import { Style, StyleSheet } from "@paperbits/common/styles";
-import { IPermalinkResolver } from "@paperbits/common/permalinks/IPermalinkResolver";
+import { IPermalinkResolver } from "@paperbits/common/permalinks";
 
 
 const defaultBackgroundSize = "cover";
@@ -18,7 +18,7 @@ const defaultBackgroundSize = "cover";
     injectable: "background"
 })
 export class Background {
-    public readonly color: ko.Observable<any>;
+    public readonly color: ko.Observable<ColorContract>;
     public readonly colorKey: ko.Observable<string>;
     public readonly gradientKey: ko.Observable<string>;
     public readonly source: ko.Observable<string>;
@@ -37,7 +37,7 @@ export class Background {
     ) {
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
-        this.color = ko.observable<any>();
+        this.color = ko.observable<ColorContract>();
         this.colorKey = ko.observable<string>();
         this.gradientKey = ko.observable<string>();
         this.repeat = ko.observable<string>();

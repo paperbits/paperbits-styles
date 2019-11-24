@@ -1,8 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleAppearanceSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { StyleCompiler, IStyleGroup } from "@paperbits/common/styles";
-import { StyleItemContract } from "../../contracts/styleItemContract";
+import { StyleCompiler, IStyleGroup, StyleContract } from "@paperbits/common/styles";
 import { StyleItem } from "../../models/styleItem";
 import { DefaultStyleCompiler } from "../../defaultStyleCompiler";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
@@ -27,7 +26,7 @@ export class StyleAppearanceSelector {
     public snippetType: string;
 
     @Event()
-    public readonly onSelect: (snippet: StyleItemContract) => void;
+    public readonly onSelect: (snippet: StyleItem) => void;
 
     constructor(
         private readonly styleService: StyleService,
@@ -54,7 +53,7 @@ export class StyleAppearanceSelector {
         this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
         for (const it of Object.values(snippetsByType)) {
-            const item = <StyleItemContract>it;
+            const item = <StyleContract>it;
             const subTheme = await this.loadThemeForItem(item);
             const styleItem = new StyleItem(item, subTheme, this.snippetType); 
             const compiller = this.getStyleCompiler(subTheme);
@@ -72,7 +71,7 @@ export class StyleAppearanceSelector {
         return group ? group.selectorTemplate : "";
     }
 
-    private async loadThemeForItem(item: StyleItemContract): Promise<object> {
+    private async loadThemeForItem(item: StyleContract): Promise<object> {
         const parts = item.key.split("/");
         const isComponent = parts[0] === "components";
         let stylesKeys = this.getAllStyleKeys(item);

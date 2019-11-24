@@ -1,3 +1,5 @@
+import { StylePluginConfig } from "@paperbits/common/styles";
+
 export interface BackgroundImage {
     sourceKey?: string;
 
@@ -17,7 +19,7 @@ export interface BackgroundImage {
     repeat?: string;
 }
 
-export interface BackgroundStylePluginConfig {
+export interface BackgroundStylePluginConfig extends StylePluginConfig {
     /**
      * e.g. "colors/default"
      */

@@ -1,3 +1,5 @@
+import { StylePluginConfig } from "@paperbits/common/styles";
+
 /**
  * Moves an element by two dimentions.
  */
@@ -31,7 +33,7 @@ export interface ScaleConfig {
 /**
  * Applies transformation to an element.
  */
-export interface TransformStylePluginConfig {
+export interface TransformStylePluginConfig extends StylePluginConfig {
     /**
      * Translate configuration.
      */

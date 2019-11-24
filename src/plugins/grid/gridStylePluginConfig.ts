@@ -1,7 +1,9 @@
+import { StylePluginConfig } from "@paperbits/common/styles";
+
 /**
  * Grid style plugin configuration.
  */
-export interface GridStylePluginConfig {
+export interface GridStylePluginConfig extends StylePluginConfig {
     /**
      * Row dimensions, e.g. ["1fr", "2fr", "1fr"].
      */

@@ -1,6 +1,6 @@
-import { StyleItemContract } from ".";
+import { StyleContract, StylePluginConfig } from "@paperbits/common/styles";
 
-export interface ShadowContract extends StyleItemContract {
+export interface ShadowContract extends StyleContract {
     /**
      * Shadow offset X.
      */
@@ -32,6 +32,6 @@ export interface ShadowContract extends StyleItemContract {
     inset?: boolean;
 }
 
-export interface ShadowStylePluginConfig {
+export interface ShadowStylePluginConfig extends StylePluginConfig {
     shadowKey: string;
 }

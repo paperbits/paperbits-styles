@@ -1,5 +1,6 @@
+import { StylePluginConfig } from "@paperbits/common/styles";
 
-export interface TransitionStylePluginConfig {
+export interface TransitionStylePluginConfig extends StylePluginConfig {
     /**
      * 	Specifies a delay (in seconds) for the transition effect.
      */

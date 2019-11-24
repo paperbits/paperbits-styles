@@ -1,3 +1,5 @@
+import { StylePluginConfig } from "@paperbits/common/styles";
+
 export interface BorderStyle {
     width?: string | number;
     style?: string;
@@ -5,14 +7,14 @@ export interface BorderStyle {
     colorKey?: string;
 }
 
-export interface BorderStylePluginConfig {
+export interface BorderStylePluginConfig extends StylePluginConfig {
     top?: BorderStyle;
     left?: BorderStyle;
     right?: BorderStyle;
     bottom?: BorderStyle;
 }
 
-export interface BorderRadiusStylePluginConfig {
+export interface BorderRadiusStylePluginConfig extends StylePluginConfig {
     topLeftRadius?: string | number;
     topRightRadius?: string | number;
     bottomLeftRadius?: string | number;

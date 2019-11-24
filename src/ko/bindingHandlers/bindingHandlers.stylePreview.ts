@@ -1,13 +1,28 @@
 import * as ko from "knockout";
 import { StyleCompiler } from "@paperbits/common/styles";
+import { StyleService } from "../..";
 
 /* The task of this handler is to assign classes, not styles */
 
 export class StylePreviewBindingHandler {
-    constructor(private readonly styleCompiler: StyleCompiler) {
+    constructor(
+        private readonly styleCompiler: StyleCompiler,
+        private readonly styleService: StyleService
+    ) {
         ko.bindingHandlers["stylePreview"] = {
             update: async (element: HTMLElement, valueAccessor) => {
-                const styleConfig = ko.unwrap(valueAccessor());
+                const config = ko.unwrap(valueAccessor());
+
+                let styleConfig;
+
+                if (typeof config === "string") {
+                    styleConfig = await this.styleService.getStyleByKey(config);
+                }
+                else {
+                    styleConfig = config;
+                }
+
+
 
                 if (!styleConfig) {
                     return;

@@ -5,7 +5,6 @@
  * Use of this source code is governed by a Commercial license that can be found in the LICENSE file and at https://paperbits.io/license/mit.
  */
 
-import "./ko/bindingHandlers/bindingHandlers.stylable";
 import "./ko/bindingHandlers/bindingHandlers.colorPicker";
 import "./ko/bindingHandlers/bindingHandlers.jss";
 import "./ko/bindingHandlers/bindingHandlers.shadowPreview";
@@ -30,6 +29,7 @@ import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.s
 import { StylePlugin } from "./plugins";
 import { StylesWorkshopSection } from "./workshops/stylesSection";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
+import { StylableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleable";
 import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
 import { Container } from "./workshops/container/container";
@@ -69,6 +69,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
+        injector.bindToCollection("autostart", StylableBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);
     }
 }

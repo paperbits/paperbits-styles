@@ -1,4 +1,6 @@
-export interface TypographyStylePluginConfig {
+import { StylePluginConfig } from "@paperbits/common/styles";
+
+export interface TypographyStylePluginConfig extends StylePluginConfig {
     fontKey?: string;
     fontSize?: string | number;
     fontWeight?: string | number;

@@ -1,4 +1,6 @@
-export interface SizeStylePluginConfig {
+import { StylePluginConfig } from "@paperbits/common/styles";
+
+export interface SizeStylePluginConfig extends StylePluginConfig {
     /**
      * Maixmum horizontal space that UI element can take.
      */
