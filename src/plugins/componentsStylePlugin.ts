@@ -4,7 +4,7 @@ import { StylePlugin } from "./stylePlugin";
 export class ComponentsStylePlugin extends StylePlugin {
     public readonly name: string = "components";
 
-    constructor(private readonly styleCompiler: StyleCompiler) { 
+    constructor(private readonly styleCompiler: StyleCompiler) {
         super();
     }
 
@@ -13,8 +13,12 @@ export class ComponentsStylePlugin extends StylePlugin {
 
         for (const componentName of Object.keys(componentsConfig)) {
             const componentConfig = componentsConfig[componentName];
+            const defaultVariation = componentConfig["default"];
 
-            const componentStyle = await this.styleCompiler.getVariationStyle(componentConfig["default"], componentName);
+            const componentStyle = defaultVariation
+                ? await this.styleCompiler.getVariationStyle(defaultVariation, componentName)
+                : new Style(componentName); // empty default style
+
             const variationNames = Object.keys(componentConfig);
 
             for (const variationName of variationNames) {
