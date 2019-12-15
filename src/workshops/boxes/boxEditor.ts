@@ -6,58 +6,66 @@ import { BoxStylePluginConfig } from "../../contracts";
 
 
 @Component({
-    selector: "box-editor",
+    selector: "box",
     template: template,
     injectable: "boxEditor"
 })
 export class BoxEditor {
-    public marginTop: ko.Observable<any>;
-    public marginLeft: ko.Observable<any>;
-    public marginRight: ko.Observable<any>;
-    public marginBottom: ko.Observable<any>;
+    public readonly marginEnabled: ko.Observable<boolean>;
+    public readonly marginTop: ko.Observable<any>;
+    public readonly marginLeft: ko.Observable<any>;
+    public readonly marginRight: ko.Observable<any>;
+    public readonly marginBottom: ko.Observable<any>;
 
-    public borderTop: ko.Observable<BorderStyle>;
-    public borderLeft: ko.Observable<BorderStyle>;
-    public borderRight: ko.Observable<any>;
-    public borderBottom: ko.Observable<any>;
+    public readonly borderEnabled: ko.Observable<boolean>;
+    public readonly borderTop: ko.Observable<BorderStyle>;
+    public readonly borderLeft: ko.Observable<BorderStyle>;
+    public readonly borderRight: ko.Observable<any>;
+    public readonly borderBottom: ko.Observable<any>;
 
-    public paddingTop: ko.Observable<any>;
-    public paddingLeft: ko.Observable<any>;
-    public paddingRight: ko.Observable<any>;
-    public paddingBottom: ko.Observable<any>;
+    public readonly paddingEnabled: ko.Observable<boolean>;
+    public readonly paddingTop: ko.Observable<any>;
+    public readonly paddingLeft: ko.Observable<any>;
+    public readonly paddingRight: ko.Observable<any>;
+    public readonly paddingBottom: ko.Observable<any>;
 
-    public topLeftRadius: ko.Observable<any>;
-    public topRightRadius: ko.Observable<any>;
-    public bottomLeftRadius: ko.Observable<any>;
-    public bottomRightRadius: ko.Observable<any>;
+    public readonly topLeftRadius: ko.Observable<any>;
+    public readonly topRightRadius: ko.Observable<any>;
+    public readonly bottomLeftRadius: ko.Observable<any>;
+    public readonly bottomRightRadius: ko.Observable<any>;
 
-    public borderTopWidth: ko.Computed<any>;
-    public borderLeftWidth: ko.Computed<any>;
-    public borderRightWidth: ko.Computed<any>;
-    public borderBottomWidth: ko.Computed<any>;
+    public readonly borderTopWidth: ko.Computed<any>;
+    public readonly borderLeftWidth: ko.Computed<any>;
+    public readonly borderRightWidth: ko.Computed<any>;
+    public readonly borderBottomWidth: ko.Computed<any>;
 
     @Param()
-    public box: ko.Observable<BoxStylePluginConfig>;
+    public readonly box: ko.Observable<BoxStylePluginConfig>;
+
+    @Param()
+    public readonly features: string;
 
     @Event()
-    public onUpdate: (contract: BoxStylePluginConfig) => void;
+    public readonly onUpdate: (contract: BoxStylePluginConfig) => void;
 
     constructor() {
-        this.init = this.init.bind(this);
-        this.dispatchUpdates = this.dispatchUpdates.bind(this);
-
         this.box = ko.observable();
+        this.features = "margin,padding,border";
+        // this.features = "padding,border";
 
+        this.marginEnabled = ko.observable();
         this.marginTop = ko.observable();
         this.marginLeft = ko.observable();
         this.marginRight = ko.observable();
         this.marginBottom = ko.observable();
 
+        this.borderEnabled = ko.observable();
         this.borderTop = ko.observable();
         this.borderLeft = ko.observable();
         this.borderRight = ko.observable();
         this.borderBottom = ko.observable();
 
+        this.paddingEnabled = ko.observable();
         this.paddingTop = ko.observable();
         this.paddingLeft = ko.observable();
         this.paddingRight = ko.observable();
@@ -76,6 +84,11 @@ export class BoxEditor {
 
     @OnMounted()
     public init(): void {
+        const features = this.features.split(",");
+        this.marginEnabled(features.includes("margin"));
+        this.paddingEnabled(features.includes("padding"));
+        this.borderEnabled(features.includes("border"));
+
         const currentStyle = this.box();
 
         if (currentStyle.margin) {

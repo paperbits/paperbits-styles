@@ -34,7 +34,16 @@
     <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
     <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
     <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
-    <box-editor params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box-editor>
+
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#boxCollapse'"></a>
+            <b>Box</b>
+        </label>
+        <div id="boxCollapse" class="collapse form-group-collapse">
+            <box params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
+        </div>
+    </div>
     <!-- /ko -->
 
     <!-- /ko -->

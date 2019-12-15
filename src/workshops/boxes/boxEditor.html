@@ -1,43 +1,56 @@
-<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#paddingCollapse'"></a>
-            <b>Box</b>
-        </label>
-        <div id="paddingCollapse" class="collapse form-group-collapse">
-            <div class="box-model">
-                <div class="box-model-margin">
-                    <span class="box-model-label">margin</span>
-                    <input type="text" class="box-model-control box-model-control-top" placeholder="-" data-bind="textInput: marginTop">
-                    <input type="text" class="box-model-control box-model-control-left" placeholder="-" data-bind="textInput: marginLeft">
-                    <input type="text" class="box-model-control box-model-control-right" placeholder="-" data-bind="textInput: marginRight">
-                    <input type="text" class="box-model-control box-model-control-bottom" placeholder="-" data-bind="textInput: marginBottom">
-                    
-                    <div class="box-model-border">
-                        <span class="box-model-label">border</span>
-                        <input type="text" class="box-model-control box-model-control-top" placeholder="-" data-bind="textInput: borderTopWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderTop, borderStyle: $component.borderTop } } }">
-                        <input type="text" class="box-model-control box-model-control-left" placeholder="-" data-bind="textInput: borderLeftWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderLeft, borderStyle: $component.borderLeft } } }">
-                        <input type="text" class="box-model-control box-model-control-right" placeholder="-" data-bind="textInput: borderRightWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderRight, borderStyle: $component.borderRight } } }">
-                        <input type="text" class="box-model-control box-model-control-bottom" placeholder="-" data-bind="textInput: borderBottomWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderBottom, borderStyle: $component.borderBottom } } }">
+<div class="box-model">
+    <div class="box-model-margin" data-bind="css: { 'box-model-enabled': marginEnabled }">
+        <div class="box-model-group">
+            <span class="box-model-label">margin</span>
+            <input type="text" class="box-model-control box-model-control-top" placeholder="-"
+                data-bind="textInput: marginTop">
+            <input type="text" class="box-model-control box-model-control-left" placeholder="-"
+                data-bind="textInput: marginLeft">
+            <input type="text" class="box-model-control box-model-control-right" placeholder="-"
+                data-bind="textInput: marginRight">
+            <input type="text" class="box-model-control box-model-control-bottom" placeholder="-"
+                data-bind="textInput: marginBottom">
+        </div>
 
-                        <input type="text" class="box-model-control box-model-control-top-left" placeholder="-" data-bind="textInput: topLeftRadius">
-                        <input type="text" class="box-model-control box-model-control-top-right" placeholder="-" data-bind="textInput: topRightRadius">
-                        <input type="text" class="box-model-control box-model-control-bottom-left" placeholder="-" data-bind="textInput: bottomLeftRadius">
-                        <input type="text" class="box-model-control box-model-control-bottom-right" placeholder="-" data-bind="textInput: bottomRightRadius">
+        <div class="box-model-border" data-bind="css: { 'box-model-enabled': borderEnabled }">
+            <div class="box-model-group">
+                <span class="box-model-label">border</span>
+                <input type="text" class="box-model-control box-model-control-top" placeholder="-"
+                    data-bind="textInput: borderTopWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderTop, borderStyle: $component.borderTop } } }">
+                <input type="text" class="box-model-control box-model-control-left" placeholder="-"
+                    data-bind="textInput: borderLeftWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderLeft, borderStyle: $component.borderLeft } } }">
+                <input type="text" class="box-model-control box-model-control-right" placeholder="-"
+                    data-bind="textInput: borderRightWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderRight, borderStyle: $component.borderRight } } }">
+                <input type="text" class="box-model-control box-model-control-bottom" placeholder="-"
+                    data-bind="textInput: borderBottomWidth, balloon: { component: { name: 'border-editor', params: { onChange: $component.borderBottom, borderStyle: $component.borderBottom } } }">
 
-                        <div class="box-model-padding">
-                            <span class="box-model-label">padding</span>
-                            <input type="text" class="box-model-control box-model-control-top" placeholder="-" data-bind="textInput: paddingTop">
-                            <input type="text" class="box-model-control box-model-control-left" placeholder="-" data-bind="textInput: paddingLeft">
-                            <input type="text" class="box-model-control box-model-control-right" placeholder="-" data-bind="textInput: paddingRight">
-                            <input type="text" class="box-model-control box-model-control-bottom" placeholder="-" data-bind="textInput: paddingBottom">
-                            <div class="box-model-content">
-                                content
-                            </div>
-                        </div>
-                    </div>
+                <input type="text" class="box-model-control box-model-control-top-left" placeholder="-"
+                    data-bind="textInput: topLeftRadius">
+                <input type="text" class="box-model-control box-model-control-top-right" placeholder="-"
+                    data-bind="textInput: topRightRadius">
+                <input type="text" class="box-model-control box-model-control-bottom-left" placeholder="-"
+                    data-bind="textInput: bottomLeftRadius">
+                <input type="text" class="box-model-control box-model-control-bottom-right" placeholder="-"
+                    data-bind="textInput: bottomRightRadius">
+            </div>
+
+            <div class="box-model-padding" data-bind="css: { 'box-model-enabled': paddingEnabled }">
+                <div class="box-model-group">
+                    <span class="box-model-label">padding</span>
+                    <input type="text" class="box-model-control box-model-control-top" placeholder="-"
+                        data-bind="textInput: paddingTop">
+                    <input type="text" class="box-model-control box-model-control-left" placeholder="-"
+                        data-bind="textInput: paddingLeft">
+                    <input type="text" class="box-model-control box-model-control-right" placeholder="-"
+                        data-bind="textInput: paddingRight">
+                    <input type="text" class="box-model-control box-model-control-bottom" placeholder="-"
+                        data-bind="textInput: paddingBottom">
+                </div>
+
+                <div class="box-model-content">
+                    content
                 </div>
             </div>
         </div>
     </div>
-</fieldset>
+</div>

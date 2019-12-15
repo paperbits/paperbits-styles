@@ -63,15 +63,16 @@ export class Container {
     private applyChanges(): void {
         this.alignment(`${this.verticalAlignment()} ${this.horizontalAlignment()}`);
 
+        const overflow = this.scrollOnOverlow()
+            ? { vertical: "scroll", horizontal: "scroll" }
+            : null;
+
         this.onUpdate({
             alignment: {
                 vertical: this.verticalAlignment(),
                 horizontal: this.horizontalAlignment()
             },
-            overflow: {
-                vertical: this.scrollOnOverlow() ? "auto" : undefined,
-                horizontal: this.scrollOnOverlow() ? "auto" : undefined
-            }
+            overflow: overflow
         });
     }
 

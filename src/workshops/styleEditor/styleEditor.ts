@@ -154,15 +154,15 @@ export class StyleEditor {
         this.scheduleUpdate();
     }
 
-    public onBoxUpdate(boxContract: BoxStylePluginConfig): void {
+    public onBoxUpdate(pluginConfig: BoxStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        Object.assign(style, boxContract);
+        Object.assign(style, pluginConfig);
         this.scheduleUpdate();
     }
 
-    public onTypographyUpdate(typographyContract: TypographyStylePluginConfig): void {
+    public onTypographyUpdate(pluginConfig: TypographyStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        style["typography"] = typographyContract;
+        style["typography"] = pluginConfig;
         this.scheduleUpdate();
     }
 
