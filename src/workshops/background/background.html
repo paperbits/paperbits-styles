@@ -39,33 +39,33 @@
         <div class="dropzone">
             <div class="dropzone-controls">
                 <!-- ko if: sourceKey() -->
-                <svg alignment="top left" data-bind="alignment: position">
+                <svg alignment="top left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="top center" data-bind="alignment: position">
+                <svg alignment="top center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="top right" data-bind="alignment: position">
+                <svg alignment="top right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="center left" data-bind="alignment: position">
+                <svg alignment="center left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="center right" data-bind="alignment: position">
+                <svg alignment="center right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom left" data-bind="alignment: position">
+                <svg alignment="bottom left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom center" data-bind="alignment: position">
+                <svg alignment="bottom center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom right" data-bind="alignment: position">
+                <svg alignment="bottom right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
                 <!-- /ko -->
                 <style data-bind="jss: backgroundPreview"></style>
-                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: position">
+                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
                     <div class="fit background-preview"></div>
                 </a>
             </div>
@@ -79,10 +79,10 @@
         </label>
         <div class="form-group">
             <label class="form-label">
-                <input name="size" type="radio" value="cover" data-bind="checked: size" />Cover
+                <input name="size" type="radio" value="cover" data-bind="checked: size, event: { change: applyChanges }" />Cover
             </label>
             <label class="form-label">
-                <input name="size" type="radio" value="contain" data-bind="checked: size" />Contain
+                <input name="size" type="radio" value="contain" data-bind="checked: size, event: { change: applyChanges }" />Contain
             </label>
         </div>
         <!-- /ko -->

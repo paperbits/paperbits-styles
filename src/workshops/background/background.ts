@@ -1,13 +1,13 @@
-import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common";
 import template from "./background.html";
-import { StyleService } from "../..";
+import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
-import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
-import { Style, StyleSheet } from "@paperbits/common/styles";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
+import { Style, StyleSheet } from "@paperbits/common/styles";
+import { StyleService } from "../..";
+import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
+import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
 
 
 const defaultBackgroundSize = "cover";
@@ -55,28 +55,34 @@ export class Background {
 
     @OnMounted()
     public async initialize(): Promise<void> {
-        const background = this.background();
-
-        await this.fillout(background);
-
-        this.position.subscribe(this.applyChanges);
-        this.size.subscribe(this.applyChanges);
+        await this.fillout();
+        this.background.subscribe(this.fillout);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
-        if(!this.backgroundStylePlugin) {
+        if (!this.backgroundStylePlugin) {
             this.backgroundStylePlugin = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
         }
         return this.backgroundStylePlugin;
     }
 
-    private async fillout(backgroundPluginConfig: any): Promise<void> {
+    private async fillout(): Promise<void> {
+        const backgroundPluginConfig = this.background();
+
         if (!backgroundPluginConfig) {
+            this.size(null);
+            this.position(null);
+            this.color(null);
+            this.colorKey(null);
+            this.gradientKey(null);
+            this.repeat(null);
+            this.source(null);
+            this.sourceKey(null);
+            this.backgroundPreview(null);
             return;
         }
 
         const styles = await this.styleService.getStyles();
-
         const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(backgroundPluginConfig);
         const style = new Style("background-preview");
         style.rules.push(...styleRules);
@@ -113,6 +119,11 @@ export class Background {
         if (backgroundPluginConfig.gradientKey) {
             this.gradientKey(backgroundPluginConfig.gradientKey);
         }
+    }
+
+    public onAlignmentChange(position: string): void {
+        this.position(position);
+        this.applyChanges();
     }
 
     public onMediaSelected(media: MediaContract): void {
