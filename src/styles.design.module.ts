@@ -37,7 +37,7 @@ import { Container } from "./workshops/container/container";
 import { StyleSnippetSelector } from "./workshops/snippets/styleSnippetSelector";
 import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
-import { StyleAppearanceSelector } from "./workshops/snippets/styleAppearanceSelector";
+import { StyleVariationSelector } from "./workshops/snippets/styleVariationSelector";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -65,7 +65,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("styleSnippet", StyleSnippet);
         injector.bind("styleSnippetSelector", StyleSnippetSelector);
-        injector.bind("styleAppearanceSelector", StyleAppearanceSelector);
+        injector.bind("styleVariationSelector", StyleVariationSelector);
         injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);

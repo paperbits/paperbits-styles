@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import template from "./styleAppearanceSelector.html";
+import template from "./styleVariationSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleCompiler, IStyleGroup, StyleContract } from "@paperbits/common/styles";
 import { StyleItem } from "../../models/styleItem";
@@ -10,11 +10,11 @@ import { StyleService } from "../../styleService";
 
 
 @Component({
-    selector: "style-appearance-selector",
+    selector: "style-variation-selector",
     template: template,
-    injectable: "styleAppearanceSelector"
+    injectable: "styleVariationSelector"
 })
-export class StyleAppearanceSelector {    
+export class StyleVariationSelector {
     public readonly working: ko.Observable<boolean>;
     public readonly selectedSnippet: ko.Observable<StyleItem>;
     public readonly snippets: ko.ObservableArray<StyleItem>;
@@ -48,14 +48,14 @@ export class StyleAppearanceSelector {
             return;
         }
         this.working(true);
-        
+
         const snippetsByType = await this.styleService.getStyleByKey(this.snippetType);
         this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
         for (const it of Object.values(snippetsByType)) {
             const item = <StyleContract>it;
             const subTheme = await this.loadThemeForItem(item);
-            const styleItem = new StyleItem(item, subTheme, this.snippetType); 
+            const styleItem = new StyleItem(item, subTheme, this.snippetType);
             const compiller = this.getStyleCompiler(subTheme);
             styleItem.stylesContent = await compiller.compileCss();
             styleItem.classNames = await compiller.getClassNameByStyleKeyAsync(item.key);
@@ -71,34 +71,51 @@ export class StyleAppearanceSelector {
         return group ? group.selectorTemplate : "";
     }
 
-    private async loadThemeForItem(item: StyleContract): Promise<object> {
+    private async loadThemeForItem(item: StyleContract): Promise<ThemeContract> {
         const parts = item.key.split("/");
         const isComponent = parts[0] === "components";
-        let stylesKeys = this.getAllStyleKeys(item);
+
+        let styleKeys = this.getAllStyleKeys(item);
+
         if (isComponent && parts[2] !== "default") {
             const defaultKey = `${parts[0]}/${parts[1]}/default`;
-            const defaultItem = await this.styleService.getStyleByKey(defaultKey); 
-            const defaultKeys = this.getAllStyleKeys(defaultItem);
-            stylesKeys.push(... defaultKeys);
-        }
-        const subTheme = {};
-        stylesKeys = stylesKeys.filter((item, index, source) => source.indexOf(item) === index);
-        for (const stylesKey of stylesKeys) {
-            const styleValue = await this.styleService.getStyleByKey(stylesKey);
-            if (styleValue) {
-                this.mergeNestedObj(subTheme, stylesKey, styleValue);
-            } else {
-                console.warn("styleKey not found: ", stylesKey);
+
+            try {
+                const defaultItem = await this.styleService.getStyleByKey(defaultKey);
+                const defaultKeys = this.getAllStyleKeys(defaultItem);
+                styleKeys.push(...defaultKeys);
+            }
+            catch (ex) {
+                // Do nothing
             }
         }
 
-        return subTheme;
+        const itemTheme: ThemeContract = {};
+        styleKeys = styleKeys.filter((item, index, source) => source.indexOf(item) === index);
+
+        for (const styleKey of styleKeys) {
+            try {
+                const styleValue = await this.styleService.getStyleByKey(styleKey);
+
+                if (styleValue) {
+                    this.mergeNestedObj(itemTheme, styleKey, styleValue);
+                }
+                else {
+                    console.warn(`Style with key "${styleKey}" not found: `);
+                }
+            }
+            catch (ex) {
+                // Do nothing
+            }
+        }
+
+        return itemTheme;
     }
 
     private mergeNestedObj(source: any, path: string, value: any): void {
         const keys = path.split("/");
         const lastKey = keys.pop();
-        const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source); 
+        const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source);
         lastObj[lastKey] = value;
     }
 
@@ -109,19 +126,27 @@ export class StyleAppearanceSelector {
 
     private getAllStyleKeys(source: any): string[] {
         const result: string[] = [];
+
         if (Array.isArray(source)) {
             source.every(x => result.push(... this.getAllStyleKeys(x)));
-        } else if (typeof source === "object") {
+        }
+        else if (typeof source === "object") {
             const propertyNames = Object.keys(source);
+
             for (const propertyName of propertyNames) {
                 const propertyValue = source[propertyName];
+
                 if (propertyName.toLowerCase().endsWith("key")) {
                     result.push(propertyValue);
-                } else {
-                    if (typeof propertyValue === "object") result.push(... this.getAllStyleKeys(propertyValue));
+                }
+                else {
+                    if (typeof propertyValue === "object") {
+                        result.push(... this.getAllStyleKeys(propertyValue));
+                    }
                 }
             }
         }
+
         return result;
     }
 

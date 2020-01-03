@@ -7,6 +7,7 @@ import { ThemeContract, ColorContract, ShadowContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
 import { StyleHandler, StyleContract } from "@paperbits/common/styles";
+import { StylePrimitives } from ".";
 
 
 const stylesPath = "styles";
@@ -45,10 +46,13 @@ export class StyleService {
             throw new Error(`Parameter "styleKey" not specified.`);
         }
 
+        if (!StylePrimitives.some(x => styleKey.startsWith(`${x}/`))) {
+            throw new Error(`Unknown style premitive: "${styleKey}".`);
+        }
+
         const styles = await this.getStyles();
 
         // TODO: If no style found, try to take default one
-
         const style = Objects.getObjectAt<any>(styleKey, styles);
 
         if (style) {
@@ -171,7 +175,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        
+
         Objects.mergeDeepAt(style.key, styles, style);
 
         await this.updateStyles(styles);
