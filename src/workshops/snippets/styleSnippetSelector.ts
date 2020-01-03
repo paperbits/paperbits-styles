@@ -100,15 +100,21 @@ export class StyleSnippetSelector {
             const defaultKey = `${parts[0]}/${parts[1]}/default`;
             const defaultItem = await this.styleSnippetService.getStyleByKey(defaultKey);
             const defaultKeys = this.getAllStyleKeys(defaultItem);
+
             stylesKeys.push(... defaultKeys);
         }
+
         const subTheme = {};
+        
         stylesKeys = stylesKeys.filter((item, index, source) => source.indexOf(item) === index);
+
         for (const stylesKey of stylesKeys) {
             const styleValue = await this.styleSnippetService.getStyleByKey(stylesKey);
+
             if (styleValue) {
                 this.mergeNestedObj(subTheme, stylesKey, styleValue);
-            } else {
+            }
+            else {
                 console.warn("styleKey not found: ", stylesKey);
             }
         }
