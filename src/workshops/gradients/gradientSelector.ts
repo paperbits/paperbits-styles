@@ -7,8 +7,7 @@ import { LinearGradientContract, getLinearGradientString } from "../../contracts
 
 @Component({
     selector: "gradient-selector",
-    template: template,
-    injectable: "gradientSelector"
+    template: template
 })
 export class GradientSelector {
     @Param()

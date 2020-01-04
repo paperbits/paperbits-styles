@@ -17,8 +17,7 @@ import { GoogleFont } from "./googleFont";
 
 @Component({
     selector: "google-fonts",
-    template: template,
-    injectable: "googleFonts"
+    template: template
 })
 export class GoogleFonts {
     public readonly fonts: ko.ObservableArray<GoogleFont>;

@@ -6,8 +6,7 @@ import { ColorContract } from "../../contracts/colorContract";
 
 @Component({
     selector: "color-selector",
-    template: template,
-    injectable: "colorSelector"
+    template: template
 })
 export class ColorSelector {
     @Param()

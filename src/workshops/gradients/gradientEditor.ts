@@ -6,8 +6,7 @@ import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradi
 
 @Component({
     selector: "gradient-editor",
-    template: template,
-    injectable: "gradientEditor"
+    template: template
 })
 export class GradientEditor {
     public readonly direction: ko.Observable<number>;

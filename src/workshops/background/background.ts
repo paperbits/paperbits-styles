@@ -14,8 +14,7 @@ const defaultBackgroundSize = "cover";
 
 @Component({
     selector: "background",
-    template: template,
-    injectable: "background"
+    template: template
 })
 export class Background {
     public readonly color: ko.Observable<ColorContract>;

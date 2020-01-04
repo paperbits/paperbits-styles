@@ -5,8 +5,7 @@ import { ContainerStylePluginConfig } from "../../contracts/containerContract";
 
 @Component({
     selector: "container",
-    template: template,
-    injectable: "container"
+    template: template
 })
 export class Container {
     public readonly verticalAlignment: ko.Observable<string>;

@@ -8,8 +8,7 @@ import { FontContract } from "../../contracts/fontContract";
 
 @Component({
     selector: "font-selector",
-    template: template,
-    injectable: "fontSelector"
+    template: template
 })
 export class FontSelector {
     @Param()

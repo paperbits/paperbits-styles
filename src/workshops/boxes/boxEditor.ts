@@ -7,8 +7,7 @@ import { BoxStylePluginConfig } from "../../contracts";
 
 @Component({
     selector: "box",
-    template: template,
-    injectable: "boxEditor"
+    template: template
 })
 export class BoxEditor {
     public readonly marginEnabled: ko.Observable<boolean>;

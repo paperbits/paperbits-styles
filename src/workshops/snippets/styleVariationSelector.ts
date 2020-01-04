@@ -11,8 +11,7 @@ import { StyleService } from "../../styleService";
 
 @Component({
     selector: "style-variation-selector",
-    template: template,
-    injectable: "styleVariationSelector"
+    template: template
 })
 export class StyleVariationSelector {
     public readonly working: ko.Observable<boolean>;

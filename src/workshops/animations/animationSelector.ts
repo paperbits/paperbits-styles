@@ -7,8 +7,7 @@ import { AnimationContract } from "../../plugins/animation/animationContract";
 
 @Component({
     selector: "animation-selector",
-    template: template,
-    injectable: "animationSelector"
+    template: template
 })
 export class AnimationSelector {
     @Param()

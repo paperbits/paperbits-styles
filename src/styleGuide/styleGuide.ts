@@ -13,8 +13,7 @@ import { ComponentStyle } from "../contracts/componentStyle";
 
 @Component({
     selector: "style-guide",
-    template: template,
-    injectable: "styleGuide"
+    template: template
 })
 export class StyleGuide {
     private activeHighlightedElement: HTMLElement;

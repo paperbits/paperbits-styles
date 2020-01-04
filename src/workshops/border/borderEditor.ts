@@ -7,8 +7,7 @@ import { StyleService } from "../..";
 
 @Component({
     selector: "border-editor",
-    template: template,
-    injectable: "borderEditor"
+    template: template
 })
 export class BorderEditor {
     public borderLineWidth: ko.Observable<string | number>;

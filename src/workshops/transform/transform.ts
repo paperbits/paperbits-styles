@@ -7,8 +7,7 @@ import { TransformStylePluginConfig } from "../../plugins/transform";
 
 @Component({
     selector: "transform",
-    template: template,
-    injectable: "transform"
+    template: template
 })
 export class Transform {
     public readonly translateX: ko.Observable<string | number>;

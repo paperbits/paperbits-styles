@@ -9,8 +9,7 @@ const inheritLabel = "(Inherit)";
 
 @Component({
     selector: "transition",
-    template: template,
-    injectable: "transition"
+    template: template
 })
 export class Transition {
     public readonly delay: ko.Observable<number>;

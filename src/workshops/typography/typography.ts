@@ -10,8 +10,7 @@ const inheritLabel = "(Inherit)";
 
 @Component({
     selector: "typography",
-    template: template,
-    injectable: "typography"
+    template: template
 })
 export class Typography {
     public fontKey: ko.Observable<any>;

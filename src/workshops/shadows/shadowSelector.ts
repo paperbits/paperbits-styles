@@ -7,8 +7,7 @@ import { ShadowContract } from "../../contracts/shadowContract";
 
 @Component({
     selector: "shadow-selector",
-    template: template,
-    injectable: "shadowSelector"
+    template: template
 })
 export class ShadowSelector {
     public readonly shadows: ko.ObservableArray<ShadowContract>;

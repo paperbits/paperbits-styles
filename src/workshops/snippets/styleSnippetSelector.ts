@@ -14,8 +14,7 @@ import { StyleCompiler, StyleContract } from "@paperbits/common/styles";
 
 @Component({
     selector: "style-snippet-selector",
-    template: template,
-    injectable: "styleSnippetSelector"
+    template: template
 })
 export class StyleSnippetSelector {    
     public readonly working: ko.Observable<boolean>;

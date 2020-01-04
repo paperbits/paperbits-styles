@@ -10,8 +10,7 @@ import { AnimationStylePluginConfig } from "../../plugins/animation";
 
 @Component({
     selector: "style-editor",
-    template: template,
-    injectable: "styleEditor"
+    template: template
 })
 export class StyleEditor {
     private updateTimeout: any;

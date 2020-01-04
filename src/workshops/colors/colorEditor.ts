@@ -5,8 +5,7 @@ import { ColorContract } from "../../contracts/colorContract";
 
 @Component({
     selector: "color-editor",
-    template: template,
-    injectable: "colorEditor"
+    template: template
 })
 export class ColorEditor {
     private selectTimeout: any;

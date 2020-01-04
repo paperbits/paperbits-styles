@@ -9,8 +9,7 @@ const inheritLabel = "(Inherit)";
 
 @Component({
     selector: "shadow-editor-group",
-    template: template,
-    injectable: "shadowEditorGroup"
+    template: template
 })
 export class ShadowEditorGroup {
     public shadowKey: ko.Observable<string>;

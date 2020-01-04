@@ -9,8 +9,7 @@ const inheritLabel = "(Inherit)";
 
 @Component({
     selector: "animation",
-    template: template,
-    injectable: "animationEditor"
+    template: template
 })
 export class AnimationEditor {
     public animationKey: ko.Observable<string>;

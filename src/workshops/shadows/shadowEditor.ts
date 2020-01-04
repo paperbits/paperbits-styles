@@ -5,8 +5,7 @@ import { ShadowContract } from "../../contracts";
 
 @Component({
     selector: "shadow-editor",
-    template: template,
-    injectable: "shadowEditor"
+    template: template
 })
 export class ShadowEditor {
     private selectTimeout: any;

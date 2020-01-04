@@ -6,7 +6,6 @@ import { StyleItem } from "../../models/styleItem";
 @Component({
     selector: "style-snippet",
     template: template,
-    injectable: "styleSnippet",
     encapsulation: Encapsulation.shadowDom
 })
 export class StyleSnippet {
