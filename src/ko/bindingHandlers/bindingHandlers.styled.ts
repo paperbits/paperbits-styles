@@ -21,7 +21,7 @@ ko.bindingHandlers["styled"] = {
                 element.parentElement.insertBefore(styleElement, element);
             }
 
-            styleElement.innerHTML = await styleModel.css;
+            styleElement.innerHTML = styleModel.css;
         }
         else if (styleElement) {
             styleElement.remove();
