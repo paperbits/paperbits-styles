@@ -11,7 +11,7 @@ export class GridCellStylePlugin extends StylePlugin {
     }
 
     public async configToStyleRules(pluginConfig: GridCellStylePluginConfig): Promise<StyleRule[]> {
-        const result = [
+        const rules = [
             new StyleRule("display", "flex"),
             new StyleRule("flexWrap", "wrap"),
             new StyleRule("justifyContent", "center"),
@@ -20,10 +20,10 @@ export class GridCellStylePlugin extends StylePlugin {
         ];
 
         if (pluginConfig.position) {
-            result.push(new StyleRule("gridColumnStart", pluginConfig.position.col));
-            result.push(new StyleRule("gridColumnEnd", pluginConfig.position.col + pluginConfig.span.cols));
-            result.push(new StyleRule("gridRowStart", pluginConfig.position.row));
-            result.push(new StyleRule("gridRowEnd", pluginConfig.position.row + pluginConfig.span.rows));
+            rules.push(new StyleRule("gridColumnStart", pluginConfig.position.col));
+            rules.push(new StyleRule("gridColumnEnd", pluginConfig.position.col + pluginConfig.span.cols));
+            rules.push(new StyleRule("gridRowStart", pluginConfig.position.row));
+            rules.push(new StyleRule("gridRowEnd", pluginConfig.position.row + pluginConfig.span.rows));
         }
 
         if (pluginConfig.alignment) {
@@ -38,7 +38,7 @@ export class GridCellStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.push(new StyleRule("justifyContent", value));
+                rules.push(new StyleRule("justifyContent", value));
             }
 
             if (pluginConfig.alignment.vertical) {
@@ -52,22 +52,28 @@ export class GridCellStylePlugin extends StylePlugin {
                     value = "space-" + value;
                 }
 
-                result.push(new StyleRule("alignContent", value));
+                rules.push(new StyleRule("alignContent", value));
             }
         }
 
         if (pluginConfig.overflow) {
             if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
-                result.push(new StyleRule("overflow", "auto"));
+                rules.push(new StyleRule("overflow", "auto"));
             }
             else if (pluginConfig.overflow.vertical) {
-                result.push(new StyleRule("overflowY", "auto"));
+                rules.push(new StyleRule("overflowY", "auto"));
             }
             else {
-                result.push(new StyleRule("overflowX", "auto"));
+                rules.push(new StyleRule("overflowX", "auto"));
             }
+
+            rules.push(new StyleRule("position", "absolute"));
+            rules.push(new StyleRule("top", "0"));
+            rules.push(new StyleRule("left", "0"));
+            rules.push(new StyleRule("right", "0"));
+            rules.push(new StyleRule("bottom", "0"));
         }
 
-        return result;
+        return rules;
     }
 }

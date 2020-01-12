@@ -18,19 +18,23 @@ export class Container {
         this.verticalAlignment = ko.observable<string>();
         this.horizontalAlignment = ko.observable<string>();
         this.scrollOnOverlow = ko.observable<boolean>();
-        this.config = ko.observable<ContainerStylePluginConfig>();
+        this.container = ko.observable<ContainerStylePluginConfig>();
+        this.overflowControls = ko.observable(false);
     }
 
     @Param()
-    public config: ko.Observable<ContainerStylePluginConfig>;
+    public container: ko.Observable<ContainerStylePluginConfig>;
+
+    @Param()
+    public overflowControls: ko.Observable<boolean>;
 
     @Event()
     public onUpdate: (config: ContainerStylePluginConfig) => void;
 
     @OnMounted()
     public initialize(): void {
-        this.updateObservables(this.config());
-        this.config.subscribe(this.updateObservables);
+        this.updateObservables(this.container());
+        this.container.subscribe(this.updateObservables);
         this.scrollOnOverlow.subscribe(this.onOverflowChange);
     }
 
