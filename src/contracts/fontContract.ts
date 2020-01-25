@@ -1,4 +1,4 @@
-import { StyleContract } from "@paperbits/common/styles";
+import { VariationContract, PrimitiveContract } from "@paperbits/common/styles";
 
 export interface FontVariantContract {
     /**
@@ -22,7 +22,7 @@ export interface FontVariantContract {
     sourceKey?: string;
 }
 
-export interface FontContract extends StyleContract {
+export interface FontContract extends PrimitiveContract {
     /**
      * e.g. "webfonts#webfont".
      */

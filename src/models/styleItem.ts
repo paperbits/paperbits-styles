@@ -1,6 +1,6 @@
 import * as ko from "knockout";
 import { ThemeContract } from "../contracts";
-import { StyleContract } from "@paperbits/common/styles";
+import { VariationContract } from "@paperbits/common/styles";
 
 export class StyleItem {
     public key: string;       
@@ -8,12 +8,12 @@ export class StyleItem {
     public category: string;
     public hasFocus: ko.Observable<boolean>;
     public stylesConfig: ThemeContract;
-    public itemConfig: StyleContract;
+    public itemConfig: VariationContract;
     public classNames: string; 
     public stylesContent: string; 
     public stylesType: string; 
 
-    constructor(contract: StyleContract, stylesConfig: ThemeContract, stylesType: string) {
+    constructor(contract: VariationContract, stylesConfig: ThemeContract, stylesType: string) {
         this.key = contract.key;
         this.displayName = contract.displayName;
         this.category = contract.category;

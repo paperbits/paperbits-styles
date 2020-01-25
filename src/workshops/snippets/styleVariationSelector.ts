@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleVariationSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { StyleCompiler, IStyleGroup, StyleContract } from "@paperbits/common/styles";
+import { StyleCompiler, IStyleGroup, VariationContract } from "@paperbits/common/styles";
 import { StyleItem } from "../../models/styleItem";
 import { DefaultStyleCompiler } from "../../defaultStyleCompiler";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
@@ -52,7 +52,7 @@ export class StyleVariationSelector {
         this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
         for (const it of Object.values(snippetsByType)) {
-            const item = <StyleContract>it;
+            const item = <VariationContract>it;
             const subTheme = await this.loadThemeForItem(item);
             const styleItem = new StyleItem(item, subTheme, this.snippetType);
             const compiller = this.getStyleCompiler(subTheme);
@@ -70,7 +70,7 @@ export class StyleVariationSelector {
         return group ? group.selectorTemplate : "";
     }
 
-    private async loadThemeForItem(item: StyleContract): Promise<ThemeContract> {
+    private async loadThemeForItem(item: VariationContract): Promise<ThemeContract> {
         const parts = item.key.split("/");
         const isComponent = parts[0] === "components";
 

@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { StyleContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
+import { VariationContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
 import { BoxStylePluginConfig, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig } from "../../contracts";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
@@ -46,7 +46,7 @@ export class StyleEditor {
     }
 
     @Param()
-    public elementStyle: StyleContract;
+    public elementStyle: VariationContract;
 
     @Event()
     public onUpdate: (contract: any) => void;

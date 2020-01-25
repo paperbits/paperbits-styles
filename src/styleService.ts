@@ -6,7 +6,7 @@ import { EventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract, ShadowContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
-import { StyleHandler, StyleContract } from "@paperbits/common/styles";
+import { StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from ".";
 
 
@@ -140,10 +140,10 @@ export class StyleService {
         return variation.key;
     }
 
-    public async addTextStyleVariation(variationName: string): Promise<StyleContract> {
+    public async addTextStyleVariation(variationName: string): Promise<VariationContract> {
         const styles = await this.getStyles();
 
-        const variation: any = {
+        const variation: VariationContract = {
             key: `globals/body/${variationName}`,
             displayName: "< Unnamed >"
         };
@@ -165,7 +165,7 @@ export class StyleService {
         await this.updateStyles(_.merge(styles, appendStyles));
     }
 
-    public async updateStyle(style: StyleContract): Promise<void> {
+    public async updateStyle(style: VariationContract): Promise<void> {
         if (!style) {
             throw new Error("Style cannot be empty.");
         }
@@ -234,7 +234,7 @@ export class StyleService {
         const variations = Object.keys(componentStyles).map(variationName => {
             const variationContract = componentStyles[variationName];
             if (states && variationName !== "default") {
-                variationContract["allowedStates"] = states;
+                variationContract.allowedStates = states;
             }
             return variationContract;
         });

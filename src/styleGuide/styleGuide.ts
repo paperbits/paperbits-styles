@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { EventManager } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
-import { IStyleGroup, Styleable, StyleContract } from "@paperbits/common/styles";
+import { IStyleGroup, Styleable, VariationContract } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
@@ -86,7 +86,7 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeStyle(contract: StyleContract): Promise<void> {
+    public async removeStyle(contract: VariationContract): Promise<void> {
         await this.styleService.removeStyle(contract.key);
         if (contract.key.startsWith("components/")) {
             const parts = contract.key.split("/");
@@ -164,7 +164,7 @@ export class StyleGuide {
         return true;
     }
 
-    public selectStyle(style: StyleContract): boolean {
+    public selectStyle(style: VariationContract): boolean {
         const view: View = {
             heading: style.displayName,
             component: {
@@ -173,11 +173,14 @@ export class StyleGuide {
                     elementStyle: style,
                     onUpdate: async () => {
                         this.styleService.updateStyle(style);
+
                         if (style.key.startsWith("components/")) {
                             const parts = style.key.split("/");
                             const componentName = parts[1];
+                            
                             await this.onUpdateStyle(componentName);
-                        } else {
+                        }
+                        else {
                             this.applyChanges();
                         }
                     }
@@ -220,7 +223,7 @@ export class StyleGuide {
     private async onUpdateStyle(componentName: string): Promise<void> {
         const components = this.uiComponents();
         const old = components.find(c => c.name === componentName);
-        
+
         if (old) {
             const updated = await this.getComponentsStyles();
             const updatedItem = updated.find(c => c.name === componentName);

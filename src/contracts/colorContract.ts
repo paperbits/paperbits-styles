@@ -1,5 +1,8 @@
-import { StyleContract } from "@paperbits/common/styles";
+import { PrimitiveContract } from "@paperbits/common/styles";
 
-export interface ColorContract extends StyleContract {
+export interface ColorContract extends PrimitiveContract {
+    /**
+     * Color value, e.g. "#ffffff", "white".
+     */
     value?: string;
 }

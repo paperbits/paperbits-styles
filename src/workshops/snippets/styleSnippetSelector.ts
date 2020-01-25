@@ -10,13 +10,13 @@ import { ThemeContract } from "../../contracts/themeContract";
 import { identifier } from "@paperbits/common/utils";
 import { getObjectAt } from "@paperbits/common/objects";
 import { IStyleGroup } from "@paperbits/common/styles/IStyleGroup";
-import { StyleCompiler, StyleContract } from "@paperbits/common/styles";
+import { StyleCompiler, VariationContract } from "@paperbits/common/styles";
 
 @Component({
     selector: "style-snippet-selector",
     template: template
 })
-export class StyleSnippetSelector {    
+export class StyleSnippetSelector {
     public readonly working: ko.Observable<boolean>;
     public readonly selectedSnippet: ko.Observable<StyleItem>;
     public readonly snippets: ko.ObservableArray<StyleItem>;
@@ -30,7 +30,7 @@ export class StyleSnippetSelector {
     public snippetType: string;
 
     @Event()
-    public readonly onSelect: (snippet: StyleContract) => void;
+    public readonly onSelect: (snippet: VariationContract) => void;
 
     constructor(
         private readonly styleSnippetService: StyleSnippetService,
@@ -57,15 +57,15 @@ export class StyleSnippetSelector {
         if (!this.isThemeSelected) {
             await this.initSnippetService();
         }
-        
+
         const snippetsByType = await this.styleSnippetService.getStyleByKey(this.snippetType);
         this.itemTemplate = this.getSnippetTypeTemplate(this.snippetType);
         const loadedSnippets = [];
-        
+
         for (const it of Object.values(snippetsByType)) {
-            const item = <StyleContract>it;
+            const item = <VariationContract>it;
             const subTheme = await this.loadThemeForItem(item);
-            const styleItem = new StyleItem(item, subTheme, this.snippetType); 
+            const styleItem = new StyleItem(item, subTheme, this.snippetType);
             const compiller = this.getStyleCompiler(subTheme);
             styleItem.stylesContent = await compiller.compileCss();
             styleItem.classNames = await compiller.getClassNameByStyleKeyAsync(item.key);
@@ -89,7 +89,7 @@ export class StyleSnippetSelector {
         }
     }
 
-    private async loadThemeForItem(item: StyleContract): Promise<object> {
+    private async loadThemeForItem(item: VariationContract): Promise<object> {
         const parts = item.key.split("/");
         const isComponent = parts[0] === "components";
 
@@ -100,11 +100,11 @@ export class StyleSnippetSelector {
             const defaultItem = await this.styleSnippetService.getStyleByKey(defaultKey);
             const defaultKeys = this.getAllStyleKeys(defaultItem);
 
-            stylesKeys.push(... defaultKeys);
+            stylesKeys.push(...defaultKeys);
         }
 
         const subTheme = {};
-        
+
         stylesKeys = stylesKeys.filter((item, index, source) => source.indexOf(item) === index);
 
         for (const stylesKey of stylesKeys) {
@@ -124,7 +124,7 @@ export class StyleSnippetSelector {
     private mergeNestedObj(source: any, path: string, value: any): void {
         const keys = path.split("/");
         const lastKey = keys.pop();
-        const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source); 
+        const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source);
         lastObj[lastKey] = value;
     }
 
@@ -168,45 +168,47 @@ export class StyleSnippetSelector {
     }
 
     public addSnippet(): void {
-        if (this.onSelect) {
-            const selectedItem = _.cloneDeep(this.selectedSnippet());
-            const source = selectedItem.stylesConfig;
-            selectedItem.stylesConfig = source;
-            const allKeys = this.getAllStyleKeys(source).filter((item, index, source) => source.indexOf(item) === index);
-            const refKeys = {};
-
-            for (const path of allKeys) {
-                const newKey = identifier();
-                const oldValue = getObjectAt<StyleContract>(path, source);
-                const keys = path.split("/");
-                const lastKey = keys.pop();
-                const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source); 
-                oldValue.key = oldValue.key.replace(lastKey, newKey);
-                oldValue.displayName = oldValue.displayName + " - " + newKey;
-                lastObj[newKey] = oldValue;
-                delete lastObj[lastKey];
-                refKeys[path] = keys.join("/") + "/" + newKey;
-            }
-            this.syncStyleKeys(source, refKeys);
-            selectedItem.key = refKeys[selectedItem.key];
-            selectedItem.itemConfig = getObjectAt<StyleContract>(selectedItem.key, source);
-            const selectedItemKeys = selectedItem.key.split("/");
-            delete selectedItem.stylesConfig[selectedItemKeys[0]];
-            this.onSelect(selectedItem);
+        if (!this.onSelect) {
+            return;
         }
+        
+        const selectedItem = _.cloneDeep(this.selectedSnippet());
+        const source = selectedItem.stylesConfig;
+        selectedItem.stylesConfig = source;
+        const allKeys = this.getAllStyleKeys(source).filter((item, index, source) => source.indexOf(item) === index);
+        const refKeys = {};
+
+        for (const path of allKeys) {
+            const newKey = identifier();
+            const oldValue = getObjectAt<VariationContract>(path, source);
+            const keys = path.split("/");
+            const lastKey = keys.pop();
+            const lastObj = keys.reduce((source, key) => source[key] = source[key] || {}, source);
+            oldValue.key = oldValue.key.replace(lastKey, newKey);
+            oldValue.displayName = oldValue.displayName + " - " + newKey;
+            lastObj[newKey] = oldValue;
+            delete lastObj[lastKey];
+            refKeys[path] = keys.join("/") + "/" + newKey;
+        }
+        this.syncStyleKeys(source, refKeys);
+        selectedItem.key = refKeys[selectedItem.key];
+        selectedItem.itemConfig = getObjectAt<VariationContract>(selectedItem.key, source);
+        const selectedItemKeys = selectedItem.key.split("/");
+        delete selectedItem.stylesConfig[selectedItemKeys[0]];
+        this.onSelect(selectedItem);
     }
 
     private syncStyleKeys(source: any, changeTable: object): void {
         if (Array.isArray(source)) {
-            source.every(x =>  this.syncStyleKeys(x, changeTable));
-        } 
+            source.every(x => this.syncStyleKeys(x, changeTable));
+        }
         else if (typeof source === "object") {
             const propertyNames = Object.keys(source);
 
             for (const propertyName of propertyNames) {
                 const propertyValue = source[propertyName];
 
-                if (propertyName.toLowerCase().endsWith("key")) {                    
+                if (propertyName.toLowerCase().endsWith("key")) {
                     const newValue = changeTable[propertyValue];
 
                     if (newValue) {

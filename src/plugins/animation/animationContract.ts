@@ -1,13 +1,9 @@
-export interface AnimationContract {
-    /**
-     * Own key.
-     */
-    key?: string;
+import { PrimitiveContract } from "@paperbits/common/styles";
 
-    displayName?: string;
-
+export interface AnimationContract extends PrimitiveContract {
     /**
-     * Name of animation keyframe (it should be pre-defined in CSS). Later on, we'll introduce key frame configuration contracts.
+     * Name of animation keyframe (it should be pre-defined in CSS).
+     * Later on, we'll introduce key frame configuration contracts.
      */
     name?: string;
 }
