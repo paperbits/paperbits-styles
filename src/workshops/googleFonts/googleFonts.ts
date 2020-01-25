@@ -1,4 +1,3 @@
-import { FontParser } from "./../fonts/fontParser";
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common";
@@ -6,13 +5,16 @@ import * as mime from "mime-types";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { IMediaService } from "@paperbits/common/media";
+import { ISettingsProvider } from "@paperbits/common/configuration";
 import { ViewManager } from "@paperbits/common/ui";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
+import { GoogleFontsConfig } from "./googleFontsConfig";
 import { GoogleFontContract, GoogleFontsResult } from "./googleFontsParser";
 import { GoogleFont } from "./googleFont";
+import { FontParser } from "./../fonts/fontParser";
 
 
 @Component({
@@ -29,7 +31,8 @@ export class GoogleFonts {
         private readonly styleService: StyleService,
         private readonly httpClient: HttpClient,
         private readonly viewManager: ViewManager,
-        private readonly mediaService: IMediaService
+        private readonly mediaService: IMediaService,
+        private readonly settingsProvider: ISettingsProvider
     ) {
         this.searchPattern = ko.observable("");
         this.fonts = ko.observableArray();
@@ -44,10 +47,10 @@ export class GoogleFonts {
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
-        const googleFontsApiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM";
+        const googleFontsSettings =  await this.settingsProvider.getSetting<GoogleFontsConfig>("googleFonts");
 
         const response = await this.httpClient.send<GoogleFontsResult>({
-            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${googleFontsApiKey}`,
+            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${googleFontsSettings.apiKey}`,
             method: HttpMethod.get,
         });
 
@@ -60,22 +63,7 @@ export class GoogleFonts {
             .subscribe(this.searchFonts);
     }
 
-    // public async searchFonts(pattern: string = ""): Promise<void> {
-    //     this.fonts([]);
-
-    //     if (!this.loadedContracts) {
-    //         return;
-    //     }
-
-    //     const loadedCount = this.fonts().length;
-    //     const fonts = this.loadedContracts
-    //         .filter(x => x.family.toLowerCase().contains(pattern.toLowerCase()))
-    //         .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
-
-    //     this.fonts.push(...fonts);
-    // }
-
-    public searchFonts(pattern: string = ""): void {
+    public searchFonts(): void {
         this.fonts([]);
         this.loadNextPage();
     }
@@ -113,9 +101,6 @@ export class GoogleFonts {
 
     public async uploadFont(): Promise<void> {
         const files = await this.viewManager.openUploadDialog();
-
-        // this.working(true);
-
         const styles = await this.styleService.getStyles();
         const file = files[0];
         const content = await Utils.readFileAsByteArray(file);
@@ -140,7 +125,5 @@ export class GoogleFonts {
         if (this.onSelect) {
             this.onSelect(fontContract);
         }
-
-        // this.working(false);
     }
 }
