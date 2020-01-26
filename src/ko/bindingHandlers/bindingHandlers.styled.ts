@@ -18,7 +18,7 @@ ko.bindingHandlers["styled"] = {
             if (!styleElement) {
                 styleElement = element.ownerDocument.createElement("style");
                 styleElement.id = styleModel.key;
-                element.parentElement.insertBefore(styleElement, element);
+                element.ownerDocument.head.appendChild(styleElement);
             }
 
             styleElement.innerHTML = styleModel.css;
