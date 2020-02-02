@@ -12,7 +12,7 @@ ko.bindingHandlers["gradientPreview"] = {
 
         const gradientStyleRule = new StyleRule("background-image", getLinearGradientString(linearGradientContract));
         const style = new Style(key);
-        style.rules.push(gradientStyleRule);
+        style.addRule(gradientStyleRule);
 
         const styleSheet = new StyleSheet();
         styleSheet.styles.push(style);

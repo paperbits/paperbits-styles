@@ -13,7 +13,7 @@ ko.bindingHandlers["shadowPreview"] = {
 
         const shadowStyleRules = ShadowStylePlugin.contractToStyleRules(shadowContract);
         const style = new Style(key);
-        style.rules.push(...shadowStyleRules);
+        style.addRules(shadowStyleRules);
 
         const styleSheet = new StyleSheet();
         styleSheet.styles.push(style);

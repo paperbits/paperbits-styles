@@ -15,7 +15,6 @@ const stylesPath = "styles";
 export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly eventManager: EventManager,
         private readonly styleHandlers: StyleHandler[]
     ) { }
 
@@ -157,7 +156,6 @@ export class StyleService {
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
         this.objectStorage.updateObject(stylesPath, updatedStyles);
-        this.eventManager.dispatchEvent("onStyleChange");
     }
 
     public async mergeStyles(appendStyles: ThemeContract): Promise<void> {
@@ -250,8 +248,6 @@ export class StyleService {
         const styles = await this.getStyles();
         Objects.deleteNodeAt(`${styleKey}`, styles);
         this.objectStorage.updateObject(`${stylesPath}`, styles);
-
-        this.eventManager.dispatchEvent("onStyleChange");
     }
 
     public async checkStyleIsInUse(styleKey: string): Promise<any[]> {

@@ -38,6 +38,7 @@ import { StyleSnippetSelector } from "./workshops/snippets/styleSnippetSelector"
 import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
 import { StyleVariationSelector } from "./workshops/snippets/styleVariationSelector";
+import { StyledBindingHandler } from "./ko/bindingHandlers";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -71,5 +72,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("autostart", StylableBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);
+
+        injector.bindToCollection("autostart", StyledBindingHandler);
     }
 }

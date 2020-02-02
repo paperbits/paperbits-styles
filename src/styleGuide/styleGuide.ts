@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { EventManager } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
-import { IStyleGroup, Styleable, VariationContract } from "@paperbits/common/styles";
+import { IStyleGroup, Styleable, VariationContract, StyleManager, StyleCompiler } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
@@ -42,7 +42,8 @@ export class StyleGuide {
         private readonly styleService: StyleService,
         private readonly viewManager: ViewManager,
         private readonly eventManager: EventManager,
-        private readonly styleGroups: IStyleGroup[]
+        private readonly styleGroups: IStyleGroup[],
+        private readonly styleCompiler: StyleCompiler
     ) {
         this.styles = ko.observable();
         this.colors = ko.observableArray([]);
@@ -75,7 +76,6 @@ export class StyleGuide {
                 params: {
                     onSelect: () => {
                         this.viewManager.closeView();
-                        this.eventManager.dispatchEvent("onStyleChange");
                         this.applyChanges();
                     }
                 }
@@ -177,12 +177,11 @@ export class StyleGuide {
                         if (style.key.startsWith("components/")) {
                             const parts = style.key.split("/");
                             const componentName = parts[1];
-                            
+
                             await this.onUpdateStyle(componentName);
                         }
-                        else {
-                            this.applyChanges();
-                        }
+
+                        this.applyChanges();
                     }
                 }
             },
@@ -253,6 +252,10 @@ export class StyleGuide {
         this.uiComponents(components);
 
         this.styles(styles);
+
+        const styleManager = new StyleManager(this.eventManager);
+        const styleSheet = await this.styleCompiler.getStyleSheet();
+        styleManager.setStyleSheet(styleSheet);
     }
 
     public async getComponentsStyles(): Promise<ComponentStyle[]> {
@@ -540,9 +543,8 @@ export class StyleGuide {
                                         const componentName = parts[1];
                                         await this.onUpdateStyle(componentName);
                                     }
-                                    else {
-                                        this.applyChanges();
-                                    }
+
+                                    this.applyChanges();
                                 }
                             }
                         },

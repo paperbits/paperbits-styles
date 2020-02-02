@@ -14,17 +14,6 @@ opts.createGenerateId = () => {
 jss.setup(opts);
 
 export class JssCompiler {
-
-    private getRulesJssString(style: Style): string {
-        const rules = style.rules.map(rule => rule.toJssString()).filter(x => !!x).join(",");
-        const modifierStyles = style.modifierStyles.map(s => `"&.${s.selector}": ${s.getRulesJssString()}`).filter(x => !!x).join(",");
-        const pseudoStyles = style.pseudoStyles.map(s => `"&:${s.selector}": ${s.getRulesJssString()}`).filter(x => !!x).join(",");
-        const nestedStyles = style.nestedStyles.map(s => `"& .${s.selector}": ${s.getRulesJssString()}`).filter(x => !!x).join(",");
-        const jssString = `{ ${[rules, modifierStyles, pseudoStyles, nestedStyles /*, nestedMediaQueries*/].filter(x => !!x).join(",")} }`;
-
-        return jssString;
-    }
-
     private flattenMediaQueries(styles: Style[]): StyleMediaQuery[] {
         const nestedMediaQueries = styles.map(x => x.nestedMediaQueries);
         const flattenNestedMediaQueries = nestedMediaQueries.reduce((acc, next) => acc.concat(next), []);
@@ -42,14 +31,12 @@ export class JssCompiler {
         return groupedMediaQueries;
     }
 
-    public styleToCss(style: Style): string {
-        // const jssObject = JSON.parse(allStyles.toJssString());
-        // const styleSheet = jss.createStyleSheet(jssObject);
-        return null;
-
-    }
-
     public styleSheetToCss(styleSheet: StyleSheet): string {
+        const globalStyles = styleSheet.globalStyles.map(style => style.toJssString()).filter(x => !!x).join(",");
+        const globalJssString = `{ "@global": { ${globalStyles} } }`;
+        const globalJssObject = JSON.parse(globalJssString);
+        const globalCss = jss.createStyleSheet(globalJssObject).toString();
+
         const fontFacesJssString = `"@font-face":[${styleSheet.fontFaces.map(x => x.toJssString()).join(",")}]`;
         const stylesJssString = styleSheet.styles.map(style => style.toJssString()).filter(x => !!x).join(",");
         const mediaQueries = this.flattenMediaQueries(styleSheet.styles);
@@ -59,6 +46,6 @@ export class JssCompiler {
         const jssObject = JSON.parse(jssString);
         const css = jss.createStyleSheet(jssObject).toString();
 
-        return css;
+        return `${globalCss} ${css}`;
     }
 }

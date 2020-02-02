@@ -84,7 +84,7 @@ export class Background {
         const styles = await this.styleService.getStyles();
         const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(backgroundPluginConfig);
         const style = new Style("background-preview");
-        style.rules.push(...styleRules);
+        style.addRules(styleRules);
 
         const styleSheet = new StyleSheet();
         styleSheet.styles.push(style);
@@ -179,7 +179,7 @@ export class Background {
         const styles = await this.styleService.getStyles();
         const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(updatedPluginConfig);
         const style = new Style("background-preview");
-        style.rules.push(...styleRules);
+        style.addRules(styleRules);
 
         const styleSheet = new StyleSheet();
         styleSheet.styles.push(style);

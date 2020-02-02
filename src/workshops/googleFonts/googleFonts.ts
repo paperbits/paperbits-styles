@@ -6,6 +6,7 @@ import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { IMediaService } from "@paperbits/common/media";
 import { ISettingsProvider } from "@paperbits/common/configuration";
+import { ISiteService } from "@paperbits/common/sites";
 import { ViewManager } from "@paperbits/common/ui";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -32,7 +33,8 @@ export class GoogleFonts {
         private readonly httpClient: HttpClient,
         private readonly viewManager: ViewManager,
         private readonly mediaService: IMediaService,
-        private readonly settingsProvider: ISettingsProvider
+        private readonly settingsProvider: ISettingsProvider,
+        private readonly siteService: ISiteService
     ) {
         this.searchPattern = ko.observable("");
         this.fonts = ko.observableArray();
@@ -47,10 +49,16 @@ export class GoogleFonts {
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
-        const googleFontsSettings =  await this.settingsProvider.getSetting<GoogleFontsConfig>("googleFonts");
+        const settings = await this.siteService.getSiteSettings();
+
+        if (!settings || !settings.integration || !settings.integration.googleFonts) {
+            return;
+        }
+
+        const apiKey = settings.integration.googleFonts.apiKey;
 
         const response = await this.httpClient.send<GoogleFontsResult>({
-            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${googleFontsSettings.apiKey}`,
+            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
             method: HttpMethod.get,
         });
 

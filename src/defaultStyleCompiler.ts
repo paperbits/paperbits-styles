@@ -23,23 +23,23 @@ import {
     PaddingStylePlugin,
     TransformStylePlugin
 } from "./plugins";
-import jss from "jss";
-import preset from "jss-preset-default";
 import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
-import { Style, StyleSheet, StyleMediaQuery, StyleCompiler, StyleModel, StyleRule, VariationsContract, StatesContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
+import {
+    Style,
+    StyleSheet,
+    StyleManager,
+    StyleMediaQuery,
+    StyleCompiler,
+    StyleModel,
+    StyleRule,
+    VariationsContract,
+    StatesContract,
+    LocalStyles,
+    PluginBag
+} from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
-
-const opts = preset();
-
-opts.createGenerateId = () => {
-    return (rule, sheet) => {
-        return Utils.camelCaseToKebabCase(rule.key);
-    };
-};
-
-jss.setup(opts);
 
 
 export class DefaultStyleCompiler implements StyleCompiler {
@@ -113,20 +113,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["stickTo"] = new StickToStylePlugin();
     }
 
-    /**
-     * Returns compliled CSS.
-     */
-    public async compileCss(): Promise<string> {
+    public async getStyleSheet(): Promise<StyleSheet> {
         await this.initializePlugins();
 
+        const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
-
-        const globalStyles = new StyleSheet();
-        const allStyles = new StyleSheet();
-
         const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
-        globalStyles.fontFaces.push(...fontFaces);
+        styleSheet.fontFaces.push(...fontFaces);
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
@@ -144,19 +138,19 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     componentStyle.modifierStyles.push(variationStyle);
                 }
 
-                allStyles.styles.push(componentStyle);
+                styleSheet.styles.push(componentStyle);
             }
         }
 
         if (themeContract.utils) {
             for (const variationName of Object.keys(themeContract.utils.text)) {
                 const textStyle = await this.getVariationStyle(themeContract.utils.text[variationName], "text", variationName);
-                allStyles.styles.push(textStyle);
+                styleSheet.styles.push(textStyle);
             }
 
             for (const variationName of Object.keys(themeContract.utils.content)) {
                 const contentStyle = await this.getVariationStyle(themeContract.utils.content[variationName], "content", variationName);
-                allStyles.styles.push(contentStyle);
+                styleSheet.styles.push(contentStyle);
             }
         }
 
@@ -184,7 +178,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     }
                 }
 
-                globalStyles.styles.push(defaultComponentStyle);
+                styleSheet.globalStyles.push(defaultComponentStyle);
             }
         }
 
@@ -192,19 +186,23 @@ export class DefaultStyleCompiler implements StyleCompiler {
             for (const colorName of Object.keys(themeContract.colors)) {
                 const colorStyleSelector = `colors-${Utils.camelCaseToKebabCase(colorName)}`;
                 const colorStyle = new Style(colorStyleSelector);
-                colorStyle.rules.push(new StyleRule("color", themeContract.colors[colorName].value));
-                allStyles.styles.push(colorStyle);
+                colorStyle.addRule(new StyleRule("color", themeContract.colors[colorName].value));
+                styleSheet.styles.push(colorStyle);
             }
         }
 
+        return styleSheet;
+    }
+
+    /**
+     * Returns compliled CSS.
+     */
+    public async compileCss(): Promise<string> {
+        const styleSheet = await this.getStyleSheet();
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(allStyles);
+        const css = compiler.styleSheetToCss(styleSheet);
 
-        const globalJssObject = JSON.parse(globalStyles.toJssString());
-        const globalStyleSheet = jss.createStyleSheet({ "@global": globalJssObject });
-        const globalCss = globalStyleSheet.toString();
-
-        return globalCss + " " + css;
+        return css;
     }
 
     public async getVariationStyle(variationConfig: VariationsContract, componentName: string, variationName: string = null): Promise<Style> {
@@ -234,7 +232,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
             if (!this.isResponsive(pluginConfig)) {
                 const rules = await plugin.configToStyleRules(pluginConfig);
-                resultStyle.rules.push(...rules);
+                resultStyle.addRules(rules);
 
                 const pseudoStyles = await plugin.configToPseudoStyles(pluginConfig);
                 resultStyle.pseudoStyles.push(...pseudoStyles);
@@ -255,7 +253,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
                 if (breakpoint === "xs") { // No need media query
                     const pluginRules = await plugin.configToStyleRules(breakpointConfig);
-                    resultStyle.rules.push(...pluginRules);
+                    resultStyle.addRules(pluginRules);
 
                     const pseudoStyles = await plugin.configToPseudoStyles(breakpointConfig);
                     resultStyle.pseudoStyles.push(...pseudoStyles);
@@ -343,7 +341,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 const pluginConfig = states[pluginName];
 
                 const pluginRules = await plugin.configToStyleRules(pluginConfig);
-                stateStyle.rules.push(...pluginRules);
+                stateStyle.addRules(pluginRules);
 
                 const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
                 stateStyle.nestedStyles.push(...nestedStyles);
@@ -361,8 +359,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const styleSheet = new StyleSheet();
         styleSheet.fontFaces.push(...fontFaces);
 
-        const jssObject = JSON.parse(styleSheet.toJssString());
-        return jss.createStyleSheet(jssObject).toString();
+        const compiler = new JssCompiler();
+        const css = compiler.styleSheetToCss(styleSheet);
+
+        return css;
     }
 
     public getClassNameByColorKey(colorKey: string): string {
@@ -408,13 +408,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames.join(" ");
     }
 
-    public async getStyleModelAsync(styleConfig: LocalStyles): Promise<StyleModel> {
+    public async getStyleModelAsync(localStyles: LocalStyles, styleManager: StyleManager): Promise<StyleModel> {
         const classNames = [];
         let variationStyle: Style;
         let key;
 
-        for (const category of Object.keys(styleConfig)) {
-            const categoryConfig = styleConfig[category];
+        for (const category of Object.keys(localStyles)) {
+            const categoryConfig = localStyles[category];
 
             if (!categoryConfig) {
                 continue;
@@ -458,14 +458,21 @@ export class DefaultStyleCompiler implements StyleCompiler {
                         classNames.push(className);
                     }
                 }
-
             }
+        }
+
+        const localStyleSheet = new StyleSheet(key);
+
+        if (variationStyle) {
+            localStyleSheet.styles.push(variationStyle);
         }
 
         const result: StyleModel = {
             key: key,
             classNames: classNames.join(" "),
-            css: await this.styleToCss(variationStyle)
+            css: await this.styleToCss(variationStyle),
+            styleSheet: localStyleSheet,
+            styleManager: styleManager
         };
 
         return result;
