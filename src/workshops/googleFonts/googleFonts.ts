@@ -55,7 +55,7 @@ export class GoogleFonts {
             return;
         }
 
-        const apiKey = settings.integration.googleFonts.apiKey;
+        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; // Temporary. settings.integration.googleFonts.apiKey;
 
         const response = await this.httpClient.send<GoogleFontsResult>({
             url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
