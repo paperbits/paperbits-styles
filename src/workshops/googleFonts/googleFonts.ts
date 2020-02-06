@@ -49,13 +49,15 @@ export class GoogleFonts {
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
-        const settings = await this.siteService.getSiteSettings();
+        // Temporary:
+        // const settings = await this.siteService.getSiteSettings();
+        // if (!settings || !settings.integration || !settings.integration.googleFonts) {
+        //     return;
+        // }
+        //
+        // const apiKey = settings.integration.googleFonts.apiKey;
 
-        if (!settings || !settings.integration || !settings.integration.googleFonts) {
-            return;
-        }
-
-        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; // Temporary. settings.integration.googleFonts.apiKey;
+        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; 
 
         const response = await this.httpClient.send<GoogleFontsResult>({
             url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
