@@ -3,13 +3,13 @@
         <div class="box-model-group">
             <span class="box-model-label">margin</span>
             <input type="text" class="box-model-control box-model-control-top" placeholder="-"
-                data-bind="textInput: marginTop">
+                data-bind="textInput: marginTop, balloon: { component: { name: 'option-selector-editor', params: { onChange: $component.marginTop, initialValue: $component.marginTop, optionsItems: 'inherit,auto' } } }">
             <input type="text" class="box-model-control box-model-control-left" placeholder="-"
-                data-bind="textInput: marginLeft">
+                data-bind="textInput: marginLeft, balloon: { component: { name: 'option-selector-editor', params: { onChange: $component.marginLeft, initialValue: $component.marginLeft, optionsItems: 'inherit,auto' } } }">
             <input type="text" class="box-model-control box-model-control-right" placeholder="-"
-                data-bind="textInput: marginRight">
+                data-bind="textInput: marginRight, balloon: { component: { name: 'option-selector-editor', params: { onChange: $component.marginRight, initialValue: $component.marginRight, optionsItems: 'inherit,auto' } } }">
             <input type="text" class="box-model-control box-model-control-bottom" placeholder="-"
-                data-bind="textInput: marginBottom">
+                data-bind="textInput: marginBottom, balloon: { component: { name: 'option-selector-editor', params: { onChange: $component.marginBottom, initialValue: $component.marginBottom, optionsItems: 'inherit,auto' } } }">
         </div>
 
         <div class="box-model-border" data-bind="css: { 'box-model-enabled': borderEnabled }">

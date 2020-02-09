@@ -38,6 +38,8 @@ export class BoxEditor {
     public readonly borderRightWidth: ko.Computed<any>;
     public readonly borderBottomWidth: ko.Computed<any>;
 
+    private isBoxUpdate: boolean;
+
     @Param()
     public readonly box: ko.Observable<BoxStylePluginConfig>;
 
@@ -80,7 +82,7 @@ export class BoxEditor {
         this.borderRightWidth = ko.computed(() => this.borderRight() ? this.borderRight().width : null);
         this.borderBottomWidth = ko.computed(() => this.borderBottom() ? this.borderBottom().width : null);
     }
-
+    
     @OnMounted()
     public init(): void {
         const features = this.features.split(",");
@@ -88,35 +90,9 @@ export class BoxEditor {
         this.paddingEnabled(features.includes("padding"));
         this.borderEnabled(features.includes("border"));
 
-        const currentStyle = this.box();
+        this.loadData(this.box());
 
-        if (currentStyle.margin) {
-            this.marginTop(currentStyle.margin.top);
-            this.marginLeft(currentStyle.margin.left);
-            this.marginRight(currentStyle.margin.right);
-            this.marginBottom(currentStyle.margin.bottom);
-        }
-
-        if (currentStyle.border) {
-            this.borderTop(currentStyle.border.top);
-            this.borderLeft(currentStyle.border.left);
-            this.borderRight(currentStyle.border.right);
-            this.borderBottom(currentStyle.border.bottom);
-        }
-
-        if (currentStyle.borderRadius) {
-            this.topLeftRadius(currentStyle.borderRadius.topLeftRadius);
-            this.topRightRadius(currentStyle.borderRadius.topRightRadius);
-            this.bottomLeftRadius(currentStyle.borderRadius.bottomLeftRadius);
-            this.bottomRightRadius(currentStyle.borderRadius.bottomLeftRadius);
-        }
-
-        if (currentStyle.padding) {
-            this.paddingTop(currentStyle.padding.top);
-            this.paddingLeft(currentStyle.padding.left);
-            this.paddingRight(currentStyle.padding.right);
-            this.paddingBottom(currentStyle.padding.bottom);
-        }
+        this.box.subscribe(this.updateBox);
 
         this.marginTop.subscribe(this.dispatchUpdates);
         this.marginLeft.subscribe(this.dispatchUpdates);
@@ -138,16 +114,57 @@ export class BoxEditor {
         this.paddingRight.subscribe(this.dispatchUpdates);
         this.paddingBottom.subscribe(this.dispatchUpdates);
     }
+    
+    private loadData(data: BoxStylePluginConfig): void {
+        const currentStyle = data;
+        if (currentStyle.margin) {
+            this.marginTop(currentStyle.margin.top);
+            this.marginLeft(currentStyle.margin.left);
+            this.marginRight(currentStyle.margin.right);
+            this.marginBottom(currentStyle.margin.bottom);
+        }
+        if (currentStyle.border) {
+            this.borderTop(currentStyle.border.top);
+            this.borderLeft(currentStyle.border.left);
+            this.borderRight(currentStyle.border.right);
+            this.borderBottom(currentStyle.border.bottom);
+        }
+        if (currentStyle.borderRadius) {
+            this.topLeftRadius(currentStyle.borderRadius.topLeftRadius);
+            this.topRightRadius(currentStyle.borderRadius.topRightRadius);
+            this.bottomLeftRadius(currentStyle.borderRadius.bottomLeftRadius);
+            this.bottomRightRadius(currentStyle.borderRadius.bottomLeftRadius);
+        }
+        if (currentStyle.padding) {
+            this.paddingTop(currentStyle.padding.top);
+            this.paddingLeft(currentStyle.padding.left);
+            this.paddingRight(currentStyle.padding.right);
+            this.paddingBottom(currentStyle.padding.bottom);
+        }
+    }
 
+    private updateBox(update: BoxStylePluginConfig): void {
+        this.isBoxUpdate = true;
+        this.loadData(update);
+        this.isBoxUpdate = false;
+    }
 
     private dispatchUpdates(): void {
-        if (!this.onUpdate) {
+        if (!this.onUpdate || this.isBoxUpdate) {
             return;
         }
 
         const parseNumber = (value) => {
+            if (value === "auto") {
+                return value;
+            }
+            
             if (value) {
-                return parseInt(value);
+                const parsed = parseInt(value);
+                if (parsed === 0) {
+                    return 0;
+                }
+                return parsed || undefined;
             }
             else {
                 return undefined;

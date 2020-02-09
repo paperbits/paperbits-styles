@@ -39,6 +39,7 @@ import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
 import { StyleVariationSelector } from "./workshops/snippets/styleVariationSelector";
 import { StyledBindingHandler } from "./ko/bindingHandlers";
+import { OptionSelectorEditor } from "./workshops/optionSelector/optionSelectorEditor";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -52,6 +53,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("transition", Transition);
         injector.bind("boxEditor", BoxEditor);
         injector.bind("borderEditor", BorderEditor);
+        injector.bind("optionSelectorEditor", OptionSelectorEditor);
         injector.bind("colorSelector", ColorSelector);
         injector.bind("colorEditor", ColorEditor);
         injector.bind("gradientSelector", GradientSelector);

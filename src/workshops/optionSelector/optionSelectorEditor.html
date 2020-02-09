@@ -1,0 +1,37 @@
+<div class="editor">
+    <h1>Select value</h1>
+    <hr />
+
+    <div class="tabs" role="tablist">
+        <div class="tab" data-bind="css: { 'tab-is-active': !selected() }, attr: { 'aria-selected': !selected() }">
+            <a href="#" data-bind="click: selected.bind($data,undefined), focus: true" title="Numeric value"
+                role="tab" aria-label="enter numeric value">
+                Enter
+            </a>
+        </div>
+        <div class="tab" data-bind="css: { 'tab-is-active': selected() === 'options' }, attr: { 'aria-selected': selected() === 'options' }">
+            <a href="#" data-bind="click: selected.bind($data,'options')" title="Predefined options" role="tab"
+                aria-label="Predefined options">
+                Choose
+            </a>
+        </div>
+    </div>
+
+    <!-- ko if: !selected() -->
+    <div class="flex flex-column">
+        <div class="flex-item flex-item-grow" role="tabpanel">
+            <div class="form-group">
+                <input id="enteredValue" type="number" class="form-control" placeholder="0" min="0" max="1000" data-bind="textInput: enteredValue" />
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: selected() === 'options' -->
+    <div class="flex-item flex-item-grow add-block-container" role="tabpanel">
+        <div class="form-group">
+            <select id="valueStyle" class="form-control" data-bind="options: optionItems, value: selectedValue"></select>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
