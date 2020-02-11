@@ -2,12 +2,11 @@ import * as _ from "lodash";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
-import { EventManager } from "@paperbits/common/events";
 import { ThemeContract, ColorContract, ShadowContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
 import { StyleHandler, VariationContract } from "@paperbits/common/styles";
-import { StylePrimitives } from ".";
+import { StylePrimitives } from "./constants";
 
 
 const stylesPath = "styles";

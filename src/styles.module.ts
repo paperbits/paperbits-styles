@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright Paperbits. All Rights Reserved.
@@ -7,7 +6,8 @@
  */
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { StyleService, DefaultStyleCompiler } from "./";
+import { StyleService } from "./styleService";
+import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 
 
