@@ -517,7 +517,7 @@ export class StyleGuide {
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
-                    style.key.startsWith("colors/") ? this.selectColor(style) : this.selectShadow(style);
+                    style.key.startsWith("colors/") ? this.selectColor(style) : this.selectShadow(<ShadowContract>style);
                 }
             });
         }
