@@ -10,14 +10,14 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 export class OptionSelectorEditor {
     public readonly optionItems: string[] = [];
     public readonly selectedValue: ko.Observable<string>;
-    public readonly enteredValue: ko.Observable<string>;
+    public readonly enteredValue: ko.Observable<string|number>;
     public readonly selected: ko.Observable<string>;
 
     @Param()
     public readonly optionsItems: ko.Observable<string>;
 
     @Param()
-    public readonly initialValue: ko.Observable<string>;
+    public readonly initialValue: ko.Observable<string|number>;
 
     @Event()
     public readonly onChange: (value: string) => void;
@@ -27,7 +27,7 @@ export class OptionSelectorEditor {
         this.optionsItems = ko.observable();
         this.initialValue = ko.observable();
         this.selectedValue = ko.observable();
-        this.enteredValue = ko.observable("0");
+        this.enteredValue = ko.observable(0);
         this.selected = ko.observable();
     }
 
@@ -36,7 +36,8 @@ export class OptionSelectorEditor {
         if (this.optionsItems()) {
             this.optionItems.push(...this.optionsItems().split(","));
         }
-        if (!this.initialValue()) {
+        const initValue = this.initialValue();
+        if (initValue !== 0 && !initValue) {
             this.initialValue("inherit");
         }
 

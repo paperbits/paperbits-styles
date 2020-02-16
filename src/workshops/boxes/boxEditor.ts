@@ -158,6 +158,10 @@ export class BoxEditor {
             if (value === "auto") {
                 return value;
             }
+
+            if (value === 0) {
+                return 0;
+            }
             
             if (value) {
                 const parsed = parseInt(value);

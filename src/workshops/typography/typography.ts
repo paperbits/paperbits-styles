@@ -4,6 +4,7 @@ import template from "./typography.html";
 import { StyleService } from "../../styleService";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { TypographyStylePluginConfig, FontContract, ColorContract, ShadowContract } from "../../contracts";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 
 const inheritLabel = "(Inherit)";
@@ -102,6 +103,7 @@ export class Typography {
         this.fontStyle(typographyContract.fontStyle);
         this.textTransform(typographyContract.textTransform);
         this.textDecoration(typographyContract.textDecoration);
+        this.lineHeight(typographyContract.lineHeight);
 
         if (typographyContract.shadowKey) {
             const shadowContract = Objects.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
@@ -128,17 +130,17 @@ export class Typography {
 
         await this.fillout(typography);
 
-        this.fontKey.subscribe(this.applyChanges);
-        this.fontWeight.subscribe(this.applyChanges);
-        this.fontStyle.subscribe(this.applyChanges);
-        this.fontSize.subscribe(this.applyChanges);
-        this.lineHeight.subscribe(this.applyChanges);
-        this.colorKey.subscribe(this.applyChanges);
-        this.shadowKey.subscribe(this.applyChanges);
-        this.textAlign.subscribe(this.applyChanges);
-        this.textTransform.subscribe(this.applyChanges);
-        this.textDecoration.subscribe(this.applyChanges);
-        this.typography.subscribe(this.fillout);
+        this.fontKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.fontWeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.fontStyle.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.fontSize.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.lineHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.colorKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.shadowKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.textAlign.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.textTransform.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.textDecoration.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.typography.extend(ChangeRateLimit).subscribe(this.fillout);
     }
 
     public onFontSelected(fontContract: FontContract): void {
