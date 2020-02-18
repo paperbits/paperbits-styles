@@ -158,7 +158,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
             for (const tagName of Object.keys(themeContract.globals)) {
                 const tagConfig = themeContract.globals[tagName];
 
-                const defaultComponentStyle = await this.getVariationStyle(tagConfig["default"], tagName, "default");
+                const defaultComponentStyle = await this.getVariationStyle(tagConfig["default"], tagName, "default", true);
                 const variations = Object.keys(tagConfig);
 
                 if (!defaultComponentStyle && variations.length <= 1) {
@@ -171,7 +171,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     }
 
                     const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
-                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName);
+                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, true);
 
                     if (variationStyle) {
                         defaultComponentStyle.nestedStyles.push(variationStyle);
@@ -205,7 +205,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return css;
     }
 
-    public async getVariationStyle(variationConfig: VariationsContract, componentName: string, variationName: string = null): Promise<Style> {
+    public async getVariationStyle(variationConfig: VariationsContract, componentName: string, variationName: string = null, isGlobal: boolean = false): Promise<Style> {
         await this.initializePlugins();
 
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
@@ -263,7 +263,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     continue;
                 }
 
-                const selector = `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
+                const selector = isGlobal
+                    ? componentName
+                    : `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
 
                 let mediaQuery = mediaQueries[breakpoint];
                 let style;

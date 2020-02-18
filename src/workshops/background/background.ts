@@ -10,7 +10,7 @@ import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, The
 import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
 
 
-const defaultBackgroundSize = "cover";
+const defaultBackgroundSize = "original";
 
 @Component({
     selector: "background",
@@ -56,6 +56,7 @@ export class Background {
     public async initialize(): Promise<void> {
         await this.fillout();
         this.background.subscribe(this.fillout);
+        this.size.subscribe(this.applyChanges);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
@@ -165,7 +166,9 @@ export class Background {
             images.push({
                 sourceKey: this.sourceKey(),
                 position: this.position(),
-                size: this.size(),
+                size: this.size() !== defaultBackgroundSize
+                    ? this.size()
+                    : undefined,
                 repeat: this.repeat()
             });
         }

@@ -9,7 +9,7 @@
     </div>
 </fieldset>
 
-<fieldset class="form flex-item flex-item-grow list fonts" role="list"
+<div class="flex flex-column flex-item flex-item-grow fonts" role="list"
     data-bind="scrollable: { onEndReach: $component.loadNextPage }" aria-live="polite">
     <!-- ko foreach: { data: fonts, as: 'font' } -->
     <div class="list-item font-box"
@@ -20,7 +20,7 @@
         </a>
     </div>
     <!--/ko -->
-</fieldset>
+</div>
 
 <div class="flex-item btn-group">
     <button class="btn" data-bind="click: uploadFont">
