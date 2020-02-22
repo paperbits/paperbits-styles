@@ -53,6 +53,7 @@ export class GridCellStylePlugin extends StylePlugin {
                 }
 
                 rules.push(new StyleRule("alignContent", value));
+                rules.push(new StyleRule("alignItems", value));
             }
         }
 
