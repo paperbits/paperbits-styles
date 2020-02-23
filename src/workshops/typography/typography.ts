@@ -16,7 +16,7 @@ const inheritLabel = "(Inherit)";
 export class Typography {
     public fontKey: ko.Observable<any>;
     public fontSize: ko.Observable<any>;
-    public fontWeight: ko.Observable<string|number>;
+    public fontWeight: ko.Observable<string | number>;
     public fontStyle: ko.Observable<any>;
     public lineHeight: ko.Observable<any>;
     public colorKey: ko.Observable<any>;
@@ -27,8 +27,10 @@ export class Typography {
     public fontName: ko.Observable<string>;
     public colorName: ko.Observable<string>;
     public shadowName: ko.Observable<string>;
-    public fontWeightVariants: FontVariantContract[] = [];
-    public currentWeight: ko.Observable<string>;
+    public fontWeights: any[] = [];
+    public fontStyles: any[] = [];
+    public currentWeight: ko.Computed<string>;
+    public currentStyle: ko.Computed<string>;
 
     public textTransformOptions = [
         { value: undefined, text: "(Inherit)" },
@@ -67,7 +69,8 @@ export class Typography {
         this.fontName = ko.observable();
         this.colorName = ko.observable();
         this.shadowName = ko.observable();
-        this.currentWeight = ko.observable();
+        this.currentWeight = ko.pureComputed(() => `${this.fontWeight() || "(Inherit)"}`);
+        this.currentStyle = ko.pureComputed(() => `${this.fontStyle() || "(Inherit)"}`);
     }
 
     private async fillout(typographyContract: TypographyStylePluginConfig): Promise<void> {
@@ -83,12 +86,20 @@ export class Typography {
             if (fontContract) {
                 this.fontName(fontContract.displayName);
                 this.fontKey(typographyContract.fontKey);
-                this.fontWeightVariants.push(...fontContract.variants);
+
+                const supportedWeights = fontContract.variants.map(variant => variant.weight.toString());
+
+                this.fontWeights = [].concat(supportedWeights, undefined);
             }
             else {
                 console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
             }
         }
+        else {
+            this.fontWeights = ["bold", "normal", undefined];
+        }
+
+        this.fontStyles = ["italic", "normal", undefined];
 
         if (typographyContract.colorKey) {
             const colorContract = Objects.getObjectAt<FontContract>(typographyContract.colorKey, styles);
@@ -103,7 +114,7 @@ export class Typography {
         }
 
         this.fontSize(typographyContract.fontSize);
-        this.fontWeight(this.getFontWeght(typographyContract.fontWeight));
+        this.fontWeight(typographyContract.fontWeight);
         this.fontStyle(typographyContract.fontStyle);
         this.textTransform(typographyContract.textTransform);
         this.textDecoration(typographyContract.textDecoration);
@@ -131,13 +142,12 @@ export class Typography {
         this.fontName(inheritLabel);
         this.colorName(inheritLabel);
         this.shadowName(inheritLabel);
-        this.updateCurrentWeight();
 
         await this.fillout(typography);
 
         this.fontKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
-        this.fontWeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
-        this.fontStyle.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.fontWeight.subscribe(this.applyChanges);
+        this.fontStyle.subscribe(this.applyChanges);
         this.fontSize.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.lineHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.colorKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
@@ -146,14 +156,12 @@ export class Typography {
         this.textTransform.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textDecoration.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.typography.extend(ChangeRateLimit).subscribe(this.fillout);
-
-        this.fontWeight.subscribe(this.updateCurrentWeight);
     }
 
     public async onFontSelected(fontContract: FontContract): Promise<void> {
         this.fontName(fontContract ? fontContract.displayName : inheritLabel);
         this.fontKey(fontContract ? fontContract.key : undefined);
-        await this.fillout({fontKey: this.fontKey()});
+        await this.fillout({ fontKey: this.fontKey() });
     }
 
     public onColorSelected(colorContract: ColorContract): void {
@@ -167,14 +175,34 @@ export class Typography {
     }
 
     public toggleBold(): void {
-        const weight = this.fontWeight() || 0;
-        const next = this.fontWeightVariants.find(f => (+f.weight) && (+f.weight) > weight);
-        this.fontWeight(next ? +next.weight : undefined);
+        const weight = this.fontWeight();
+        let index = this.fontWeights.indexOf(weight);
+
+        index++;
+
+        if (index > this.fontWeights.length - 1) {
+            index = 0;
+        }
+
+        const newWeight = this.fontWeights[index];
+
+        this.fontWeight(newWeight);
+        //  this.currentWeight(`${newWeight || "(Inherit)"}`);
     }
 
     public toggleItalic(): void {
         const style = this.fontStyle();
-        this.fontStyle(style === "italic" ? undefined : "italic");
+        let index = this.fontStyles.indexOf(style);
+
+        index++;
+
+        if (index > this.fontStyles.length - 1) {
+            index = 0;
+        }
+
+        const newStyle = this.fontStyles[index];
+
+        this.fontStyle(newStyle);
     }
 
     public alignLeft(): void {
@@ -197,48 +225,45 @@ export class Typography {
         this.textAlign(alignment === "justify" ? undefined : "justify");
     }
 
-    public isWeightBold(): boolean {
-        return this.fontWeight() > 0;
-    }
-
-    public updateCurrentWeight(): void {
-        this.currentWeight(`Font weight: ${ this.fontWeight() > 0 ? this.fontWeight() : "(Inherit)"}`);
-    }
-
-    private getFontWeght(fontWeight: string|number): number|undefined {
+    private getFontWeght(fontWeight: string | number): number | undefined {
         if (!fontWeight) {
             return undefined;
         }
 
         if (fontWeight === "bold") {
-            const last = this.fontWeightVariants[this.fontWeightVariants.length - 1];
+            const last = this.fontWeights[this.fontWeights.length - 1];
             const boldWeight = +last.weight;
+
             if (boldWeight >= 600) {
                 return boldWeight;
             }
-        } else {
+        }
+        else {
             const boldWeight = +fontWeight;
             if (boldWeight) {
                 return boldWeight;
             }
         }
+
         return undefined;
     }
 
     private applyChanges(): void {
-        if (this.onUpdate) {
-            this.onUpdate({
-                fontKey: this.fontKey(),
-                fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
-                fontWeight: this.fontWeight(),
-                fontStyle: this.fontStyle(),
-                lineHeight: this.lineHeight() ? this.lineHeight() : undefined,
-                colorKey: this.colorKey(),
-                shadowKey: this.shadowKey(),
-                textAlign: this.textAlign(),
-                textTransform: this.textTransform(),
-                textDecoration: this.textDecoration()
-            });
+        if (!this.onUpdate) {
+            return;
         }
+
+        this.onUpdate({
+            fontKey: this.fontKey(),
+            fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
+            fontWeight: this.fontWeight(),
+            fontStyle: this.fontStyle(),
+            lineHeight: this.lineHeight() ? this.lineHeight() : undefined,
+            colorKey: this.colorKey(),
+            shadowKey: this.shadowKey(),
+            textAlign: this.textAlign(),
+            textTransform: this.textTransform(),
+            textDecoration: this.textDecoration()
+        });
     }
 }
