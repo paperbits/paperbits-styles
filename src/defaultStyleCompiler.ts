@@ -200,7 +200,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
     public async compileCss(): Promise<string> {
         const styleSheet = await this.getStyleSheet();
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(styleSheet);
+        const css = compiler.compile(styleSheet);
 
         return css;
     }
@@ -362,7 +362,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         styleSheet.fontFaces.push(...fontFaces);
 
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(styleSheet);
+        const css = compiler.compile(styleSheet);
 
         return css;
     }
@@ -536,7 +536,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         styleSheet.styles.push(style);
 
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(styleSheet);
+        const css = compiler.compile(styleSheet);
         return css;
     }
 }

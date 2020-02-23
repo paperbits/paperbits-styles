@@ -12,7 +12,7 @@ export class StylesheetBindingHandler {
         ko.bindingHandlers["styleSheet"] = {
             init: (element: HTMLStyleElement) => {
                 const applyStyleSheet = (styleSheet: StyleSheet): void => {
-                    const css = compiler.styleSheetToCss(styleSheet);
+                    const css = compiler.compile(styleSheet);
                     const nodes = Array.prototype.slice.call(element.childNodes);
 
                     let stylesTextNode = nodes.find(x => x["key"] === styleSheet.key);

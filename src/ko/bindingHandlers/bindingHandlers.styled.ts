@@ -40,7 +40,7 @@ export class StyledBindingHandler {
                 let styleElement = element.ownerDocument.getElementById(styleModel.key);
 
                 const compiler = new JssCompiler();
-                const css = compiler.styleSheetToCss(styleModel.styleSheet);
+                const css = compiler.compile(styleModel.styleSheet);
 
                 if (css) {
                     if (!styleElement) {

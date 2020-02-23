@@ -39,7 +39,11 @@ export class JssCompiler {
         return groupedMediaQueries;
     }
 
-    public styleSheetToCss(styleSheet: StyleSheet): string {
+    public compile(...styleSheets: StyleSheet[]): string {
+        return styleSheets.map((val) => this.styleSheetToCss(val)).join(" ");
+    }
+
+    private styleSheetToCss(styleSheet: StyleSheet): string {
         const globalStyles = styleSheet.globalStyles.map(style => style.toJssString()).filter(x => !!x).join(",");
         const globalJssString = `{ "@global": { ${globalStyles} } }`;
         const globalJssObject = JSON.parse(globalJssString);

@@ -13,7 +13,7 @@ ko.bindingHandlers["jss"] = {
         }
 
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(styleSheet);
+        const css = compiler.compile(styleSheet);
 
         element.innerHTML = css;
     }

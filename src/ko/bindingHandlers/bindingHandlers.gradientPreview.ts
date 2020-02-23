@@ -18,7 +18,7 @@ ko.bindingHandlers["gradientPreview"] = {
         styleSheet.styles.push(style);
 
         const compiler = new JssCompiler();
-        const css = compiler.styleSheetToCss(styleSheet);
+        const css = compiler.compile(styleSheet);
         element.innerHTML = css;
     }
 };

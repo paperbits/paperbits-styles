@@ -45,7 +45,7 @@ export class StylePreviewBindingHandler {
 
                         const styleElement = document.createElement("style");
                         const compiler = new JssCompiler();
-                        const css = compiler.styleSheetToCss(styleModel.styleSheet);
+                        const css = compiler.compile(styleModel.styleSheet);
                         styleElement.innerHTML = css;
                         element.parentElement.insertBefore(styleElement, element);
                     }
