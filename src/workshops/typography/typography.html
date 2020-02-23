@@ -7,7 +7,7 @@
 
     <div id="typographyCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <div class="toolbox-btn" data-bind="css: { 'toolbox-btn-is-active': isWeightBold() }, tooltipToggle: currentWeight" title="Bold">
+            <div class="toolbox-btn" data-bind="css: { 'toolbox-btn-is-active': isWeightBold() }, tooltipToggle: currentWeight, attr: { title: currentWeight }">
                 <a href="#" data-bind="click: toggleBold" aria-label="Make text bold">
                     <i class="paperbits-icon paperbits-bold"></i>
                 </a>
