@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import { StyleModel } from "@paperbits/common/styles";
+import { JssCompiler } from "../../jssCompiler";
 
 
 export class StyledBindingHandler {
@@ -29,30 +30,33 @@ export class StyledBindingHandler {
         ko.bindingHandlers["styledInPlace"] = {
             update: async (element: HTMLElement, valueAccessor) => {
                 const styleModel: StyleModel = ko.unwrap(valueAccessor());
-        
+
                 if (!styleModel) {
                     return;
                 }
-        
+
                 const cssObservable = ko.observable();
-        
+
                 let styleElement = element.ownerDocument.getElementById(styleModel.key);
-        
-                if (styleModel.css) {
+
+                const compiler = new JssCompiler();
+                const css = compiler.styleSheetToCss(styleModel.styleSheet);
+
+                if (css) {
                     if (!styleElement) {
                         styleElement = element.ownerDocument.createElement("style");
                         styleElement.id = styleModel.key;
                         element.ownerDocument.head.appendChild(styleElement);
                     }
-        
-                    styleElement.innerHTML = styleModel.css;
+
+                    styleElement.innerHTML = css;
                 }
                 else if (styleElement) {
                     styleElement.remove();
                 }
-        
+
                 cssObservable(styleModel.classNames);
-        
+
                 ko.applyBindingsToNode(element, { css: cssObservable }, null);
             }
         };

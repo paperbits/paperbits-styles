@@ -1,6 +1,7 @@
 import * as ko from "knockout";
 import { StyleCompiler } from "@paperbits/common/styles";
 import { StyleService } from "../..";
+import { JssCompiler } from "../../jssCompiler";
 
 /* The task of this handler is to assign classes, not styles */
 
@@ -43,7 +44,9 @@ export class StylePreviewBindingHandler {
                         classNames = styleModel.classNames;
 
                         const styleElement = document.createElement("style");
-                        styleElement.innerHTML = await styleModel.css;
+                        const compiler = new JssCompiler();
+                        const css = compiler.styleSheetToCss(styleModel.styleSheet);
+                        styleElement.innerHTML = css;
                         element.parentElement.insertBefore(styleElement, element);
                     }
                 }
