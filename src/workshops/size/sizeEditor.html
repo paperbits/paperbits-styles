@@ -1,0 +1,46 @@
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#sizeCollapse'"></a>
+        <b>Container size</b>
+    </label>
+    <div id="sizeCollapse" class="collapse form-group-collapse">
+        <!-- ko if: widthEnabled -->
+        <div class="form-group">
+            <label for="itemWidth" class="form-label">Width (px)</label>
+            <input type="number" id="itemWidth" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: itemWidth" />
+        </div>
+        <!-- /ko -->
+        <!-- ko if: minMaxWidthEnabled -->
+        <div class="form-group">
+            <label for="minWidth" class="form-label">Min width (px)</label>
+            <input type="number" id="minWidth" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: minWidth" />
+        </div>
+        <div class="form-group">
+            <label for="maxWidth" class="form-label">Max width (px)</label>
+            <input type="number" id="maxWidth" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: maxWidth" />
+        </div>
+        <!-- /ko -->
+        <!-- ko if: heightEnabled -->
+        <div class="form-group">
+            <label for="itemHeight" class="form-label">Height (px)</label>
+            <input type="number" id="itemHeight" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: itemHeight" />
+        </div>
+        <!-- /ko -->
+        <!-- ko if: minMaxHeightEnabled -->
+        <div class="form-group">
+            <label for="minHeight" class="form-label">Min height (px)</label>
+            <input type="number" id="minHeight" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: minHeight" />
+        </div>
+        <div class="form-group">
+            <label for="maxHeight" class="form-label">Max height (px)</label>
+            <input type="number" id="maxHeight" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: maxHeight" />
+        </div>
+        <!-- /ko -->
+    </div>
+</div>

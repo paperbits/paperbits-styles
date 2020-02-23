@@ -63,8 +63,8 @@ export class GoogleFont {
                 const matches = regex.exec(variantName);
 
                 /* Normal weight is equivalent to 400. Bold weight is quivalent to 700. */
-                const fontWeight = matches[1] || 400;
-                const fontStyle = matches[2] || "normal";
+                const fontWeight = +matches[1] || 400;
+                const fontStyle = (matches[2] === "regular" ? "normal" : matches[2]) || "normal";
                 const fontFile = this.files[variantName];
 
                 const fontVariant: FontVariantContract = {

@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import template from "./styleEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { VariationContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
-import { BoxStylePluginConfig, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig } from "../../contracts";
+import { BoxStylePluginConfig, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig } from "../../contracts";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
 import { AnimationStylePluginConfig } from "../../plugins/animation";
@@ -24,6 +24,7 @@ export class StyleEditor {
     public readonly elementStyleShadow: ko.Observable<ShadowStylePluginConfig>;
     public readonly elementStyleAnimation: ko.Observable<AnimationStylePluginConfig>;
     public readonly elementStyleBox: ko.Observable<BoxStylePluginConfig>;
+    public readonly elementStyleSize: ko.Observable<SizeStylePluginConfig>;
     public readonly elementStyleTransform: ko.Observable<TransformStylePluginConfig>;
     public readonly elementStyleTransition: ko.Observable<TransitionStylePluginConfig>;
     public readonly allowBlockStyles: ko.Observable<boolean>;
@@ -41,6 +42,7 @@ export class StyleEditor {
         this.elementStyleShadow = ko.observable();
         this.elementStyleAnimation = ko.observable();
         this.elementStyleBox = ko.observable();
+        this.elementStyleSize = ko.observable();
         this.allowBlockStyles = ko.observable();
         this.working = ko.observable(true);
     }
@@ -81,6 +83,7 @@ export class StyleEditor {
         this.elementStyleShadow(<ShadowStylePluginConfig>style.shadow);
         this.elementStyleAnimation(<AnimationStylePluginConfig>style.animation);
         this.elementStyleBox(<BoxStylePluginConfig>style);
+        this.elementStyleSize(<SizeStylePluginConfig>style.size);
         this.working(false);
     }
 
@@ -156,6 +159,12 @@ export class StyleEditor {
     public onBoxUpdate(pluginConfig: BoxStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
         Object.assign(style, pluginConfig);
+        this.scheduleUpdate();
+    }
+
+    public onSizeUpdate(pluginConfig: SizeStylePluginConfig): void {
+        const style = this.getStyleForSelectedState();
+        style["size"] = pluginConfig;
         this.scheduleUpdate();
     }
 
