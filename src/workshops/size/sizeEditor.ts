@@ -73,7 +73,6 @@ export class SizeEditor {
         this.itemWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
         this.minWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
         this.maxWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-
     }
     
     private loadData(data: SizeStylePluginConfig): void {
