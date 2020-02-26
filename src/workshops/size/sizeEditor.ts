@@ -53,7 +53,7 @@ export class SizeEditor {
         this.minWidth = ko.observable();
         this.maxWidth = ko.observable();
     }
-    
+
     @OnMounted()
     public init(): void {
         const features = this.features.split(",");
@@ -74,16 +74,20 @@ export class SizeEditor {
         this.minWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
         this.maxWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
     }
-    
-    private loadData(data: SizeStylePluginConfig): void {
-        const currentStyle = data;
-        currentStyle.height && this.itemHeight(currentStyle.height);
-        currentStyle.minHeight && this.minHeight(currentStyle.minHeight);
-        currentStyle.maxHeight && this.maxHeight(currentStyle.maxHeight);
 
-        currentStyle.width && this.itemWidth(currentStyle.width);
-        currentStyle.minWidth && this.minWidth(currentStyle.minWidth);
-        currentStyle.maxWidth && this.maxWidth(currentStyle.maxWidth);
+    private loadData(data: SizeStylePluginConfig): void {
+        if (!data) {
+            return;
+        }
+
+        const currentStyle = data;
+        this.itemHeight(currentStyle?.height);
+        this.minHeight(currentStyle?.minHeight);
+        this.maxHeight(currentStyle?.maxHeight);
+        
+        this.itemWidth(currentStyle?.width);
+        this.minWidth(currentStyle?.minWidth);
+        this.maxWidth(currentStyle?.maxWidth);
     }
 
     private updateSize(update: SizeStylePluginConfig): void {
