@@ -82,7 +82,7 @@ export class BoxEditor {
         this.borderRightWidth = ko.computed(() => this.borderRight() ? this.borderRight().width : null);
         this.borderBottomWidth = ko.computed(() => this.borderBottom() ? this.borderBottom().width : null);
     }
-    
+
     @OnMounted()
     public init(): void {
         const features = this.features.split(",");
@@ -114,8 +114,12 @@ export class BoxEditor {
         this.paddingRight.subscribe(this.dispatchUpdates);
         this.paddingBottom.subscribe(this.dispatchUpdates);
     }
-    
+
     private loadData(data: BoxStylePluginConfig): void {
+        if (!data) {
+            return;
+        }
+
         const currentStyle = data;
         if (currentStyle.margin) {
             this.marginTop(currentStyle.margin.top);
@@ -162,7 +166,7 @@ export class BoxEditor {
             if (value === 0) {
                 return 0;
             }
-            
+
             if (value) {
                 const parsed = parseInt(value);
                 if (parsed === 0) {
