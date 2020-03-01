@@ -1,6 +1,6 @@
 {
     "name": "@paperbits/styles",
-    "version": "0.1.232",
+    "version": "0.1.233",
     "description": "Paperbits style editors.",
     "author": "Paperbits",
     "license": "MIT",
@@ -16,7 +16,7 @@
         "url": "https://github.com/paperbits/paperbits-styles/issues"
     },
     "dependencies": {
-        "@paperbits/common": "0.1.232",
+        "@paperbits/common": "0.1.233",
         "@simonwep/pickr": "^1.4.7",
         "cropperjs": "^1.5.6",
         "google-maps": "^3.3.0",
