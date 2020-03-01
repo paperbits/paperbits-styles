@@ -21,7 +21,7 @@ export abstract class StylePlugin {
             return value;
         }
 
-        if (value) {
+        if (value !== null && value !== undefined) {
             return parseInt(<string>value) + "px";
         }
         else {
