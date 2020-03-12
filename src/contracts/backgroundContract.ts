@@ -14,9 +14,14 @@ export interface BackgroundImage {
     position?: string;
 
     /**
-     * e.g. "no-repeat"
+     * e.g. "no-repeat".
      */
     repeat?: string;
+
+    /**
+     * e.g. "fixed".
+     */
+    attachment?: string;
 }
 
 export interface BackgroundStylePluginConfig extends StylePluginConfig {
