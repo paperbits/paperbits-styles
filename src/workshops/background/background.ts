@@ -11,6 +11,7 @@ import { BackgroundStylePlugin } from "../../plugins/background/backgroundStyleP
 
 
 const defaultBackgroundSize = "original";
+const defaultBackgroundAttachment = "inherit";
 
 @Component({
     selector: "background",
@@ -25,6 +26,7 @@ export class Background {
     public readonly repeat: ko.Observable<string>;
     public readonly size: ko.Observable<string>;
     public readonly position: ko.Observable<string>;
+    public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
 
     private backgroundStylePlugin: BackgroundStylePlugin;
@@ -36,6 +38,7 @@ export class Background {
     ) {
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
+        this.attachment = ko.observable<string>();
         this.color = ko.observable<ColorContract>();
         this.colorKey = ko.observable<string>();
         this.gradientKey = ko.observable<string>();
@@ -57,6 +60,7 @@ export class Background {
         await this.fillout();
         this.background.subscribe(this.fillout);
         this.size.subscribe(this.applyChanges);
+        this.attachment.subscribe(this.applyChanges);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
@@ -72,6 +76,7 @@ export class Background {
         if (!backgroundPluginConfig) {
             this.size(null);
             this.position(null);
+            this.attachment(null);
             this.color(null);
             this.colorKey(null);
             this.gradientKey(null);
@@ -110,6 +115,7 @@ export class Background {
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
             this.size(image.size || defaultBackgroundSize);
+            this.attachment(image.attachment || defaultBackgroundAttachment);
             this.position(image.position || "center");
 
             const media = await this.mediaService.getMediaByKey(image.sourceKey);
@@ -126,11 +132,17 @@ export class Background {
         this.applyChanges();
     }
 
+    public onAttachmentChange(attachment: string): void {
+        this.attachment(attachment);
+        this.applyChanges();
+    }
+
     public onMediaSelected(media: MediaContract): void {
         this.source(media ? `url("${media.downloadUrl}")` : "none");
         this.sourceKey(media ? media.key : undefined);
         this.repeat(this.repeat() || "no-repeat");
         this.size(this.size() || defaultBackgroundSize);
+        this.attachment(this.attachment() || defaultBackgroundAttachment);
         this.position(this.position() || "center center");
         this.applyChanges();
     }
@@ -153,6 +165,7 @@ export class Background {
         this.sourceKey(undefined);
         this.size(undefined);
         this.position(undefined);
+        this.attachment(undefined);
         this.gradientKey(undefined);
         this.applyChanges();
     }
@@ -169,7 +182,10 @@ export class Background {
                 size: this.size() !== defaultBackgroundSize
                     ? this.size()
                     : undefined,
-                repeat: this.repeat()
+                repeat: this.repeat(),
+                attachment: this.attachment() !== defaultBackgroundAttachment
+                    ? this.attachment()
+                    : undefined, 
             });
         }
 

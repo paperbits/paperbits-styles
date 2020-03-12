@@ -12,12 +12,6 @@ export class BackgroundStylePlugin extends StylePlugin {
         private readonly mediaPermalinkResolver: IPermalinkResolver
     ) {
         super();
-        if(!themeContract) {
-            console.error("ThemeContract is empty");
-        }
-        if(!mediaPermalinkResolver) {
-            console.error("mediaPermalinkResolver is empty");
-        }
     }
 
     public setThemeContract(themeContract: ThemeContract): void {
@@ -30,6 +24,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         const backgroundPosition = [];
         const backgroundRepeat = [];
         const backgroundSize = [];
+        const backgroundAttachment = [];
 
         if (pluginConfig.colorKey) {
             const color = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
@@ -55,6 +50,7 @@ export class BackgroundStylePlugin extends StylePlugin {
                 backgroundPosition.push(image.position || "unset");
                 backgroundSize.push(image.size || "unset");
                 backgroundRepeat.push(image.repeat || "no-repeat");
+                backgroundAttachment.push(image.attachment || "unset");
             }
         }
 
@@ -84,6 +80,10 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (backgroundRepeat.length > 0) {
             rules.push(new StyleRule("backgroundRepeat", backgroundRepeat.join(",")));
+        }
+
+        if (backgroundAttachment.length > 0) {
+            rules.push(new StyleRule("backgroundAttachment", backgroundAttachment.join(",")));
         }
 
         return rules;
