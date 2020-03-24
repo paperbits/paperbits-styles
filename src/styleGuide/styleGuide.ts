@@ -108,6 +108,18 @@ export class StyleGuide {
         this.selectColor(addedItem);
     }
 
+    public async addGradient(): Promise<void> {
+        const variationName = `${Utils.identifier()}`;
+        const addedItem = await this.styleService.addGradientVariation(variationName);
+
+        const gradients = this.gradients();
+        gradients.push(addedItem)
+        console.log(gradients);
+        this.gradients(this.sortByDisplayName(gradients));
+
+        this.selectGradient(addedItem);
+    }
+
     public async addShadow(): Promise<void> {
         const variationName = `${Utils.identifier()}`;
         const addedItem = await this.styleService.addShadowVariation(variationName);
@@ -121,6 +133,11 @@ export class StyleGuide {
 
     public async removeColor(color: ColorContract): Promise<void> {
         await this.styleService.removeStyle(color.key);
+        this.applyChanges();
+    }
+
+    public async removeGradient(gradient: LinearGradientContract): Promise<void> {
+        await this.styleService.removeStyle(gradient.key);
         this.applyChanges();
     }
 
@@ -142,6 +159,26 @@ export class StyleGuide {
 
         this.viewManager.openViewAsPopup(view);
         return true;
+    }
+
+    public selectGradient(gradient: LinearGradientContract): boolean { 
+        const view: View = { 
+            heading: "Gradient",
+            component: {
+                name: "gradient-editor",
+                params: {
+                    selectedGradient: gradient,
+                    onSelect: async (gradient: LinearGradientContract) => {
+                        await this.styleService.updateStyle(gradient);
+                        this.applyChanges();
+                    }
+                }
+            },
+            resize: "vertically horizontally"
+        };
+
+        this.viewManager.openViewAsPopup(view);
+        return true
     }
 
     public selectShadow(shadow: ShadowContract): boolean {
@@ -457,7 +494,6 @@ export class StyleGuide {
         };
 
         if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
-            !style.key.startsWith("gradients/") &&
             !style.key.endsWith("/default") && style.key.indexOf("/navbar/default/") === -1
         ) {
             styleContextualEditor.deleteCommand = {
@@ -509,7 +545,7 @@ export class StyleGuide {
             });
         }
 
-        if (style.key.startsWith("colors/") || style.key.startsWith("shadows/")) {
+        if (style.key.startsWith("colors/") || style.key.startsWith("shadows/") || style.key.startsWith("gradients/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit variation",
@@ -517,11 +553,15 @@ export class StyleGuide {
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
+                    if (style.key.startsWith("gradients/")) {
+                        this.selectGradient(style);
+                        return;
+                    }
                     style.key.startsWith("colors/") ? this.selectColor(style) : this.selectShadow(<ShadowContract>style);
                 }
             });
         }
-        else if (!style.key.startsWith("fonts/") && !style.key.startsWith("gradients/")) {
+        else if (!style.key.startsWith("fonts/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit variation",

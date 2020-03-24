@@ -1,17 +1,39 @@
-<!-- <style data-bind="jss: gradientPreview"></style> -->
-
-<style data-bind="jss: gradientPreview"></style>
-
-<div class="dropzone">
-    <div class="dropzone-showbox">
-        <div class="fit gradient-preview"></div>
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
+    <!-- ko if: gradientViewModel() -->
+    <div class="form-group">
+        <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Name of the gradient', click: initialize"></button>
+        <label for="gradientName">Gradient name</label>
+        <input id="gradientName" type="text" class="form-control" spellcheck="false"
+            data-bind="textInput: gradientViewModel().displayName, focus: true">
     </div>
-</div>
 
-<div class="color-stops" data-bind="click: $component.addColorStop">
-    <!-- ko foreach: { data: $component.colorStops, as: 'colorStop' } -->
-    <button class="color-stop" data-bind="style: { left: colorStop.length+'%' }">
-        +
-    </button>
+    <style data-bind="jss: gradientPreview"></style>
+
+    <div class="dropzone">
+        <div class="dropzone-showbox">
+            <div class="fit gradient-preview"></div>
+        </div>
+
+        <div style="width: 100%; height: 25px;margin: 15px 0px;">
+            <div class="fit gradient-preview"></div>
+        </div>
+    </div>
+
+
+    <div class="style-card style-card-empty">
+        <div style="max-height: 450px;" data-bind="scrollable: true">
+            <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+            <div>
+                <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
+                data-bind="balloon: { component: { name: 'color-picker-view', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }">
+                    <div style="width: 30px; height: 30px;" data-bind="style: {background: colorStop.color}"></div>
+                </a>
+                <p>Length: <input data-bind="textInput: colorStop.length" /></p>
+            </div>
+            <!-- /ko -->
+        </div>
+        <a href="#" data-bind="click: addColor">Add color</a>
+    </div>
     <!-- /ko -->
-</div>
+</fieldset>
+

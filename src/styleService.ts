@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
-import { ThemeContract, ColorContract, ShadowContract } from "./contracts";
+import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
 import { StyleHandler, VariationContract } from "@paperbits/common/styles";
@@ -77,6 +77,21 @@ export class StyleService {
         styles["colors"][variationName] = newVariation;
 
         this.updateStyles(styles);
+
+        // console.log(styles);
+
+        return newVariation;
+    }
+
+    public async addGradientVariation(variationName: string): Promise<LinearGradientContract> {
+        const styles = await this.getStyles();
+        const newVariation: LinearGradientContract = Objects.clone(styles["gradients"]["gradient1"]);
+        newVariation.key = `gradients/${variationName}`;
+        newVariation.displayName = "< Unnamed >";
+        
+        styles["gradients"][variationName] = newVariation;
+
+        this.updateStyles(styles)
 
         return newVariation;
     }
