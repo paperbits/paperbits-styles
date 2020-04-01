@@ -114,7 +114,6 @@ export class StyleGuide {
 
         const gradients = this.gradients();
         gradients.push(addedItem)
-        console.log(gradients);
         this.gradients(this.sortByDisplayName(gradients));
 
         this.selectGradient(addedItem);
@@ -595,7 +594,6 @@ export class StyleGuide {
                 }
             });
         }
-
         return styleContextualEditor;
     }
 

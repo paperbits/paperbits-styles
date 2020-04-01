@@ -5,10 +5,10 @@ export class LinearGradientViewModel {
     public key: string;
     public displayName: ko.Observable<string>;
     public direction: ko.Observable<string>;
-    public colorStops: ko.ObservableArray<colorStopViewModel>;
+    public colorStops: ko.ObservableArray<ColorStopViewModel>;
 
     constructor(gradient: LinearGradientContract) {
-        this.colorStops = ko.observableArray<colorStopViewModel>([]);
+        this.colorStops = ko.observableArray<ColorStopViewModel>([]);
         this.direction = ko.observable<string>();
         if (gradient) {
             this.key = gradient.key;
@@ -16,7 +16,7 @@ export class LinearGradientViewModel {
             this.direction(gradient.direction || "");
             if (gradient.colorStops) {
                 gradient.colorStops.forEach((colorStop) => {
-                    this.colorStops.push(new colorStopViewModel(colorStop));
+                    this.colorStops.push(new ColorStopViewModel(colorStop));
                 });
             }
             return;
@@ -26,7 +26,7 @@ export class LinearGradientViewModel {
     }
 }
 
-export class colorStopViewModel {
+export class ColorStopViewModel {
     public color: ko.Observable<string>;
     public length: ko.Observable<number>;
 
