@@ -87,9 +87,12 @@ export class Typography {
                 this.fontName(fontContract.displayName);
                 this.fontKey(typographyContract.fontKey);
 
-                const supportedWeights = fontContract.variants.map(variant => variant.weight.toString());
+                const supportedWeights = fontContract.variants
+                    .map(variant => variant.weight.toString());
 
-                this.fontWeights = [].concat(supportedWeights, undefined);
+                const deduplicated = supportedWeights.filter((item, index) => supportedWeights.indexOf(item) === index);
+
+                this.fontWeights = [].concat(deduplicated, undefined);
             }
             else {
                 console.warn(`Font with key "${typographyContract.fontKey}" not found. Elements using it will fallback to parent's definition.`);
