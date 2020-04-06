@@ -85,7 +85,7 @@ export class StyleService {
 
     public async addGradientVariation(variationName: string): Promise<LinearGradientContract> {
         const styles = await this.getStyles();
-        const newVariation: LinearGradientContract = Objects.clone(styles["gradients"]["gradient1"]);
+        const newVariation: LinearGradientContract = Objects.clone(styles["gradients"]["default"]);
         newVariation.key = `gradients/${variationName}`;
         newVariation.displayName = "< Unnamed >";
         

@@ -1,13 +1,9 @@
 import * as ko from "knockout";
 import template from "./gradientEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradientString, ColorContract, ThemeContract } from "../../contracts";
-import { View, ViewManagerMode, ViewManager } from "@paperbits/common/ui";
+import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradientString } from "../../contracts";
 import { LinearGradientViewModel, ColorStopViewModel } from "./linearGradientViewModel";
-import { StyleService } from "../../styleService";
 import { Style, StyleSheet, StyleRule } from "@paperbits/common/styles";
-import { BackgroundStylePlugin } from "../../plugins";
-import { IPermalinkResolver } from "@paperbits/common/permalinks";
 
 
 @Component({
@@ -28,11 +24,7 @@ export class GradientEditor {
     @Event()
     public readonly onSelect: (gradient: LinearGradientContract) => void;
 
-    constructor(
-        private readonly mediaPermalinkResolver: IPermalinkResolver,
-        private readonly styleService: StyleService,
-        private readonly viewManager: ViewManager
-    ) {
+    constructor() {
         this.initialize = this.initialize.bind(this);
 
         this.gradientPreview = ko.observable<string>();
@@ -47,14 +39,12 @@ export class GradientEditor {
 
         this.gradientViewModel(this.selectedGradient ? 
             new LinearGradientViewModel(this.selectedGradient()) 
-            : new LinearGradientViewModel(null))
+            : new LinearGradientViewModel(null));
         this.direction(parseFloat(this.gradientViewModel().direction()));
         this.direction.subscribe(deg => {
             this.gradientViewModel().direction(deg + "deg");
             this.applyChanges();
-            if (this.onSelect) {
-                this.onSelect(this.selectedGradient());
-            }
+            this.updateOnSelect();
         });
 
         this.configDragging();
@@ -66,23 +56,21 @@ export class GradientEditor {
     }
 
     private configDragging(): void {
-        this.dragging = this.gradientViewModel().colorStops().map(x => false);
+        this.dragging = this.gradientViewModel().colorStops().map(() => false);
     }
 
     public async attachFunction(): Promise<void> {
         const gradient = this.gradientViewModel();
 
-        gradient.displayName.subscribe((change) => {
-            this.applyChanges()
-            if (this.onSelect) {
-                this.onSelect(this.selectedGradient())
-            }
+        gradient.displayName.subscribe(() => {
+            this.applyChanges();
+            this.updateOnSelect();
         });
         gradient.direction.subscribe(this.applyChanges);
         gradient.colorStops().forEach((colorStop) => {
             colorStop.color.subscribe(this.applyChanges);
             colorStop.length.subscribe(this.applyChanges);
-        })
+        });
     }
 
     public initializePointer(element: HTMLElement, colorStop: ColorStopViewModel): boolean {
@@ -91,7 +79,7 @@ export class GradientEditor {
         const position = parentRect.width * 1.0 / 100 * length - 4;
         element.style.left= position + "px";
         element.style.backgroundColor = colorStop.color();
-        return true
+        return true;
     } 
 
     public async addColor(): Promise<void> {
@@ -102,9 +90,7 @@ export class GradientEditor {
         newColor.color.subscribe(this.applyChanges);
         newColor.length.subscribe(this.applyChanges);
         this.gradientViewModel().colorStops.push(newColor);
-        if (this.onSelect) {
-            this.onSelect(this.selectedGradient());
-        }
+        this.updateOnSelect();
     }
 
     private async applyChanges(): Promise<void> {
@@ -117,11 +103,11 @@ export class GradientEditor {
             colorStops.push(<LinearGradientColorStopContract>{
                 color: colorStop.color(),
                 length: colorStop.length()
-            })
-        })
+            });
+        });
 
-        gradient.colorStops = colorStops
-        this.updateBackground()
+        gradient.colorStops = colorStops;
+        this.updateBackground();
     }
 
     private async updateBackground(): Promise<void> {
@@ -134,35 +120,25 @@ export class GradientEditor {
         this.gradientPreview(styleSheet);
     }
 
-    public changeColor(obIndex: ko.Observable<number>, colorValue: string, e:HTMLElement): void {
+    public changeColor(obIndex: ko.Observable<number>, colorValue: string): void {
         const index = obIndex();
         this.gradientViewModel().colorStops()[index].color(colorValue);
-        if (this.onSelect) {
-            this.onSelect(this.selectedGradient());
-        }
+        this.updateOnSelect();
     }
 
-    public onMouseDown(obIndex: ko.Observable<number>, element: HTMLElement, event: MouseEvent, parent: any): void {
-        this.configDragging()
+    public onMouseDown(obIndex: ko.Observable<number>, element: HTMLElement, event: MouseEvent): void {
+        this.configDragging();
         this.dragging[obIndex()] = true;
         this.initialOffset = event.pageX - element.offsetLeft;
     }
 
     public onMouseUp(): void {
         this.configDragging();
-        if (this.onSelect) {
-            this.onSelect(this.selectedGradient());
-        }
+        this.updateOnSelect();
     }
 
     public onMouseMove(element: HTMLElement, event: MouseEvent): void {
-        let dragIndex = -1;
-        for (var i = 0; i < this.dragging.length; i++) {
-            if (this.dragging[i]) {
-                dragIndex = i;
-                break
-            }
-        }
+        let dragIndex = this.dragging.findIndex(e => e);
         if (dragIndex == -1) {
             return;
         }
@@ -180,5 +156,11 @@ export class GradientEditor {
         (<HTMLElement>element.children.item(dragIndex)).style.left = position;
         const length = (parseFloat(position) + 4) / parentRect.width * 100;
         this.gradientViewModel().colorStops()[dragIndex].length(length);
+    }
+
+    public updateOnSelect(): void {
+        if (this.onSelect) {
+            this.onSelect(this.selectedGradient());
+        }
     }
 }
