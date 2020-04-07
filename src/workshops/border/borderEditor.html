@@ -16,14 +16,14 @@
         </div>
 
         <ul class="palette">
-            <li class="color-box" data-bind="css: { selected: !$component.borderColor() }">
+            <li class="color-box" data-bind="css: { selected: !$component.borderColorKey() }">
                 <a href="#" title="Clear color" class="color" role="button" data-bind="click: $component.clearColor">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
             </li>
 
             <!-- ko foreach: { data: colors, as: 'color' } -->
-            <li class="color-box" data-bind="css: { selected: color === $component.borderColor }">
+            <li class="color-box" data-bind="css: { selected: color.key === $component.borderColorKey() }">
                 <a href="#" class="color" role="button"
                     data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
             </li>
