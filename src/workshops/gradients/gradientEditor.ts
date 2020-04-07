@@ -35,11 +35,8 @@ export class GradientEditor {
 
     @OnMounted()
     public async initialize(): Promise<void> {
-        this.gradientPreview(null);
+        this.gradientViewModel(new LinearGradientViewModel(this.selectedGradient()));
 
-        this.gradientViewModel(this.selectedGradient ? 
-            new LinearGradientViewModel(this.selectedGradient()) 
-            : new LinearGradientViewModel(null));
         this.direction(parseFloat(this.gradientViewModel().direction()));
         this.direction.subscribe(deg => {
             this.gradientViewModel().direction(deg + "deg");

@@ -78,8 +78,6 @@ export class StyleService {
 
         this.updateStyles(styles);
 
-        // console.log(styles);
-
         return newVariation;
     }
 
