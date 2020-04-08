@@ -22,11 +22,13 @@
         <div class="slider-display">
             <div class="fit gradient-preview"></div>
         </div>
-        <div class="color-pointer-list" data-bind="event: {mousemove: function() {$component.onMouseMove($element, event)}}">
+
+        <div class="color-pointer-list">
             <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-            <div class="color-pointer" draggable="true" data-bind="visible: $component.initializePointer($element, colorStop), event:{ mousedown: function() {$component.onMouseDown($index, $element, event)}, mouseup: $component.onMouseUp}"></div>
+            <div class="color-pointer" data-bind="slider: { data: colorStop, initialize: $component.initializePointer, onmousemove: $component.onMouseMove}"></div>
             <!-- /ko -->
         </div>
+        
     </div>
 
 

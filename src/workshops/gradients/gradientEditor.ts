@@ -15,8 +15,8 @@ export class GradientEditor {
     public readonly gradientViewModel: ko.Observable<LinearGradientViewModel>;
 
     public direction: ko.Observable<number>;
-    public dragging: boolean[];
     public initialOffset: number;
+    private sliderWidth: number;
 
     @Param()
     public readonly selectedGradient: ko.Observable<LinearGradientContract>;
@@ -44,16 +44,8 @@ export class GradientEditor {
             this.updateOnSelect();
         });
 
-        this.configDragging();
-
         this.attachFunction();
         this.updateBackground();
-        
-        this.gradientViewModel().colorStops.subscribe(this.configDragging);
-    }
-
-    private configDragging(): void {
-        this.dragging = this.gradientViewModel().colorStops().map(() => false);
     }
 
     public async attachFunction(): Promise<void> {
@@ -71,9 +63,9 @@ export class GradientEditor {
     }
 
     public initializePointer(element: HTMLElement, colorStop: ColorStopViewModel): boolean {
-        const parentRect = element.parentElement.getBoundingClientRect();
+        this.sliderWidth = element.parentElement.getBoundingClientRect().width;
         const length = colorStop.length();
-        const position = parentRect.width * 1.0 / 100 * length - 4;
+        const position = this.sliderWidth * 1.0 / 100 * length - 4;
         element.style.left= position + "px";
         element.style.backgroundColor = colorStop.color();
         return true;
@@ -123,36 +115,10 @@ export class GradientEditor {
         this.updateOnSelect();
     }
 
-    public onMouseDown(obIndex: ko.Observable<number>, element: HTMLElement, event: MouseEvent): void {
-        this.configDragging();
-        this.dragging[obIndex()] = true;
-        this.initialOffset = event.pageX - element.offsetLeft;
-    }
 
-    public onMouseUp(): void {
-        this.configDragging();
-        this.updateOnSelect();
-    }
-
-    public onMouseMove(element: HTMLElement, event: MouseEvent): void {
-        let dragIndex = this.dragging.findIndex(e => e);
-        if (dragIndex == -1) {
-            return;
-        }
-        const parentRect = element.getBoundingClientRect();
-        let x = event.pageX;
-        
-        if (x < parentRect.x) {
-          x =  parentRect.x;
-        }
-        
-        if (x > parentRect.x + parentRect.width) {
-          x =  parentRect.x + parentRect.width;
-        }
-        let position =  x - this.initialOffset + "px";
-        (<HTMLElement>element.children.item(dragIndex)).style.left = position;
-        const length = (parseFloat(position) + 4) / parentRect.width * 100;
-        this.gradientViewModel().colorStops()[dragIndex].length(length);
+    public onMouseMove(element: HTMLElement, position: number, index: number): void {
+        const length = (position + 4) / this.sliderWidth * 100;
+        this.gradientViewModel().colorStops()[index].length(length);
     }
 
     public updateOnSelect(): void {
