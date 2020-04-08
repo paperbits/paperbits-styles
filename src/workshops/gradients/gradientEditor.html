@@ -25,7 +25,7 @@
 
         <div class="color-pointer-list">
             <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-            <div class="color-pointer" data-bind="slider: { data: colorStop, initialize: $component.initializePointer, onmousemove: $component.onMouseMove}"></div>
+            <div class="color-pointer" data-bind="slider: { data: colorStop, index: $index(), initialize: $component.initializePointer, onmousemove: $component.onMouseMove}"></div>
             <!-- /ko -->
         </div>
         
