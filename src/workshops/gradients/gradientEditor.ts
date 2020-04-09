@@ -15,8 +15,6 @@ export class GradientEditor {
     public readonly gradientViewModel: ko.Observable<LinearGradientViewModel>;
 
     public direction: ko.Observable<number>;
-    public initialOffset: number;
-    private sliderWidth: number;
 
     @Param()
     public readonly selectedGradient: ko.Observable<LinearGradientContract>;
@@ -62,15 +60,6 @@ export class GradientEditor {
         });
     }
 
-    public initializePointer(element: HTMLElement, colorStop: ColorStopViewModel): boolean {
-        this.sliderWidth = element.parentElement.getBoundingClientRect().width;
-        const length = colorStop.length();
-        const position = this.sliderWidth * 1.0 / 100 * length - 4;
-        element.style.left= position + "px";
-        element.style.backgroundColor = colorStop.color();
-        return true;
-    } 
-
     public async addColor(): Promise<void> {
         const newColor = new ColorStopViewModel(<LinearGradientColorStopContract> {
             color: "#000000",
@@ -79,6 +68,7 @@ export class GradientEditor {
         newColor.color.subscribe(this.applyChanges);
         newColor.length.subscribe(this.applyChanges);
         this.gradientViewModel().colorStops.push(newColor);
+        this.applyChanges();
         this.updateOnSelect();
     }
 
@@ -115,10 +105,8 @@ export class GradientEditor {
         this.updateOnSelect();
     }
 
-
-    public onMouseMove(element: HTMLElement, position: number, index: number): void {
-        const length = (position + 4) / this.sliderWidth * 100;
-        this.gradientViewModel().colorStops()[index].length(length);
+    public updateColorLength(colorStop: ColorStopViewModel,percentage: number) {
+        colorStop.length(percentage);
     }
 
     public updateOnSelect(): void {
