@@ -2,6 +2,8 @@ import * as ko from "knockout";
 import template from "./gradientEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradientString } from "../../contracts";
+import { LinearGradientViewModel, ColorStopViewModel } from "./linearGradientViewModel";
+import { Style, StyleSheet, StyleRule } from "@paperbits/common/styles";
 
 
 @Component({
@@ -9,47 +11,107 @@ import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradi
     template: template
 })
 export class GradientEditor {
-    public readonly direction: ko.Observable<number>;
-    public readonly colorStops: ko.ObservableArray<LinearGradientColorStopContract>;
     public readonly gradientPreview: ko.Observable<Object>;
+    public readonly gradientViewModel: ko.Observable<LinearGradientViewModel>;
+
+    public direction: ko.Observable<number>;
+
+    @Param()
+    public readonly selectedGradient: ko.Observable<LinearGradientContract>;
+
+    @Event()
+    public readonly onSelect: (gradient: LinearGradientContract) => void;
 
     constructor() {
         this.initialize = this.initialize.bind(this);
-        this.addColorStop = this.addColorStop.bind(this);
 
-        this.direction = ko.observable(90);
-        this.colorStops = ko.observableArray();
-        this.colorStops.push({ color: "#ABDCFF", length: 0 });
-        this.colorStops.push({ color: "#0396FF", length: 100 });
-        this.gradientPreview = ko.observable();
+        this.gradientPreview = ko.observable<string>();
+        this.gradientViewModel = ko.observable();
+        this.selectedGradient = ko.observable();
+        this.direction = ko.observable<number>();
     }
 
     @OnMounted()
     public async initialize(): Promise<void> {
-        // const gradient = this.gradient();
+        this.gradientViewModel(new LinearGradientViewModel(this.selectedGradient()));
 
-        // const jss = await this.backgroundStylePlugin.contractToStyleRules(background);
-        // this.backgroundPreview({ backgroundPreview: jss });
+        this.direction(parseFloat(this.gradientViewModel().direction()));
+        this.direction.subscribe(deg => {
+            this.gradientViewModel().direction(deg + "deg");
+            this.applyChanges();
+            this.updateOnSelect();
+        });
 
-        this.applyChanges();
+        this.attachFunction();
+        this.updateBackground();
     }
 
-    public addColorStop(a, event: MouseEvent): void {
-        event.preventDefault();
-        event.stopPropagation();
-        const colorStopLength = Math.floor(100 * event.offsetX / (<HTMLElement>event.target).clientWidth);
+    public async attachFunction(): Promise<void> {
+        const gradient = this.gradientViewModel();
 
-        this.colorStops.push({ color: "#AAAAAA", length: colorStopLength });
+        gradient.displayName.subscribe(() => {
+            this.applyChanges();
+            this.updateOnSelect();
+        });
+        gradient.direction.subscribe(this.applyChanges);
+        gradient.colorStops().forEach((colorStop) => {
+            colorStop.color.subscribe(this.applyChanges);
+            colorStop.length.subscribe(this.applyChanges);
+        });
+    }
+
+    public async addColor(): Promise<void> {
+        const newColor = new ColorStopViewModel(<LinearGradientColorStopContract> {
+            color: "#000000",
+            length: 0
+        })
+        newColor.color.subscribe(this.applyChanges);
+        newColor.length.subscribe(this.applyChanges);
+        this.gradientViewModel().colorStops.push(newColor);
         this.applyChanges();
+        this.updateOnSelect();
     }
 
     private async applyChanges(): Promise<void> {
-        const abc = getLinearGradientString({ key: "", displayName: "", direction: `${this.direction()}deg`, colorStops: this.colorStops() });
+        const gradient = this.selectedGradient();
+        const colorStops: LinearGradientColorStopContract[] = [];
 
-        this.gradientPreview({
-            gradientPreview: {
-                background: { image: abc }
-            }
+        gradient.displayName = this.gradientViewModel().displayName();
+        gradient.direction = parseFloat(this.gradientViewModel().direction()) + "deg";
+        this.gradientViewModel().colorStops().forEach((colorStop) => {
+            colorStops.push(<LinearGradientColorStopContract>{
+                color: colorStop.color(),
+                length: colorStop.length()
+            });
         });
+
+        gradient.colorStops = colorStops;
+        this.updateBackground();
+    }
+
+    private async updateBackground(): Promise<void> {
+        const style = new Style("gradient-preview");
+        style.addRules([new StyleRule("backgroundImage", getLinearGradientString(this.selectedGradient()))]);
+
+        const styleSheet = new StyleSheet();
+        styleSheet.styles.push(style);
+
+        this.gradientPreview(styleSheet);
+    }
+
+    public changeColor(obIndex: ko.Observable<number>, colorValue: string): void {
+        const index = obIndex();
+        this.gradientViewModel().colorStops()[index].color(colorValue);
+        this.updateOnSelect();
+    }
+
+    public updateColorLength(colorStop: ColorStopViewModel,percentage: number) {
+        colorStop.length(percentage);
+    }
+
+    public updateOnSelect(): void {
+        if (this.onSelect) {
+            this.onSelect(this.selectedGradient());
+        }
     }
 }

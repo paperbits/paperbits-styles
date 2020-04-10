@@ -1,17 +1,55 @@
-<!-- <style data-bind="jss: gradientPreview"></style> -->
-
-<style data-bind="jss: gradientPreview"></style>
-
-<div class="dropzone">
-    <div class="dropzone-showbox">
-        <div class="fit gradient-preview"></div>
+<fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
+    <!-- ko if: gradientViewModel() -->
+    <div class="form-group">
+        <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Name of the gradient'"></button>
+        <label for="gradientName">Gradient name</label>
+        <input id="gradientName" type="text" class="form-control" spellcheck="false"
+            data-bind="textInput: gradientViewModel().displayName, focus: true">
     </div>
-</div>
+    <div class="form-group">
+        <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Degree of the gradient'"></button>
+        <label for="gradientDegree">Degree</label>
+        <input id="gradientDegree" type="number" class="form-control" spellcheck="false"
+            data-bind="textInput: direction, focus: true">
+    </div>
 
-<div class="color-stops" data-bind="click: $component.addColorStop">
-    <!-- ko foreach: { data: $component.colorStops, as: 'colorStop' } -->
-    <button class="color-stop" data-bind="style: { left: colorStop.length+'%' }">
-        +
-    </button>
+    <style data-bind="jss: gradientPreview"></style>
+
+    <div class="dropzone">
+        <div class="dropzone-showbox">
+            <div class="fit gradient-preview"></div>
+        </div>
+        <div class="slider-display">
+            <div class="fit gradient-preview"></div>
+        </div>
+
+        <div class="color-pointer-list">
+            <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+            <div class="color-pointer" data-bind="style: { 'background-color': colorStop.color() }, slider: { data: colorStop, offset: 4, percentage: colorStop.length(), onmousemove: $component.updateColorLength, onmousedrop: $component.updateOnSelect }"></div>
+            <!-- /ko -->
+        </div>
+        
+    </div>
+
+
+    <div class="style-card style-card-empty">
+        <div class="form-group" data-bind="scrollable: true">
+            <label for="gradientColors">Colors</label>
+            <ul class="palette">
+                <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+                    <li class="color-box">
+                        <a href="#" role="listitem" class="color" 
+                        data-bind="balloon: { component: { name: 'color-picker-view', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
+                    </li>
+                <!-- /ko -->
+                <li class="color-box">
+                    <a href="#" title="Clear gradient" class="color" data-bind="click: $component.addColor">
+                        <i class="paperbits-icon paperbits-simple-add"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
     <!-- /ko -->
-</div>
+</fieldset>
+
