@@ -4,6 +4,7 @@ import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorat
 import { LinearGradientContract, LinearGradientColorStopContract, getLinearGradientString } from "../../contracts";
 import { LinearGradientViewModel, ColorStopViewModel } from "./linearGradientViewModel";
 import { Style, StyleSheet, StyleRule } from "@paperbits/common/styles";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 
 @Component({
@@ -23,8 +24,6 @@ export class GradientEditor {
     public readonly onSelect: (gradient: LinearGradientContract) => void;
 
     constructor() {
-        this.initialize = this.initialize.bind(this);
-
         this.gradientPreview = ko.observable<string>();
         this.gradientViewModel = ko.observable();
         this.selectedGradient = ko.observable();
@@ -36,7 +35,8 @@ export class GradientEditor {
         this.gradientViewModel(new LinearGradientViewModel(this.selectedGradient()));
 
         this.direction(parseFloat(this.gradientViewModel().direction()));
-        this.direction.subscribe(deg => {
+
+        this.direction.extend(ChangeRateLimit).subscribe(deg => {
             this.gradientViewModel().direction(deg + "deg");
             this.applyChanges();
             this.updateOnSelect();
@@ -49,24 +49,24 @@ export class GradientEditor {
     public async attachFunction(): Promise<void> {
         const gradient = this.gradientViewModel();
 
-        gradient.displayName.subscribe(() => {
+        gradient.displayName.extend(ChangeRateLimit).subscribe(() => {
             this.applyChanges();
             this.updateOnSelect();
         });
         gradient.direction.subscribe(this.applyChanges);
         gradient.colorStops().forEach((colorStop) => {
-            colorStop.color.subscribe(this.applyChanges);
-            colorStop.length.subscribe(this.applyChanges);
+            colorStop.color.extend(ChangeRateLimit).subscribe(this.applyChanges);
+            colorStop.length.extend(ChangeRateLimit).subscribe(this.applyChanges);
         });
     }
 
     public async addColor(): Promise<void> {
-        const newColor = new ColorStopViewModel(<LinearGradientColorStopContract> {
+        const newColor = new ColorStopViewModel(<LinearGradientColorStopContract>{
             color: "#000000",
             length: 0
-        })
-        newColor.color.subscribe(this.applyChanges);
-        newColor.length.subscribe(this.applyChanges);
+        });
+        newColor.color.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        newColor.length.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.gradientViewModel().colorStops.push(newColor);
         this.applyChanges();
         this.updateOnSelect();
@@ -78,6 +78,7 @@ export class GradientEditor {
 
         gradient.displayName = this.gradientViewModel().displayName();
         gradient.direction = parseFloat(this.gradientViewModel().direction()) + "deg";
+        
         this.gradientViewModel().colorStops().forEach((colorStop) => {
             colorStops.push(<LinearGradientColorStopContract>{
                 color: colorStop.color(),
@@ -105,7 +106,7 @@ export class GradientEditor {
         this.updateOnSelect();
     }
 
-    public updateColorLength(colorStop: ColorStopViewModel,percentage: number) {
+    public updateColorLength(colorStop: ColorStopViewModel, percentage: number): void {
         colorStop.length(percentage);
     }
 
