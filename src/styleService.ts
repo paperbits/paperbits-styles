@@ -89,7 +89,7 @@ export class StyleService {
         
         styles["gradients"][variationName] = newVariation;
 
-        this.updateStyles(styles)
+        this.updateStyles(styles);
 
         return newVariation;
     }

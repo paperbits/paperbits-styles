@@ -14,8 +14,7 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 export class GradientEditor {
     public readonly gradientPreview: ko.Observable<Object>;
     public readonly gradientViewModel: ko.Observable<LinearGradientViewModel>;
-
-    public direction: ko.Observable<number>;
+    public readonly direction: ko.Observable<number>;
 
     @Param()
     public readonly selectedGradient: ko.Observable<LinearGradientContract>;
@@ -53,7 +52,7 @@ export class GradientEditor {
             this.applyChanges();
             this.updateOnSelect();
         });
-        gradient.direction.subscribe(this.applyChanges);
+        gradient.direction.extend(ChangeRateLimit).subscribe(this.applyChanges);
         gradient.colorStops().forEach((colorStop) => {
             colorStop.color.extend(ChangeRateLimit).subscribe(this.applyChanges);
             colorStop.length.extend(ChangeRateLimit).subscribe(this.applyChanges);
