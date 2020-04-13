@@ -3,18 +3,18 @@
     <hr />
 
     <div class="flex flex-column list-container">
-        <ul class="list" data-bind="scrollable: true">
-            <li class="list-item">
+        <div class="list" data-bind="scrollable: true">
+            <div class="list-item">
                 <a href="#" title="Clear animation" class="list-item-label" data-bind="click: $component.clearAnimations">
                     (Inherit)
                 </a>
-            </li>
+            </div>
 
             <!-- ko foreach: { data: animations, as: 'animation' } -->
-            <li class="list-item" data-bind="css: { selected: animation.key == $component.selectedAnimation() }">
+            <div class="list-item" data-bind="css: { selected: animation.key == $component.selectedAnimation() }">
                 <a href="#" class="list-item-label" data-bind="click: $component.selectAnimation, text: animation.displayName"></a>
-            </li>
+            </div>
             <!--/ko -->
-        </ul>
+        </div>
     </div>
 </div>

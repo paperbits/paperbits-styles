@@ -33,19 +33,19 @@
     <div class="style-card style-card-empty">
         <div class="form-group" data-bind="scrollable: true">
             <label for="gradientColors">Colors</label>
-            <ul class="palette">
+            <div class="palette">
                 <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                    <li class="color-box">
+                    <div class="color-box">
                         <a href="#" role="listitem" class="color" 
                         data-bind="balloon: { component: { name: 'color-picker-view', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
-                    </li>
+                    </div>
                 <!-- /ko -->
-                <li class="color-box">
+                <div class="color-box">
                     <a href="#" title="Clear gradient" class="color" data-bind="click: $component.addColor">
                         <i class="paperbits-icon paperbits-simple-add"></i>
                     </a>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /ko -->

@@ -1,8 +1,8 @@
-<div class="editor">
+<div class="editor flex flex-column">
     <h1>Border</h1>
     <hr />
 
-    <div class="form">
+    <div class="form" data-bind="scrollable: true">
         <div class="form-group">
             <label for="borderLineWidth">Line width</label>
             <input id="borderLineWidth" type="number" class="form-control" placeholder="(Inherit)" min="1" max="100"
@@ -15,19 +15,19 @@
                 data-bind="options: borderLineStyles, value: borderLineStyle, optionsText: 'name', optionsValue: 'value'"></select>
         </div>
 
-        <ul class="palette">
-            <li class="color-box" data-bind="css: { selected: !$component.borderColorKey() }">
+        <div class="palette">
+            <div class="color-box" data-bind="css: { selected: !$component.borderColorKey() }">
                 <a href="#" title="Clear color" class="color" role="button" data-bind="click: $component.clearColor">
                     <i class="paperbits-icon paperbits-ban"></i>
                 </a>
-            </li>
+            </div>
 
             <!-- ko foreach: { data: colors, as: 'color' } -->
-            <li class="color-box" data-bind="css: { selected: color.key === $component.borderColorKey() }">
+            <div class="color-box" data-bind="css: { selected: color.key === $component.borderColorKey() }">
                 <a href="#" class="color" role="button"
                     data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
-            </li>
+            </div>
             <!--/ko -->
-        </ul>
+        </div>
     </div>
 </div>
