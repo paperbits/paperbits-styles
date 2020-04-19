@@ -1,13 +1,13 @@
 <fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
     <!-- ko if: gradientViewModel() -->
     <div class="form-group">
-        <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Name of the gradient'"></button>
+        <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Name of the gradient'"></button>
         <label for="gradientName">Gradient name</label>
         <input id="gradientName" type="text" class="form-control" spellcheck="false"
             data-bind="textInput: gradientViewModel().displayName, focus: true">
     </div>
     <div class="form-group">
-        <button class="btn btn-info" type="button" title="Help" data-bind="tooltipToggle: 'Degree of the gradient'"></button>
+        <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Degree of the gradient'"></button>
         <label for="gradientDegree">Degree: <span data-bind="text: direction"></span>°</label>
         <input id="gradientDegree" type="range" min="0" max="360" class="form-control"
             data-bind="textInput: direction, focus: true">
