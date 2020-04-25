@@ -1,53 +1,72 @@
 <fieldset class="form flex-item flex-item-grow" data-bind="scrollable: true">
     <!-- ko if: gradientViewModel() -->
-    <div class="form-group">
-        <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Name of the gradient'"></button>
-        <label for="gradientName">Gradient name</label>
-        <input id="gradientName" type="text" class="form-control" spellcheck="false"
-            data-bind="textInput: gradientViewModel().displayName, focus: true">
-    </div>
-    <div class="form-group">
-        <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Degree of the gradient'"></button>
-        <label for="gradientDegree">Degree: <span data-bind="text: direction"></span>°</label>
-        <input id="gradientDegree" type="range" min="0" max="360" class="form-control"
-            data-bind="textInput: direction, focus: true">
-    </div>
-
-    <style data-bind="jss: gradientPreview"></style>
-
-    <div class="dropzone">
-        <div class="dropzone-showbox">
-            <div class="fit gradient-preview"></div>
-        </div>
-        <div class="slider-display">
-            <div class="fit gradient-preview"></div>
-        </div>
-
-        <div class="color-pointer-list">
-            <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-            <div class="color-pointer" data-bind="style: { 'background-color': colorStop.color() }, slider: { data: colorStop, offset: 4, percentage: colorStop.length(), onmousemove: $component.updateColorLength, onmousedrop: $component.updateOnSelect }"></div>
-            <!-- /ko -->
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#mainCollapse'"></a>
+            <b>Main</b>
+        </label>
+        <div id="mainCollapse" class="collapse form-group-collapse">
+            <div class="form-group">
+                <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Name of the gradient'"></button>
+                <label for="gradientName">Gradient name</label>
+                <input id="gradientName" type="text" class="form-control" spellcheck="false"
+                    data-bind="textInput: gradientViewModel().displayName, focus: true">
+            </div>
         </div>
     </div>
 
-    <div class="style-card style-card-empty">
-        <div class="form-group" data-bind="scrollable: true">
-            <label for="gradientColors">Colors</label>
-            <div class="palette">
-                <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                    <div class="color-box">
-                        <a href="#" role="listitem" class="color" 
-                        data-bind="balloon: { component: { name: 'color-picker-view', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#settingsCollapse'"></a>
+            <b>Settings</b>
+        </label>
+        <div id="settingsCollapse" class="collapse form-group-collapse">
+            <div class="form-group">
+                <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Degree of the gradient'"></button>
+                <label for="gradientDegree">Rotate: <span data-bind="text: direction"></span>°</label>
+                <input id="gradientDegree" type="range" min="0" max="360" class="form-control"
+                    data-bind="textInput: direction, focus: true">
+            </div>
+
+            <style data-bind="jss: gradientPreview"></style>
+            <style data-bind="jss: gradientPreviewColorStops"></style>
+
+            <div class="dropzone">
+                <div class="dropzone-showbox">
+                    <div class="fit gradient-preview" data-bind="angle: direction"></div>
+                </div>
+                <div class="slider-display">
+                    <div class="fit gradient-preview-color-stops"></div>
+                </div>
+
+                <div class="slider">
+                    <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+                    <div class="slider-thumb"
+                        data-bind="style: { 'background-color': colorStop.color() }, slider: { percentage: colorStop.length, onChange: $component.onColorStopChange }">
                     </div>
-                <!-- /ko -->
-                <div class="color-box">
-                    <a href="#" title="Clear gradient" class="color" data-bind="click: $component.addColor">
-                        <i class="paperbits-icon paperbits-simple-add"></i>
-                    </a>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <div class="style-card style-card-empty">
+                <div class="form-group" data-bind="scrollable: true">
+                    <label for="gradientColors">Color stops</label>
+                    <div class="palette">
+                        <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+                        <div class="color-box">
+                            <a href="#" role="listitem" class="color"
+                                data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
+                        </div>
+                        <!-- /ko -->
+                        <div class="color-box">
+                            <a href="#" title="Clear gradient" class="color" data-bind="click: $component.addColor">
+                                <i class="paperbits-icon paperbits-simple-add"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- /ko -->
 </fieldset>
-

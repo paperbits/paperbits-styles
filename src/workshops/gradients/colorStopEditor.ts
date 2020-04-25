@@ -1,14 +1,16 @@
 import * as ko from "knockout";
-import template from "./colorPickerView.html";
+import template from "./colorStopEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { ColorContract } from "../../contracts/colorContract";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 @Component({
-    selector: "color-picker-view",
+    selector: "color-stop-editor",
     template: template
 })
-export class ColorPickerView {
+export class ColorStopEditor {
+    constructor() {
+        this.colorValue = ko.observable();
+    }
 
     @Param()
     public readonly colorValue: ko.Observable<string>;
@@ -16,21 +18,20 @@ export class ColorPickerView {
     @Event()
     public readonly onSelect: (colorValue: string) => void;
 
-    constructor() {
-
-        this.colorValue = ko.observable();
-    }
-
     @OnMounted()
     public async loadColors(): Promise<void> {
         this.colorValue
             .extend(ChangeRateLimit)
-            .subscribe(this.scheduleColorUpdate)
+            .subscribe(this.applyChanges);
     }
 
-    private scheduleColorUpdate(): void {
+    private applyChanges(): void {
         if (this.onSelect) {
             this.onSelect(this.colorValue());
         }
+    }
+
+    public deleteColorStop(): void {
+        this.onSelect(null);
     }
 }
