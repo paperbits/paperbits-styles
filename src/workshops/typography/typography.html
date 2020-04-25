@@ -2,17 +2,17 @@
     <label class="form-label">
         <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#typographyCollapse'"></a>
         <b>Typography</b>
-        <button class="btn btn-info" type="button" data-bind="tooltipToggle: 'Manage text appearance'"></button>
+        <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage text appearance'"></button>
     </label>
 
     <div id="typographyCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <div class="toolbox-btn" title="Font weight" data-bind="css: { 'toolbox-btn-is-active': fontWeight }, tooltipToggle: currentWeight">
+            <div class="toolbox-btn" title="Font weight" data-bind="css: { 'toolbox-btn-is-active': fontWeight }, tooltip: currentWeight">
                 <a href="#" data-bind="click: toggleBold" aria-label="Change font weight">
                     <i class="paperbits-icon paperbits-bold"></i>
                 </a>
             </div>
-            <div class="toolbox-btn" title="Font style" data-bind="css: { 'toolbox-btn-is-active': fontStyle }, tooltipToggle: currentStyle">
+            <div class="toolbox-btn" title="Font style" data-bind="css: { 'toolbox-btn-is-active': fontStyle }, tooltip: currentStyle">
                 <a href="#" data-bind="click: toggleItalic" aria-label="Change font style">
                     <i class="paperbits-icon paperbits-italic"></i>
                 </a>
