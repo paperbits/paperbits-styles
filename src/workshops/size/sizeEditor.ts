@@ -62,42 +62,35 @@ export class SizeEditor {
         this.widthEnabled(features.includes("width"));
         this.minMaxWidthEnabled(features.includes("minMaxWidth"));
 
-        this.loadData(this.sizeConfig() || {});
+        this.updateObservables();
+        this.sizeConfig.subscribe(this.updateObservables);
 
-        this.sizeConfig.extend(ChangeRateLimit).subscribe(this.updateSize);
-
-        this.itemHeight.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-        this.minHeight.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-        this.maxHeight.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-
-        this.itemWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-        this.minWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
-        this.maxWidth.extend(ChangeRateLimit).subscribe(this.dispatchUpdates);
+        this.itemHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.minHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.maxHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.itemWidth.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.minWidth.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.maxWidth.extend(ChangeRateLimit).subscribe(this.applyChanges);
     }
 
-    private loadData(data: SizeStylePluginConfig): void {
-        if (!data) {
+    private updateObservables(): void {
+        const pluginConfig = this.sizeConfig();
+
+        if (!pluginConfig) {
             return;
         }
+      
+        this.itemHeight(pluginConfig?.height);
+        this.minHeight(pluginConfig?.minHeight);
+        this.maxHeight(pluginConfig?.maxHeight);
 
-        const currentStyle = data;
-        this.itemHeight(currentStyle?.height);
-        this.minHeight(currentStyle?.minHeight);
-        this.maxHeight(currentStyle?.maxHeight);
-        
-        this.itemWidth(currentStyle?.width);
-        this.minWidth(currentStyle?.minWidth);
-        this.maxWidth(currentStyle?.maxWidth);
+        this.itemWidth(pluginConfig?.width);
+        this.minWidth(pluginConfig?.minWidth);
+        this.maxWidth(pluginConfig?.maxWidth);
     }
 
-    private updateSize(update: SizeStylePluginConfig): void {
-        this.isSizeUpdate = true;
-        this.loadData(update);
-        this.isSizeUpdate = false;
-    }
-
-    private dispatchUpdates(): void {
-        if (!this.onUpdate || this.isSizeUpdate) {
+    private applyChanges(): void {
+        if (!this.onUpdate) {
             return;
         }
 
