@@ -16,7 +16,8 @@ export class GridCellStylePlugin extends StylePlugin {
             new StyleRule("flexWrap", "wrap"),
             new StyleRule("justifyContent", "center"),
             new StyleRule("alignContent", "center"),
-            new StyleRule("alignItems", "center")
+            new StyleRule("alignItems", "center"),
+            new StyleRule("minWidth", "0")
         ];
 
         if (pluginConfig.position) {
