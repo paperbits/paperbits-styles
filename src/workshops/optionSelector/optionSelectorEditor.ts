@@ -37,6 +37,7 @@ export class OptionSelectorEditor {
             this.optionItems.push(...this.optionsItems().split(","));
         }
         const initValue = this.initialValue();
+
         if (initValue !== 0 && !initValue) {
             this.initialValue("inherit");
         }
@@ -64,5 +65,4 @@ export class OptionSelectorEditor {
 
         this.onChange(result);
     }
-    
 }
