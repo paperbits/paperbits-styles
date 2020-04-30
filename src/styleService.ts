@@ -83,15 +83,26 @@ export class StyleService {
 
     public async addGradientVariation(variationName: string): Promise<LinearGradientContract> {
         const styles = await this.getStyles();
-        const newVariation: LinearGradientContract = Objects.clone(styles["gradients"]["default"]);
-        newVariation.key = `gradients/${variationName}`;
-        newVariation.displayName = "< Unnamed >";
-        
-        styles["gradients"][variationName] = newVariation;
+        const gradient: LinearGradientContract = {
+            key: `gradients/${variationName}`,
+            displayName: "Gradient",
+            direction: "45deg",
+            colorStops: [{
+                color: "#87E0FD",
+                length: 0
+            },
+            {
+                color: "#05ABE0",
+                length: 100
+            }]
+        };
+        gradient.displayName = "< Unnamed >";
+
+        styles["gradients"][variationName] = gradient;
 
         this.updateStyles(styles);
 
-        return newVariation;
+        return gradient;
     }
 
     public async addShadowVariation(variationName: string): Promise<ShadowContract> {
