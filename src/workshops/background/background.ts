@@ -8,10 +8,12 @@ import { Style, StyleSheet } from "@paperbits/common/styles";
 import { StyleService } from "../..";
 import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
 import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 
 const defaultBackgroundSize = "original";
 const defaultBackgroundAttachment = "inherit";
+const defaultPositionConfig = "default";
 
 @Component({
     selector: "background",
@@ -25,9 +27,12 @@ export class Background {
     public readonly sourceKey: ko.Observable<string>;
     public readonly repeat: ko.Observable<string>;
     public readonly size: ko.Observable<string>;
+    public readonly posConfig: ko.Observable<string>;
     public readonly position: ko.Observable<string>;
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
+    public readonly topOffset: ko.Observable<number>;
+    public readonly leftOffset: ko.Observable<number>;
 
     private backgroundStylePlugin: BackgroundStylePlugin;
 
@@ -38,6 +43,7 @@ export class Background {
     ) {
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
+        this.posConfig = ko.observable<string>();
         this.attachment = ko.observable<string>();
         this.color = ko.observable<ColorContract>();
         this.colorKey = ko.observable<string>();
@@ -47,6 +53,8 @@ export class Background {
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
         this.backgroundPreview = ko.observable<string>();
+        this.topOffset = ko.observable(0);
+        this.leftOffset = ko.observable(0);
     }
 
     @Param()
@@ -60,7 +68,11 @@ export class Background {
         await this.fillout();
         this.background.subscribe(this.fillout);
         this.size.subscribe(this.applyChanges);
+        this.posConfig.subscribe(this.posConfigChange);
         this.attachment.subscribe(this.applyChanges);
+
+        this.topOffset.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.leftOffset.extend(ChangeRateLimit).subscribe(this.applyChanges);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
@@ -70,11 +82,22 @@ export class Background {
         return this.backgroundStylePlugin;
     }
 
+    private posConfigChange(config: string): void {
+        if (config === "offset") {
+            this.topOffset(0);
+            this.leftOffset(0);
+        } else {
+            this.position("center center");
+            this.applyChanges();
+        }
+    }
+
     private async fillout(): Promise<void> {
         const backgroundPluginConfig = this.background();
 
         if (!backgroundPluginConfig) {
             this.size(null);
+            this.posConfig(null);
             this.position(null);
             this.attachment(null);
             this.color(null);
@@ -115,6 +138,7 @@ export class Background {
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
             this.size(image.size || defaultBackgroundSize);
+            this.posConfig(defaultPositionConfig);
             this.attachment(image.attachment || defaultBackgroundAttachment);
             this.position(image.position || "center");
 
@@ -142,6 +166,7 @@ export class Background {
         this.sourceKey(media ? media.key : undefined);
         this.repeat(this.repeat() || "no-repeat");
         this.size(this.size() || defaultBackgroundSize);
+        this.posConfig(this.posConfig() || defaultPositionConfig);
         this.attachment(this.attachment() || defaultBackgroundAttachment);
         this.position(this.position() || "center center");
         this.applyChanges();
@@ -164,6 +189,7 @@ export class Background {
         this.source("none");
         this.sourceKey(undefined);
         this.size(undefined);
+        this.posConfig(undefined);
         this.position(undefined);
         this.attachment(undefined);
         this.gradientKey(undefined);
@@ -174,6 +200,9 @@ export class Background {
         let images;
 
         if (this.sourceKey()) {
+            if (this.posConfig() === "offset") {
+                this.position(`left ${this.leftOffset()}px top ${this.topOffset()}px`);
+            }
             images = [];
 
             images.push({
