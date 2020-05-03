@@ -12,14 +12,14 @@ export class StyleSnippetService implements IStyleSnippetService {
 
     private async getThemes(): Promise<Bag<ThemeContract>> {
         if (!this.themes) {
-            await this.loadThemes();
+            await this.loadStyleSnippets();
         }
         return this.themes;
     }
 
-    private async loadThemes(): Promise<void> {
+    private async loadStyleSnippets(): Promise<void> {
         const response = await this.httpClient.send({
-            url: "/data/themes.json",
+            url: "/data/snippets-styles.json",
             method: "GET"
         });
 
