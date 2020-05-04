@@ -472,7 +472,6 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const result: StyleModel = {
             key: key,
             classNames: classNames.join(" "),
-            // css: await this.styleToCss(variationStyle),
             styleSheet: localStyleSheet,
             styleManager: styleManager
         };

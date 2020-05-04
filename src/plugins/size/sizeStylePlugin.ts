@@ -13,6 +13,14 @@ export class SizeStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: SizeStylePluginConfig): Promise<StyleRule[]> {
         const result = [];
 
+        if (pluginConfig.width) {
+            result.push(new StyleRule("width", StylePlugin.parseSize(pluginConfig.width)));
+        }
+
+        if (pluginConfig.height) {
+            result.push(new StyleRule("height", StylePlugin.parseSize(pluginConfig.height)));
+        }
+
         if (pluginConfig.minWidth) {
             result.push(new StyleRule("minWidth", StylePlugin.parseSize(pluginConfig.minWidth)));
         }
