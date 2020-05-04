@@ -39,66 +39,56 @@
         <div class="dropzone">
             <div class="dropzone-controls">
                 <!-- ko if: sourceKey() -->
-                <svg alignment="top left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="top left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="top center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="top center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="top right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="top right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="center left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="center left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="center right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="center right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom left" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="bottom left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="bottom center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
-                <svg alignment="bottom right" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <svg alignment="bottom right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <polygon points="2,2 14,2 14,14" />
                 </svg>
                 <!-- /ko -->
                 <style data-bind="jss: backgroundPreview"></style>
-                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: { position: position, onChange: onAlignmentChange }">
+                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
                     <div class="fit background-preview"></div>
                 </a>
             </div>
         </div>
 
         <!-- ko if: sourceKey() -->
-        <label class="form-label">
-            Background position
-            <button class="btn btn-info" type="button"
-                data-bind="tooltip: '<p><b>Default:</b> Default position of the background image, can be selected by the buttons above.</p><p><b>Offset:</b> Customize the position of the background image by top and left offsets.</p>'"></button>
-        </label>
-        <div class="form-group">
-            <label class="form-label">
-                <input name="positionConfig" type="radio" value="default" data-bind="checked: posConfig" />Default
-            </label>
-            <label class="form-label">
-                <input name="positionConfig" type="radio" value="offset" data-bind="checked: posConfig, event: { change: applyChanges }" />Offset
-            </label>
-        </div>
-        <!-- ko if: posConfig() == "offset" -->
-        <div class="form-group">
-            <label for="topOffset" class="form-label">Top offset (px)</label>
-            <input type="number" min="0" id="topOffset" class="form-control"
-                data-bind="textInput: topOffset" />
-        </div>
-        <div class="form-group">
-            <label for="leftOffset" class="form-label">Left offset (px)</label>
-            <input type="number" min="0" id="leftOffset" class="form-control"
-                data-bind="textInput: leftOffset" />
-        </div>
+  
+        <!-- ko if: horizontalOffsetDirection() && horizontalOffsetDirection() !== 'center' -->
+            <div class="form-group">
+                <label class="form-label"><span class="capitalize" data-bind="text: horizontalOffsetDirection"></span> offset (px)</label>
+                <input type="number" min="0" class="form-control"
+                    data-bind="textInput: horizontalOffset">
+            </div>
         <!-- /ko -->
 
-
+        <!-- ko if: verticalOffsetDirection() && verticalOffsetDirection() !== 'center' -->
+            <div class="form-group">
+                <label class="form-label"><span class="capitalize" data-bind="text: verticalOffsetDirection"></span> offset (px)</label>
+                <input type="number" min="0" class="form-control"
+                    data-bind="textInput: vertialOffset">
+            </div>
+        <!-- /ko -->
+        
         <label class="form-label">
             Background sizing
             <button class="btn btn-info" type="button"

@@ -31,8 +31,12 @@ export class Background {
     public readonly position: ko.Observable<string>;
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
-    public readonly topOffset: ko.Observable<number>;
-    public readonly leftOffset: ko.Observable<number>;
+    public readonly direction: ko.Observable<string>;
+
+    public readonly horizontalOffsetDirection: ko.Observable<string>;
+    public readonly verticalOffsetDirection: ko.Observable<string>;
+    public readonly horizontalOffset: ko.Observable<number>;
+    public readonly vertialOffset: ko.Observable<number>;
 
     private backgroundStylePlugin: BackgroundStylePlugin;
 
@@ -53,8 +57,12 @@ export class Background {
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
         this.backgroundPreview = ko.observable<string>();
-        this.topOffset = ko.observable(0);
-        this.leftOffset = ko.observable(0);
+        this.direction = ko.observable<string>();
+        
+        this.horizontalOffsetDirection = ko.observable<string>();
+        this.verticalOffsetDirection = ko.observable<string>();
+        this.horizontalOffset = ko.observable<number>();
+        this.vertialOffset = ko.observable<number>();
     }
 
     @Param()
@@ -68,11 +76,9 @@ export class Background {
         await this.fillout();
         this.background.subscribe(this.fillout);
         this.size.subscribe(this.applyChanges);
-        this.posConfig.subscribe(this.posConfigChange);
         this.attachment.subscribe(this.applyChanges);
-
-        this.topOffset.extend(ChangeRateLimit).subscribe(this.applyChanges);
-        this.leftOffset.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.horizontalOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
+        this.vertialOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
@@ -80,16 +86,6 @@ export class Background {
             this.backgroundStylePlugin = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
         }
         return this.backgroundStylePlugin;
-    }
-
-    private posConfigChange(config: string): void {
-        if (config === "offset") {
-            this.topOffset(0);
-            this.leftOffset(0);
-        } else {
-            this.position("center center");
-            this.applyChanges();
-        }
     }
 
     private async fillout(): Promise<void> {
@@ -107,6 +103,7 @@ export class Background {
             this.source(null);
             this.sourceKey(null);
             this.backgroundPreview(null);
+            this.clearBackgroundImageOffset();
             return;
         }
 
@@ -152,6 +149,45 @@ export class Background {
     }
 
     public onAlignmentChange(position: string): void {
+        this.direction(position);
+        this.clearBackgroundImageOffset();
+        
+        if (position.includes("left")) {
+            this.horizontalOffsetDirection("left");
+        }
+        else if (position.includes("right")) {
+            this.horizontalOffsetDirection("right");
+        } 
+        else {
+            this.horizontalOffsetDirection("center");
+        }
+
+        if (position.includes("top")) {
+            this.verticalOffsetDirection("top");
+        } 
+        else if (position.includes("bottom")) {
+            this.verticalOffsetDirection("bottom");
+        } 
+        else {
+            this.verticalOffsetDirection("center");
+        }
+
+        this.applyDirectionOffset();
+    }
+
+    public applyDirectionOffset() {
+        let position = "";
+        if (!this.horizontalOffsetDirection() || this.horizontalOffsetDirection() === "center") {
+            position += "center ";
+        } else {
+            position += `${this.horizontalOffsetDirection()} ${this.horizontalOffset() || 0}px `
+        }
+        if (!this.verticalOffsetDirection() || this.verticalOffsetDirection() === "center") {
+            position += "center";
+        } else {
+            position += `${this.verticalOffsetDirection()} ${this.vertialOffset() || 0}px`
+        }
+        
         this.position(position);
         this.applyChanges();
     }
@@ -200,9 +236,6 @@ export class Background {
         let images;
 
         if (this.sourceKey()) {
-            if (this.posConfig() === "offset") {
-                this.position(`left ${this.leftOffset()}px top ${this.topOffset()}px`);
-            }
             images = [];
 
             images.push({
@@ -237,5 +270,12 @@ export class Background {
         if (this.onUpdate) {
             this.onUpdate(updatedPluginConfig);
         }
+    }
+
+    private clearBackgroundImageOffset() {
+        this.horizontalOffsetDirection(null);
+        this.verticalOffsetDirection(null);
+        this.horizontalOffset(0);
+        this.vertialOffset(0);
     }
 }
