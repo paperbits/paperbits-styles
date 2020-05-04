@@ -13,7 +13,6 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 const defaultBackgroundSize = "original";
 const defaultBackgroundAttachment = "inherit";
-const defaultPositionConfig = "default";
 
 @Component({
     selector: "background",
@@ -27,7 +26,6 @@ export class Background {
     public readonly sourceKey: ko.Observable<string>;
     public readonly repeat: ko.Observable<string>;
     public readonly size: ko.Observable<string>;
-    public readonly posConfig: ko.Observable<string>;
     public readonly position: ko.Observable<string>;
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
@@ -47,7 +45,6 @@ export class Background {
     ) {
         this.size = ko.observable<string>();
         this.position = ko.observable<string>();
-        this.posConfig = ko.observable<string>();
         this.attachment = ko.observable<string>();
         this.color = ko.observable<ColorContract>();
         this.colorKey = ko.observable<string>();
@@ -93,7 +90,6 @@ export class Background {
 
         if (!backgroundPluginConfig) {
             this.size(null);
-            this.posConfig(null);
             this.position(null);
             this.attachment(null);
             this.color(null);
@@ -135,7 +131,6 @@ export class Background {
             this.sourceKey(image.sourceKey);
             this.repeat(image.repeat || "no-repeat");
             this.size(image.size || defaultBackgroundSize);
-            this.posConfig(defaultPositionConfig);
             this.attachment(image.attachment || defaultBackgroundAttachment);
             this.position(image.position || "center");
 
@@ -202,7 +197,6 @@ export class Background {
         this.sourceKey(media ? media.key : undefined);
         this.repeat(this.repeat() || "no-repeat");
         this.size(this.size() || defaultBackgroundSize);
-        this.posConfig(this.posConfig() || defaultPositionConfig);
         this.attachment(this.attachment() || defaultBackgroundAttachment);
         this.position(this.position() || "center center");
         this.applyChanges();
@@ -225,7 +219,6 @@ export class Background {
         this.source("none");
         this.sourceKey(undefined);
         this.size(undefined);
-        this.posConfig(undefined);
         this.position(undefined);
         this.attachment(undefined);
         this.gradientKey(undefined);
