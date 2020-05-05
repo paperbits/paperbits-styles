@@ -8,6 +8,7 @@ import { Style, StyleSheet } from "@paperbits/common/styles";
 import { StyleService } from "../..";
 import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
 import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
+import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 
 const defaultBackgroundSize = "original";
@@ -28,6 +29,12 @@ export class Background {
     public readonly position: ko.Observable<string>;
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
+    public readonly direction: ko.Observable<string>;
+
+    public readonly horizontalOffsetDirection: ko.Observable<string>;
+    public readonly verticalOffsetDirection: ko.Observable<string>;
+    public readonly horizontalOffset: ko.Observable<number>;
+    public readonly vertialOffset: ko.Observable<number>;
 
     private backgroundStylePlugin: BackgroundStylePlugin;
 
@@ -47,6 +54,12 @@ export class Background {
         this.source = ko.observable<string>();
         this.sourceKey = ko.observable<string>();
         this.backgroundPreview = ko.observable<string>();
+        this.direction = ko.observable<string>();
+        
+        this.horizontalOffsetDirection = ko.observable<string>();
+        this.verticalOffsetDirection = ko.observable<string>();
+        this.horizontalOffset = ko.observable<number>();
+        this.vertialOffset = ko.observable<number>();
     }
 
     @Param()
@@ -61,6 +74,8 @@ export class Background {
         this.background.subscribe(this.fillout);
         this.size.subscribe(this.applyChanges);
         this.attachment.subscribe(this.applyChanges);
+        this.horizontalOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
+        this.vertialOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
     }
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
@@ -84,6 +99,7 @@ export class Background {
             this.source(null);
             this.sourceKey(null);
             this.backgroundPreview(null);
+            this.clearBackgroundImageOffset();
             return;
         }
 
@@ -128,6 +144,45 @@ export class Background {
     }
 
     public onAlignmentChange(position: string): void {
+        this.direction(position);
+        this.clearBackgroundImageOffset();
+        
+        if (position.includes("left")) {
+            this.horizontalOffsetDirection("left");
+        }
+        else if (position.includes("right")) {
+            this.horizontalOffsetDirection("right");
+        } 
+        else {
+            this.horizontalOffsetDirection("center");
+        }
+
+        if (position.includes("top")) {
+            this.verticalOffsetDirection("top");
+        } 
+        else if (position.includes("bottom")) {
+            this.verticalOffsetDirection("bottom");
+        } 
+        else {
+            this.verticalOffsetDirection("center");
+        }
+
+        this.applyDirectionOffset();
+    }
+
+    public applyDirectionOffset() {
+        let position = "";
+        if (!this.horizontalOffsetDirection() || this.horizontalOffsetDirection() === "center") {
+            position += "center ";
+        } else {
+            position += `${this.horizontalOffsetDirection()} ${this.horizontalOffset() || 0}px `
+        }
+        if (!this.verticalOffsetDirection() || this.verticalOffsetDirection() === "center") {
+            position += "center";
+        } else {
+            position += `${this.verticalOffsetDirection()} ${this.vertialOffset() || 0}px`
+        }
+        
         this.position(position);
         this.applyChanges();
     }
@@ -208,5 +263,12 @@ export class Background {
         if (this.onUpdate) {
             this.onUpdate(updatedPluginConfig);
         }
+    }
+
+    private clearBackgroundImageOffset() {
+        this.horizontalOffsetDirection(null);
+        this.verticalOffsetDirection(null);
+        this.horizontalOffset(0);
+        this.vertialOffset(0);
     }
 }
