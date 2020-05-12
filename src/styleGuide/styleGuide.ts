@@ -530,7 +530,7 @@ export class StyleGuide {
             !style.key.startsWith("fonts/") &&
             !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/") &&
-            !style.key.contains("/components/") // sub-components
+            !style.key.includes("/components/") // sub-components
         ) {
             styleContextualEditor.selectCommands.push({
                 name: "background",
