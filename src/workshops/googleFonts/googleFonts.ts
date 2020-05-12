@@ -86,7 +86,7 @@ export class GoogleFonts {
         const pattern = this.searchPattern().toLowerCase();
 
         const fonts = this.loadedContracts
-            .filter(x => x.family.toLowerCase().contains(pattern))
+            .filter(x => x.family.toLowerCase().includes(pattern))
             .slice(loadedCount, loadedCount + 50).map(contract => new GoogleFont(contract));
 
         this.fonts.push(...fonts);
