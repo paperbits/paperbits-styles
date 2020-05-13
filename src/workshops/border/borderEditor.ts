@@ -77,13 +77,8 @@ export class BorderEditor {
     }
 
     public clearColor(): void {
-        // if (this.selectedColor) {
-        //     this.selectedColor(null);
-        // }
-
-        // if (this.onSelect) {
-        //     this.onSelect(null);
-        // }
+        this.borderColorKey(null);
+        this.applyChanges();
     }
 
     private applyChanges(): void {
