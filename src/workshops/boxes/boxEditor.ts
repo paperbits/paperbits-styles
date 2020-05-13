@@ -137,7 +137,7 @@ export class BoxEditor {
             this.topLeftRadius(currentStyle.borderRadius.topLeftRadius);
             this.topRightRadius(currentStyle.borderRadius.topRightRadius);
             this.bottomLeftRadius(currentStyle.borderRadius.bottomLeftRadius);
-            this.bottomRightRadius(currentStyle.borderRadius.bottomLeftRadius);
+            this.bottomRightRadius(currentStyle.borderRadius.bottomRightRadius);
         }
         if (currentStyle.padding) {
             this.paddingTop(currentStyle.padding.top);
