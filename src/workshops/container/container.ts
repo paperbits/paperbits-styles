@@ -33,31 +33,23 @@ export class Container {
 
     @OnMounted()
     public initialize(): void {
-        this.updateObservables(this.container());
+        this.updateObservables();
         this.container.subscribe(this.updateObservables);
         this.scrollOnOverlow.subscribe(this.onOverflowChange);
     }
 
-    private updateObservables(stylePluginConfig: ContainerStylePluginConfig): void {
-        if (!stylePluginConfig) {
-            return;
-        }
+    private updateObservables(): void {
+        const containerStyle = this.container();
 
-        const overflowStyle = stylePluginConfig.overflow;
-
-        if (overflowStyle) {
+        if (containerStyle?.overflow) {
             this.scrollOnOverlow(true);
         }
         else {
             this.scrollOnOverlow(false);
         }
 
-        const alignmentStyle = stylePluginConfig.alignment;
-
-        if (alignmentStyle) {
-            this.verticalAlignment(alignmentStyle.vertical);
-            this.horizontalAlignment(alignmentStyle.horizontal);
-        }
+        this.verticalAlignment(containerStyle?.alignment?.vertical);
+        this.horizontalAlignment(containerStyle?.alignment?.horizontal);
     }
 
     /**

@@ -76,10 +76,6 @@ export class SizeEditor {
     private updateObservables(): void {
         const pluginConfig = this.sizeConfig();
 
-        if (!pluginConfig) {
-            return;
-        }
-      
         this.itemHeight(pluginConfig?.height);
         this.minHeight(pluginConfig?.minHeight);
         this.maxHeight(pluginConfig?.maxHeight);
@@ -103,7 +99,6 @@ export class SizeEditor {
             maxWidth: this.maxWidth(),
         };
 
-        Objects.cleanupObject(update);
-        this.onUpdate(update);
+         this.onUpdate(update);
     }
 }
