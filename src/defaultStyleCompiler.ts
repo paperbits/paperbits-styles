@@ -14,6 +14,7 @@ import {
     ShadowStylePlugin,
     AnimationStylePlugin,
     TypographyStylePlugin,
+    ListStylePlugin,
     ComponentsStylePlugin,
     StatesStylePlugin,
     ContainerStylePlugin,
@@ -33,8 +34,8 @@ import {
     StyleCompiler,
     StyleModel,
     StyleRule,
-    VariationsContract,
-    StatesContract,
+    VariationBagContract,
+    StateBagContract,
     LocalStyles,
     PluginBag
 } from "@paperbits/common/styles";
@@ -102,6 +103,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
+        this.plugins["list"] = new ListStylePlugin();
         this.plugins["components"] = new ComponentsStylePlugin(this);
         this.plugins["states"] = new StatesStylePlugin(this);
         this.plugins["grid"] = new GridStylePlugin();
@@ -174,7 +176,12 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, true);
 
                     if (variationStyle) {
-                        defaultComponentStyle.nestedStyles.push(variationStyle);
+                        if (componentName === "text") {
+                            defaultComponentStyle.nestedStyles.push(variationStyle);
+                        }
+                        else {
+                            defaultComponentStyle.modifierStyles.push(variationStyle);
+                        }
                     }
                 }
 
@@ -205,7 +212,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return css;
     }
 
-    public async getVariationStyle(variationConfig: VariationsContract, componentName: string, variationName: string = null, isGlobal: boolean = false): Promise<Style> {
+    public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false): Promise<Style> {
         await this.initializePlugins();
 
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
@@ -238,6 +245,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 resultStyle.pseudoStyles.push(...pseudoStyles);
 
                 const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
+
+                if (isGlobal) {
+                    resultStyle.nestedGlobalStyles.push(...nestedStyles);
+                }
+                else {
+                    resultStyle.nestedStyles.push(...nestedStyles);
+                }
+
                 resultStyle.nestedStyles.push(...nestedStyles);
 
                 continue;
@@ -296,7 +311,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return resultStyle;
     }
 
-    public getVariationClassNames(variations: VariationsContract, componentName: string, variationName: string = null): string[] {
+    public getVariationClassNames(variations: VariationBagContract, componentName: string, variationName: string = null): string[] {
         const classNames = [];
 
         if (!variationName) {
@@ -333,7 +348,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames;
     }
 
-    public async getStateStyle(states: StatesContract, stateName: string): Promise<Style> {
+    public async getStateStyle(states: StateBagContract, stateName: string): Promise<Style> {
         const stateStyle = new Style(stateName);
 
         for (const pluginName of Object.keys(states)) {
@@ -486,12 +501,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         const segments = key.split("/");
 
-        if (key.startsWith("globals/") && segments[1] !== "body") {
+        const category = segments[0];
+        let component = segments[1];
+        const componentVariation = segments[2];
+
+        if (category === "globals" && component !== "body" && component !== "ul") {
             return null;
         }
 
-        let component = segments[1];
-        const componentVariation = segments[2];
         const classNames = [];
 
         if (component === "body") {

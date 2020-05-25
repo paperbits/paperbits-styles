@@ -7,6 +7,7 @@ export * from "./margin/marginStylePlugin";
 export * from "./shadowStylePlugin";
 export * from "./stylePlugin";
 export * from "./typographyStylePlugin";
+export * from "./list/listStylePlugin";
 export * from "./componentsStylePlugin";
 export * from "./statesStylePlugin";
 export * from "./containerStylePlugin";

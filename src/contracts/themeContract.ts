@@ -1,6 +1,6 @@
 import { Bag } from "@paperbits/common";
 import { ColorContract, ShadowContract, AnimationContract, FontContract, LinearGradientContract } from "./";
-import { ComponentsContract } from "@paperbits/common/styles";
+import { ComponentBagContract } from "@paperbits/common/styles";
 
 
 /**
@@ -35,12 +35,12 @@ export interface ThemeContract {
     /**
      * Global component definitions.
      */
-    globals?: ComponentsContract;
+    globals?: ComponentBagContract;
 
     /**
      * Component definitions.
      */
-    components?: ComponentsContract;
+    components?: ComponentBagContract;
 
     /**
      * Utility styles.

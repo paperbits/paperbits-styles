@@ -1,4 +1,4 @@
-import { Style, StyleCompiler, ComponentsContract } from "@paperbits/common/styles";
+import { Style, StyleCompiler, ComponentBagContract } from "@paperbits/common/styles";
 import { StylePlugin } from "./stylePlugin";
 
 export class ComponentsStylePlugin extends StylePlugin {
@@ -8,7 +8,7 @@ export class ComponentsStylePlugin extends StylePlugin {
         super();
     }
 
-    public async configToNestedStyles(componentsConfig: ComponentsContract): Promise<Style[]> {
+    public async configToNestedStyles(componentsConfig: ComponentBagContract): Promise<Style[]> {
         const resultStyles: Style[] = [];
 
         for (const componentName of Object.keys(componentsConfig)) {
