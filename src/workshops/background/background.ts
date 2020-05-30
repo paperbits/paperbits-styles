@@ -55,7 +55,7 @@ export class Background {
         this.sourceKey = ko.observable<string>();
         this.backgroundPreview = ko.observable<string>();
         this.direction = ko.observable<string>();
-        
+
         this.horizontalOffsetDirection = ko.observable<string>();
         this.verticalOffsetDirection = ko.observable<string>();
         this.horizontalOffset = ko.observable<number>();
@@ -135,7 +135,10 @@ export class Background {
             this.position(image.position || "center");
 
             const media = await this.mediaService.getMediaByKey(image.sourceKey);
-            this.source(`url("${media.downloadUrl}")`);
+
+            if (media) {
+                this.source(`url("${media.downloadUrl}")`);
+            }
         }
 
         if (backgroundPluginConfig.gradientKey) {
@@ -146,23 +149,23 @@ export class Background {
     public onAlignmentChange(position: string): void {
         this.direction(position);
         this.clearBackgroundImageOffset();
-        
+
         if (position.includes("left")) {
             this.horizontalOffsetDirection("left");
         }
         else if (position.includes("right")) {
             this.horizontalOffsetDirection("right");
-        } 
+        }
         else {
             this.horizontalOffsetDirection("center");
         }
 
         if (position.includes("top")) {
             this.verticalOffsetDirection("top");
-        } 
+        }
         else if (position.includes("bottom")) {
             this.verticalOffsetDirection("bottom");
-        } 
+        }
         else {
             this.verticalOffsetDirection("center");
         }
@@ -182,7 +185,7 @@ export class Background {
         } else {
             position += `${this.verticalOffsetDirection()} ${this.vertialOffset() || 0}px`
         }
-        
+
         this.position(position);
         this.applyChanges();
     }
@@ -240,7 +243,7 @@ export class Background {
                 repeat: this.repeat(),
                 attachment: this.attachment() !== defaultBackgroundAttachment
                     ? this.attachment()
-                    : undefined, 
+                    : undefined,
             });
         }
 
