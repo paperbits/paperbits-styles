@@ -50,7 +50,7 @@ export class GoogleFonts {
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
         // Temporary:
-        // const settings = await this.siteService.getSiteSettings();
+        // const settings = await this.siteService.getSettings();
         // if (!settings || !settings.integration || !settings.integration.googleFonts) {
         //     return;
         // }
