@@ -24,7 +24,6 @@
         "jss-preset-default": "^10.0.0",
         "knockout": "^3.5.1",
         "knockout.validation": "^2.0.4",
-        "lity": "^2.4.0",
         "lodash": "^4.17.15",
         "mime-types": "^2.1.24",
         "opentype.js": "1.1.0",
