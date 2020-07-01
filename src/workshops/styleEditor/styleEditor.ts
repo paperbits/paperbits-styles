@@ -1,11 +1,14 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
-import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { VariationContract, LocalStyles, PluginBag } from "@paperbits/common/styles";
-import { BoxStylePluginConfig, TypographyStylePluginConfig, BackgroundStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig } from "../../contracts";
+import { EventManager } from "@paperbits/common/events";
+import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
+import { PluginBag, VariationContract } from "@paperbits/common/styles";
+import { ViewManager } from "@paperbits/common/ui";
+import { BackgroundStylePluginConfig, BoxStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig, TypographyStylePluginConfig } from "../../contracts";
+import { AnimationStylePluginConfig } from "../../plugins/animation";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
-import { AnimationStylePluginConfig } from "../../plugins/animation";
+import { StyleHelper } from "../../styleHelper";
 
 
 @Component({
@@ -31,7 +34,10 @@ export class StyleEditor {
     public readonly working: ko.Observable<boolean>;
 
 
-    constructor() {
+    constructor(
+        private readonly viewManager: ViewManager,
+        private readonly eventManager: EventManager
+    ) {
         this.styleName = ko.observable("New style");
         this.selectedState = ko.observable();
         this.elementStates = ko.observableArray();
@@ -57,7 +63,7 @@ export class StyleEditor {
     public initialize(): void {
         this.styleName(this.elementStyle.displayName);
         this.allowBlockStyles(!this.elementStyle.key.startsWith("globals/body"));
-        this.resetEditors(this.elementStyle);
+        this.updateObservables();
 
         const states = this.elementStyle.allowedStates;
         this.elementStates(states);
@@ -67,6 +73,7 @@ export class StyleEditor {
         }
 
         this.styleName.subscribe(this.onStyleNameUpdate);
+        this.eventManager.addEventListener("onViewportChange", this.updateObservables);
     }
 
     private scheduleUpdate(): void {
@@ -74,9 +81,16 @@ export class StyleEditor {
         this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 500);
     }
 
-    public resetEditors(style: PluginBag): void {
+    public updateObservables(): void {
         this.working(true);
-        this.elementStyleTypography(style.typography);
+
+        const style = this.getStyleForSelectedState();
+        const viewport = this.viewManager.getViewport();
+
+        const typographyConfig = StyleHelper.getPluginConfig(style, "typography", viewport);
+        this.elementStyleTypography(typographyConfig);
+
+
         this.elementStyleTransform(style.transform);
         this.elementStyleTransition(<TransitionStylePluginConfig>style.transition);
         this.elementStyleBackground(style.background);
@@ -89,8 +103,7 @@ export class StyleEditor {
 
     public onStateSelected(state: string): void {
         this.currentState = state;
-        const style = this.getStyleForSelectedState();
-        this.resetEditors(style);
+        this.updateObservables();
     }
 
     private getStyleForSelectedState(): any {
@@ -169,8 +182,9 @@ export class StyleEditor {
     }
 
     public onTypographyUpdate(pluginConfig: TypographyStylePluginConfig): void {
+        const viewport = this.viewManager.getViewport();
         const style = this.getStyleForSelectedState();
-        style["typography"] = pluginConfig;
+        StyleHelper.setPluginConfig(style, "typography", pluginConfig, viewport);
         this.scheduleUpdate();
     }
 

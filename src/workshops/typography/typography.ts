@@ -32,7 +32,7 @@ export class Typography {
     public currentWeight: ko.Computed<string>;
     public currentStyle: ko.Computed<string>;
 
-    public textTransformOptions = [
+    public textTransformOptions: any = [
         { value: undefined, text: "(Inherit)" },
         { value: "none", text: "None" },
         { value: "capitalize", text: "Capitalize" },
@@ -40,7 +40,7 @@ export class Typography {
         { value: "uppercase", text: "Upper-case" }
     ];
 
-    public textDecorationOptions = [
+    public textDecorationOptions: any = [
         { value: undefined, text: "(Inherit)" },
         { value: "none", text: "None" },
         { value: "underline", text: "Underline" },
@@ -73,7 +73,7 @@ export class Typography {
         this.currentStyle = ko.pureComputed(() => `${this.fontStyle() || "(Inherit)"}`);
     }
 
-    private async fillout(typographyContract: TypographyStylePluginConfig): Promise<void> {
+    private async updateObservables(typographyContract: TypographyStylePluginConfig): Promise<void> {
         if (!typographyContract) {
             return;
         }
@@ -146,7 +146,7 @@ export class Typography {
         this.colorName(inheritLabel);
         this.shadowName(inheritLabel);
 
-        await this.fillout(typography);
+        await this.updateObservables(typography);
 
         this.fontKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.fontWeight.subscribe(this.applyChanges);
@@ -158,13 +158,13 @@ export class Typography {
         this.textAlign.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textTransform.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textDecoration.extend(ChangeRateLimit).subscribe(this.applyChanges);
-        this.typography.extend(ChangeRateLimit).subscribe(this.fillout);
+        this.typography.extend(ChangeRateLimit).subscribe(this.updateObservables);
     }
 
     public async onFontSelected(fontContract: FontContract): Promise<void> {
         this.fontName(fontContract ? fontContract.displayName : inheritLabel);
         this.fontKey(fontContract ? fontContract.key : undefined);
-        await this.fillout({ fontKey: this.fontKey() });
+        await this.updateObservables({ fontKey: this.fontKey() });
     }
 
     public onColorSelected(colorContract: ColorContract): void {
