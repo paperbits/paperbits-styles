@@ -13,7 +13,7 @@ ko.bindingHandlers["colorPicker"] = {
             defaultRepresentation: "HEX",
             showAlways: true,
             useAsButton: false,
-            position: "right",
+            inline: true,
             components: {
                 preview: true,
                 opacity: true,
