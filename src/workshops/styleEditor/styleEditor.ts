@@ -85,12 +85,7 @@ export class StyleEditor {
         this.working(true);
 
         const style = this.getStyleForSelectedState();
-        const viewport = this.viewManager.getViewport();
-
-        const typographyConfig = StyleHelper.getPluginConfig(style, "typography", viewport);
-        this.elementStyleTypography(typographyConfig);
-
-
+        this.elementStyleTypography(style.typography);
         this.elementStyleTransform(style.transform);
         this.elementStyleTransition(<TransitionStylePluginConfig>style.transition);
         this.elementStyleBackground(style.background);
@@ -133,39 +128,21 @@ export class StyleEditor {
         this.scheduleUpdate();
     }
 
-    public onBackgroundUpdate(background: BackgroundStylePluginConfig): void {
+    public onBackgroundUpdate(pluginConfig: BackgroundStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        style["background"] = background;
+        StyleHelper.setPluginConfig(style, "background", pluginConfig, null);
         this.scheduleUpdate();
     }
 
-    public onShadowUpdate(shadow: ShadowStylePluginConfig): void {
+    public onShadowUpdate(pluginConfig: ShadowStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-
-        if (shadow) {
-            style["shadow"] = { shadowKey: shadow.shadowKey };
-        }
-        else {
-            delete style["shadow"];
-        }
-
+        StyleHelper.setPluginConfig(style, "shadow", pluginConfig, null);
         this.scheduleUpdate();
     }
 
-    public onAnimationUpdate(animation: AnimationStylePluginConfig): void {
+    public onAnimationUpdate(pluginConfig: AnimationStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-
-        if (animation) {
-            style["animation"] = {
-                animationKey: animation.animationKey,
-                duration: animation.duration,
-                iterationCount: animation.iterationCount
-            };
-        }
-        else {
-            delete style["animation"];
-        }
-
+        StyleHelper.setPluginConfig(style, "animation", pluginConfig, null);
         this.scheduleUpdate();
     }
 
@@ -177,26 +154,25 @@ export class StyleEditor {
 
     public onSizeUpdate(pluginConfig: SizeStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        style["size"] = pluginConfig;
+        StyleHelper.setPluginConfig(style, "size", pluginConfig, null);
         this.scheduleUpdate();
     }
 
     public onTypographyUpdate(pluginConfig: TypographyStylePluginConfig): void {
-        const viewport = this.viewManager.getViewport();
         const style = this.getStyleForSelectedState();
-        StyleHelper.setPluginConfig(style, "typography", pluginConfig, viewport);
+        StyleHelper.setPluginConfig(style, "typography", pluginConfig, null);
         this.scheduleUpdate();
     }
 
     public onTransformUpdate(pluginConfig: TransformStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        style["transform"] = pluginConfig;
+        StyleHelper.setPluginConfig(style, "transform", pluginConfig, null);
         this.scheduleUpdate();
     }
 
     public onTransitionUpdate(pluginConfig: TransitionStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        style["transition"] = pluginConfig;
+        StyleHelper.setPluginConfig(style, "transition", pluginConfig, null);
         this.scheduleUpdate();
     }
 }

@@ -44,6 +44,10 @@ export class TypographyStylePlugin extends StylePlugin {
             result.push(new StyleRule("lineHeight", StylePlugin.parseSize(pluginConfig.lineHeight)));
         }
 
+        if (pluginConfig.letterSpacing) {
+            result.push(new StyleRule("letterSpacing", StylePlugin.parseSize(pluginConfig.letterSpacing)));
+        }
+
         if (pluginConfig.colorKey) {
             const colorContract = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
 

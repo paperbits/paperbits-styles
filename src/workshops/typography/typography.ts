@@ -18,7 +18,8 @@ export class Typography {
     public fontSize: ko.Observable<any>;
     public fontWeight: ko.Observable<string | number>;
     public fontStyle: ko.Observable<any>;
-    public lineHeight: ko.Observable<any>;
+    public lineHeight: ko.Observable<string | number>;
+    public letterSpacing: ko.Observable<string | number>;
     public colorKey: ko.Observable<any>;
     public shadowKey: ko.Observable<any>;
     public textAlign: ko.Observable<any>;
@@ -61,6 +62,7 @@ export class Typography {
         this.fontWeight = ko.observable();
         this.fontStyle = ko.observable();
         this.lineHeight = ko.observable();
+        this.letterSpacing = ko.observable();
         this.colorKey = ko.observable();
         this.shadowKey = ko.observable();
         this.textAlign = ko.observable();
@@ -122,6 +124,7 @@ export class Typography {
         this.textTransform(typographyContract.textTransform);
         this.textDecoration(typographyContract.textDecoration);
         this.lineHeight(typographyContract.lineHeight);
+        this.letterSpacing(typographyContract.letterSpacing);
 
         if (typographyContract.shadowKey) {
             const shadowContract = Objects.getObjectAt<FontContract>(typographyContract.shadowKey, styles);
@@ -153,6 +156,7 @@ export class Typography {
         this.fontStyle.subscribe(this.applyChanges);
         this.fontSize.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.lineHeight.extend(ChangeRateLimit).subscribe(this.applyChanges);
+        this.letterSpacing.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.colorKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.shadowKey.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textAlign.extend(ChangeRateLimit).subscribe(this.applyChanges);
@@ -261,7 +265,8 @@ export class Typography {
             fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
             fontWeight: this.fontWeight(),
             fontStyle: this.fontStyle(),
-            lineHeight: this.lineHeight() ? this.lineHeight() : undefined,
+            lineHeight: this.lineHeight() || null,
+            letterSpacing: this.letterSpacing() || null,
             colorKey: this.colorKey(),
             shadowKey: this.shadowKey(),
             textAlign: this.textAlign(),

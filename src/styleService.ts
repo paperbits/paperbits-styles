@@ -197,7 +197,7 @@ export class StyleService {
 
         const styles = await this.getStyles();
 
-        Objects.mergeDeepAt(style.key, styles, style, false);
+        Objects.setValue(style.key, styles, style);
 
         await this.updateStyles(styles);
     }

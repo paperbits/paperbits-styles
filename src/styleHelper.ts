@@ -1,5 +1,5 @@
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
-import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
+import { BreakpointValues, Breakpoints } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import * as Objects from "@paperbits/common/objects";
 import * as Utils from "@paperbits/common/utils";
@@ -157,5 +157,47 @@ export class StyleHelper {
         }
 
         Objects.cleanupObject(pluginBag, true, true);
+        // this.optimizePluginConfig(pluginBag);
+    }
+
+    public static optimizeProperty(pluginBag: PluginBag, property: string): void {
+        if (!StyleHelper.isResponsive(pluginBag[property])) {
+            return;
+        }
+
+        const result = Utils.optimizeBreakpoints(pluginBag[property]);
+        pluginBag[property] = result;
+    }
+
+    public static optimizePluginConfig(pluginConfig: StylePluginConfig): void {
+        if (!StyleHelper.isResponsive(pluginConfig)) {
+            return;
+        }
+
+        const breakpoints = ["xs", "sm", "md", "lg", "xl"];
+        const lastValues = {};
+
+        for (const breakpoint of breakpoints) {
+            const pluginBag = pluginConfig[breakpoint];
+
+            if (!pluginBag) {
+                continue;
+            }
+
+            const properties = Object.keys(pluginBag);
+
+            for (const property of properties) {
+                if (lastValues[property] === pluginBag[property]) {
+                    delete pluginBag[property];
+                }
+                else {
+                    lastValues[property] = pluginBag[property];
+                }
+            }
+
+            if (Object.keys(pluginBag).length === 0) {
+                delete pluginConfig[breakpoint];
+            }
+        }
     }
 }

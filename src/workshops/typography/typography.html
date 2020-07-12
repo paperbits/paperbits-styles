@@ -56,6 +56,11 @@
         </div>
 
         <div class="form-group">
+            <label for="letterSpacing">Letter spacing</label>
+            <input id="letterSpacing" type="number" class="form-control" placeholder="(Inherit)" min="1" max="100" data-bind="textInput: $component.letterSpacing" />
+        </div>
+
+        <div class="form-group">
             <label for="textColor">Text color</label>
             <button id="textColor" class="btn" data-bind="text: $component.colorName, balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
             </button>

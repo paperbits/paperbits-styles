@@ -10,5 +10,6 @@ export interface TypographyStylePluginConfig extends StylePluginConfig {
     textAlign?: string;
     textTransform?: string;
     textDecoration?: string;
-    lineHeight?: string;
+    lineHeight?: string | number;
+    letterSpacing?: string | number;
 }
