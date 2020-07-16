@@ -160,8 +160,8 @@ export class StyleGuide {
         return true;
     }
 
-    public selectGradient(gradient: LinearGradientContract): boolean { 
-        const view: View = { 
+    public selectGradient(gradient: LinearGradientContract): boolean {
+        const view: View = {
             heading: "Gradient",
             component: {
                 name: "gradient-editor",
@@ -269,16 +269,24 @@ export class StyleGuide {
     public async applyChanges(): Promise<void> {
         const styles = await this.styleService.getStyles();
 
-        const fonts = Object.values(styles.fonts);
+        const fonts = styles.fonts
+            ? Object.values(styles.fonts)
+            : [];
         this.fonts(fonts);
 
-        const colors = Object.values(styles.colors);
+        const colors = styles.colors
+            ? Object.values(styles.colors)
+            : [];
         this.colors(this.sortByDisplayName(colors));
 
-        const gradients = Object.values(styles.gradients);
+        const gradients = styles.gradients
+            ? Object.values(styles.gradients)
+            : [];
         this.gradients(this.sortByDisplayName(gradients));
 
-        const shadows = Object.values(styles.shadows).filter(x => x.key !== "shadows/none");
+        const shadows = styles.shadows
+            ? Object.values(styles.shadows).filter(x => x.key !== "shadows/none")
+            : [];
         this.shadows(this.sortByDisplayName(shadows));
 
         const textStylesVariations = await this.styleService.getVariations("globals", "body");

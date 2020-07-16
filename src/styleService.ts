@@ -74,7 +74,7 @@ export class StyleService {
         newVariation.key = `colors/${variationName}`;
         newVariation.displayName = "< Unnamed >";
 
-        styles["colors"][variationName] = newVariation;
+        Objects.setValue(`colors/${variationName}`, styles, newVariation);
 
         this.updateStyles(styles);
 
@@ -97,8 +97,7 @@ export class StyleService {
             }]
         };
         gradient.displayName = "< Unnamed >";
-
-        styles["gradients"][variationName] = gradient;
+        Objects.setValue(`gradients/${variationName}`, styles, gradient);
 
         this.updateStyles(styles);
 
@@ -111,7 +110,7 @@ export class StyleService {
         newVariation.key = `shadows/${variationName}`;
         newVariation.displayName = "< Unnamed >";
 
-        styles["shadows"][variationName] = newVariation;
+        Objects.setValue(`shadows/${variationName}`, styles, newVariation);
 
         this.updateStyles(styles);
 
