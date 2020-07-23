@@ -195,8 +195,10 @@
         <div class="samples">
             <!-- ko foreach: { data: $component.colors, as: 'color' } -->
             <div class="sample style-card" data-bind="styleable: color">
-                <div tabindex="0" class="style-card-square"
-                    data-bind="attr: { title: color.displayName }, style: { background: color.value }"></div>
+                <div tabindex="0" class="style-card-square pseudo-transparent-bckg"
+                    data-bind="attr: { title: color.displayName }">
+                    <div class="fit" data-bind="style: { background: color.value }"></div>
+                </div>
                 <span class="style-card-label" data-bind="text: color.displayName"></span>
             </div>
             <!--/ko -->

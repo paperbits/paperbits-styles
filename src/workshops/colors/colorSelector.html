@@ -11,7 +11,9 @@
 
         <!-- ko foreach: { data: colors, as: 'color' } -->
         <div class="color-box" data-bind="css: { selected: color === $component.selectedColor() }">
-            <a href="#" role="listitem" class="color" data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
+            <a href="#" role="listitem" class="color pseudo-transparent-bckg" data-bind="click: $component.selectColor, attr: { title: color.displayName }">
+                <span class="fit" data-bind="style: { background: color.value }"></span>
+            </a>
         </div>
         <!--/ko -->
     </div>
