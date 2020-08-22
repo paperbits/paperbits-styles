@@ -39,10 +39,6 @@ export class JssCompiler {
         return groupedMediaQueries;
     }
 
-    public compile(...styleSheets: StyleSheet[]): string {
-        return styleSheets.map((val) => this.styleSheetToCss(val)).join(" ");
-    }
-
     private styleSheetToCss(styleSheet: StyleSheet): string {
         const globalStyles = styleSheet.globalStyles.map(style => style.toJssString()).filter(x => !!x).join(",");
         const globalJssString = `{ "@global": { ${globalStyles} } }`;
@@ -58,5 +54,13 @@ export class JssCompiler {
         const css = jss.createStyleSheet(jssObject).toString();
 
         return `${globalCss} ${css}`;
+    }
+
+    public compile(...styleSheets: StyleSheet[]): string {
+        return styleSheets
+            .map((val) => this.styleSheetToCss(val))
+            .join(" ")
+            .replace(/\n/g, "")
+            .replace(/\s\s+/g, " ");
     }
 }
