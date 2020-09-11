@@ -14,7 +14,7 @@
                 <!-- /ko -->
 
                 <div class="style-card style-card-empty">
-                    <button class="btn-round" data-bind="click: $component.addFonts"></button>
+                    <button class="btn-round" data-bind="click: $component.addFonts" aria-label="Add font"></button>
                     <div class="style-card-label">
                         Add font
                     </div>
@@ -37,7 +37,7 @@
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">
-                    <button class="btn-round" data-bind="click: $component.addTextStyleVariation"></button>
+                    <button class="btn-round" data-bind="click: $component.addTextStyleVariation" aria-label="Add variation"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>
@@ -203,7 +203,7 @@
             </div>
             <!--/ko -->
             <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addColor"></button>
+                <button class="btn-round" data-bind="click: $component.addColor" aria-label="Add color"></button>
                 <div class="style-card-label">
                     Add color
                 </div>
@@ -224,7 +224,7 @@
             </div>
             <!--/ko -->
             <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addGradient"></button>
+                <button class="btn-round" data-bind="click: $component.addGradient" aria-label="Add gradient"></button>
                 <div class="style-card-label">
                     Add gradient
                 </div>
@@ -243,7 +243,7 @@
             </div>
             <!--/ko -->
             <div class="style-card style-card-empty">
-                <button class="btn-round" data-bind="click: $component.addShadow"></button>
+                <button class="btn-round" data-bind="click: $component.addShadow" aria-label="Add shadow"></button>
                 <div class="style-card-label">
                     Add shadow
                 </div>
@@ -258,9 +258,9 @@
                 <div class="style-card" data-bind="styleable: components.formControl.default">
                     <div class="style-card-body">
                         <div class="form-group">
-                            <label>Label</label>
+                            <label aria-hidden="true" tabindex="-1">Label</label>
                             <input type="text" class="form-control no-pointer-events" value="Input value"
-                                data-bind="stylePreview:components.formControl.default" />
+                                data-bind="stylePreview:components.formControl.default" tabindex="-1" aria-hidden="true" />
                         </div>
                     </div>
                     <span class="style-card-label" data-bind="text: components.formControl.default.displayName"></span>
@@ -326,7 +326,7 @@
                     <!-- <a href="#" class="btn-round" data-bind="balloon: { component: { name: 'style-snippet-selector', params: { snippetType: 'components/' + item.name, onSelect: $component.onSnippetSelected } } }">
                         <i class="paperbits-icon paperbits-color"></i>
                     </a> -->
-                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)"></button>
+                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)" aria-label="Add variation"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>
