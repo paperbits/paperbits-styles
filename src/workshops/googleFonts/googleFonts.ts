@@ -1,7 +1,6 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common";
-import * as mime from "mime-types";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { IMediaService } from "@paperbits/common/media";
@@ -115,7 +114,7 @@ export class GoogleFonts {
         const file = files[0];
         const content = await Utils.readFileAsByteArray(file);
         const fontContract = await FontParser.parse(content);
-        const contentType = <string>mime.lookup(file.name);
+        const contentType = file.type;
         const fontVariant = fontContract.variants[0];
         const uploadPromise = this.mediaService.createMedia(file.name, content, contentType);
 
