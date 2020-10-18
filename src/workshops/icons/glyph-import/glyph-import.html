@@ -1,0 +1,33 @@
+<div class="flex flex-column no-overflow ">
+    <fieldset class="flex-item form">
+        <div class="form-group">
+            <input class="form-control" type="search" role="searchbox"
+                data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true" placeholder="Search icons..."
+                aria-label="Search widgets" aria-controls="searchResult" />
+        </div>
+    </fieldset>
+
+    <div class="flex-item flex-item-grow" role="list" data-bind="scrollable: true">
+        <!-- ko foreach: { data: categories, as: 'category' } -->
+        <div class="flex-item">
+            <!-- ko if: $component.showFontNames -->
+            <h2 class="text-center" data-bind="text: category.name"></h2>
+            <!-- /ko -->
+            <!-- ko if: category.items.length > 0 -->
+            <div class="flex flex-row flex-wrap flex-item flex-item-grow" role="list">
+                <!-- ko foreach: { data: category.items, as: 'item' } -->
+                <a href="#" data-bind="click: $component.selectGlyph, attr: { title: item.name }"
+                    class="list-item list-item-icon">
+                    <canvas width="50" height="50" class="item" data-bind="fontGlyph: item"></canvas>
+                    <div class="text-overflow" data-bind="text: item.name"></div>
+                </a>
+                <!-- /ko -->
+            </div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+        <!-- ko if: working -->
+        <spinner></spinner>
+        <!-- /ko -->
+    </div>
+</div>

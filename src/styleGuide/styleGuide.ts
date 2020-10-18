@@ -7,9 +7,11 @@ import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorato
 import { IStyleGroup, Styleable, VariationContract, StyleManager, StyleCompiler } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
-import { FontContract, ColorContract, ShadowContract, LinearGradientContract } from "../contracts";
+import { FontContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
 import { ComponentStyle } from "../contracts/componentStyle";
+import { formatUnicode } from "../styleUitls";
+import { OpenTypeFontGlyph } from "../openType";
 
 @Component({
     selector: "style-guide",
@@ -34,6 +36,7 @@ export class StyleGuide {
     public readonly colors: ko.ObservableArray<ColorContract>;
     public readonly shadows: ko.ObservableArray<ShadowContract>;
     public readonly gradients: ko.ObservableArray<LinearGradientContract>;
+    public readonly icons: ko.ObservableArray<any>;
     public readonly textStyles: ko.ObservableArray<any>;
     public readonly navBars: ko.ObservableArray<any>;
     public readonly uiComponents: ko.ObservableArray<ComponentStyle>;
@@ -49,6 +52,7 @@ export class StyleGuide {
         this.colors = ko.observableArray([]);
         this.shadows = ko.observableArray([]);
         this.gradients = ko.observableArray([]);
+        this.icons = ko.observableArray([]);
         this.fonts = ko.observableArray([]);
         this.buttons = ko.observableArray([]);
         this.cards = ko.observableArray([]);
@@ -61,7 +65,7 @@ export class StyleGuide {
     }
 
     @OnMounted()
-    public async loadStyles(): Promise<void> {
+    public async initialize(): Promise<void> {
         this.viewManager.mode = ViewManagerMode.selecting;
         this.applyChanges();
         this.ownerDocument = this.viewManager.getHostDocument();
@@ -130,6 +134,32 @@ export class StyleGuide {
         this.selectShadow(addedItem);
     }
 
+    public async addIcon(): Promise<void> {
+        const externalFonts = await this.styleService.getExternalIconFonts();
+
+        const view: View = {
+            heading: "Add icon",
+            component: {
+                name: "glyph-import",
+                params: {
+                    fonts: externalFonts,
+                    showFontNames: true,
+                    onSelect: async (glyph: OpenTypeFontGlyph) => {
+                        await this.styleService.addIcon(glyph);
+                        this.viewManager.closeView();
+                        this.applyChanges();
+                    }
+                }
+            },
+            resize: {
+                directions: "vertically horizontally",
+                initialWidth: 400
+            }
+        };
+
+        this.viewManager.openViewAsPopup(view);
+    }
+
     public async removeColor(color: ColorContract): Promise<void> {
         await this.styleService.removeStyle(color.key);
         this.applyChanges();
@@ -177,7 +207,8 @@ export class StyleGuide {
         };
 
         this.viewManager.openViewAsPopup(view);
-        return true
+
+        return true;
     }
 
     public selectShadow(shadow: ShadowContract): boolean {
@@ -272,7 +303,7 @@ export class StyleGuide {
         const fonts = styles.fonts
             ? Object.values(styles.fonts)
             : [];
-        this.fonts(fonts);
+        this.fonts(fonts.filter(x => x.key !== ("fonts/icons")));
 
         const colors = styles.colors
             ? Object.values(styles.colors)
@@ -288,6 +319,17 @@ export class StyleGuide {
             ? Object.values(styles.shadows).filter(x => x.key !== "shadows/none")
             : [];
         this.shadows(this.sortByDisplayName(shadows));
+
+        const icons = styles.icons
+            ? Object.values(styles.icons).map(icon => ({
+                key: icon.key,
+                class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
+                displayName: icon.displayName,
+                unicode: formatUnicode(icon.unicode)
+            }))
+            : [];
+
+        this.icons(this.sortByDisplayName(icons));
 
         const textStylesVariations = await this.styleService.getVariations("globals", "body");
         this.textStyles(this.sortByDisplayName(textStylesVariations));
@@ -534,7 +576,32 @@ export class StyleGuide {
             };
         }
 
+        if (style.key.startsWith("icons/")) {
+            styleContextualEditor.deleteCommand = {
+                tooltip: "Delete icon",
+                color: "#607d8b",
+                component: {
+                    name: "confirmation",
+                    params: {
+                        getMessage: async () => {
+                            return `Are you sure you want to delete this icon?`;
+                        },
+                        onConfirm: async () => {
+                            await this.styleService.removeIcon(style.key);
+                            await this.applyChanges();
+                            this.viewManager.clearContextualEditors();
+                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
+                        },
+                        onDecline: () => {
+                            this.viewManager.clearContextualEditors();
+                        }
+                    }
+                }
+            };
+        }
+
         if (!style.key.startsWith("colors/") &&
+            !style.key.startsWith("icons/") &&
             !style.key.startsWith("fonts/") &&
             !style.key.startsWith("shadows/") &&
             !style.key.startsWith("gradients/") &&
@@ -568,7 +635,7 @@ export class StyleGuide {
                 }
             });
         }
-        else if (!style.key.startsWith("fonts/")) {
+        else if (!style.key.startsWith("fonts/") && !style.key.startsWith("icons/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit variation",

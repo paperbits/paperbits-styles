@@ -8,3 +8,5 @@ export const StylePrimitives = [
     "shadows",
     "utils"
 ];
+
+export const IconsFontBlobKey = "/styles/fonts/icons.ttf";

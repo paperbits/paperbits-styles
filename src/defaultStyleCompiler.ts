@@ -1,5 +1,6 @@
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
+import { formatUnicode } from "./styleUitls";
 import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
@@ -37,7 +38,7 @@ import {
     VariationBagContract,
     StateBagContract,
     LocalStyles,
-    PluginBag
+    PluginBag, FontFace
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
@@ -195,6 +196,22 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 const colorStyle = new Style(colorStyleSelector);
                 colorStyle.addRule(new StyleRule("color", themeContract.colors[colorName].value));
                 styleSheet.styles.push(colorStyle);
+            }
+        }
+
+        if (themeContract.icons) {
+            const iconNames = Object.keys(themeContract.icons);
+
+            for (const iconName of iconNames) {
+                const icon = themeContract.icons[iconName];
+                const formattedUnicode = formatUnicode(icon.unicode);
+                const iconStyleSelector = `icon-${Utils.camelCaseToKebabCase(iconName)}`;
+                const iconStyle = new Style(iconStyleSelector);
+                const pseudoStyle = new Style("before");
+
+                pseudoStyle.addRule(new StyleRule("content", `'\\\\${formattedUnicode}'`));
+                iconStyle.pseudoStyles.push(pseudoStyle);
+                styleSheet.styles.push(iconStyle);
             }
         }
 
@@ -366,6 +383,50 @@ export class DefaultStyleCompiler implements StyleCompiler {
         }
 
         return stateStyle;
+    }
+
+    public async getIconFontStylesCss(): Promise<string> {
+        const themeContract = await this.getStyles();
+        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
+        const fontFaces = await fontsPlugin.contractToFontFaces();
+        const iconFontFace = fontFaces.find(x => x.fontFamily === "Icons");
+
+        const styleSheet = new StyleSheet();
+        styleSheet.fontFaces.push(iconFontFace);
+
+        const iconBaseStyle = new Style("icon");
+        iconBaseStyle.addRule(new StyleRule("display", `inline-block`));
+        iconBaseStyle.addRule(new StyleRule("font-family", "Icons"));
+        iconBaseStyle.addRule(new StyleRule("font-style", "normal"));
+        iconBaseStyle.addRule(new StyleRule("font-weight", "normal"));
+        iconBaseStyle.addRule(new StyleRule("font-size", "1em"));
+        iconBaseStyle.addRule(new StyleRule("vertical-align", "middle"));
+        iconBaseStyle.addRule(new StyleRule("speak", "none"));
+        iconBaseStyle.addRule(new StyleRule("text-transform", "none"));
+        iconBaseStyle.addRule(new StyleRule("-webkit-font-smoothing", "antialiased"));
+        iconBaseStyle.addRule(new StyleRule("-moz-osx-font-smoothing", "grayscale"));
+        styleSheet.styles.push(iconBaseStyle);
+
+        if (themeContract.icons) {
+            const iconNames = Object.keys(themeContract.icons);
+
+            for (const iconName of iconNames) {
+                const icon = themeContract.icons[iconName];
+                const formattedUnicode = formatUnicode(icon.unicode);
+                const iconStyleSelector = `icon-${Utils.camelCaseToKebabCase(iconName)}`;
+                const iconStyle = new Style(iconStyleSelector);
+                const pseudoStyle = new Style("before");
+
+                pseudoStyle.addRule(new StyleRule("content", `'\\\\${formattedUnicode}'`));
+                iconStyle.pseudoStyles.push(pseudoStyle);
+                styleSheet.styles.push(iconStyle);
+            }
+        }
+
+        const compiler = new JssCompiler();
+        const css = compiler.compile(styleSheet);
+
+        return css;
     }
 
     public async getFontsStylesCss(): Promise<string> {

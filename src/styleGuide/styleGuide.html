@@ -37,7 +37,8 @@
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">
-                    <button class="btn-round" data-bind="click: $component.addTextStyleVariation" aria-label="Add variation"></button>
+                    <button class="btn-round" data-bind="click: $component.addTextStyleVariation"
+                        aria-label="Add variation"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>
@@ -108,7 +109,8 @@
                 <article>
                     <div class="style-card" data-bind="styleable: globals.a.default">
                         <div class="style-card-body">
-                            <a href="#" class="no-pointer-events" data-bind="stylePreview: 'globals/a/default'">Regular link</a>
+                            <a href="#" class="no-pointer-events" data-bind="stylePreview: 'globals/a/default'">Regular
+                                link</a>
                         </div>
                     </div>
                 </article>
@@ -252,6 +254,26 @@
     </article>
 
     <article>
+        <h2 class="heading">Icons <span class="preview">Preview</span></h2>
+        <div class="samples">
+            <!-- ko foreach: { data: $component.icons, as: 'icon' } -->
+            <div class="sample style-card" data-bind="styleable: icon">
+                <div class="style-card-body">
+                    <i class="icon" data-bind="css: icon.class"></i>
+                </div>
+                <div class="style-card-label" data-bind="text: icon.displayName"></div>
+            </div>
+            <!--/ko -->
+            <div class="style-card style-card-empty">
+                <button class="btn-round" data-bind="click: $component.addIcon" aria-label="Add icon"></button>
+                <div class="style-card-label">
+                    Add icon
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <article>
         <h2 class="heading">Form controls</h2>
         <div class="row">
             <div class="col col-md-3">
@@ -260,7 +282,8 @@
                         <div class="form-group">
                             <label aria-hidden="true" tabindex="-1">Label</label>
                             <input type="text" class="form-control no-pointer-events" value="Input value"
-                                data-bind="stylePreview:components.formControl.default" tabindex="-1" aria-hidden="true" />
+                                data-bind="stylePreview:components.formControl.default" tabindex="-1"
+                                aria-hidden="true" />
                         </div>
                     </div>
                     <span class="style-card-label" data-bind="text: components.formControl.default.displayName"></span>
@@ -326,7 +349,8 @@
                     <!-- <a href="#" class="btn-round" data-bind="balloon: { component: { name: 'style-snippet-selector', params: { snippetType: 'components/' + item.name, onSelect: $component.onSnippetSelected } } }">
                         <i class="paperbits-icon paperbits-color"></i>
                     </a> -->
-                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)" aria-label="Add variation"></button>
+                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)"
+                        aria-label="Add variation"></button>
                     <div class="style-card-label">
                         Add variation
                     </div>

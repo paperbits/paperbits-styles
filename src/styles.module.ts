@@ -9,6 +9,7 @@ import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
+import { FontManager } from "./openType";
 
 
 export class StyleModule implements IInjectorModule {
@@ -16,5 +17,6 @@ export class StyleModule implements IInjectorModule {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);
+        injector.bindSingleton("fontManager", FontManager);
     }
 }

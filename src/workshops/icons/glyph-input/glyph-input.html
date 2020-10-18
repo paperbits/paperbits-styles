@@ -1,0 +1,16 @@
+<!-- ko if: iconFont -->
+<div class="form-group">
+    <label id="visibleToLabel" class="form-label">
+        Icon
+    </label>
+
+    <div class="input-group">
+        <a href="#" class="form-control" role="button" aria-labelledby="visibleToLabel"
+            data-bind="text: selectedIconDisplay, balloon: { component: { name: 'glyph-selector', params: { fonts: [$component.iconFont()], onSelect: $component.onGlyphSelected } }, position: 'right' }">
+        </a>
+        <!-- <div class="input-group-addon">
+            <i class="paperbits-icon paperbits-single-02"></i>
+        </div> -->
+    </div>
+</div>
+<!-- /ko -->

@@ -2,11 +2,15 @@ import * as _ from "lodash";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IObjectStorage } from "@paperbits/common/persistence";
-import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract } from "./contracts";
+import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
 import { StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
+import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
+import { FontManager } from "./openType";
+import { HttpClient } from "@paperbits/common/http";
+import { ISettingsProvider } from "@paperbits/common/configuration";
 
 
 const stylesPath = "styles";
@@ -14,7 +18,10 @@ const stylesPath = "styles";
 export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
-        private readonly styleHandlers: StyleHandler[]
+        private readonly styleHandlers: StyleHandler[],
+        private readonly fontManager: FontManager,
+        private readonly settingsProvider: ISettingsProvider,
+        private readonly httpClient: HttpClient
     ) { }
 
     public async getStyles(): Promise<ThemeContract> {
@@ -305,4 +312,45 @@ export class StyleService {
         return referencedStyles;
     }
 
+    public async addIcon(glyph: OpenTypeFontGlyph): Promise<void> {
+        const styles = await this.getStyles();
+        await this.fontManager.addGlyph(styles, glyph);
+        await this.updateStyles(styles);
+    }
+
+    public async removeIcon(iconKey: string): Promise<void> {
+        const styles = await this.getStyles();
+
+        const icon = Objects.getObjectAt<FontGlyphContract>(iconKey, styles);
+
+        if (icon) {
+            await this.fontManager.removeGlyph(styles, icon.unicode);
+            await this.removeStyle(iconKey);
+        }
+    }
+
+    public async getIconFont(): Promise<FontContract> {
+        const styles = await this.getStyles();
+        const iconFont: FontContract = Objects.getObjectAt<FontContract>("fonts/icons", styles);
+
+        return iconFont;
+    }
+
+    public async getExternalIconFonts(): Promise<FontContract[]> {
+        const iconFontsUrl = await this.settingsProvider.getSetting<string>("iconFontsUrl");
+
+        const response = await this.httpClient.send({
+            url: iconFontsUrl,
+            method: "GET"
+        });
+
+        if (response.statusCode !== 200) {
+            return [];
+        }
+
+        const iconFontsData = <any>response.toObject();
+
+        return iconFontsData.fonts;
+    }
 }
+

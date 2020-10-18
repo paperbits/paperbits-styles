@@ -1,4 +1,4 @@
-import { VariationContract, PrimitiveContract } from "@paperbits/common/styles";
+import { PrimitiveContract } from "@paperbits/common/styles";
 
 export interface FontVariantContract {
     /**

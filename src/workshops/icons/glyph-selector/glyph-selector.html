@@ -1,0 +1,54 @@
+<div class="editor">
+    <h1>
+        Icons
+    </h1>
+    <hr />
+
+    <fieldset class="flex-item form">
+        <div class="form-group">
+            <input class="form-control" type="search" role="searchbox"
+                data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true" placeholder="Search icons..."
+                aria-label="Search widgets" aria-controls="searchResult" />
+        </div>
+    </fieldset>
+
+    <style data-bind="html: compiledFontStyles"></style>
+
+    <div class="flex-item flex-item-grow list" role="list" data-bind="scrollable: true">
+        <!-- ko if: $component.icons().length > 0 -->
+        <div class="flex flex-row flex-wrap flex-item flex-item-grow" role="list">
+            <!-- ko foreach: { data:  $component.icons, as: 'icon' } -->
+            <a href="#" class="list-item list-item-icon" data-bind="click: $component.selectIcon">
+                <i class="icon" data-bind="css: icon.class"></i>
+                <div data-bind="text: icon.displayName"></div>
+            </a>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: working -->
+        <spinner></spinner>
+        <!-- /ko -->
+
+        <!-- ko if: !working() && $component.icons().length === 0 -->
+        <div class="flex flex-column flex-item flex-item-grow list">
+            <!-- ko if: searchPattern() === "" -->
+            <p class="flex-item flex-item-grow text-center">It seems that you don't have any icons yet. You can add one
+                in Styles section.
+            </p>
+            <!-- /ko -->
+
+            <!-- ko if: searchPattern() !== ""  -->
+            <p class="flex-item flex-item-grow text-center">Could not find anything. Try to change search criteria.</p>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+    </div>
+
+    <div class="flex-item btn-group">
+        <button class="btn" data-bind="click: $component.selectNone">
+            <i class="paperbits-icon paperbits-ban"></i>
+            None
+        </button>
+    </div>
+</div>
