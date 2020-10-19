@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
+import * as Constants from "@paperbits/common/constants";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
@@ -337,7 +338,7 @@ export class StyleService {
     }
 
     public async getExternalIconFonts(): Promise<FontContract[]> {
-        const iconFontsUrl = await this.settingsProvider.getSetting<string>("iconFontsUrl");
+        const iconFontsUrl = Constants.iconsFontsLibraryUrl;
 
         const response = await this.httpClient.send({
             url: iconFontsUrl,
