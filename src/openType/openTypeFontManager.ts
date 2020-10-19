@@ -18,13 +18,16 @@ export class FontManager {
         const advanceWidths = []; // capturing advanceWidths (overcoming bug in openfont.js library)
 
         if (iconFont) {
-            const fontUrl = iconFont.variants[0].file;
-            font = await opentype.load(fontUrl, null, { lowMemory: true });
+            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
 
-            for (let index = 0; index < font.numGlyphs; index++) {
-                const glyphInFont = font.glyphs.get(index);
-                glyphs.push(glyphInFont);
-                advanceWidths.push(glyphInFont.advanceWidth);
+            if (fontUrl) {
+                font = await opentype.load(fontUrl, null, { lowMemory: true });
+
+                for (let index = 0; index < font.numGlyphs; index++) {
+                    const glyphInFont = font.glyphs.get(index);
+                    glyphs.push(glyphInFont);
+                    advanceWidths.push(glyphInFont.advanceWidth);
+                }
             }
         }
         else {
@@ -95,15 +98,18 @@ export class FontManager {
         const advanceWidths = []; // capturing advanceWidths (overcoming bug in openfont.js library)
 
         if (iconFont) {
-            const fontUrl = iconFont.variants[0].file;
-            font = await opentype.load(fontUrl, null, { lowMemory: true });
+            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
 
-            for (let index = 0; index < font.numGlyphs; index++) {
-                const glyphInFont = font.glyphs.get(index);
+            if (fontUrl) {
+                font = await opentype.load(fontUrl, null, { lowMemory: true });
 
-                if (glyphInFont.unicode !== unicode) {
-                    glyphs.push(glyphInFont);
-                    advanceWidths.push(glyphInFont.advanceWidth);
+                for (let index = 0; index < font.numGlyphs; index++) {
+                    const glyphInFont = font.glyphs.get(index);
+
+                    if (glyphInFont.unicode !== unicode) {
+                        glyphs.push(glyphInFont);
+                        advanceWidths.push(glyphInFont.advanceWidth);
+                    }
                 }
             }
         }
