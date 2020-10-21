@@ -9,4 +9,4 @@ export const StylePrimitives = [
     "utils"
 ];
 
-export const IconsFontBlobKey = "/styles/fonts/icons.ttf";
+export const IconsFontBlobKey = "styles/fonts/icons.ttf";
