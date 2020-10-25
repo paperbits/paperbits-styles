@@ -69,9 +69,12 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
     private async getStyles(): Promise<ThemeContract> {
         if (!this.styles && !this.styleService) {
-            console.error("Styles provider is not set!!!");
+            console.error("Styles provider is not set!");
         }
+
         const result = this.styles || await this.styleService.getStyles();
+        Objects.cleanupObject(result, true);
+
         return result;
     }
 
@@ -202,7 +205,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         if (themeContract.icons) {
             const iconBaseStyle = this.getIconFontStyle();
             styleSheet.styles.push(iconBaseStyle);
-            
+
             const iconNames = Object.keys(themeContract.icons);
 
             for (const iconName of iconNames) {

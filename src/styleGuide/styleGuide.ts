@@ -117,7 +117,7 @@ export class StyleGuide {
         const addedItem = await this.styleService.addGradientVariation(variationName);
 
         const gradients = this.gradients();
-        gradients.push(addedItem)
+        gradients.push(addedItem);
         this.gradients(this.sortByDisplayName(gradients));
 
         this.selectGradient(addedItem);
@@ -271,7 +271,6 @@ export class StyleGuide {
     }
 
     public async onSnippetSelected(snippet: StyleItem): Promise<void> {
-        console.log("Snippet selected: ", snippet);
         await this.styleService.mergeStyles(snippet.stylesConfig);
         await this.openInEditor(snippet.stylesType.split("/").pop(), snippet);
     }
@@ -300,39 +299,30 @@ export class StyleGuide {
     public async applyChanges(): Promise<void> {
         const styles = await this.styleService.getStyles();
 
-        const fonts = styles.fonts
-            ? Object.values(styles.fonts)
-            : [];
-        this.fonts(fonts.filter(x => x.key !== ("fonts/icons")));
+        const fonts = await this.styleService.getFonts();
+        this.fonts(fonts);
 
-        const colors = styles.colors
-            ? Object.values(styles.colors)
-            : [];
+        const colors = await this.styleService.getColors();
         this.colors(this.sortByDisplayName(colors));
 
-        const gradients = styles.gradients
-            ? Object.values(styles.gradients)
-            : [];
+        const gradients = await this.styleService.getGadients();
         this.gradients(this.sortByDisplayName(gradients));
 
-        const shadows = styles.shadows
-            ? Object.values(styles.shadows).filter(x => x.key !== "shadows/none")
-            : [];
-        this.shadows(this.sortByDisplayName(shadows));
+        const shadows = await this.styleService.getShadows();
+        this.shadows(shadows);
 
-        const icons = styles.icons
-            ? Object.values(styles.icons).map(icon => ({
-                key: icon.key,
-                class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
-                displayName: icon.displayName,
-                unicode: formatUnicode(icon.unicode)
-            }))
-            : [];
+        const icons = await this.styleService.getIcons();
+        const extendedIcons = icons.map(icon => ({
+            key: icon.key,
+            class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
+            displayName: icon.displayName,
+            unicode: formatUnicode(icon.unicode)
+        }));
 
-        this.icons(this.sortByDisplayName(icons));
+        this.icons(extendedIcons);
 
-        const textStylesVariations = await this.styleService.getVariations("globals", "body");
-        this.textStyles(this.sortByDisplayName(textStylesVariations));
+        const textVariations = await this.styleService.getTextVariations();
+        this.textStyles(textVariations);
 
         const components = await this.getComponentsStyles();
         this.uiComponents(components);

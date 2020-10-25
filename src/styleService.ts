@@ -6,7 +6,7 @@ import { IObjectStorage } from "@paperbits/common/persistence";
 import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
 import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
-import { StyleHandler, VariationContract } from "@paperbits/common/styles";
+import { PrimitiveContract, StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
 import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
 import { FontManager } from "./openType";
@@ -21,9 +21,12 @@ export class StyleService {
         private readonly objectStorage: IObjectStorage,
         private readonly styleHandlers: StyleHandler[],
         private readonly fontManager: FontManager,
-        private readonly settingsProvider: ISettingsProvider,
         private readonly httpClient: HttpClient
     ) { }
+
+    private sortByDisplayName(items: any[]): any[] {
+        return _.sortBy(items, ["displayName"]);
+    }
 
     public async getStyles(): Promise<ThemeContract> {
         const stylesObject = await this.objectStorage.getObject<ThemeContract>(stylesPath);
@@ -89,6 +92,10 @@ export class StyleService {
         return newVariation;
     }
 
+    public async getColors(): Promise<ColorContract[]> {
+        return this.getPrimitives<ColorContract>("colors");
+    }
+
     public async addGradientVariation(variationName: string): Promise<LinearGradientContract> {
         const styles = await this.getStyles();
         const gradient: LinearGradientContract = {
@@ -112,6 +119,20 @@ export class StyleService {
         return gradient;
     }
 
+    private async getPrimitives<T>(type: string): Promise<T[]> {
+        const styles = await this.getStyles();
+
+        const primitives = styles[type]
+            ? Object.values<T>(styles[type]).filter(primitive => !!primitive)
+            : [];
+
+        return this.sortByDisplayName(primitives);
+    }
+
+    public async getGadients(): Promise<LinearGradientContract[]> {
+        return this.getPrimitives<LinearGradientContract>("gradients");
+    }
+
     public async addShadowVariation(variationName: string): Promise<ShadowContract> {
         const styles = await this.getStyles();
         const newVariation: any = { blur: 1, spread: 1, color: "rgba(0, 0, 0, 0.1)", inset: false, offsetX: 1, offsetY: 1 };
@@ -123,6 +144,11 @@ export class StyleService {
         this.updateStyles(styles);
 
         return newVariation;
+    }
+
+    public async getShadows(): Promise<ShadowContract[]> {
+        const shadows = await this.getPrimitives<ShadowContract>("shadows");
+        return shadows.filter(x => x !== null && x.key !== "shadows/none");
     }
 
     private rewriteVariationKeysRecursively(variation: Object, parentKey: string): void {
@@ -238,7 +264,7 @@ export class StyleService {
             return variationContract;
         });
 
-        return variations;
+        return variations.filter(variation => !!variation);
     }
 
     public getAllowedStates(styles: any): [] {
@@ -276,7 +302,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        Objects.deleteNodeAt(`${styleKey}`, styles);
+        Objects.setValue(styleKey, styles, null);
         this.objectStorage.updateObject(`${stylesPath}`, styles);
     }
 
@@ -330,6 +356,11 @@ export class StyleService {
         }
     }
 
+    public async getIcons(): Promise<FontGlyphContract[]> {
+        const icons = await this.getPrimitives<FontGlyphContract>("icons");
+        return icons;
+    }
+
     public async getIconFont(): Promise<FontContract> {
         const styles = await this.getStyles();
         const iconFont: FontContract = Objects.getObjectAt<FontContract>("fonts/icons", styles);
@@ -355,10 +386,12 @@ export class StyleService {
     }
 
     public async getFonts(): Promise<FontContract[]> {
-        const themeContract = await this.getStyles();
-        const fonts = Object.values(themeContract.fonts);
+        const fonts = await this.getPrimitives<FontContract>("fonts");
+        return fonts.filter(x => x.key !== ("fonts/icons"));
+    }
 
-        return fonts;
+    public async getTextVariations(): Promise<any[]> {
+        const textStylesVariations = await this.getVariations("globals", "body");
+        return this.sortByDisplayName(textStylesVariations);
     }
 }
-
