@@ -2,7 +2,7 @@ import * as opentype from "opentype.js";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IBlobStorage } from "@paperbits/common/persistence";
-import { IconsFontBlobKey } from "../constants";
+import { IconsFontFileSourceKey, IconsFontPermalink } from "../constants";
 import { FontContract, FontGlyphContract, ThemeContract } from "../contracts";
 import { OpenTypeFont } from "./openTypeFont";
 import { OpenTypeFontGlyph } from "./openTypeFontGlyph";
@@ -18,7 +18,7 @@ export class FontManager {
         const advanceWidths = []; // capturing advanceWidths (overcoming bug in openfont.js library)
 
         if (iconFont) {
-            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
+            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontFileSourceKey);
 
             if (fontUrl) {
                 font = await opentype.load(fontUrl, null, { lowMemory: true });
@@ -63,8 +63,7 @@ export class FontManager {
 
         const fontArrayBuffer = font.toArrayBuffer();
 
-        await this.blobStorage.uploadBlob(IconsFontBlobKey, new Uint8Array(fontArrayBuffer), "font/ttf");
-        const downloadUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
+        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), "font/ttf");
 
         iconFont = {
             displayName: "Icons",
@@ -72,7 +71,8 @@ export class FontManager {
             key: "fonts/icons",
             variants: [
                 {
-                    file: downloadUrl,
+                    sourceKey: IconsFontFileSourceKey,
+                    permalink: IconsFontPermalink,
                     style: "normal",
                     weight: "400"
                 }
@@ -98,7 +98,7 @@ export class FontManager {
         const advanceWidths = []; // capturing advanceWidths (overcoming bug in openfont.js library)
 
         if (iconFont) {
-            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
+            const fontUrl = await this.blobStorage.getDownloadUrl(IconsFontFileSourceKey);
 
             if (fontUrl) {
                 font = await opentype.load(fontUrl, null, { lowMemory: true });
@@ -139,8 +139,7 @@ export class FontManager {
 
         const fontArrayBuffer = font.toArrayBuffer();
 
-        await this.blobStorage.uploadBlob(IconsFontBlobKey, new Uint8Array(fontArrayBuffer), "font/ttf");
-        const downloadUrl = await this.blobStorage.getDownloadUrl(IconsFontBlobKey);
+        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), "font/ttf");
 
         iconFont = {
             displayName: "Icons",
@@ -148,7 +147,8 @@ export class FontManager {
             key: "fonts/icons",
             variants: [
                 {
-                    file: downloadUrl,
+                    sourceKey: IconsFontFileSourceKey,
+                    permalink: IconsFontPermalink,
                     style: "normal",
                     weight: "400"
                 }

@@ -173,7 +173,7 @@ export class Background {
         this.applyDirectionOffset();
     }
 
-    public applyDirectionOffset() {
+    public applyDirectionOffset(): void {
         let position = "";
         if (!this.horizontalOffsetDirection() || this.horizontalOffsetDirection() === "center") {
             position += "center ";
@@ -268,7 +268,7 @@ export class Background {
         }
     }
 
-    private clearBackgroundImageOffset() {
+    private clearBackgroundImageOffset(): void {
         this.horizontalOffsetDirection(null);
         this.verticalOffsetDirection(null);
         this.horizontalOffset(0);

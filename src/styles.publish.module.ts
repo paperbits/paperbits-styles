@@ -10,13 +10,17 @@ import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 import { FontManager } from "./openType";
+import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver";
+import { FontPublisher } from "./fonts/fontPublisher";
 
 
-export class StyleModule implements IInjectorModule {
+export class StylePublishModule implements IInjectorModule {
     public register(injector: IInjector): void {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);
         injector.bindSingleton("fontManager", FontManager);
+        injector.bindToCollection("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
+        injector.bindToCollection("publishers", FontPublisher);
     }
 }

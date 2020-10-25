@@ -16,6 +16,8 @@ export interface FontVariantContract {
      */
     file?: string;
 
+    permalink?: string;
+
     /**
      * A key that is used to identify a font source.
      */

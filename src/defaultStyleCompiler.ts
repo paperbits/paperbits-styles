@@ -50,7 +50,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly mediaPermalinkResolver: IPermalinkResolver
+        private readonly permalinkResolver: IPermalinkResolver
     ) {
         this.plugins = {};
     }
@@ -100,7 +100,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["margin"] = new MarginStylePlugin();
         this.plugins["border"] = new BorderStylePlugin(themeContract);
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
+        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.permalinkResolver);
         this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
         this.plugins["animation"] = new AnimationStylePlugin(themeContract);
         this.plugins["typography"] = new TypographyStylePlugin(themeContract);
@@ -121,7 +121,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
-        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
+        const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
         styleSheet.fontFaces.push(...fontFaces);
 
@@ -200,6 +200,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
         }
 
         if (themeContract.icons) {
+            const iconBaseStyle = this.getIconFontStyle();
+            styleSheet.styles.push(iconBaseStyle);
+            
             const iconNames = Object.keys(themeContract.icons);
 
             for (const iconName of iconNames) {
@@ -385,15 +388,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return stateStyle;
     }
 
-    public async getIconFontStylesCss(): Promise<string> {
-        const themeContract = await this.getStyles();
-        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
-        const fontFaces = await fontsPlugin.contractToFontFaces();
-        const iconFontFace = fontFaces.find(x => x.fontFamily === "Icons");
-
-        const styleSheet = new StyleSheet();
-        styleSheet.fontFaces.push(iconFontFace);
-
+    private getIconFontStyle(): Style {
         const iconBaseStyle = new Style("icon");
         iconBaseStyle.addRule(new StyleRule("display", `inline-block`));
         iconBaseStyle.addRule(new StyleRule("font-family", "Icons"));
@@ -405,6 +400,20 @@ export class DefaultStyleCompiler implements StyleCompiler {
         iconBaseStyle.addRule(new StyleRule("text-transform", "none"));
         iconBaseStyle.addRule(new StyleRule("-webkit-font-smoothing", "antialiased"));
         iconBaseStyle.addRule(new StyleRule("-moz-osx-font-smoothing", "grayscale"));
+
+        return iconBaseStyle;
+    }
+
+    public async getIconFontStylesCss(): Promise<string> {
+        const themeContract = await this.getStyles();
+        const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
+        const fontFaces = await fontsPlugin.contractToFontFaces();
+        const iconFontFace = fontFaces.find(x => x.fontFamily === "Icons");
+
+        const styleSheet = new StyleSheet();
+        styleSheet.fontFaces.push(iconFontFace);
+
+        const iconBaseStyle = this.getIconFontStyle();
         styleSheet.styles.push(iconBaseStyle);
 
         if (themeContract.icons) {
@@ -431,7 +440,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
     public async getFontsStylesCss(): Promise<string> {
         const themeContract = await this.getStyles();
-        const fontsPlugin = new FontsStylePlugin(this.mediaPermalinkResolver, themeContract);
+        const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
 
         const styleSheet = new StyleSheet();

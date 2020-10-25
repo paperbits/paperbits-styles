@@ -353,5 +353,12 @@ export class StyleService {
 
         return iconFontsData.fonts;
     }
+
+    public async getFonts(): Promise<FontContract[]> {
+        const themeContract = await this.getStyles();
+        const fonts = Object.values(themeContract.fonts);
+
+        return fonts;
+    }
 }
 

@@ -54,8 +54,6 @@ export class BorderEditor {
             this.borderColorKey(style.colorKey);
         }
 
-
-
         const themeContract = await this.styleService.getStyles();
 
         const colors = Object.keys(themeContract.colors).map((key) => {

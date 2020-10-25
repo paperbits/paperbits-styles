@@ -12,13 +12,12 @@ import "./ko/bindingHandlers/bindingHandlers.gradientPreview";
 import "./ko/bindingHandlers/bindingHandlers.itemTemplate";
 import "./ko/bindingHandlers/bindingHandlers.fontGlyph";
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
-import { StyleModule } from "./styles.module";
 import { StyleEditor } from "./workshops/styleEditor";
 import { StyleGuide } from "./styleGuide/styleGuide";
 import { BoxEditor } from "./workshops/boxes/boxEditor";
 import { BorderEditor } from "./workshops/border";
 import { ColorSelector, ColorEditor } from "./workshops/colors";
-import { GradientSelector,  GradientEditor, ColorStopEditor } from "./workshops/gradients";
+import { GradientSelector, GradientEditor, ColorStopEditor } from "./workshops/gradients";
 import { FontSelector } from "./workshops/fonts";
 import { GoogleFonts } from "./workshops/googleFonts";
 import { AnimationSelector } from "./workshops/animations";
@@ -34,7 +33,6 @@ import { StylableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.sty
 import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
 import { Container } from "./workshops/container/container";
-
 import { StyleSnippetSelector } from "./workshops/snippets/styleSnippetSelector";
 import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
@@ -45,10 +43,13 @@ import { SizeEditor } from "./workshops/size/sizeEditor";
 import { GlyphSelector } from "./workshops/icons/glyph-selector/glyph-selector";
 import { GlyphImport } from "./workshops/icons/glyph-import/glyph-import";
 import { GlyphInput } from "./workshops/icons/glyph-input/glyph-input";
+import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.design";
+import { StyleService } from "./styleService";
+import { DefaultStyleCompiler } from "./defaultStyleCompiler";
+import { FontManager } from "./openType";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
-        injector.bindModule(new StyleModule());
         injector.bind("fontSelector", FontSelector);
         injector.bind("glyphSelector", GlyphSelector);
         injector.bind("glyphImport", GlyphImport);
@@ -73,6 +74,10 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("shadowEditorGroup", ShadowEditorGroup);
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("animationEditor", AnimationEditor);
+        injector.bindSingleton("styleService", StyleService);
+        injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
+        injector.bindToCollection("autostart", StyledBindingHandler);
+        injector.bindSingleton("fontManager", FontManager);
         injector.bind("styleEditor", StyleEditor);
         injector.bind("styleGuide", StyleGuide);
         injector.bind("stylePlugin", StylePlugin);
@@ -84,7 +89,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("autostart", StylableBindingHandler);
         injector.bindToCollection("workshopSections", StylesWorkshopSection);
-
         injector.bindToCollection("autostart", StyledBindingHandler);
+        injector.bindToCollection("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
     }
 }
