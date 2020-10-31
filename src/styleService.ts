@@ -123,7 +123,9 @@ export class StyleService {
         const styles = await this.getStyles();
 
         const primitives = styles[type]
-            ? Object.values<T>(styles[type]).filter(primitive => !!primitive)
+            ? Object
+                .values<T>(styles[type])
+                .filter(primitive => !!primitive)
             : [];
 
         return this.sortByDisplayName(primitives);

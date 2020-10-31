@@ -46,9 +46,9 @@ export class FontManager {
 
         if (iconFont) {
             const content = await this.blobStorage.downloadBlob(IconsFontFileSourceKey);
-            const arrayBuffer = content.buffer.slice(content.byteOffset, content.byteLength + content.byteOffset);
 
             if (content) {
+                const arrayBuffer = content.buffer.slice(content.byteOffset, content.byteLength + content.byteOffset);
                 font = await opentype.parse(arrayBuffer, null, { lowMemory: true });
 
                 for (let index = 0; index < font.numGlyphs; index++) {
@@ -108,9 +108,9 @@ export class FontManager {
 
         if (iconFont) {
             const content = await this.blobStorage.downloadBlob(IconsFontFileSourceKey);
-            const arrayBuffer = content.buffer.slice(content.byteOffset, content.byteLength + content.byteOffset);
 
             if (content) {
+                const arrayBuffer = content.buffer.slice(content.byteOffset, content.byteLength + content.byteOffset);
                 font = await opentype.parse(arrayBuffer, null, { lowMemory: true });
 
                 for (let index = 0; index < font.numGlyphs; index++) {

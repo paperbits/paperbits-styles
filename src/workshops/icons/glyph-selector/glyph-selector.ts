@@ -58,25 +58,22 @@ export class GlyphSelector {
             .extend(ChangeRateLimit)
             .subscribe(this.searchIcons);
 
-        const styles = await this.styleService.getStyles();
+        const icons = await this.styleService.getIcons();
+        const iconViewModels = icons.map(icon => ({
+            key: icon.key,
+            class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
+            displayName: icon.displayName,
+            unicode: formatUnicode(icon.unicode)
+        }));
 
-        const icons = styles.icons
-            ? Object.values(styles.icons).map(icon => ({
-                key: icon.key,
-                class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
-                displayName: icon.displayName,
-                unicode: formatUnicode(icon.unicode)
-            }))
-            : [];
-
-        this.allIcons = icons;
+        this.allIcons = iconViewModels;
         this.icons(icons);
         this.working(false);
     }
 
     private searchIcons(pattern: string = ""): void {
         this.working(true);
-        
+
         pattern = pattern.toLowerCase();
         const filteredIcons = this.allIcons.filter(icon => icon.displayName.toLowerCase().includes(pattern));
         this.icons(filteredIcons);
