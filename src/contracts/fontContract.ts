@@ -22,6 +22,11 @@ export interface FontVariantContract {
      * A key that is used to identify a font source.
      */
     sourceKey?: string;
+
+    /**
+     * @deprecated.
+     */
+    sourceId?: string;
 }
 
 export interface FontContract extends PrimitiveContract {

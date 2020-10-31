@@ -14,13 +14,19 @@ export class FontPublisher implements IPublisher {
     ) { }
 
     private async renderFontFile(font: FontContract): Promise<void> {
+        this.logger.trackEvent("Publishing", { message: `Publishing font ${font.displayName}...` });
+
         try {
             for (const variant of font.variants) {
-                const blob = await this.blobStorage.downloadBlob(variant.sourceKey);
+                const blobKey = variant.sourceKey || variant.sourceId;
+                const blob = await this.blobStorage.downloadBlob(blobKey);
 
                 if (blob) {
                     await this.outputBlobStorage.uploadBlob(variant.permalink, blob, "font/ttf");
+                    continue;
                 }
+
+                this.logger.trackEvent("Publishing", { message: `Could not find blob for a font variant ${blobKey}.` });
             }
         }
         catch (error) {
@@ -30,6 +36,6 @@ export class FontPublisher implements IPublisher {
 
     public async publish(): Promise<void> {
         const iconFont = await this.styleService.getIconFont();
-        this.renderFontFile(iconFont);
+        await this.renderFontFile(iconFont);
     }
 }

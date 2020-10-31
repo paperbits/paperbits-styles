@@ -9,6 +9,7 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { FontContract } from "../../../contracts";
 import { StyleService } from "../../../styleService";
 import { formatUnicode } from "../../../styleUitls";
+import { StyleCompiler } from "@paperbits/common/styles";
 
 export interface GlyphItem {
     name: string;
@@ -28,7 +29,7 @@ export class GlyphSelector {
 
     constructor(
         private readonly styleService: StyleService,
-        private readonly styleCompiler: any
+        private readonly styleCompiler: StyleCompiler
     ) {
         this.working = ko.observable(true);
         this.fonts = ko.observableArray();
@@ -67,7 +68,7 @@ export class GlyphSelector {
         }));
 
         this.allIcons = iconViewModels;
-        this.icons(icons);
+        this.icons(iconViewModels);
         this.working(false);
     }
 
