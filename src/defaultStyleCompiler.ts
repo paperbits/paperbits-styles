@@ -42,6 +42,7 @@ import {
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
+import { IconsFontFamilyName, IconsFontStyleName, IconsFontWeight } from "./constants";
 
 
 export class DefaultStyleCompiler implements StyleCompiler {
@@ -394,9 +395,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
     private getIconFontStyle(): Style {
         const iconBaseStyle = new Style("icon");
         iconBaseStyle.addRule(new StyleRule("display", `inline-block`));
-        iconBaseStyle.addRule(new StyleRule("font-family", "Icons"));
-        iconBaseStyle.addRule(new StyleRule("font-style", "normal"));
-        iconBaseStyle.addRule(new StyleRule("font-weight", "normal"));
+        iconBaseStyle.addRule(new StyleRule("font-family", IconsFontFamilyName));
+        iconBaseStyle.addRule(new StyleRule("font-style", IconsFontStyleName));
+        iconBaseStyle.addRule(new StyleRule("font-weight", IconsFontWeight));
         iconBaseStyle.addRule(new StyleRule("font-size", "1em"));
         iconBaseStyle.addRule(new StyleRule("vertical-align", "middle"));
         iconBaseStyle.addRule(new StyleRule("speak", "none"));
@@ -411,7 +412,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const themeContract = await this.getStyles();
         const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
-        const iconFontFace = fontFaces.find(x => x.fontFamily === "Icons");
+        const iconFontFace = fontFaces.find(x => x.fontFamily === IconsFontFamilyName);
 
         const styleSheet = new StyleSheet();
         styleSheet.fontFaces.push(iconFontFace);

@@ -9,5 +9,8 @@ export const StylePrimitives = [
     "utils"
 ];
 
-export const IconsFontFileSourceKey = "styles/fonts/icons/regular";
+export const IconsFontStyleName = "normal";
+export const IconsFontWeight = "normal";
+export const IconsFontFamilyName = "Website Icons";
+export const IconsFontFileSourceKey = "fonts/icons/regular";
 export const IconsFontPermalink = "/styles/fonts/icons-regular.ttf";
