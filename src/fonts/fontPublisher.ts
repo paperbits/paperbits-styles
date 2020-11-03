@@ -36,6 +36,12 @@ export class FontPublisher implements IPublisher {
 
     public async publish(): Promise<void> {
         const iconFont = await this.styleService.getIconFont();
+
+        if (!iconFont) {
+            this.logger.trackEvent("Publishing", { message: `Skipping icon font publishing since it is not defined.` });
+            return;
+        }
+
         await this.renderFontFile(iconFont);
     }
 }
