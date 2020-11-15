@@ -352,8 +352,12 @@ export class StyleGuide {
                 const variations = Object.keys(componentStyles).map(variationName => {
                     const variationContract = componentStyles[variationName];
 
+                    if (!variationContract) {
+                        return null;
+                    }
+
                     if (states && variationName !== "default") {
-                        variationContract["allowedStates"] = states;
+                        variationContract.allowedStates = states;
                     }
 
                     return variationContract;
@@ -362,7 +366,7 @@ export class StyleGuide {
                 return {
                     name: componentName,
                     displayName: groupMetadata.groupName,
-                    variations: variations,
+                    variations: variations.filter(x => !!x),
                     itemTemplate: groupMetadata.styleTemplate
                 };
             })

@@ -305,7 +305,8 @@ export class StyleService {
 
         const styles = await this.getStyles();
         Objects.setValue(styleKey, styles, null);
-        this.objectStorage.updateObject(`${stylesPath}`, styles);
+        
+        await this.objectStorage.updateObject(`${stylesPath}`, styles);
     }
 
     public async checkStyleIsInUse(styleKey: string): Promise<any[]> {
