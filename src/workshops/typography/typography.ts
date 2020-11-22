@@ -168,7 +168,12 @@ export class Typography {
     public async onFontSelected(fontContract: FontContract): Promise<void> {
         this.fontName(fontContract ? fontContract.displayName : inheritLabel);
         this.fontKey(fontContract ? fontContract.key : undefined);
-        await this.updateObservables({ fontKey: this.fontKey() });
+
+        await this.updateObservables({
+            fontKey: this.fontKey(),
+            fontSize: this.fontSize(),
+            textAlign: this.textAlign()
+        });
     }
 
     public onColorSelected(colorContract: ColorContract): void {
