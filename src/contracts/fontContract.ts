@@ -1,33 +1,6 @@
 import { PrimitiveContract } from "@paperbits/common/styles";
+import { FontVariantContract } from "./fontVariantContract";
 
-export interface FontVariantContract {
-    /**
-     * e.g. "400", "bold", etc.
-     */
-    weight: number | string;
-
-    /**
-     * e.g. "normal", "italic".
-     */
-    style: string;
-
-    /**
-     * e.g. "http://fonts.gstatic.com/s/adventpro/v7/V8mDoQfxVT4Dvddr_yOwjcmODbY.ttf".
-     */
-    file?: string;
-
-    permalink?: string;
-
-    /**
-     * A key that is used to identify a font source.
-     */
-    sourceKey?: string;
-
-    /**
-     * @deprecated.
-     */
-    sourceId?: string;
-}
 
 export interface FontContract extends PrimitiveContract {
     /**

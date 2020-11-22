@@ -28,6 +28,9 @@ export class StyleService {
         return _.sortBy(items, ["displayName"]);
     }
 
+    /**
+     * Returns object with the whole theme styles.
+     */
     public async getStyles(): Promise<ThemeContract> {
         const stylesObject = await this.objectStorage.getObject<ThemeContract>(stylesPath);
 
@@ -54,6 +57,8 @@ export class StyleService {
         if (!styleKey) {
             throw new Error(`Parameter "styleKey" not specified.`);
         }
+
+        styleKey = styleKey.trim();
 
         if (!StylePrimitives.some(x => styleKey.startsWith(`${x}/`))) {
             throw new Error(`Unknown style premitive: "${styleKey}".`);
@@ -390,7 +395,12 @@ export class StyleService {
 
     public async getFonts(): Promise<FontContract[]> {
         const fonts = await this.getPrimitives<FontContract>("fonts");
-        return fonts.filter(x => x.key !== ("fonts/icons"));
+        return fonts;
+    }
+
+    public async getFont(fontKey: string): Promise<FontContract> {
+        const fonts = await this.getPrimitives<FontContract>("fonts");
+        return fonts.find(x => x.key === fontKey);
     }
 
     public async getTextVariations(): Promise<any[]> {

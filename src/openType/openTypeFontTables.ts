@@ -13,4 +13,13 @@ export interface OpenTypeFontTables {
      * It may contain more than one subtable, in order to support more than one character encoding scheme.
      */
     cmap: any;
+
+    /**
+     * The OS/2 table consists of a set of metrics and other data that are required in OpenType fonts.
+     */
+    os2: OpenTypeFontTablesOs2;
+}
+
+export interface OpenTypeFontTablesOs2 {
+    usWeightClass: number;
 }

@@ -6,6 +6,7 @@ export * from "./boxStylePluginConfig";
 export * from "./colorContract";
 export * from "./containerStylePluginConfig";
 export * from "./fontContract";
+export * from "./fontVariantContract";
 export * from "./linearGradientContract";
 export * from "./marginStylePluginConfig";
 export * from "./shadowContract";

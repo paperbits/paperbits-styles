@@ -38,7 +38,7 @@ import {
     VariationBagContract,
     StateBagContract,
     LocalStyles,
-    PluginBag, FontFace
+    PluginBag
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";

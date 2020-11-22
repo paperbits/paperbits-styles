@@ -12,9 +12,10 @@ import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorat
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
 import { GoogleFontsConfig } from "./googleFontsConfig";
-import { GoogleFontContract, GoogleFontsResult } from "./googleFontsParser";
+import { GoogleFontContract } from "./googleFontContract";
+import { GoogleFontsResult } from "./googleFontsResult";
 import { GoogleFont } from "./googleFont";
-import { FontParser } from "./../fonts/fontParser";
+import { FontManager } from "../../openType";
 
 
 @Component({
@@ -31,7 +32,7 @@ export class GoogleFonts {
         private readonly styleService: StyleService,
         private readonly httpClient: HttpClient,
         private readonly viewManager: ViewManager,
-        private readonly mediaService: IMediaService,
+        private readonly fontManager: FontManager,
         private readonly settingsProvider: ISettingsProvider,
         private readonly siteService: ISiteService
     ) {
@@ -44,7 +45,7 @@ export class GoogleFonts {
     public readonly selectedFont: ko.Observable<FontContract>;
 
     @Event()
-    public readonly onSelect: (font: FontContract) => void;
+    public readonly onSelect: (font: FontContract, custom?: boolean) => void;
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
@@ -56,7 +57,7 @@ export class GoogleFonts {
         //
         // const apiKey = settings.integration.googleFonts.apiKey;
 
-        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; 
+        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM";
 
         const response = await this.httpClient.send<GoogleFontsResult>({
             url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
@@ -109,19 +110,9 @@ export class GoogleFonts {
     }
 
     public async uploadFont(): Promise<void> {
-        const files = await this.viewManager.openUploadDialog();
+        const files = await this.viewManager.openUploadDialog(".ttf", ".otf", "woff");
         const styles = await this.styleService.getStyles();
-        const file = files[0];
-        const content = await Utils.readFileAsByteArray(file);
-        const fontContract = await FontParser.parse(content);
-        const contentType = file.type;
-        const fontVariant = fontContract.variants[0];
-        const uploadPromise = this.mediaService.createMedia(file.name, content, contentType);
-
-        this.viewManager.notifyProgress(uploadPromise, "Styles", `Uploading ${file.name}...`);
-
-        const media = await uploadPromise;
-        fontVariant.sourceKey = media.key;
+        const fontContract = await this.fontManager.parseFontFiles(files);
 
         Objects.setValue(fontContract.key, styles, fontContract);
 
@@ -132,7 +123,7 @@ export class GoogleFonts {
         }
 
         if (this.onSelect) {
-            this.onSelect(fontContract);
+            this.onSelect(fontContract, true);
         }
     }
 }

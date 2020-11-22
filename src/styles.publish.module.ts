@@ -10,7 +10,7 @@ import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styled";
 import { FontManager } from "./openType";
-import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver";
+import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.publish";
 import { FontPublisher } from "./fonts/fontPublisher";
 
 

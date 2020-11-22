@@ -1,5 +1,14 @@
 import { OpenTypeFontTables } from "./openTypeFontTables";
 
+export interface OpenTypeFontFamilyName {
+    en: string;
+}
+
+export interface OpenTypeFontNames {
+    fontFamily: OpenTypeFontFamilyName;
+    fontSubfamily: OpenTypeFontFamilyName;
+}
+
 /**
  * OpenType font definition.
  */
@@ -8,6 +17,8 @@ export interface OpenTypeFont {
      * Number of glyphs.
      */
     numGlyphs: number;
+
+    names: OpenTypeFontNames;
 
     /**
      * Glyph definitions.

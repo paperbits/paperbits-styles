@@ -2,8 +2,8 @@ import * as opentype from "opentype.js";
 import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import { IBlobStorage } from "@paperbits/common/persistence";
-import { IconsFontFamilyName, IconsFontFileSourceKey, IconsFontPermalink, IconsFontStyleName } from "../constants";
-import { FontContract, FontGlyphContract, ThemeContract } from "../contracts";
+import { IconsFontFamilyName, IconsFontFileSourceKey, IconsFontStyleName } from "../constants";
+import { FontContract, FontGlyphContract, FontVariantContract, ThemeContract } from "../contracts";
 import { OpenTypeFont } from "./openTypeFont";
 import { OpenTypeFontGlyph } from "./openTypeFontGlyph";
 
@@ -30,7 +30,6 @@ export class FontManager {
             variants: [
                 {
                     sourceKey: IconsFontFileSourceKey,
-                    permalink: IconsFontPermalink,
                     style: "normal",
                     weight: "400"
                 }
@@ -146,5 +145,53 @@ export class FontManager {
 
         iconFont = this.getIconFontContract();
         Objects.setValue("fonts/icons", styles, iconFont);
+    }
+
+    private normalizeFontWeight(value: number | string): number {
+        const weight = parseInt(<string>value);
+
+        if (!weight) {
+            return 400;
+        }
+
+        return Math.round(Math.round((weight / 100)) * 100);
+    }
+
+    public async parseFontFile(file: File): Promise<FontVariantContract> {
+        const content = await Utils.readFileAsByteArray(file);
+        const info: OpenTypeFont = opentype.parse(content);
+        const fontWeight = this.normalizeFontWeight(info.tables?.os2?.usWeightClass || 400);
+        const fontStyle = "normal"; // TODO: Try to extract from tables or guess from file name
+        const fileNameParts = file.name.split(".");
+        const extension = fileNameParts.length > 1 ? `.${fileNameParts.pop()}` : "";
+
+        const identifier = Utils.guid();
+        const blobKey = `fonts/${identifier}${extension}`;
+        await this.blobStorage.uploadBlob(blobKey, content, "font/ttf");
+
+        const fontVariant: FontVariantContract = {
+            weight: fontWeight,
+            style: fontStyle,
+            sourceKey: blobKey
+        };
+
+        return fontVariant;
+    }
+
+    public async parseFontFiles(files: File[]): Promise<FontContract> {
+        const variants = await Promise.all(files.map(file => this.parseFontFile(file)));
+        const identifier = Utils.randomClassName();
+
+        const fontContract: FontContract = {
+            key: `fonts/${identifier}`,
+            family: identifier,
+            displayName: "Custom Font",
+            category: null,
+            version: null,
+            lastModified: (new Date()).toISOString(),
+            variants: variants
+        };
+
+        return fontContract;
     }
 }

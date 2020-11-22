@@ -1,8 +1,5 @@
 import { Bag } from "@paperbits/common";
 
-export interface GoogleFontsResult {
-    items: GoogleFontContract[];
-}
 
 export interface GoogleFontContract {
     kind: string;

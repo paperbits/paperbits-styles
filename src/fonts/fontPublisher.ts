@@ -19,10 +19,15 @@ export class FontPublisher implements IPublisher {
         try {
             for (const variant of font.variants) {
                 const blobKey = variant.sourceKey || variant.sourceId;
+
+                if (!blobKey) {
+                    continue; // external font, should we download?
+                }
+
                 const blob = await this.blobStorage.downloadBlob(blobKey);
 
                 if (blob) {
-                    await this.outputBlobStorage.uploadBlob(variant.permalink, blob, "font/ttf");
+                    await this.outputBlobStorage.uploadBlob(variant.sourceKey, blob, "font/ttf");
                     continue;
                 }
 
@@ -30,18 +35,15 @@ export class FontPublisher implements IPublisher {
             }
         }
         catch (error) {
-            this.logger.trackEvent("Publishing", { message: `Could not publish icon font: ${error.stack}` });
+            this.logger.trackEvent("Publishing", { message: `Could not publish font: ${error.stack}` });
         }
     }
 
     public async publish(): Promise<void> {
-        const iconFont = await this.styleService.getIconFont();
+        const fonts = await this.styleService.getFonts();
 
-        if (!iconFont) {
-            this.logger.trackEvent("Publishing", { message: `Skipping icon font publishing since it is not defined.` });
-            return;
+        for (const font of fonts) {
+            this.renderFontFile(font);
         }
-
-        await this.renderFontFile(iconFont);
     }
 }

@@ -47,6 +47,7 @@ import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.design";
 import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { FontManager } from "./openType";
+import { FontEditor } from "./workshops/fonts/fontEditor";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -77,6 +78,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);
+        injector.bind("fontEditor", FontEditor);
         injector.bindSingleton("fontManager", FontManager);
         injector.bind("styleEditor", StyleEditor);
         injector.bind("styleGuide", StyleGuide);

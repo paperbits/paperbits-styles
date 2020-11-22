@@ -78,9 +78,30 @@ export class StyleGuide {
             component: {
                 name: "google-fonts",
                 params: {
-                    onSelect: () => {
+                    onSelect: async (font: FontContract, custom: boolean) => {
                         this.viewManager.closeView();
-                        this.applyChanges();
+                        await this.applyChanges();
+
+                        if (!custom) {
+                            return;
+                        }
+
+                        const view: View = {
+                            heading: font.displayName,
+                            component: {
+                                name: "font-editor",
+                                params: {
+                                    font: font,
+                                    onChange: async () => {
+                                        await this.styleService.updateStyle(font);
+                                        this.applyChanges();
+                                    }
+                                }
+                            },
+                            resize: "vertically horizontally"
+                        };
+
+                        this.viewManager.openViewAsPopup(view);
                     }
                 }
             },
@@ -300,7 +321,7 @@ export class StyleGuide {
         const styles = await this.styleService.getStyles();
 
         const fonts = await this.styleService.getFonts();
-        this.fonts(fonts);
+        this.fonts(fonts.filter(x => x.key !== "fonts/icons"));
 
         const colors = await this.styleService.getColors();
         this.colors(this.sortByDisplayName(colors));
@@ -663,6 +684,35 @@ export class StyleGuide {
                 }
             });
         }
+
+        if (style.key.startsWith("fonts/")) {
+            styleContextualEditor.selectCommands.push({
+                name: "edit",
+                tooltip: "Edit font",
+                iconClass: "paperbits-edit-72",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    const view: View = {
+                        heading: style.displayName,
+                        component: {
+                            name: "font-editor",
+                            params: {
+                                font: style,
+                                onChange: async () => {
+                                    await this.styleService.updateStyle(style);
+                                    this.applyChanges();
+                                }
+                            }
+                        },
+                        resize: "vertically horizontally"
+                    };
+
+                    this.viewManager.openViewAsPopup(view);
+                }
+            });
+        }
+
         return styleContextualEditor;
     }
 

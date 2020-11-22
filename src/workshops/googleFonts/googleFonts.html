@@ -1,4 +1,4 @@
-<fieldset class="flex-item form">
+<div class="flex-item form">
     <div class="form-group">
         <input class="form-control" type="search" role="searchbox"
             data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true" placeholder="Search fonts..."
@@ -7,7 +7,7 @@
             data-bind="text: `Fonts found: ${fonts().length}`">
         </p>
     </div>
-</fieldset>
+</div>
 
 <div class="flex flex-column flex-item flex-item-grow fonts" role="list"
     data-bind="scrollable: { onEndReach: $component.loadNextPage }" aria-live="polite">
@@ -15,7 +15,7 @@
     <div class="list-item font-box"
         data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
         <style data-bind="jss: preview"></style>
-        <a href="#" role="listitem" class="font-family"
+        <a href="#" role="listitem" class="font"
             data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
         </a>
     </div>

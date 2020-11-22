@@ -1,8 +1,9 @@
 import * as Utils from "@paperbits/common/utils";
 import * as ko from "knockout";
 import { Bag } from "@paperbits/common";
-import { FontContract, FontVariantContract } from "./../../contracts/fontContract";
-import { GoogleFontContract } from "./googleFontsParser";
+import { FontContract } from "./../../contracts/fontContract";
+import { FontVariantContract } from "../../contracts/fontVariantContract";
+import { GoogleFontContract } from "./googleFontContract";
 import { StyleSheet, FontFace } from "@paperbits/common/styles";
 
 export class GoogleFont {
@@ -70,7 +71,7 @@ export class GoogleFont {
                 const fontVariant: FontVariantContract = {
                     weight: fontWeight,
                     style: fontStyle,
-                    file: fontFile.replace("http://", "https://")
+                    permalink: fontFile.replace("http://", "https://")
                 };
 
                 return fontVariant;
