@@ -3,7 +3,6 @@ import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
-import { IMediaService } from "@paperbits/common/media";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 import { ISiteService } from "@paperbits/common/sites";
 import { ViewManager } from "@paperbits/common/ui";
@@ -17,6 +16,8 @@ import { GoogleFontsResult } from "./googleFontsResult";
 import { GoogleFont } from "./googleFont";
 import { FontManager } from "../../openType";
 
+
+const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; // TODO: Allow users to specify their own key.
 
 @Component({
     selector: "google-fonts",
@@ -55,9 +56,7 @@ export class GoogleFonts {
         //     return;
         // }
         //
-        // const apiKey = settings.integration.googleFonts.apiKey;
-
-        const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM";
+       
 
         const response = await this.httpClient.send<GoogleFontsResult>({
             url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
