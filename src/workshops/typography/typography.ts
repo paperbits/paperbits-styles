@@ -92,7 +92,9 @@ export class Typography {
                 const supportedWeights = fontContract.variants
                     .map(variant => variant.weight.toString());
 
-                const deduplicated = supportedWeights.filter((item, index) => supportedWeights.indexOf(item) === index);
+                const deduplicated = supportedWeights
+                    .filter(weight => supportedWeights.includes(weight))
+                    .sort();
 
                 this.fontWeights = [].concat(deduplicated, undefined);
             }
