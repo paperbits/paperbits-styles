@@ -43,7 +43,7 @@ export class FontPublisher implements IPublisher {
         const fonts = await this.styleService.getFonts();
 
         for (const font of fonts) {
-            this.renderFontFile(font);
+            await this.renderFontFile(font);
         }
     }
 }
