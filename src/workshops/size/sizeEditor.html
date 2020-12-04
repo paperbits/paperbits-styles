@@ -6,38 +6,65 @@
     <div id="sizeCollapse" class="collapse form-group-collapse">
         <!-- ko if: widthEnabled -->
         <div class="form-group">
-            <label for="itemWidth" class="form-label">Width (px)</label>
+            <label for="itemWidth" class="form-label">
+                Width (px)
+                <button class="btn btn-info" type="button" aria-label="Container width"
+                    data-bind="tooltip: 'Set container width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
             <input type="number" min="0" id="itemWidth" class="form-control" placeholder="(Not set)"
                 data-bind="textInput: itemWidth" />
         </div>
         <!-- /ko -->
-        <!-- ko if: minMaxWidthEnabled -->
-        <div class="form-group">
-            <label for="minWidth" class="form-label">Min width (px)</label>
-            <input type="number" min="0" id="minWidth" class="form-control" placeholder="(Not set)"
-                data-bind="textInput: minWidth" />
-        </div>
-        <div class="form-group">
-            <label for="maxWidth" class="form-label">Max width (px)</label>
-            <input type="number" min="0" id="maxWidth" class="form-control" placeholder="(Not set)"
-                data-bind="textInput: maxWidth" />
-        </div>
-        <!-- /ko -->
+
         <!-- ko if: heightEnabled -->
         <div class="form-group">
-            <label for="itemHeight" class="form-label">Height (px)</label>
+            <label for="itemHeight" class="form-label">
+                Height (px)
+                <button class="btn btn-info" type="button" aria-label="Container height"
+                    data-bind="tooltip: 'Set container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
             <input type="number" min="0" id="itemHeight" class="form-control" placeholder="(Not set)"
                 data-bind="textInput: itemHeight" />
         </div>
         <!-- /ko -->
+
+        <!-- ko if: minMaxWidthEnabled -->
+        <div class="form-group">
+            <label for="minWidth" class="form-label">
+                Min width (px)
+                <button class="btn btn-info" type="button" aria-label="Min container width"
+                    data-bind="tooltip: 'Set minimum width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
+            <input type="number" min="0" id="minWidth" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: minWidth" />
+        </div>
+        <div class="form-group">
+            <label for="maxWidth" class="form-label">
+                Max width (px)
+                <button class="btn btn-info" type="button" aria-label="Max container width"
+                    data-bind="tooltip: 'Set maximum container width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
+            <input type="number" min="0" id="maxWidth" class="form-control" placeholder="(Not set)"
+                data-bind="textInput: maxWidth" />
+        </div>
+        <!-- /ko -->
+
         <!-- ko if: minMaxHeightEnabled -->
         <div class="form-group">
-            <label for="minHeight" class="form-label">Min height (px)</label>
+            <label for="minHeight" class="form-label">
+                Min height (px)
+                <button class="btn btn-info" type="button" aria-label="Min container height"
+                    data-bind="tooltip: 'Set minimum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
             <input type="number" min="0" id="minHeight" class="form-control" placeholder="(Not set)"
                 data-bind="textInput: minHeight" />
         </div>
         <div class="form-group">
-            <label for="maxHeight" class="form-label">Max height (px)</label>
+            <label for="maxHeight" class="form-label">
+                Max height (px)
+                <button class="btn btn-info" type="button" aria-label="Max container height"
+                    data-bind="tooltip: 'Set maximum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
+            </label>
             <input type="number" min="0" id="maxHeight" class="form-control" placeholder="(Not set)"
                 data-bind="textInput: maxHeight" />
         </div>
