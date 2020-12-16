@@ -10,14 +10,15 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
-import { GoogleFontsConfig } from "./googleFontsConfig";
+import { GoogleFontsSettings } from "./googleFontsConfig";
 import { GoogleFontContract } from "./googleFontContract";
 import { GoogleFontsResult } from "./googleFontsResult";
 import { GoogleFont } from "./googleFont";
 import { FontManager } from "../../openType";
 
 
-const apiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; // TODO: Allow users to specify their own key.
+const defaultApiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; 
+const defaultApiUrl = "https://www.googleapis.com/webfonts/v1/webfonts";
 
 @Component({
     selector: "google-fonts",
@@ -34,8 +35,7 @@ export class GoogleFonts {
         private readonly httpClient: HttpClient,
         private readonly viewManager: ViewManager,
         private readonly fontManager: FontManager,
-        private readonly settingsProvider: ISettingsProvider,
-        private readonly siteService: ISiteService
+        private readonly settingsProvider: ISettingsProvider
     ) {
         this.searchPattern = ko.observable("");
         this.fonts = ko.observableArray();
@@ -50,16 +50,12 @@ export class GoogleFonts {
 
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
-        // Temporary:
-        // const settings = await this.siteService.getSettings();
-        // if (!settings || !settings.integration || !settings.integration.googleFonts) {
-        //     return;
-        // }
-        //
-       
+        const settings = await this.settingsProvider.getSetting<GoogleFontsSettings>("integration/googleFonts");
+        const apiKey = settings?.apiKey || defaultApiKey;
+        const apiUrl = settings?.apiUrl || defaultApiUrl;
 
         const response = await this.httpClient.send<GoogleFontsResult>({
-            url: `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}`,
+            url: `${apiUrl}?key=${apiKey}`,
             method: HttpMethod.get,
         });
 
