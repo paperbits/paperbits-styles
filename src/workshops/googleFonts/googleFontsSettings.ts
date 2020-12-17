@@ -1,14 +1,14 @@
 /**
- * Google fonts configuration contract.
+ * Google Fonts configuration contract.
  */
 export interface GoogleFontsSettings {
     /**
-     * Google fonts API key.
+     * Google Fonts API key.
      */
     apiKey: string;
 
     /**
-     * Google fonts API URL.
+     * Google Fonts API URL.
      */
     apiUrl: string;
 }

@@ -10,7 +10,7 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
-import { GoogleFontsSettings } from "./googleFontsConfig";
+import { GoogleFontsSettings } from "./googleFontsSettings";
 import { GoogleFontContract } from "./googleFontContract";
 import { GoogleFontsResult } from "./googleFontsResult";
 import { GoogleFont } from "./googleFont";
