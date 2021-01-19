@@ -239,29 +239,6 @@ export class Typography {
         this.textAlign(alignment === "justify" ? undefined : "justify");
     }
 
-    private getFontWeght(fontWeight: string | number): number | undefined {
-        if (!fontWeight) {
-            return undefined;
-        }
-
-        if (fontWeight === "bold") {
-            const last = this.fontWeights[this.fontWeights.length - 1];
-            const boldWeight = +last.weight;
-
-            if (boldWeight >= 600) {
-                return boldWeight;
-            }
-        }
-        else {
-            const boldWeight = +fontWeight;
-            if (boldWeight) {
-                return boldWeight;
-            }
-        }
-
-        return undefined;
-    }
-
     private applyChanges(): void {
         if (!this.onUpdate) {
             return;
