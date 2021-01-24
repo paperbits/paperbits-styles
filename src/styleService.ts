@@ -4,14 +4,12 @@ import * as Objects from "@paperbits/common/objects";
 import * as Constants from "@paperbits/common/constants";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
-import { StyleItem } from "./models/styleItem";
 import { ComponentStyle } from "./contracts/componentStyle";
-import { PrimitiveContract, StyleHandler, VariationContract } from "@paperbits/common/styles";
+import { StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
 import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
 import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
-import { ISettingsProvider } from "@paperbits/common/configuration";
 
 
 const stylesPath = "styles";
@@ -158,15 +156,15 @@ export class StyleService {
         return shadows.filter(x => x !== null && x.key !== "shadows/none");
     }
 
-    private rewriteVariationKeysRecursively(variation: Object, parentKey: string): void {
-        variation["key"] = parentKey;
+    private rewriteVariationKeysRecursively(variation: VariationContract, parentKey: string): void {
+        variation.key = parentKey;
 
-        if (!variation["components"]) {
+        if (!variation.components) {
             return;
         }
 
-        Object.keys(variation["components"]).forEach(componentKey => {
-            const subComponent = variation["components"][componentKey];
+        Object.keys(variation.components).forEach(componentKey => {
+            const subComponent = variation.components[componentKey];
 
             Object.keys(subComponent).forEach(subComponentVariationKey => {
                 const subComponentVariation = subComponent[subComponentVariationKey];
@@ -179,14 +177,13 @@ export class StyleService {
 
     public async addComponentVariation(componentName: string, variationName: string, snippet?: ComponentStyle): Promise<string> {
         const styles = await this.getStyles();
-
         const defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
 
         if (!defaultVariation) {
             throw new Error(`Default variation for component "${componentName}" not found.`);
         }
 
-        const variation: StyleItem = Objects.clone(defaultVariation);
+        const variation: VariationContract = Objects.clone(defaultVariation);
         const key = `components/${componentName}/${variationName}`;
 
         this.rewriteVariationKeysRecursively(variation, key);
@@ -288,6 +285,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
+        
         const componentStyles = styles.components[componentName];
 
         const states = this.getAllowedStates(componentStyles);
@@ -310,7 +308,7 @@ export class StyleService {
 
         const styles = await this.getStyles();
         Objects.setValue(styleKey, styles, null);
-        
+
         await this.objectStorage.updateObject(`${stylesPath}`, styles);
     }
 

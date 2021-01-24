@@ -1,4 +1,3 @@
-import * as ko from "knockout";
 import template from "./styleSnippet.html";
 import { Component, Param, OnMounted, Encapsulation } from "@paperbits/common/ko/decorators";
 import { StyleItem } from "../../models/styleItem";
