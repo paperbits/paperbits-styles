@@ -1,5 +1,6 @@
 import * as ko from "knockout";
-import * as Objects from "@paperbits/common";
+import * as Objects from "@paperbits/common/objects";
+import * as Arrays from "@paperbits/common/arrays";
 import template from "./typography.html";
 import { StyleService } from "../../styleService";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -92,9 +93,7 @@ export class Typography {
                 const supportedWeights = fontContract.variants
                     .map(variant => variant.weight.toString());
 
-                const deduplicated = supportedWeights
-                    .filter(weight => supportedWeights.includes(weight))
-                    .sort();
+                const deduplicated = Arrays.distinct(supportedWeights).sort();
 
                 this.fontWeights = [].concat(deduplicated, undefined);
             }
