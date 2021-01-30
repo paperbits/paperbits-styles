@@ -77,7 +77,7 @@
         <div class="form-group">
             <label for="textColor">Text color</label>
             <button id="textColor" class="btn"
-                data-bind="text: $component.colorName, balloon: { component: { name: 'color-selector', params: { onSelect: $component.onColorSelected, selectedColor: $component.colorKey } } }">
+                data-bind="text: $component.colorName, balloon: { component: { name: 'color-selector', params: { selectedColorKey: $component.colorKey, onSelect: $component.onColorSelected } } }">
             </button>
         </div>
 

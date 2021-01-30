@@ -2,16 +2,16 @@
     <h1>Gradient</h1>
     <hr/>
 
-    <div class="palette">
-        <div class="color-box">
-            <a href="#" title="Clear gradient" class="color" data-bind="click: $component.clearGradients">
+    <div class="palette" role="list">
+        <div class="color-box" data-bind="css: { selected: !$component.selectedGradientKey() }, tooltip: 'Clear gradient'">
+            <a href="#" class="color" data-bind="click: $component.clearGradients, focus: true">
                 <i class="paperbits-icon paperbits-ban"></i>
             </a>
         </div>
 
         <!-- ko foreach: { data: gradients, as: 'gradient' } -->
-        <div class="color-box" data-bind="css: { selected: gradient === $component.selectedGradient() }">
-            <a href="#" class="color" data-bind="click: $component.selectGradient, attr: { title: gradient.displayName }, style: { background: gradient.value }"></a>
+        <div class="color-box" data-bind="css: { selected: gradient.key === $component.selectedGradientKey() }, tooltip: gradient.displayName">
+            <a href="#" class="color" data-bind="click: $component.selectGradient, style: { background: gradient.value }"></a>
         </div>
         <!--/ko -->
     </div>

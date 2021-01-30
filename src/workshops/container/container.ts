@@ -12,6 +12,7 @@ export class Container {
     public readonly horizontalAlignment: ko.Observable<string>;
     public readonly alignment: ko.Observable<string>;
     public readonly scrollOnOverlow: ko.Observable<boolean>;
+    public readonly horizontalAlignmentTooltip: ko.Computed<string>;
 
     constructor() {
         this.alignment = ko.observable<string>();
@@ -20,6 +21,21 @@ export class Container {
         this.scrollOnOverlow = ko.observable<boolean>();
         this.container = ko.observable<ContainerStylePluginConfig>();
         this.overflowControls = ko.observable(false);
+
+        this.horizontalAlignmentTooltip = ko.computed(() => {
+            const value = this.horizontalAlignment();
+
+            switch (value) {
+                case "center":
+                    return "Center";
+                case "around":
+                    return "Space around";
+                case "between":
+                    return "Space between";
+                default:
+                    return "(Not set)";
+            }
+        });
     }
 
     @Param()
@@ -84,6 +100,9 @@ export class Container {
                 this.horizontalAlignment("between");
                 break;
             case "between":
+                this.horizontalAlignment(undefined);
+                break;
+            case undefined:
                 this.horizontalAlignment("center");
                 break;
         }
@@ -98,6 +117,9 @@ export class Container {
                 this.verticalAlignment("between");
                 break;
             case "between":
+                this.verticalAlignment(undefined);
+                break;
+            case undefined:
                 this.verticalAlignment("center");
                 break;
         }

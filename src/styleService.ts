@@ -3,7 +3,7 @@ import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common/objects";
 import * as Constants from "@paperbits/common/constants";
 import { IObjectStorage } from "@paperbits/common/persistence";
-import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
+import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract, AnimationContract } from "./contracts";
 import { ComponentStyle } from "./contracts/componentStyle";
 import { StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
@@ -156,6 +156,11 @@ export class StyleService {
         return shadows.filter(x => x !== null && x.key !== "shadows/none");
     }
 
+    public async getAnimations(): Promise<AnimationContract[]> {
+        const animations = await this.getPrimitives<AnimationContract>("animations");
+        return animations.filter(x => x !== null && x.key !== "animations/none");
+    }
+
     private rewriteVariationKeysRecursively(variation: VariationContract, parentKey: string): void {
         variation.key = parentKey;
 
@@ -285,7 +290,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-        
+
         const componentStyles = styles.components[componentName];
 
         const states = this.getAllowedStates(componentStyles);

@@ -9,45 +9,32 @@ import { ColorContract } from "../../contracts/colorContract";
     template: template
 })
 export class ColorSelector {
-    @Param()
-    public initColorKey: ko.Observable<string>;
+    public readonly colors: ko.ObservableArray<ColorContract>;
+
+    constructor(private readonly styleService: StyleService) {
+        this.colors = ko.observableArray();
+        this.selectedColor = ko.observable();
+        this.selectedColorKey = ko.observable();
+    }
 
     @Param()
     public readonly selectedColor: ko.Observable<ColorContract>;
 
+    @Param()
+    public readonly selectedColorKey: ko.Observable<string>;
+
     @Event()
     public readonly onSelect: (color: ColorContract) => void;
 
-    public readonly colors: ko.ObservableArray<ColorContract>;
-
-    constructor(private readonly styleService: StyleService) {
-        this.loadColors = this.loadColors.bind(this);
-        this.selectColor = this.selectColor.bind(this);
-
-        this.colors = ko.observableArray();
-        this.selectedColor = ko.observable();
-        this.initColorKey = ko.observable();
-    }
-
     @OnMounted()
-    public async loadColors(): Promise<void> {
-        const themeContract = await this.styleService.getStyles();
-        const defaultColorKey = this.initColorKey();
-        const colors = Object.keys(themeContract.colors).map((key) => {
-            const colorContract = themeContract.colors[key];
-            if (defaultColorKey && colorContract.key === defaultColorKey) {
-                this.selectedColor(colorContract);
-            }
-            return colorContract;
-        });
-
+    public async initialize(): Promise<void> {
+        const colors = await this.styleService.getColors();
         this.colors(colors);
     }
 
     public selectColor(color: ColorContract): void {
-        if (this.selectedColor) {
-            this.selectedColor(color);
-        }
+        this.selectedColor(color);
+        this.selectedColorKey(color?.key);
 
         if (this.onSelect) {
             this.onSelect(color);
@@ -55,9 +42,7 @@ export class ColorSelector {
     }
 
     public clearColors(): void {
-        if (this.selectedColor) {
-            this.selectedColor(null);
-        }
+        this.selectedColorKey(null);
 
         if (this.onSelect) {
             this.onSelect(null);

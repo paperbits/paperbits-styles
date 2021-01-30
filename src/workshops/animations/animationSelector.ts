@@ -25,13 +25,7 @@ export class AnimationSelector {
 
     @OnMounted()
     public async loadAnimations(): Promise<void> {
-        const themeContract = await this.styleService.getStyles();
-
-        const animations = Object.keys(themeContract.animations).map((key) => {
-            const animationContract = themeContract.animations[key];
-            return animationContract;
-        });
-
+        const animations = await this.styleService.getAnimations();
         this.animations(animations);
     }
 

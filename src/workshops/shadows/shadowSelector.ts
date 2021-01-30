@@ -28,13 +28,7 @@ export class ShadowSelector {
 
     @OnMounted()
     public async loadShadows(): Promise<void> {
-        const themeContract = await this.styleService.getStyles();
-
-        const shadows = Object.keys(themeContract.shadows).map((key) => {
-            const shadowContract = themeContract.shadows[key];
-            return shadowContract;
-        });
-
+        const shadows = await this.styleService.getShadows();
         this.shadows(shadows);
     }
 

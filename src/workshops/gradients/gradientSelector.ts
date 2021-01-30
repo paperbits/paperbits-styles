@@ -10,59 +10,51 @@ import { LinearGradientContract, getLinearGradientString } from "../../contracts
     template: template
 })
 export class GradientSelector {
+    public readonly gradients: ko.ObservableArray<GradientOption>;
+
+    constructor(private readonly styleService: StyleService) {
+        this.gradients = ko.observableArray();
+        this.selectedGradientKey = ko.observable();
+    }
+
     @Param()
-    public readonly selectedGradient: ko.Observable<LinearGradientContract>;
+    public readonly selectedGradientKey: ko.Observable<string>;
 
     @Event()
     public readonly onSelect: (gradient: LinearGradientContract) => void;
 
-    public gradients: ko.ObservableArray<GradientOption>;
-
-    constructor(private readonly styleService: StyleService) {
-        this.loadGradients = this.loadGradients.bind(this);
-        this.selectGradient = this.selectGradient.bind(this);
-
-        this.gradients = ko.observableArray();
-        this.selectedGradient = ko.observable();
-    }
-
     @OnMounted()
     public async loadGradients(): Promise<void> {
-        const themeContract = await this.styleService.getStyles();
+        const gradients = await this.styleService.getGadients();
 
-        const gradients = Object.keys(themeContract.gradients).map((key) => {
-            const gradientContract = themeContract.gradients[key];
-
+        const gradientsOptions = gradients.map((gradient) => {
             return {
-                value: getLinearGradientString(gradientContract),
-                gradientContract: gradientContract
+                key: gradient.key,
+                value: getLinearGradientString(gradient),
+                gradientContract: gradient
             };
         });
 
-        this.gradients(gradients);
+        this.gradients(gradientsOptions);
     }
 
     public selectGradient(gradient: GradientOption): void {
-        if (this.selectedGradient) {
-            this.selectedGradient(gradient.gradientContract);
-        }
+        this.selectedGradientKey(gradient?.gradientContract.key);
 
         if (this.onSelect) {
             this.onSelect(gradient.gradientContract);
         }
+
+        console.log(this.selectedGradientKey());
     }
 
     public clearGradients(): void {
-        if (this.selectedGradient) {
-            this.selectedGradient(null);
-        }
+        this.selectedGradientKey(null);
+
+        console.log(this.selectedGradientKey());
 
         if (this.onSelect) {
             this.onSelect(null);
         }
-    }
-
-    public addGradient(): void {
-        debugger;
     }
 }

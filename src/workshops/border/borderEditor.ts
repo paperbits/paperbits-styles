@@ -24,7 +24,7 @@ export class BorderEditor {
     @Event()
     public readonly onChange: (contract: BorderStyle) => void;
 
-    
+
 
     constructor(private readonly styleService: StyleService) {
         this.borderColor = ko.observable<ColorContract>();
@@ -54,16 +54,8 @@ export class BorderEditor {
             this.borderColorKey(style.colorKey);
         }
 
-        const themeContract = await this.styleService.getStyles();
-
-        const colors = Object.keys(themeContract.colors).map((key) => {
-            const colorContract = themeContract.colors[key];
-            return colorContract;
-        });
-
+        const colors = await this.styleService.getColors();
         this.colors(colors);
-
-
 
         this.borderLineWidth.subscribe(this.applyChanges);
         this.borderLineStyle.subscribe(this.applyChanges);
@@ -96,5 +88,5 @@ export class BorderEditor {
 
         this.onChange(borderStyle);
     }
-    
+
 }
