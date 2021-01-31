@@ -30,28 +30,25 @@ export class GradientSelector {
         const gradientsOptions = gradients.map((gradient) => {
             return {
                 key: gradient.key,
+                displayName: gradient.displayName,
                 value: getLinearGradientString(gradient),
-                gradientContract: gradient
+                contract: gradient
             };
         });
 
         this.gradients(gradientsOptions);
     }
 
-    public selectGradient(gradient: GradientOption): void {
-        this.selectedGradientKey(gradient?.gradientContract.key);
+    public selectGradient(option: GradientOption): void {
+        this.selectedGradientKey(option?.contract.key);
 
         if (this.onSelect) {
-            this.onSelect(gradient.gradientContract);
+            this.onSelect(option.contract);
         }
-
-        console.log(this.selectedGradientKey());
     }
 
     public clearGradients(): void {
         this.selectedGradientKey(null);
-
-        console.log(this.selectedGradientKey());
 
         if (this.onSelect) {
             this.onSelect(null);
