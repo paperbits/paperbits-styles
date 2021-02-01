@@ -1,10 +1,13 @@
 import { StylePluginConfig } from "@paperbits/common/styles";
 
 export interface BackgroundImage {
+    /**
+     * Image source key, e.g. `uploads/image1`.
+     */
     sourceKey?: string;
 
     /**
-     * e.g. "contain", "cover".
+     * e.g. `contain`, `cover`.
      */
     size?: string;
 

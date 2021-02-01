@@ -1,33 +1,43 @@
 import { StylePluginConfig } from "@paperbits/common/styles";
 
 /**
- * Moves an element by two dimentions.
+ * Moves an element by dimentions.
  */
 export interface TranslateConfig {
     /**
-     * Horizontal translation, e.g. 100px.
+     * X-axis translation, e.g. 100px.
      */
-    x: string | number;
+    x?: string | number;
 
     /**
-     * Vertical translation, e.g. 100px.
+     * Y-axis translation, e.g. 100px.
      */
-    y: string | number;
+    y?: string | number;
+
+    /**
+     * Z-axis translation, e.g. 100px.
+     */
+    z?: string | number;
 }
 
 /**
- * Scales an element by two dimentions.
+ * Scales an element by dimentions.
  */
 export interface ScaleConfig {
     /**
-     * Horizontal scaling, e.g. 2.5.
+     * X-axis scaling, e.g. 2.5.
      */
-    x: string | number;
+    x?: string | number;
 
     /**
-     * Vertical scaling, e.g. 2.5.
+     * Y-axis scaling, e.g. 2.5.
      */
-    y: string | number;
+    y?: string | number;
+
+    /**
+     * Z-axis scaling, e.g. 2.5.
+     */
+    z?: string | number;
 }
 
 /**
