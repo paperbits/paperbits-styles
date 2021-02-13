@@ -69,5 +69,17 @@
                 data-bind="textInput: maxHeight" />
         </div>
         <!-- /ko -->
+
+        <!-- ko if: stretchEnabled -->
+        <label class="form-label">
+            Height
+            <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage section height'"></button>
+        </label>
+        <div class="form-group">
+            <label for="stretch" class="form-label">
+                <input type="checkbox" id="stretch" name="stretch" data-bind="checked: stretch" />Stretch
+            </label>
+        </div>
+        <!-- /ko -->
     </div>
 </div>
