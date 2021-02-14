@@ -1,9 +1,9 @@
-import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
-import { BreakpointValues, Breakpoints } from "@paperbits/common/styles/breakpoints";
-import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import * as Objects from "@paperbits/common/objects";
 import * as Utils from "@paperbits/common/utils";
+import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
+import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
+import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
 import { WidgetModel } from "@paperbits/common/widgets";
 
 
