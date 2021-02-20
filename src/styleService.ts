@@ -406,7 +406,7 @@ export class StyleService {
         return fonts.find(x => x.key === fontKey);
     }
 
-    public async getTextVariations(): Promise<any[]> {
+    public async getTextVariations(): Promise<VariationContract[]> {
         const textStylesVariations = await this.getVariations("globals", "body");
         return this.sortByDisplayName(textStylesVariations);
     }
