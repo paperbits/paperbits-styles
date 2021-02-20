@@ -4,7 +4,6 @@ import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
-import { WidgetModel } from "@paperbits/common/widgets";
 
 
 export class StyleHelper {
@@ -200,73 +199,5 @@ export class StyleHelper {
                 delete pluginConfig[breakpoint];
             }
         }
-    }
-
-    /**
-     * @deprecated
-     */
-    public static setPaddings(gridModel: WidgetModel): void {
-        gridModel.widgets.forEach(x => {
-            x.styles.instance["padding"] = {
-                xs: {
-                    top: 5,
-                    left: 5,
-                    right: 5,
-                    bottom: 5
-                },
-                md: {
-                    top: 15,
-                    left: 15,
-                    right: 15,
-                    bottom: 15
-                }
-            };
-        });
-    }
-
-    /**
-     * @deprecated
-     */
-    public static setMargins(gridModel: WidgetModel): void {
-        const styles = gridModel.styles.instance;
-
-        styles["margin"] = {
-            xs: {
-                top: 10,
-                left: "auto",
-                right: "auto",
-                bottom: 10
-            },
-            md: {
-                top: 15,
-                bottom: 15
-            },
-            xl: {
-                top: 25,
-                bottom: 25
-            }
-        };
-    }
-
-    /**
-     * @deprecated
-     */
-    public static setMaxWidth(gridModel: WidgetModel): void {
-        const styles = gridModel.styles.instance;
-
-        styles["size"] = {
-            sm: {
-                maxWidth: 540
-            },
-            md: {
-                maxWidth: 720
-            },
-            lg: {
-                maxWidth: 960
-            },
-            xl: {
-                maxWidth: 1140
-            }
-        };
     }
 }
