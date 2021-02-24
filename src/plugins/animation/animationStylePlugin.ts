@@ -7,8 +7,9 @@ import { ThemeContract } from "../../contracts";
 
 export class AnimationStylePlugin extends StylePlugin {
     public name: string = "animation";
+    private themeContract: ThemeContract;
 
-    constructor(private themeContract: ThemeContract) {
+    constructor() {
         super();
     }
 

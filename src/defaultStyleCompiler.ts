@@ -102,12 +102,12 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         this.plugins["padding"] = new PaddingStylePlugin();
         this.plugins["margin"] = new MarginStylePlugin();
-        this.plugins["border"] = new BorderStylePlugin(themeContract);
+        this.plugins["border"] = new BorderStylePlugin();
         this.plugins["borderRadius"] = new BorderRadiusStylePlugin();
-        this.plugins["background"] = new BackgroundStylePlugin(themeContract, this.permalinkResolver);
-        this.plugins["shadow"] = new ShadowStylePlugin(themeContract);
-        this.plugins["animation"] = new AnimationStylePlugin(themeContract);
-        this.plugins["typography"] = new TypographyStylePlugin(themeContract);
+        this.plugins["background"] = new BackgroundStylePlugin(this.permalinkResolver);
+        this.plugins["shadow"] = new ShadowStylePlugin();
+        this.plugins["animation"] = new AnimationStylePlugin();
+        this.plugins["typography"] = new TypographyStylePlugin();
         this.plugins["list"] = new ListStylePlugin();
         this.plugins["components"] = new ComponentsStylePlugin(this);
         this.plugins["states"] = new StatesStylePlugin(this);

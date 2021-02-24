@@ -4,9 +4,10 @@ import { ThemeContract, ShadowContract, ShadowStylePluginConfig } from "../contr
 import { StyleRule } from "@paperbits/common/styles";
 
 export class ShadowStylePlugin extends StylePlugin {
+    private themeContract: ThemeContract;
     public readonly name: string = "shadow";
 
-    constructor(private themeContract: ThemeContract) {
+    constructor() {
         super();
     }
 

@@ -5,12 +5,10 @@ import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, get
 import { StyleRule } from "@paperbits/common/styles";
 
 export class BackgroundStylePlugin extends StylePlugin {
+    private themeContract: ThemeContract;
     public readonly name: string = "background";
 
-    constructor(
-        private themeContract: ThemeContract,
-        private readonly mediaPermalinkResolver: IPermalinkResolver
-    ) {
+    constructor(private readonly mediaPermalinkResolver: IPermalinkResolver) {
         super();
     }
 

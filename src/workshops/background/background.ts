@@ -80,7 +80,8 @@ export class Background {
 
     private getBackgroundStylePlugin(themeContract: ThemeContract): BackgroundStylePlugin {
         if (!this.backgroundStylePlugin) {
-            this.backgroundStylePlugin = new BackgroundStylePlugin(themeContract, this.mediaPermalinkResolver);
+            this.backgroundStylePlugin = new BackgroundStylePlugin(this.mediaPermalinkResolver);
+            this.backgroundStylePlugin.setThemeContract(themeContract);
         }
         return this.backgroundStylePlugin;
     }

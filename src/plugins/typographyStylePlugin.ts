@@ -4,9 +4,10 @@ import { ThemeContract, TypographyStylePluginConfig, FontContract, ColorContract
 import { StyleRule } from "@paperbits/common/styles";
 
 export class TypographyStylePlugin extends StylePlugin {
+    private themeContract: ThemeContract;
     public readonly name: string = "typography";
 
-    constructor(private themeContract: ThemeContract) {
+    constructor() {
         super();
     }
 

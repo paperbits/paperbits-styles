@@ -4,9 +4,10 @@ import { BorderStylePluginConfig, ColorContract, ThemeContract } from "../../con
 import { StyleRule } from "@paperbits/common/styles";
 
 export class BorderStylePlugin extends StylePlugin {
+    private themeContract: ThemeContract;
     public readonly name: string = "border";
 
-    constructor(private themeContract: ThemeContract) {
+    constructor() {
         super();
     }
 

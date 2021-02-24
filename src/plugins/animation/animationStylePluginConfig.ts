@@ -12,12 +12,12 @@ export interface AnimationStylePluginConfig extends StylePluginConfig {
     duration?: string | number;
 
     /**
-     * Count.
+     * Count of animation iterations.
      */
     iterationCount?: string | number;
     
     /**
-     * Timiing function, e.g. "linear".
+     * Animation timing function, e.g. "linear".
      */
     timingFunction?: string;
 }
