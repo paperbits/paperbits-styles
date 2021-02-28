@@ -70,6 +70,11 @@ export class StyleGuide {
         this.applyChanges();
         this.ownerDocument = this.viewManager.getHostDocument();
         this.attach();
+
+        this.eventManager.dispatchEvent("displayHint", {
+            key: "7b92",
+            content: `Here you can manage styles of every element of the content. All the customizations will get reflected everywhere on your website.`
+        });
     }
 
     public async addFonts(): Promise<void> {
