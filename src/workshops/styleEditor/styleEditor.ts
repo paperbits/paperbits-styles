@@ -124,7 +124,7 @@ export class StyleEditor {
     }
 
     public onStyleNameUpdate(name: string): void {
-        this.elementStyle["displayName"] = name;
+        this.elementStyle.displayName = name;
         this.scheduleUpdate();
     }
 

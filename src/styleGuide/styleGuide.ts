@@ -530,7 +530,7 @@ export class StyleGuide {
 
         const config: IHighlightConfig = {
             element: element,
-            text: style["displayName"],
+            text: style.displayName,
             color: contextualEditor.color
         };
 

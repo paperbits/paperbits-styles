@@ -7,7 +7,7 @@
     <div id="animationCollapse" class="collapse form-group-collapse">
         <div class="form-group">
             <label for="animationType">Type</label>
-            <button id="animationType" class="btn" data-bind="text: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }"></button>
+            <button id="animationType" class="btn btn-default" data-bind="text: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }"></button>
         </div>
 
         <!-- ko if: $component.animationKey -->

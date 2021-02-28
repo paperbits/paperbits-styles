@@ -16,14 +16,14 @@
         <div class="font-variant-display"
             data-bind="text: $component.previewText, style: { 'font-family': $component.font.family, 'font-weight': variant.weight, 'font-style': variant.style }">
         </div>
-        <button class="btn" data-bind="click: $component.removeVariant">
+        <button class="btn btn-default" data-bind="click: $component.removeVariant">
             <i class="paperbits-icon paperbits-simple-remove"></i>
             Remove
         </button>
         <!-- /ko -->
 
         <!-- ko ifnot: $component.isVariantDefined(variant) -->
-        <button class="btn" data-bind="click: $component.addVariant">
+        <button class="btn btn-default" data-bind="click: $component.addVariant">
             <i class="paperbits-icon paperbits-simple-add"></i>
             Add
         </button>
