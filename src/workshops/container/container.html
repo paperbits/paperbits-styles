@@ -10,15 +10,15 @@
         <div class="form-group">
             <label>Horizontal</label>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignLeft, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'start' }">
+                data-bind="click: alignLeft, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'start' }, tooltip: 'Align left'">
                 <i class="paperbits-icon paperbits-align-left"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignCenter, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'center' || horizontalAlignment() === 'around' || horizontalAlignment() === 'between' }">
+                data-bind="click: alignCenter, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'center' || horizontalAlignment() === 'around' || horizontalAlignment() === 'between' }, tooltip: 'Align center or distribute'">
                 <i class="paperbits-icon paperbits-align-center-horizontal"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignRight, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'end' }">
+                data-bind="click: alignRight, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'end' }, tooltip: 'Align right'">
                 <i class="paperbits-icon paperbits-align-right"></i>
             </a>
         </div>
@@ -26,15 +26,15 @@
         <div class="form-group">
             <label>Vertical</label>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignTop, css: { 'toolbox-btn-is-active': verticalAlignment() === 'start' }">
+                data-bind="click: alignTop, css: { 'toolbox-btn-is-active': verticalAlignment() === 'start' }, tooltip: 'Align top'"">
                 <i class="paperbits-icon paperbits-align-top"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignMiddle, css: { 'toolbox-btn-is-active': verticalAlignment() === 'center' || verticalAlignment() === 'around' || verticalAlignment() === 'between' }">
+                data-bind="click: alignMiddle, css: { 'toolbox-btn-is-active': verticalAlignment() === 'center' || verticalAlignment() === 'around' || verticalAlignment() === 'between' }, tooltip: 'Align center or distribute'">
                 <i class="paperbits-icon paperbits-align-center-vertical"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignBottom, css: { 'toolbox-btn-is-active': verticalAlignment() === 'end' }">
+                data-bind="click: alignBottom, css: { 'toolbox-btn-is-active': verticalAlignment() === 'end' }, tooltip: 'Align bottom'"">
                 <i class="paperbits-icon paperbits-align-bottom"></i>
             </a>
         </div>
