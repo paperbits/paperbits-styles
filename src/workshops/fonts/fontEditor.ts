@@ -9,6 +9,7 @@ import { ViewManager } from "@paperbits/common/ui";
 import { IBlobStorage } from "@paperbits/common/persistence";
 import { FontVariantContract } from "../../contracts";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
+import { EventManager } from "@paperbits/common/events";
 
 
 interface Variant {
@@ -142,7 +143,8 @@ export class FontEditor {
     constructor(
         private readonly permalinkResolver: IPermalinkResolver,
         private readonly viewManager: ViewManager,
-        private readonly blobStorage: IBlobStorage
+        private readonly blobStorage: IBlobStorage,
+        private readonly eventManager: EventManager
     ) {
         this.variants = ko.observableArray();
         this.displayName = ko.observable();
@@ -165,6 +167,11 @@ export class FontEditor {
             .subscribe(this.applyChanges);
 
         await this.buildPreview();
+
+        this.eventManager.dispatchEvent("displayHint", {
+            key: "4e45",
+            content: `A font consists of one or more font faces. In the Font editor, you can upload and associate font faces to particular weights and styles.`
+        });
     }
 
     private async buildPreview(): Promise<void> {
