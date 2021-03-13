@@ -9,28 +9,28 @@
         <div class="tabs">
             <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }">
                 <a href="#" role="button" aria-label="Clear background" data-bind="tooltip: 'Clear background', click: clearBackground">
-                    <i class="paperbits-icon paperbits-ban"></i>
+                    <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }">
                 <a href="#" role="button" aria-label="Background picture" aria-haspopup="true"
                     data-bind="tooltip: 'Background picture', balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
-                    <i class="paperbits-icon paperbits-image-2"></i>
+                    <i aria-hidden="true" class="paperbits-icon paperbits-image-2"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': colorKey }">
                 <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
                     data-bind="tooltip: 'Background color', balloon: { component: { name: 'color-selector', params: { selectedColorKey: $component.colorKey, onSelect: $component.onColorSelected } } }">
-                    <i class="paperbits-icon paperbits-paint-bucket-40"></i>
+                    <i aria-hidden="true" class="paperbits-icon paperbits-paint-bucket-40"></i>
                 </a>
             </div>
 
             <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }">
                 <a href="#" role="button" aria-label="Background gradient" aria-haspopup="true"
                     data-bind="tooltip: 'Background gradient', balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradientKey: $component.gradientKey } } }">
-                    <i class="paperbits-icon paperbits-gradient"></i>
+                    <i aria-hidden="true" class="paperbits-icon paperbits-gradient"></i>
                 </a>
             </div>
         </div>

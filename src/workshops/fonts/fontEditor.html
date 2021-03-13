@@ -17,14 +17,14 @@
             data-bind="text: $component.previewText, style: { 'font-family': $component.font.family, 'font-weight': variant.weight, 'font-style': variant.style }">
         </div>
         <button class="btn btn-default" data-bind="click: $component.removeVariant">
-            <i class="paperbits-icon paperbits-simple-remove"></i>
+            <i aria-hidden="true" class="paperbits-icon paperbits-simple-remove"></i>
             Remove
         </button>
         <!-- /ko -->
 
         <!-- ko ifnot: $component.isVariantDefined(variant) -->
         <button class="btn btn-default" data-bind="click: $component.addVariant">
-            <i class="paperbits-icon paperbits-simple-add"></i>
+            <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
             Add
         </button>
         <!-- /ko -->
