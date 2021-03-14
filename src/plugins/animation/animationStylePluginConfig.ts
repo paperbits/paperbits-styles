@@ -20,4 +20,9 @@ export interface AnimationStylePluginConfig extends StylePluginConfig {
      * Animation timing function, e.g. "linear".
      */
     timingFunction?: string;
+
+    /**
+     * Starts animation when element gets into view.
+     */
+    startWhenVisible: boolean;
 }

@@ -27,6 +27,10 @@ export class AnimationStylePlugin extends StylePlugin {
             new StyleRule("animationTimingFunction", pluginConfig.timingFunction || "linear")
         ];
 
+        if (pluginConfig.startWhenVisible) {
+            result.push(new StyleRule("animationPlayState", "paused"));
+        }
+
         return result;
     }
 }

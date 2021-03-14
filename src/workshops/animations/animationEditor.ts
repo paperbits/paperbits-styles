@@ -4,6 +4,7 @@ import template from "./animationEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { AnimationContract } from "../../plugins/animation/animationContract";
+import { AnimationStylePluginConfig } from "../../plugins/animation";
 
 const inheritLabel = "(Inherit)";
 
@@ -12,16 +13,17 @@ const inheritLabel = "(Inherit)";
     template: template
 })
 export class AnimationEditor {
-    public animationKey: ko.Observable<string>;
-    public displayName: ko.Observable<string>;
-    public iterationCount: ko.Observable<string | number>;
-    public duration: ko.Observable<string | number>;
+    public readonly animationKey: ko.Observable<string>;
+    public readonly displayName: ko.Observable<string>;
+    public readonly iterationCount: ko.Observable<string | number>;
+    public readonly duration: ko.Observable<string | number>;
+    public readonly startWhenVisible: ko.Observable<boolean>;
 
     @Param()
-    public readonly animation: ko.Observable<any>;
+    public readonly animation: ko.Observable<AnimationStylePluginConfig>;
 
     @Event()
-    public readonly onUpdate: (animation) => void;
+    public readonly onUpdate: (animation: AnimationStylePluginConfig) => void;
 
     constructor(private readonly styleService: StyleService) {
         this.applyChanges = this.applyChanges.bind(this);
@@ -32,7 +34,7 @@ export class AnimationEditor {
         this.displayName = ko.observable();
         this.iterationCount = ko.observable();
         this.duration = ko.observable();
-
+        this.startWhenVisible = ko.observable(false);
         this.animation = ko.observable();
     }
 
@@ -49,6 +51,7 @@ export class AnimationEditor {
             this.animationKey(animation.animationKey);
             this.duration(animation.duration);
             this.iterationCount(animation.iterationCount);
+            this.startWhenVisible(animation.startWhenVisible);
         }
         else {
             this.duration(1);
@@ -58,6 +61,7 @@ export class AnimationEditor {
 
         this.duration.subscribe(this.applyChanges);
         this.iterationCount.subscribe(this.applyChanges);
+        this.startWhenVisible.subscribe(this.applyChanges);
     }
 
     public onAnimationSelected(animation: AnimationContract): void {
@@ -73,7 +77,8 @@ export class AnimationEditor {
                     iterationCount: this.iterationCount(),
                     duration: this.duration(),
                     timingFunction: "linear",
-                    animationKey: this.animationKey()
+                    animationKey: this.animationKey(),
+                    startWhenVisible: this.startWhenVisible()
                 });
             }
             else {
