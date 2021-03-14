@@ -21,6 +21,7 @@ import {
     ContainerStylePlugin,
     SizeStylePlugin,
     TransitionStylePlugin,
+    PositionStylePlugin,
     StickToStylePlugin,
     PaddingStylePlugin,
     TransformStylePlugin
@@ -117,6 +118,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["size"] = new SizeStylePlugin();
         this.plugins["transform"] = new TransformStylePlugin();
         this.plugins["transition"] = new TransitionStylePlugin();
+        this.plugins["position"] = new PositionStylePlugin();
         this.plugins["stickTo"] = new StickToStylePlugin();
     }
 

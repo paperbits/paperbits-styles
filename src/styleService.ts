@@ -260,6 +260,10 @@ export class StyleService {
             categoryStyles = styles[categoryName];
         }
 
+        if (!categoryStyles) {
+            return [];
+        }
+
         const category = Object.keys(categoryStyles);
         const states = this.getAllowedStates(categoryStyles);
 
@@ -276,11 +280,13 @@ export class StyleService {
         return variations.filter(variation => !!variation);
     }
 
-    public getAllowedStates(styles: any): [] {
+    public getAllowedStates(styles: any): string[] {
         const states = styles["default"]["allowedStates"];
+
         if (states) {
             return states;
         }
+
         return undefined;
     }
 
@@ -292,6 +298,10 @@ export class StyleService {
         const styles = await this.getStyles();
 
         const componentStyles = styles.components[componentName];
+
+        if (!componentStyles) {
+            return [];
+        }
 
         const states = this.getAllowedStates(componentStyles);
 

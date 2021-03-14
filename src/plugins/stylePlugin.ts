@@ -16,17 +16,28 @@ export abstract class StylePlugin {
         return [];
     }
 
-    public static parseSize = (value: string | number, fallback: string | number = 0): any => {
+    private static isNumber(value: string): boolean {
+        return /^\d*$/gm.test(value);
+    }
+
+    public static parseSize = (value: string | number, fallback: string | number = 0): string => {
         if (value === "auto" || value === "initial" || value === "inherit") {
             return value;
         }
 
-        if (value !== null && value !== undefined) {
-            return parseInt(<string>value) + "px";
+        if (value === null || value === undefined) {
+            return `${fallback}px`;
         }
-        else {
-            return fallback;
+
+        if (typeof value === "number" || StylePlugin.isNumber(value)) {
+            return value + "px";
         }
+
+        if (typeof value === "string") {
+            return value;
+        }
+
+        throw new Error(`Unparsable value ${value}`);
     };
 
     public setThemeContract?(themeContract: ThemeContract): void;
