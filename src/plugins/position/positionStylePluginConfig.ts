@@ -9,22 +9,22 @@ export interface PositionStylePluginConfig extends StylePluginConfig {
     /**
      * e.g. `50%`.
      */
-    top?: string;
+    top?: number | string;
 
     /**
      * e.g. `50%`.
      */
-    left?: string;
+    left?: number | string;
 
     /**
      * e.g. `50%`.
      */
-    right?: string;
+    right?: number | string;
 
     /**
      * e.g. `50%`.
      */
-    bottom?: string;
+    bottom?: number | string;
 
     /**
      * z-index

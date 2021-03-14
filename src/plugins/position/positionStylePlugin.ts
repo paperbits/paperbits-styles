@@ -13,25 +13,25 @@ export class PositionStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: PositionStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        rules.push(new StyleRule("position", pluginConfig.position));
+        rules.push(new StyleRule("position", StylePlugin.parseSize(pluginConfig.position)));
 
-        if (pluginConfig.top) {
-            rules.push(new StyleRule("top", pluginConfig.top));
+        if (pluginConfig.top !== undefined) {
+            rules.push(new StyleRule("top", StylePlugin.parseSize(pluginConfig.top)));
         }
 
-        if (pluginConfig.left) {
-            rules.push(new StyleRule("left", pluginConfig.left));
+        if (pluginConfig.left !== undefined) {
+            rules.push(new StyleRule("left", StylePlugin.parseSize(pluginConfig.left)));
         }
 
-        if (pluginConfig.right) {
-            rules.push(new StyleRule("right", pluginConfig.right));
+        if (pluginConfig.right !== undefined) {
+            rules.push(new StyleRule("right", StylePlugin.parseSize(pluginConfig.right)));
         }
 
-        if (pluginConfig.bottom) {
-            rules.push(new StyleRule("bottom", pluginConfig.bottom));
+        if (pluginConfig.bottom !== undefined) {
+            rules.push(new StyleRule("bottom", StylePlugin.parseSize(pluginConfig.bottom)));
         }
 
-        if (pluginConfig.zIndex) {
+        if (pluginConfig.zIndex !== undefined) {
             rules.push(new StyleRule("z-index", pluginConfig.zIndex));
         }
 
