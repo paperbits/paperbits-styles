@@ -8,10 +8,10 @@ export class BorderRadiusStylePlugin extends StylePlugin {
 
     public async configToStyleRules(pluginConfig: BorderRadiusStylePluginConfig): Promise<StyleRule[]> {
         const result = [
-            new StyleRule("borderTopLeftRadius", StylePlugin.parseSize(pluginConfig.topLeftRadius)),
-            new StyleRule("borderTopRightRadius", StylePlugin.parseSize(pluginConfig.topRightRadius)),
-            new StyleRule("borderBottomLeftRadius", StylePlugin.parseSize(pluginConfig.bottomLeftRadius)),
-            new StyleRule("borderBottomRightRadius", StylePlugin.parseSize(pluginConfig.bottomRightRadius))
+            new StyleRule("borderTopLeftRadius", this.parseValue(pluginConfig.topLeftRadius)),
+            new StyleRule("borderTopRightRadius", this.parseValue(pluginConfig.topRightRadius)),
+            new StyleRule("borderBottomLeftRadius", this.parseValue(pluginConfig.bottomLeftRadius)),
+            new StyleRule("borderBottomRightRadius", this.parseValue(pluginConfig.bottomRightRadius))
         ];
 
         return result;

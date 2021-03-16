@@ -1,5 +1,4 @@
 import { StylePlugin } from "../stylePlugin";
-import { ThemeContract } from "../../contracts";
 import { StyleRule } from "@paperbits/common/styles";
 import { PositionStylePluginConfig } from "./positionStylePluginConfig";
 
@@ -13,22 +12,22 @@ export class PositionStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: PositionStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        rules.push(new StyleRule("position", StylePlugin.parseSize(pluginConfig.position)));
+        rules.push(new StyleRule("position", this.parseValue(pluginConfig.position)));
 
         if (pluginConfig.top !== undefined) {
-            rules.push(new StyleRule("top", StylePlugin.parseSize(pluginConfig.top)));
+            rules.push(new StyleRule("top", this.parseValue(pluginConfig.top)));
         }
 
         if (pluginConfig.left !== undefined) {
-            rules.push(new StyleRule("left", StylePlugin.parseSize(pluginConfig.left)));
+            rules.push(new StyleRule("left", this.parseValue(pluginConfig.left)));
         }
 
         if (pluginConfig.right !== undefined) {
-            rules.push(new StyleRule("right", StylePlugin.parseSize(pluginConfig.right)));
+            rules.push(new StyleRule("right", this.parseValue(pluginConfig.right)));
         }
 
         if (pluginConfig.bottom !== undefined) {
-            rules.push(new StyleRule("bottom", StylePlugin.parseSize(pluginConfig.bottom)));
+            rules.push(new StyleRule("bottom", this.parseValue(pluginConfig.bottom)));
         }
 
         if (pluginConfig.zIndex !== undefined) {

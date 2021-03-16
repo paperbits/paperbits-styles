@@ -10,8 +10,8 @@ export class TransformStylePlugin extends StylePlugin {
         const transformOperations = [];
 
         if (pluginConfig.translate) {
-            const translateX = StylePlugin.parseSize(pluginConfig.translate.x);
-            const translateY = StylePlugin.parseSize(pluginConfig.translate.y);
+            const translateX = this.parseValue(pluginConfig.translate.x);
+            const translateY = this.parseValue(pluginConfig.translate.y);
             transformOperations.push(`translate(${translateX},${translateY})`);
         }
 

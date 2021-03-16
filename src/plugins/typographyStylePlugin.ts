@@ -27,7 +27,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.fontSize) {
-            result.push(new StyleRule("fontSize", StylePlugin.parseSize(pluginConfig.fontSize)));
+            result.push(new StyleRule("fontSize", this.parseValue(pluginConfig.fontSize)));
         }
 
         if (pluginConfig.fontKey) {
@@ -42,11 +42,11 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.lineHeight) {
-            result.push(new StyleRule("lineHeight", StylePlugin.parseSize(pluginConfig.lineHeight)));
+            result.push(new StyleRule("lineHeight", this.parseValue(pluginConfig.lineHeight)));
         }
 
         if (pluginConfig.letterSpacing) {
-            result.push(new StyleRule("letterSpacing", StylePlugin.parseSize(pluginConfig.letterSpacing)));
+            result.push(new StyleRule("letterSpacing", this.parseValue(pluginConfig.letterSpacing)));
         }
 
         if (pluginConfig.colorKey) {
@@ -68,9 +68,9 @@ export class TypographyStylePlugin extends StylePlugin {
                     result.push(new StyleRule("textShadow", "none"));
                 }
                 else {
-                    const x = StylePlugin.parseSize(shadowContract.offsetX);
-                    const y = StylePlugin.parseSize(shadowContract.offsetY);
-                    const blur = StylePlugin.parseSize(shadowContract.blur);
+                    const x = this.parseValue(shadowContract.offsetX);
+                    const y = this.parseValue(shadowContract.offsetY);
+                    const blur = this.parseValue(shadowContract.blur);
                     const color = shadowContract.color || "#000";
     
                     result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));

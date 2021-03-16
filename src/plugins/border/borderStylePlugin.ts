@@ -22,7 +22,7 @@ export class BorderStylePlugin extends StylePlugin {
             const borderTopColorPluginConfig = Objects.getObjectAt<ColorContract>(pluginConfig.top.colorKey, this.themeContract);
 
             if (borderTopColorPluginConfig) {
-                result.push(new StyleRule("borderTop", `${StylePlugin.parseSize(pluginConfig.top.width)} ${pluginConfig.top.style} ${borderTopColorPluginConfig.value}`));
+                result.push(new StyleRule("borderTop", `${this.parseValue(pluginConfig.top.width)} ${pluginConfig.top.style} ${borderTopColorPluginConfig.value}`));
             }
         }
         else {
@@ -33,7 +33,7 @@ export class BorderStylePlugin extends StylePlugin {
             const borderLeftColorPluginConfig = Objects.getObjectAt<ColorContract>(pluginConfig.left.colorKey, this.themeContract);
 
             if (borderLeftColorPluginConfig) {
-                result.push(new StyleRule("borderLeft", `${StylePlugin.parseSize(pluginConfig.left.width)} ${pluginConfig.left.style} ${borderLeftColorPluginConfig.value}`));
+                result.push(new StyleRule("borderLeft", `${this.parseValue(pluginConfig.left.width)} ${pluginConfig.left.style} ${borderLeftColorPluginConfig.value}`));
             }
         }
         else {
@@ -44,7 +44,7 @@ export class BorderStylePlugin extends StylePlugin {
             const borderRightColorPluginConfig = Objects.getObjectAt<ColorContract>(pluginConfig.right.colorKey, this.themeContract);
 
             if (borderRightColorPluginConfig) {
-                result.push(new StyleRule("borderRight", `${StylePlugin.parseSize(pluginConfig.right.width)} ${pluginConfig.right.style} ${borderRightColorPluginConfig.value}`));
+                result.push(new StyleRule("borderRight", `${this.parseValue(pluginConfig.right.width)} ${pluginConfig.right.style} ${borderRightColorPluginConfig.value}`));
             }
         }
         else {
@@ -55,7 +55,7 @@ export class BorderStylePlugin extends StylePlugin {
             const borderBottomColorpluginConfig = Objects.getObjectAt<ColorContract>(pluginConfig.bottom.colorKey, this.themeContract);
 
             if (borderBottomColorpluginConfig) {
-                result.push(new StyleRule("borderBottom", `${StylePlugin.parseSize(pluginConfig.bottom.width)} ${pluginConfig.bottom.style} ${borderBottomColorpluginConfig.value}`));
+                result.push(new StyleRule("borderBottom", `${this.parseValue(pluginConfig.bottom.width)} ${pluginConfig.bottom.style} ${borderBottomColorpluginConfig.value}`));
             }
         }
         else {

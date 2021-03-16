@@ -15,15 +15,15 @@ export class ShadowStylePlugin extends StylePlugin {
         this.themeContract = themeContract;
     }
 
-    public static contractToStyleRules(contract: ShadowContract): StyleRule[] {
+    public contractToStyleRules(contract: ShadowContract): StyleRule[] {
         if (!contract.color) {
             return [new StyleRule("boxShadow", "none")];
         }
 
-        const offsetX = StylePlugin.parseSize(contract.offsetX);
-        const offsetY = StylePlugin.parseSize(contract.offsetY);
-        const blur = StylePlugin.parseSize(contract.blur);
-        const spread = StylePlugin.parseSize(contract.spread);
+        const offsetX = this.parseValue(contract.offsetX);
+        const offsetY = this.parseValue(contract.offsetY);
+        const blur = this.parseValue(contract.blur);
+        const spread = this.parseValue(contract.spread);
         const color = contract.color || "#000";
         const inset = contract.inset ? "inset" : undefined;
 
@@ -38,7 +38,7 @@ export class ShadowStylePlugin extends StylePlugin {
         const shadowContract = Objects.getObjectAt<ShadowContract>(pluginConfig.shadowKey, this.themeContract);
 
         if (shadowContract) {
-            return ShadowStylePlugin.contractToStyleRules(shadowContract);
+            return this.contractToStyleRules(shadowContract);
         }
         else {
             console.warn(`Shadow with key "${pluginConfig.shadowKey}" not found. Elements using it will fallback to parent's definition.`);

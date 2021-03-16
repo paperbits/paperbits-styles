@@ -8,10 +8,10 @@ export class PaddingStylePlugin extends StylePlugin {
 
     public async configToStyleRules(pluginConfig: PaddingStylePluginConfig): Promise<StyleRule[]> {
         const rules = [
-            new StyleRule("paddingTop", StylePlugin.parseSize(pluginConfig.top)),
-            new StyleRule("paddingLeft", StylePlugin.parseSize(pluginConfig.left)),
-            new StyleRule("paddingRight", StylePlugin.parseSize(pluginConfig.right)),
-            new StyleRule("paddingBottom", StylePlugin.parseSize(pluginConfig.bottom))
+            new StyleRule("paddingTop", this.parseValue(pluginConfig.top)),
+            new StyleRule("paddingLeft", this.parseValue(pluginConfig.left)),
+            new StyleRule("paddingRight", this.parseValue(pluginConfig.right)),
+            new StyleRule("paddingBottom", this.parseValue(pluginConfig.bottom))
         ];
 
         return rules;

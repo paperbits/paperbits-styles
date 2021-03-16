@@ -9,10 +9,10 @@ export class MarginStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: MarginStylePluginConfig): Promise<StyleRule[]> {
         const result = [];
 
-        result.push(new StyleRule("marginTop", StylePlugin.parseSize(pluginConfig.top, "auto")));
-        result.push(new StyleRule("marginLeft", StylePlugin.parseSize(pluginConfig.left, "auto")));
-        result.push(new StyleRule("marginRight", StylePlugin.parseSize(pluginConfig.right, "auto")));
-        result.push(new StyleRule("marginBottom", StylePlugin.parseSize(pluginConfig.bottom, "auto")));
+        result.push(new StyleRule("marginTop", this.parseValue(pluginConfig.top, "auto")));
+        result.push(new StyleRule("marginLeft", this.parseValue(pluginConfig.left, "auto")));
+        result.push(new StyleRule("marginRight", this.parseValue(pluginConfig.right, "auto")));
+        result.push(new StyleRule("marginBottom", this.parseValue(pluginConfig.bottom, "auto")));
 
         return result;
     }

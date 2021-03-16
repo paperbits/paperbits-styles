@@ -1,26 +1,26 @@
-import { Style, StyleRule } from "@paperbits/common/styles";
+import { Style, StylePluginConfig, StyleRule } from "@paperbits/common/styles";
 import { ThemeContract } from "../contracts/themeContract";
 
 export abstract class StylePlugin {
     protected name: string;
 
-    public async configToStyleRules?(pluginConfig: any): Promise<StyleRule[]> {
+    public async configToStyleRules?(pluginConfig: StylePluginConfig): Promise<StyleRule[]> {
         return [];
     }
 
-    public async configToNestedStyles?(pluginConfig: any): Promise<Style[]> {
+    public async configToNestedStyles?(pluginConfig: StylePluginConfig): Promise<Style[]> {
         return [];
     }
 
-    public async configToPseudoStyles?(pluginConfig: any): Promise<Style[]> {
+    public async configToPseudoStyles?(pluginConfig: StylePluginConfig): Promise<Style[]> {
         return [];
     }
 
-    private static isNumber(value: string): boolean {
+    private static isStringNumber(value: string): boolean {
         return /^\d*$/gm.test(value);
     }
 
-    public static parseSize = (value: string | number, fallback: string | number = 0): string => {
+    public parseValue(value: string | number, fallback: string | number = 0): string {
         if (value === "auto" || value === "initial" || value === "inherit") {
             return value;
         }
@@ -29,7 +29,7 @@ export abstract class StylePlugin {
             return `${fallback}px`;
         }
 
-        if (typeof value === "number" || StylePlugin.isNumber(value)) {
+        if (typeof value === "number" || StylePlugin.isStringNumber(value)) {
             return value + "px";
         }
 
@@ -38,7 +38,7 @@ export abstract class StylePlugin {
         }
 
         throw new Error(`Unparsable value ${value}`);
-    };
+    }
 
     public setThemeContract?(themeContract: ThemeContract): void;
 }
