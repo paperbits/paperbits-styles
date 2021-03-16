@@ -41,7 +41,7 @@ export class GoogleFont {
 
         const fontFace = new FontFace();
         fontFace.fontFamily = this.family;
-        fontFace.src = fileName.replace("http://", "https://");
+        fontFace.source = fileName.replace("http://", "https://");
         fontFace.fontStyle = "normal";
         fontFace.fontWeight = "normal";
 

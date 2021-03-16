@@ -40,7 +40,7 @@ export class FontsStylePlugin {
 
                 const fontFace = new FontFace();
                 fontFace.fontFamily = fontContract.family;
-                fontFace.src = fontVariantUrl;
+                fontFace.source = fontVariantUrl;
                 fontFace.fontStyle = variant.style || "normal";
                 fontFace.fontWeight = variant.weight || "normal";
 

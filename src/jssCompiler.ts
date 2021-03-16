@@ -1,7 +1,7 @@
 import jss from "jss";
 import preset from "jss-preset-default";
 import * as Utils from "@paperbits/common/utils";
-import { Style, StyleSheet, StyleMediaQuery, BreakpointValues } from "@paperbits/common/styles";
+import { Style, StyleSheet, StyleMediaQuery, BreakpointValues, FontFace } from "@paperbits/common/styles";
 
 const opts = preset();
 
@@ -47,7 +47,7 @@ export class JssCompiler {
         const globalJssString = `{ "@global": { ${globalStyles} } }`;
         const globalJssObject = JSON.parse(globalJssString);
         const globalCss = jss.createStyleSheet(globalJssObject).toString();
-        const fontFacesJssString = `"@font-face":[${styleSheet.fontFaces.map(x => x.toJssString()).join(",")}]`;
+        const fontFacesJssString = `"@font-face":[${styleSheet.fontFaces.map(x => this.fontFaceToJssString(x)).join(",")}]`;
         const stylesJssString = styleSheet.styles.map(style => this.styleToJssString(style)).filter(x => !!x).join(",");
         const mediaQueries = this.flattenMediaQueries(styleSheet.styles, styleSheet.globalStyles);
         const mediaQueriesJssString = mediaQueries.map(x => this.mediaQueryToJssString(x)).filter(x => !!x).join(",");
@@ -57,6 +57,16 @@ export class JssCompiler {
         const css = jss.createStyleSheet(jssObject).toString();
 
         return `${globalCss} ${css}`;
+    }
+
+    private fontFaceToJssString(fontFace: FontFace): string {
+        const jssString = `{
+            "src": "url(${fontFace.source})",
+            "fontFamily": "${fontFace.fontFamily}",
+            "fontStyle": "${fontFace.fontStyle}",
+            "fontWeight": "${fontFace.fontWeight}"
+        }`;
+        return jssString;
     }
 
     private mediaQueryToJssString(mediaQuery: StyleMediaQuery): string {
