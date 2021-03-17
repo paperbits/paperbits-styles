@@ -1,5 +1,6 @@
 import * as ko from "knockout";
-import * as Objects from "@paperbits/common";
+import * as Objects from "@paperbits/common/objects";
+import * as Utils from "@paperbits/common/utils";
 import template from "./background.html";
 import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
@@ -30,6 +31,7 @@ export class Background {
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
     public readonly direction: ko.Observable<string>;
+    public readonly backgroundClass: string;
 
     public readonly horizontalOffsetDirection: ko.Observable<string>;
     public readonly verticalOffsetDirection: ko.Observable<string>;
@@ -60,6 +62,7 @@ export class Background {
         this.verticalOffsetDirection = ko.observable<string>();
         this.horizontalOffset = ko.observable<number>();
         this.vertialOffset = ko.observable<number>();
+        this.backgroundClass = Utils.randomClassName();
     }
 
     @Param()
@@ -106,7 +109,7 @@ export class Background {
 
         const styles = await this.styleService.getStyles();
         const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(backgroundPluginConfig);
-        const style = new Style("background-preview");
+        const style = new Style(this.backgroundClass);
         style.addRules(styleRules);
 
         const styleSheet = new StyleSheet();
@@ -256,7 +259,7 @@ export class Background {
 
         const styles = await this.styleService.getStyles();
         const styleRules = await this.getBackgroundStylePlugin(styles).configToStyleRules(updatedPluginConfig);
-        const style = new Style("background-preview");
+        const style = new Style(this.backgroundClass);
         style.addRules(styleRules);
 
         const styleSheet = new StyleSheet();
