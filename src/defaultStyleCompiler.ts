@@ -39,7 +39,9 @@ import {
     VariationBagContract,
     StateBagContract,
     LocalStyles,
-    PluginBag
+    PluginBag,
+    StyleAnimation,
+    StyleAnimationFrame
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
@@ -221,6 +223,25 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 pseudoStyle.addRule(new StyleRule("content", `'\\\\${formattedUnicode}'`));
                 iconStyle.pseudoStyles.push(pseudoStyle);
                 styleSheet.styles.push(iconStyle);
+            }
+        }
+
+        if (themeContract.animations) {
+            const animationNames = Object.keys(themeContract.animations);
+
+            for (const animationName of animationNames) {
+                const animationContract = themeContract.animations[animationName];
+                const styleAnimation = new StyleAnimation();
+                styleAnimation.name = animationContract.name;
+
+                for (const frame of animationContract.frames) {
+                    const f = new StyleAnimationFrame();
+                    f.step = frame.step;
+
+                    styleAnimation.frames.push(f);
+                }
+
+                styleSheet.animations.push(styleAnimation);
             }
         }
 

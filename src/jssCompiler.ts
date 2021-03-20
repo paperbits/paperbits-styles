@@ -1,7 +1,8 @@
 import jss from "jss";
 import preset from "jss-preset-default";
 import * as Utils from "@paperbits/common/utils";
-import { Style, StyleSheet, StyleMediaQuery, BreakpointValues, FontFace } from "@paperbits/common/styles";
+import { StyleRule, Style, StyleSheet, StyleMediaQuery, StyleAnimation, BreakpointValues, FontFace } from "@paperbits/common/styles";
+import { AnimationContract } from "./contracts";
 
 const opts = preset();
 
@@ -56,7 +57,37 @@ export class JssCompiler {
         const jssObject = JSON.parse(jssString);
         const css = jss.createStyleSheet(jssObject).toString();
 
+
         return `${globalCss} ${css}`;
+    }
+
+    private animationToJssString(animation: StyleAnimation): string {
+        // const styles = {
+        //     '@keyframes slideRight': {
+        //       from: {opacity: 0},
+        //       to: {opacity: 1}
+        //     },
+        //     container: {
+        //       animationName: '$slideRight'
+        //     }
+        //   }
+
+        const keyframePropName = `@keyframes ${animation.name}`;
+
+        let stepsString = "";
+
+        for (const frame of animation.frames) {
+            stepsString += `${frame.step}%`;
+        }
+
+        const styles: any = {
+            [keyframePropName]: {
+                from: { opacity: 0 },
+                to: { opacity: 1 }
+            }
+        };
+
+        return JSON.stringify(styles);
     }
 
     private fontFaceToJssString(fontFace: FontFace): string {
