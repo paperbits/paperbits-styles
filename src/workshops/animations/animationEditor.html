@@ -6,15 +6,23 @@
 
     <div id="animationCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <label for="animationType">Type</label>
-            <button id="animationType" class="btn btn-default"
-                data-bind="text: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }"></button>
+            <label for="animationType">
+                Type
+            </label>
+            <div class="input-group">
+                <input id="animationType" class="form-control" readonly
+                    data-bind="value: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }" />
+                <span class="btn input-group-btn">
+                    <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
+                </span>
+            </div>
         </div>
 
         <!-- ko if: $component.animationKey -->
         <div class="form-group">
             <label for="animationDuration">
-                <button class="btn btn-info" type="button" aria-label="Max container width" data-bind="tooltip: 'Defines how long a single animation cycle runs.'"></button>
+                <button class="btn btn-info" type="button" aria-label="Max container width"
+                    data-bind="tooltip: 'Defines how long a single animation cycle runs.'"></button>
                 Duration (seconds)
             </label>
             <input id="animationDuration" type="number" class="form-control" min="0.5" step="0.5"
@@ -22,7 +30,8 @@
         </div>
         <div class="form-group">
             <label for="animationIterationCount">
-                <button class="btn btn-info" type="button" aria-label="Max container width" data-bind="tooltip: 'Defines how many times the animation repeats. If empty, the animation will repeat indefinitely.'"></button>
+                <button class="btn btn-info" type="button" aria-label="Max container width"
+                    data-bind="tooltip: 'Defines how many times the animation repeats. If empty, the animation will repeat indefinitely.'"></button>
                 Iteration count
             </label>
             <input id="animationIterationCount" type="number" class="form-control" min="1" step="1"
@@ -30,7 +39,8 @@
         </div>
         <div class="form-group">
             <label for="controls" class="form-label">
-                <button class="btn btn-info" type="button" aria-label="Max container width" data-bind="tooltip: 'If set, the animation will start only when the element gets scrolled into view.'"></button>
+                <button class="btn btn-info" type="button" aria-label="Max container width"
+                    data-bind="tooltip: 'If set, the animation will start only when the element gets scrolled into view.'"></button>
                 <input type="checkbox" id="startWhenVisible" data-bind="checked: startWhenVisible" />Start when visible
             </label>
         </div>

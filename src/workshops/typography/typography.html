@@ -8,9 +8,13 @@
     <div id="typographyCollapse" class="collapse form-group-collapse">
         <div class="form-group">
             <label for="fontFamily">Font family</label>
-            <button id="fontFamily" class="btn btn-default"
-                data-bind="text: $component.fontName, balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }">
-            </button>
+            <div class="input-group">
+                <input id="fontFamily" class="form-control" readonly
+                    data-bind="value: $component.fontName, balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }" />
+                <span class="btn input-group-btn">
+                    <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
+                </span>
+            </div>
         </div>
 
         <div class="form-group">
@@ -73,7 +77,6 @@
             </div>
         </div>
 
-
         <div class="form-group">
             <label for="textColor">Text color</label>
             <button id="textColor" class="btn btn-default"
@@ -82,10 +85,16 @@
         </div>
 
         <div class="form-group">
-            <label for="textShadow">Text shadow</label>
-            <button id="textShadow" class="btn btn-default"
-                data-bind="text: $component.shadowName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }">
-            </button>
+            <label for="textShadow">
+                Text shadow
+            </label>
+            <div class="input-group">
+                <input id="textShadow" class="form-control" readonly
+                    data-bind="value: $component.shadowName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }" />
+                <span class="btn input-group-btn">
+                    <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
+                </span>
+            </div>
         </div>
 
         <div class="form-group">
