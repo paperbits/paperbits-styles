@@ -20,9 +20,9 @@ export abstract class StylePlugin {
         return /^\d*$/gm.test(value);
     }
 
-    public parseValue(value: string | number, fallback: string | number = 0): string {
-        if (value === null || value === undefined) {
-            value = fallback;
+    public parseValue(value: string | number): string {
+        if (value === null || value === undefined || value === "") {
+            throw new Error(`Style rule value cannot be empty.`);
         }
 
         if (value === "auto" || value === "initial" || value === "inherit") {
@@ -37,7 +37,7 @@ export abstract class StylePlugin {
             return value;
         }
 
-        throw new Error(`Unparsable value ${value}`);
+        throw new Error(`Unparsable value ${value}.`);
     }
 
     public setThemeContract?(themeContract: ThemeContract): void;
