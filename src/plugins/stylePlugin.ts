@@ -21,12 +21,12 @@ export abstract class StylePlugin {
     }
 
     public parseValue(value: string | number, fallback: string | number = 0): string {
-        if (value === "auto" || value === "initial" || value === "inherit") {
-            return value;
+        if (value === null || value === undefined) {
+            value = fallback;
         }
 
-        if (value === null || value === undefined) {
-            return `${fallback}px`;
+        if (value === "auto" || value === "initial" || value === "inherit") {
+            return value;
         }
 
         if (typeof value === "number" || StylePlugin.isStringNumber(value)) {
