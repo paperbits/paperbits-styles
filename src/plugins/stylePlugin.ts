@@ -20,6 +20,10 @@ export abstract class StylePlugin {
         return /^\d*$/gm.test(value);
     }
 
+    public isValueEmpty(value: string | number): boolean {
+        return value === null || value === undefined || value === "";
+    }
+
     public parseValue(value: string | number): string {
         if (value === null || value === undefined || value === "") {
             throw new Error(`Style rule value cannot be empty.`);
