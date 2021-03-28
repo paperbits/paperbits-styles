@@ -14,23 +14,23 @@ export class PositionStylePlugin extends StylePlugin {
 
         rules.push(new StyleRule("position", this.parseValue(pluginConfig.position)));
 
-        if (pluginConfig.top !== undefined) {
+        if (!this.isValueEmpty(pluginConfig.top)) {
             rules.push(new StyleRule("top", this.parseValue(pluginConfig.top)));
         }
 
-        if (pluginConfig.left !== undefined) {
+        if (!this.isValueEmpty(pluginConfig.left)) {
             rules.push(new StyleRule("left", this.parseValue(pluginConfig.left)));
         }
 
-        if (pluginConfig.right !== undefined) {
+        if (!this.isValueEmpty(pluginConfig.right)) {
             rules.push(new StyleRule("right", this.parseValue(pluginConfig.right)));
         }
 
-        if (pluginConfig.bottom !== undefined) {
+        if (!this.isValueEmpty(pluginConfig.bottom)) {
             rules.push(new StyleRule("bottom", this.parseValue(pluginConfig.bottom)));
         }
 
-        if (pluginConfig.zIndex !== undefined) {
+        if (!this.isValueEmpty(pluginConfig.zIndex)) {
             rules.push(new StyleRule("z-index", pluginConfig.zIndex));
         }
 
