@@ -1,129 +1,123 @@
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#backgroundCollapse'"></a>
-        <b>Background</b>
-        <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage background'"></button>
-    </label>
+<div class="tabs">
+    <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }">
+        <a href="#" role="button" aria-label="Clear background"
+            data-bind="tooltip: 'Clear background', click: clearBackground">
+            <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
+        </a>
+    </div>
 
-    <div id="backgroundCollapse" class="collapse form-group-collapse">
-        <div class="tabs">
-            <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }">
-                <a href="#" role="button" aria-label="Clear background" data-bind="tooltip: 'Clear background', click: clearBackground">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
-                </a>
-            </div>
+    <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }">
+        <a href="#" role="button" aria-label="Background picture" aria-haspopup="true"
+            data-bind="tooltip: 'Background picture', balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
+            <i aria-hidden="true" class="paperbits-icon paperbits-image-2"></i>
+        </a>
+    </div>
 
-            <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }">
-                <a href="#" role="button" aria-label="Background picture" aria-haspopup="true"
-                    data-bind="tooltip: 'Background picture', balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-image-2"></i>
-                </a>
-            </div>
+    <div class="tab" data-bind="css: { 'tab-is-active': colorKey }">
+        <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
+            data-bind="tooltip: 'Background color', balloon: { component: { name: 'color-selector', params: { selectedColorKey: $component.colorKey, onSelect: $component.onColorSelected } } }">
+            <i aria-hidden="true" class="paperbits-icon paperbits-paint-bucket-40"></i>
+        </a>
+    </div>
 
-            <div class="tab" data-bind="css: { 'tab-is-active': colorKey }">
-                <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
-                    data-bind="tooltip: 'Background color', balloon: { component: { name: 'color-selector', params: { selectedColorKey: $component.colorKey, onSelect: $component.onColorSelected } } }">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-paint-bucket-40"></i>
-                </a>
-            </div>
-
-            <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }">
-                <a href="#" role="button" aria-label="Background gradient" aria-haspopup="true"
-                    data-bind="tooltip: 'Background gradient', balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradientKey: $component.gradientKey } } }">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-gradient"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="dropzone">
-            <div class="dropzone-controls">
-                <!-- ko if: sourceKey() -->
-                <svg alignment="top left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="top center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="top right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="center left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="center right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="bottom left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="bottom center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <svg alignment="bottom right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <polygon points="2,2 14,2 14,14" />
-                </svg>
-                <!-- /ko -->
-                <style data-bind="jss: backgroundPreview"></style>
-                <a href="#" class="dropzone-showbox" alignment="center center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
-                    <div class="fit" data-bind="css: backgroundClass"></div>
-                </a>
-            </div>
-        </div>
-
-        <!-- ko if: sourceKey() -->
-  
-        <!-- ko if: horizontalOffsetDirection() && horizontalOffsetDirection() !== 'center' -->
-            <div class="form-group">
-                <label class="form-label"><span class="capitalize" data-bind="text: horizontalOffsetDirection"></span> offset (px)</label>
-                <input type="number" min="0" class="form-control"
-                    data-bind="textInput: horizontalOffset">
-            </div>
-        <!-- /ko -->
-
-        <!-- ko if: verticalOffsetDirection() && verticalOffsetDirection() !== 'center' -->
-            <div class="form-group">
-                <label class="form-label"><span class="capitalize" data-bind="text: verticalOffsetDirection"></span> offset (px)</label>
-                <input type="number" min="0" class="form-control"
-                    data-bind="textInput: vertialOffset">
-            </div>
-        <!-- /ko -->
-        
-        <label class="form-label">
-            Background sizing
-            <button class="btn btn-info" type="button"
-                data-bind="tooltip: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Resize the background image to make sure the image is fully visible.</p>'"></button>
-        </label>
-        <div class="form-group">
-            <label class="form-label">
-                <input name="size" type="radio" value="original" data-bind="checked: size" />Original
-            </label>
-            <label class="form-label">
-                <input name="size" type="radio" value="cover" data-bind="checked: size, event: { change: applyChanges }" />Cover
-            </label>
-            <label class="form-label">
-                <input name="size" type="radio" value="contain" data-bind="checked: size, event: { change: applyChanges }" />Contain
-            </label>
-        </div>
-
-        <label class="form-label">
-            Background attachment
-            <button class="btn btn-info" type="button"
-                data-bind="tooltip: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Resize the background image to make sure the image is fully visible.</p>'"></button>
-        </label>
-        <div class="form-group">
-            <label class="form-label">
-                <input name="attachment" type="radio" value="inherit" data-bind="checked: attachment" />Inherit
-            </label>
-            <label class="form-label">
-                <input name="attachment" type="radio" value="scroll" data-bind="checked: attachment, event: { change: applyChanges }" />Scroll
-            </label>
-            <label class="form-label">
-                <input name="attachment" type="radio" value="fixed" data-bind="checked: attachment, event: { change: applyChanges }" />Fixed
-            </label>
-            <label class="form-label">
-                <input name="attachment" type="radio" value="local" data-bind="checked: attachment, event: { change: applyChanges }" />Local
-            </label>
-        </div>
-        <!-- /ko -->
+    <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }">
+        <a href="#" role="button" aria-label="Background gradient" aria-haspopup="true"
+            data-bind="tooltip: 'Background gradient', balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradientKey: $component.gradientKey } } }">
+            <i aria-hidden="true" class="paperbits-icon paperbits-gradient"></i>
+        </a>
     </div>
 </div>
+
+<div class="dropzone">
+    <div class="dropzone-controls">
+        <!-- ko if: sourceKey() -->
+        <svg alignment="top left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="top center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="top right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="center left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="center right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="bottom left" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="bottom center" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <svg alignment="bottom right" data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <polygon points="2,2 14,2 14,14" />
+        </svg>
+        <!-- /ko -->
+        <style data-bind="jss: backgroundPreview"></style>
+        <a href="#" class="dropzone-showbox" alignment="center center"
+            data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
+            <div class="fit" data-bind="css: backgroundClass"></div>
+        </a>
+    </div>
+</div>
+
+<!-- ko if: sourceKey() -->
+
+<!-- ko if: horizontalOffsetDirection() && horizontalOffsetDirection() !== 'center' -->
+<div class="form-group">
+    <label class="form-label"><span class="capitalize" data-bind="text: horizontalOffsetDirection"></span> offset
+        (px)</label>
+    <input type="number" min="0" class="form-control" data-bind="textInput: horizontalOffset">
+</div>
+<!-- /ko -->
+
+<!-- ko if: verticalOffsetDirection() && verticalOffsetDirection() !== 'center' -->
+<div class="form-group">
+    <label class="form-label"><span class="capitalize" data-bind="text: verticalOffsetDirection"></span> offset
+        (px)</label>
+    <input type="number" min="0" class="form-control" data-bind="textInput: vertialOffset">
+</div>
+<!-- /ko -->
+
+<label class="form-label">
+    Background sizing
+    <button class="btn btn-info" type="button"
+        data-bind="tooltip: '<p><b>Contain:</b> Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges.</p><p><b>Cover:</b> Resize the background image to make sure the image is fully visible.</p>'"></button>
+</label>
+<div class="form-group">
+    <label class="form-label">
+        <input name="size" type="radio" value="original" data-bind="checked: size" />Original
+    </label>
+    <label class="form-label">
+        <input name="size" type="radio" value="cover" data-bind="checked: size, event: { change: applyChanges }" />Cover
+    </label>
+    <label class="form-label">
+        <input name="size" type="radio" value="contain"
+            data-bind="checked: size, event: { change: applyChanges }" />Contain
+    </label>
+</div>
+
+<label class="form-label">
+    Background attachment
+</label>
+<div class="form-group">
+    <label class="form-label">
+        <input name="attachment" type="radio" value="inherit" data-bind="checked: attachment" />Inherit
+    </label>
+    <label class="form-label">
+        <input name="attachment" type="radio" value="scroll"
+            data-bind="checked: attachment, event: { change: applyChanges }" />Scroll
+    </label>
+    <label class="form-label">
+        <input name="attachment" type="radio" value="fixed"
+            data-bind="checked: attachment, event: { change: applyChanges }" />Fixed
+    </label>
+    <label class="form-label">
+        <input name="attachment" type="radio" value="local"
+            data-bind="checked: attachment, event: { change: applyChanges }" />Local
+    </label>
+</div>
+<!-- /ko -->
