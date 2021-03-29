@@ -29,7 +29,20 @@
 
     <!-- ko if: allowBlockStyles -->
     <!-- <gradient-editor></gradient-editor> -->
-    <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
+    
+    <div class="form-group form-group-collapsible">
+        <label class="form-label">
+            <a href="#" class="form-group-toggle" title="Toggle section"
+                data-bind="collapse: '#backgroundCollapse'"></a>
+            <b>Background</b>
+            <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage background'"></button>
+        </label>
+
+        <div id="backgroundCollapse" class="collapse form-group-collapse">
+            <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
+        </div>
+    </div>
+
     <shadow-editor-group params="{ shadow: elementStyleShadow, onUpdate: onShadowUpdate }"></shadow-editor-group>
     <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
     <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
