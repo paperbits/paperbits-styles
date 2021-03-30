@@ -12,7 +12,7 @@ export class PositionStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: PositionStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        rules.push(new StyleRule("position", this.parseValue(pluginConfig.position)));
+        rules.push(new StyleRule("position", pluginConfig.position));
 
         if (!this.isValueEmpty(pluginConfig.top)) {
             rules.push(new StyleRule("top", this.parseValue(pluginConfig.top)));

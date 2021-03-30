@@ -20,10 +20,10 @@ export class ShadowStylePlugin extends StylePlugin {
             return [new StyleRule("boxShadow", "none")];
         }
 
-        const offsetX = this.parseValue(contract.offsetX);
-        const offsetY = this.parseValue(contract.offsetY);
-        const blur = this.parseValue(contract.blur);
-        const spread = this.parseValue(contract.spread);
+        const offsetX = this.parseValue(contract.offsetX || 0);
+        const offsetY = this.parseValue(contract.offsetY || 0);
+        const blur = this.parseValue(contract.blur || 0);
+        const spread = this.parseValue(contract.spread || 0);
         const color = contract.color || "#000";
         const inset = contract.inset ? "inset" : undefined;
 

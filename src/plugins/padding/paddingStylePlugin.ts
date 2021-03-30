@@ -9,19 +9,19 @@ export class PaddingStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: PaddingStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        if (pluginConfig.top) {
+        if (!this.isValueEmpty(pluginConfig.top)) {
             rules.push(new StyleRule("paddingTop", this.parseValue(pluginConfig.top)));
         }
 
-        if (pluginConfig.left) {
+        if (!this.isValueEmpty(pluginConfig.left)) {
             rules.push(new StyleRule("paddingLeft", this.parseValue(pluginConfig.left)));
         }
 
-        if (pluginConfig.right) {
+        if (!this.isValueEmpty(pluginConfig.right)) {
             rules.push(new StyleRule("paddingRight", this.parseValue(pluginConfig.right)));
         }
-        
-        if (pluginConfig.bottom) {
+
+        if (!this.isValueEmpty(pluginConfig.bottom)) {
             rules.push(new StyleRule("paddingBottom", this.parseValue(pluginConfig.bottom)));
         }
 
