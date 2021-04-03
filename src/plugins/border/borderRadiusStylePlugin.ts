@@ -1,6 +1,7 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
 import { BorderRadiusStylePluginConfig } from "../../contracts";
+import { StyleHelper } from "../../styleHelper";
 
 
 export class BorderRadiusStylePlugin extends StylePlugin {
@@ -9,20 +10,20 @@ export class BorderRadiusStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: BorderRadiusStylePluginConfig): Promise<StyleRule[]> {
         const result = [];
 
-        if (!this.isValueEmpty(pluginConfig.topLeftRadius)) {
-            result.push(new StyleRule("borderTopLeftRadius", this.parseValue(pluginConfig.topLeftRadius)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.topLeftRadius)) {
+            result.push(new StyleRule("borderTopLeftRadius", StyleHelper.parseValue(pluginConfig.topLeftRadius)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.topRightRadius)) {
-            result.push(new StyleRule("borderTopRightRadius", this.parseValue(pluginConfig.topRightRadius)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.topRightRadius)) {
+            result.push(new StyleRule("borderTopRightRadius", StyleHelper.parseValue(pluginConfig.topRightRadius)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.bottomLeftRadius)) {
-            result.push(new StyleRule("borderBottomLeftRadius", this.parseValue(pluginConfig.bottomLeftRadius)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.bottomLeftRadius)) {
+            result.push(new StyleRule("borderBottomLeftRadius", StyleHelper.parseValue(pluginConfig.bottomLeftRadius)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.bottomRightRadius)) {
-            result.push(new StyleRule("borderBottomRightRadius", this.parseValue(pluginConfig.bottomRightRadius)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.bottomRightRadius)) {
+            result.push(new StyleRule("borderBottomRightRadius", StyleHelper.parseValue(pluginConfig.bottomRightRadius)));
         }
 
         return result;

@@ -11,16 +11,14 @@ export class GridStylePlugin extends StylePlugin {
     }
 
     public async configToStyleRules(pluginConfig: GridStylePluginConfig): Promise<StyleRule[]> {
-        const result = [
-            new StyleRule("display", "grid"),
-            new StyleRule("gridTemplateColumns", pluginConfig.cols.join(" ")),
-            new StyleRule("gridTemplateRows", pluginConfig.rows.join(" ")),
-            new StyleRule("gridColumnGap", pluginConfig.colGap),
-            new StyleRule("gridRowGap", pluginConfig.rowGap),
-            new StyleRule("width", "100%"),
-            new StyleRule("flex", 1)
-        ];
-
+        const result = [];
+        result.push(new StyleRule("display", "grid"));
+        result.push(new StyleRule("gridTemplateColumns", pluginConfig.cols.join(" ")));
+        result.push(new StyleRule("gridTemplateRows", pluginConfig.rows.join(" ")));
+        result.push(new StyleRule("gridColumnGap", pluginConfig.colGap));
+        result.push(new StyleRule("gridRowGap", pluginConfig.rowGap));
+        result.push(new StyleRule("width", "100%"));
+        result.push(new StyleRule("flex", 1));
         return result;
     }
 }

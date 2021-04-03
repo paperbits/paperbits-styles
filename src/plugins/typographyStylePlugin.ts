@@ -2,6 +2,7 @@ import * as Objects from "@paperbits/common";
 import { StylePlugin } from "./stylePlugin";
 import { ThemeContract, TypographyStylePluginConfig, FontContract, ColorContract, ShadowContract } from "../contracts";
 import { StyleRule } from "@paperbits/common/styles";
+import { StyleHelper } from "../styleHelper";
 
 export class TypographyStylePlugin extends StylePlugin {
     private themeContract: ThemeContract;
@@ -18,16 +19,16 @@ export class TypographyStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: TypographyStylePluginConfig): Promise<StyleRule[]> {
         const result = [];
 
-        if (!this.isValueEmpty(pluginConfig.fontWeight)) {
+        if (!StyleHelper.isValueEmpty(pluginConfig.fontWeight)) {
             result.push(new StyleRule("fontWeight", pluginConfig.fontWeight));
         }
 
-        if (!this.isValueEmpty(pluginConfig.fontStyle)) {
+        if (!StyleHelper.isValueEmpty(pluginConfig.fontStyle)) {
             result.push(new StyleRule("fontStyle", pluginConfig.fontStyle));
         }
 
-        if (!this.isValueEmpty(pluginConfig.fontSize)) {
-            result.push(new StyleRule("fontSize", this.parseValue(pluginConfig.fontSize)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.fontSize)) {
+            result.push(new StyleRule("fontSize", StyleHelper.parseValue(pluginConfig.fontSize)));
         }
 
         if (pluginConfig.fontKey) {
@@ -41,12 +42,12 @@ export class TypographyStylePlugin extends StylePlugin {
             }
         }
 
-        if (!this.isValueEmpty(pluginConfig.lineHeight)) {
-            result.push(new StyleRule("lineHeight", this.parseValue(pluginConfig.lineHeight)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.lineHeight)) {
+            result.push(new StyleRule("lineHeight", StyleHelper.parseValue(pluginConfig.lineHeight)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.letterSpacing)) {
-            result.push(new StyleRule("letterSpacing", this.parseValue(pluginConfig.letterSpacing)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.letterSpacing)) {
+            result.push(new StyleRule("letterSpacing", StyleHelper.parseValue(pluginConfig.letterSpacing)));
         }
 
         if (pluginConfig.colorKey) {
@@ -68,9 +69,9 @@ export class TypographyStylePlugin extends StylePlugin {
                     result.push(new StyleRule("textShadow", "none"));
                 }
                 else {
-                    const x = this.parseValue(shadowContract.offsetX || 0);
-                    const y = this.parseValue(shadowContract.offsetY || 0);
-                    const blur = this.parseValue(shadowContract.blur || 0);
+                    const x = StyleHelper.parseValue(shadowContract.offsetX || 0);
+                    const y = StyleHelper.parseValue(shadowContract.offsetY || 0);
+                    const blur = StyleHelper.parseValue(shadowContract.blur || 0);
                     const color = shadowContract.color || "#000";
 
                     result.push(new StyleRule("textShadow", [x, y, blur, color].join(" ")));

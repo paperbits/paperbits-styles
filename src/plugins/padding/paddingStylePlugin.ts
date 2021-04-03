@@ -1,6 +1,7 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
 import { PaddingStylePluginConfig } from ".";
+import { StyleHelper } from "../../styleHelper";
 
 
 export class PaddingStylePlugin extends StylePlugin {
@@ -9,20 +10,20 @@ export class PaddingStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: PaddingStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        if (!this.isValueEmpty(pluginConfig.top)) {
-            rules.push(new StyleRule("paddingTop", this.parseValue(pluginConfig.top)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.top)) {
+            rules.push(new StyleRule("paddingTop", StyleHelper.parseValue(pluginConfig.top)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.left)) {
-            rules.push(new StyleRule("paddingLeft", this.parseValue(pluginConfig.left)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.left)) {
+            rules.push(new StyleRule("paddingLeft", StyleHelper.parseValue(pluginConfig.left)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.right)) {
-            rules.push(new StyleRule("paddingRight", this.parseValue(pluginConfig.right)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.right)) {
+            rules.push(new StyleRule("paddingRight", StyleHelper.parseValue(pluginConfig.right)));
         }
 
-        if (!this.isValueEmpty(pluginConfig.bottom)) {
-            rules.push(new StyleRule("paddingBottom", this.parseValue(pluginConfig.bottom)));
+        if (!StyleHelper.isValueEmpty(pluginConfig.bottom)) {
+            rules.push(new StyleRule("paddingBottom", StyleHelper.parseValue(pluginConfig.bottom)));
         }
 
         return rules;

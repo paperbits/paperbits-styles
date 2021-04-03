@@ -1,6 +1,7 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
 import { TransformStylePluginConfig } from ".";
+import { StyleHelper } from "../../styleHelper";
 
 
 export class TransformStylePlugin extends StylePlugin {
@@ -10,17 +11,17 @@ export class TransformStylePlugin extends StylePlugin {
         const transformOperations = [];
 
         if (pluginConfig.translate) {
-            if (!this.isValueEmpty(pluginConfig.translate.x) && !this.isValueEmpty(pluginConfig.translate.y)) {
-                const translateX = this.parseValue(pluginConfig.translate.x);
-                const translateY = this.parseValue(pluginConfig.translate.y);
+            if (!StyleHelper.isValueEmpty(pluginConfig.translate.x) && !StyleHelper.isValueEmpty(pluginConfig.translate.y)) {
+                const translateX = StyleHelper.parseValue(pluginConfig.translate.x);
+                const translateY = StyleHelper.parseValue(pluginConfig.translate.y);
                 transformOperations.push(`translate(${translateX},${translateY})`);
             }
-            else if (!this.isValueEmpty(pluginConfig.translate.x)) {
-                const translateX = this.parseValue(pluginConfig.translate.x);
+            else if (!StyleHelper.isValueEmpty(pluginConfig.translate.x)) {
+                const translateX = StyleHelper.parseValue(pluginConfig.translate.x);
                 transformOperations.push(`translateX(${translateX})`);
             }
-            else if (!this.isValueEmpty(pluginConfig.translate.y)) {
-                const translateY = this.parseValue(pluginConfig.translate.y);
+            else if (!StyleHelper.isValueEmpty(pluginConfig.translate.y)) {
+                const translateY = StyleHelper.parseValue(pluginConfig.translate.y);
                 transformOperations.push(`translateY(${translateY})`);
             }
         }

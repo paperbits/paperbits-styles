@@ -262,12 +262,32 @@ export class StyleHelper {
     public static style(localStyles: LocalStyles): StyleConfigurator {
         return new StyleConfigurator(localStyles);
     }
+
+    private static isStringNumber(value: string): boolean {
+        return /^\d*$/gm.test(value);
+    }
+
+    public static isValueEmpty(value: string | number): boolean {
+        return value === null || value === undefined || value === "";
+    }
+
+    public static parseValue(value: string | number): string {
+        if (value === null || value === undefined || value === "") {
+            throw new Error(`Style rule value cannot be empty.`);
+        }
+
+        if (value === "auto" || value === "initial" || value === "inherit") {
+            return value;
+        }
+
+        if (typeof value === "number" || StyleHelper.isStringNumber(value)) {
+            return value + "px";
+        }
+
+        if (typeof value === "string") {
+            return value;
+        }
+
+        throw new Error(`Unparsable value ${value}.`);
+    }
 }
-
-
-// StyleHelper
-//     .styles(null)
-//     .component("aaaa")
-//     .variation("default")
-//     .plugin("")
-//     .setConfig(null);
