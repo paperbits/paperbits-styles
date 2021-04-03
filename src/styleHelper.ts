@@ -6,6 +6,64 @@ import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
 
 
+class StyleConfigurator {
+    constructor(private readonly localStyles: LocalStyles) { }
+
+    public plugin(pluginName: string): PluginStyleConfigurator {
+        return new PluginStyleConfigurator(this.localStyles, pluginName);
+    }
+
+    public component(name: string): ComponentStyleConfigurator {
+        return new ComponentStyleConfigurator(this.localStyles, name);
+    }
+}
+
+class PluginStyleConfigurator {
+    constructor(
+        private readonly localStyles: LocalStyles,
+        private readonly name: string) { }
+
+    public setConfig(value: StylePluginConfig, viewport?: string): void {
+        StyleHelper.setPluginConfigForLocalStyles(this.localStyles, this.name, value, viewport);
+    }
+
+    public getConfig<TStylePlugin>(viewport?: string): TStylePlugin {
+        return <TStylePlugin>StyleHelper.getPluginConfigForLocalStyles(this.localStyles, this.name, viewport);
+    }
+}
+
+class ComponentStyleConfigurator {
+    constructor(
+        private readonly localStyles: LocalStyles,
+        private readonly componentName: string
+    ) { }
+
+    public variation(variationName: string): VariationStyleConfigurator {
+        if (!/^\w*$/gm.test(variationName)) {
+            throw new Error(`Invalid component variation name: "${variationName}"`);
+        }
+
+        return new VariationStyleConfigurator(this.localStyles, this.componentName, variationName);
+    }
+}
+
+class VariationStyleConfigurator {
+    constructor(
+        private readonly localStyles: LocalStyles,
+        private readonly componentName: string,
+        private readonly variationName: string
+    ) { }
+
+    public plugin(name: string): PluginStyleConfigurator {
+        if (!/^\w*$/gm.test(name)) {
+            throw new Error(`Invalid style plugin name: "${name}"`);
+        }
+
+        return new PluginStyleConfigurator(this.localStyles, `components/${this.componentName}/${this.variationName}/${name}`);
+    }
+}
+
+
 export class StyleHelper {
     private static isResponsive(variation: Object): boolean {
         if (!variation) {
@@ -28,7 +86,7 @@ export class StyleHelper {
             return null;
         }
 
-        const pluginConfig = localStyles.instance[pluginName];
+        const pluginConfig = Objects.getObjectAt(pluginName, localStyles.instance);
 
         if (!pluginConfig) {
             return null;
@@ -71,7 +129,7 @@ export class StyleHelper {
         }
 
         const instance = localStyles.instance || {};
-        let plugin = instance[pluginName] || {};
+        let plugin = Objects.getObjectAt(pluginName, instance) || {};
 
         if (viewport) {
             plugin[viewport] = pluginConfig;
@@ -80,7 +138,7 @@ export class StyleHelper {
             plugin = pluginConfig;
         }
 
-        instance[pluginName] = plugin;
+        Objects.setValue(pluginName, instance, plugin);
         localStyles.instance = instance;
 
         if (!instance.key) {
@@ -200,4 +258,16 @@ export class StyleHelper {
             }
         }
     }
+
+    public static style(localStyles: LocalStyles): StyleConfigurator {
+        return new StyleConfigurator(localStyles);
+    }
 }
+
+
+// StyleHelper
+//     .styles(null)
+//     .component("aaaa")
+//     .variation("default")
+//     .plugin("")
+//     .setConfig(null);
