@@ -630,7 +630,7 @@ export class StyleGuide {
             styleContextualEditor.selectCommands.push({
                 name: "background",
                 tooltip: "Change background",
-                iconClass: "paperbits-drop",
+                iconClass: "paperbits-icon paperbits-drop",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
@@ -643,7 +643,7 @@ export class StyleGuide {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit variation",
-                iconClass: "paperbits-edit-72",
+                iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
@@ -659,7 +659,7 @@ export class StyleGuide {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit variation",
-                iconClass: "paperbits-edit-72",
+                iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
@@ -694,7 +694,7 @@ export class StyleGuide {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 tooltip: "Edit font",
-                iconClass: "paperbits-edit-72",
+                iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
