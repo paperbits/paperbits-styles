@@ -33,9 +33,6 @@ export class SizeEditor {
     @Param()
     public readonly features: string;
 
-    @Param()
-    public readonly label: string = "Sizes";
-
     @Event()
     public readonly onUpdate: (contract: SizeStylePluginConfig) => void;
 

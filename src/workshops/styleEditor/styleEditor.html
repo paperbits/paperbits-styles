@@ -7,8 +7,7 @@
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
             <div class="form-group">
-                <button class="btn btn-info" type="button"
-                    data-bind="tooltip: 'Name of the style'"></button>
+                <button class="btn btn-info" type="button" data-bind="tooltip: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>
                 <input id="styleName" type="text" class="form-control" spellcheck="false"
                     data-bind="textInput: styleName, focus: true">
@@ -29,7 +28,7 @@
 
     <!-- ko if: allowBlockStyles -->
     <!-- <gradient-editor></gradient-editor> -->
-    
+
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section"
@@ -48,17 +47,27 @@
     <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
     <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
 
-    <size-editor params="{ features: 'minMaxWidth,minMaxHeight', sizeConfig: elementStyleSize, onUpdate: onSizeUpdate }"></size-editor>
     <div class="form-group form-group-collapsible">
         <label class="form-label">
-            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#boxCollapse'"></a>
-            <b>Box</b>
+            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#sizeCollapse'"
+                aria-label="Toggle 'Size' section"></a>
+            <b>Size</b>
         </label>
-        <div id="boxCollapse" class="collapse form-group-collapse">
-            <box params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
+        <div id="sizeCollapse" class="collapse form-group-collapse">
+            <size-editor params="{ features: 'minMaxWidth,minMaxHeight', sizeConfig: elementStyleSize, onUpdate: onSizeUpdate }">
+            </size-editor>
         </div>
-    </div>
-    <!-- /ko -->
 
-    <!-- /ko -->
-</div>
+        <div class="form-group form-group-collapsible">
+            <label class="form-label">
+                <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#boxCollapse'"></a>
+                <b>Box</b>
+            </label>
+            <div id="boxCollapse" class="collapse form-group-collapse">
+                <box params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- /ko -->
+    </div>
