@@ -1,6 +1,7 @@
 <div class="form-group form-group-collapsible">
     <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#alignmentCollapse'"></a>
+        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#alignmentCollapse'"
+            aria-label="Toggle 'Content alignment' section"></a>
         <b>Content alignment</b>
         <button class="btn btn-info" type="button"
             data-bind="tooltip: 'Align the content inside the container. Depending on viewport, the alignment can be different, following mobile-first approach. If not specified in current one, container applies configuration from closest smaller viewports.'"></button>
@@ -10,15 +11,18 @@
         <div class="form-group">
             <label>Horizontal</label>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignLeft, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'start' }, tooltip: 'Align left'">
+                data-bind="click: alignLeft, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'start' }, tooltip: 'Align left'"
+                aria-label="Align left">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-left"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignCenter, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'center' || horizontalAlignment() === 'around' || horizontalAlignment() === 'between' }, tooltip: 'Align center or distribute'">
+                data-bind="click: alignCenter, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'center' || horizontalAlignment() === 'around' || horizontalAlignment() === 'between' }, tooltip: 'Align center or distribute'"
+                aria-label="Align center or distribute">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-center-horizontal"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignRight, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'end' }, tooltip: 'Align right'">
+                data-bind="click: alignRight, css: { 'toolbox-btn-is-active': horizontalAlignment() === 'end' }, tooltip: 'Align right'"
+                aria-label="Align right">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-right"></i>
             </a>
         </div>
@@ -26,15 +30,18 @@
         <div class="form-group">
             <label>Vertical</label>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignTop, css: { 'toolbox-btn-is-active': verticalAlignment() === 'start' }, tooltip: 'Align top'">
+                data-bind="click: alignTop, css: { 'toolbox-btn-is-active': verticalAlignment() === 'start' }, tooltip: 'Align top'"
+                aria-label="Align top">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-top"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignMiddle, css: { 'toolbox-btn-is-active': verticalAlignment() === 'center' || verticalAlignment() === 'around' || verticalAlignment() === 'between' }, tooltip: 'Align center or distribute'">
+                data-bind="click: alignMiddle, css: { 'toolbox-btn-is-active': verticalAlignment() === 'center' || verticalAlignment() === 'around' || verticalAlignment() === 'between' }, tooltip: 'Align center or distribute'"
+                aria-label="Align center or distribute">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-center-vertical"></i>
             </a>
             <a href="#" class="toolbox-btn" role="button"
-                data-bind="click: alignBottom, css: { 'toolbox-btn-is-active': verticalAlignment() === 'end' }, tooltip: 'Align bottom'">
+                data-bind="click: alignBottom, css: { 'toolbox-btn-is-active': verticalAlignment() === 'end' }, tooltip: 'Align bottom'"
+                aria-label="Align bottom">
                 <i aria-hidden="true" class="paperbits-icon paperbits-align-bottom"></i>
             </a>
         </div>
@@ -44,7 +51,8 @@
 <!-- ko if: overflowControls -->
 <div class="form-group form-group-collapsible">
     <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#contentFlowCollapse'"></a>
+        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#contentFlowCollapse'"
+            aria-label="Toggle 'Content flow' section"></a>
         <b>Content flow</b>
         <button class="btn btn-info" type="button"
             data-bind="tooltip: 'Manage scrolling settings for container'"></button>
