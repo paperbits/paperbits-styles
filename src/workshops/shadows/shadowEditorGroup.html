@@ -1,20 +1,12 @@
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#shadowCollapse'" aria-label="Toggle 'Shadow' section"></a>
-        <b>Shadow</b>
+<div class="form-group">
+    <label for="shadowType">
+        Type
     </label>
-
-    <div id="shadowCollapse" class="collapse form-group-collapse">
-        <div class="form-group">
-            <label for="shadowType">
-                Type
-            </label>
-            <div class="input-group">
-                <input id="shadowType" class="form-control" readonly data-bind="value: $component.displayName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.shadowKey } } }" />
-                <span class="btn input-group-btn">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
-                </span>
-            </div>
-        </div>
+    <div class="input-group">
+        <input id="shadowType" class="form-control" readonly
+            data-bind="value: $component.displayName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.shadowKey } } }" />
+        <span class="btn input-group-btn">
+            <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
+        </span>
     </div>
 </div>

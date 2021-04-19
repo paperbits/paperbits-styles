@@ -3,7 +3,7 @@ import * as Objects from "@paperbits/common";
 import template from "./shadowEditorGroup.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
-import { ShadowContract } from "../../contracts/shadowContract";
+import { ShadowContract, ShadowStylePluginConfig } from "../../contracts/shadowContract";
 
 const inheritLabel = "(Inherit)";
 
@@ -19,7 +19,7 @@ export class ShadowEditorGroup {
     public readonly shadow: ko.Observable<any>;
 
     @Event()
-    public readonly onUpdate: (shadow) => void;
+    public readonly onUpdate: (shadow: ShadowStylePluginConfig) => void;
 
     constructor(private readonly styleService: StyleService) {
         this.shadow = ko.observable();
