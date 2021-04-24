@@ -50,7 +50,7 @@ export class BoxEditor {
     public readonly features: string;
 
     @Event()
-    public readonly onUpdate: (contract: BoxStylePluginConfig) => void;
+    public readonly onUpdate: (contract: BoxStylePluginConfig, changeset?: BoxStylePluginConfig) => void;
 
     constructor() {
         this.box = ko.observable();
@@ -189,7 +189,11 @@ export class BoxEditor {
         }
 
         const newState: BoxStylePluginConfig = this.getState();
-        this.onUpdate(newState);
+        const changeSet = Objects.generateChangeset(this.currentState, newState);
+
+        this.onUpdate(newState, changeSet);
+
+        this.currentState = newState;
     }
 
     private getState(): BoxStylePluginConfig {

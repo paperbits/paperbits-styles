@@ -76,13 +76,11 @@ export class BorderEditor {
 
         let borderStyle: BorderStyle;
 
-        if (colorKey && borderLineStyle && borderLineWidth) {
-            borderStyle = {
-                width: borderLineWidth,
-                style: borderLineStyle,
-                colorKey: colorKey
-            };
-        }
+        borderStyle = {
+            width: borderLineWidth,
+            style: borderLineStyle,
+            colorKey: colorKey
+        };
 
         this.onChange(borderStyle);
     }
