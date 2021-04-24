@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { Styleable } from "@paperbits/common/styles";
+import { PrimitiveContract, Styleable } from "@paperbits/common/styles";
 import { StyleService } from "../..";
 
 
@@ -9,17 +9,14 @@ export class StylableBindingHandler {
             update: async (element: HTMLElement, valueAccessor) => {
                 const config = ko.unwrap(valueAccessor());
 
-                let style;
+                const styleKey = typeof config === "string"
+                    ? config
+                    : config.key;
 
-                if (typeof config === "string") {
-                    style = await this.styleService.getStyleByKey(config);
-                }
-                else {
-                    style = config;
-                }
+                const style = await this.styleService.getStyleByKey(styleKey);
 
                 if (!style) {
-                    return;
+                    throw new Error(`Unable to find style by key ${styleKey}`);
                 }
 
                 const backgroundObservable = ko.observable();

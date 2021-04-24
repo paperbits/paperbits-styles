@@ -17,7 +17,7 @@ import { StyleHelper } from "../../styleHelper";
 })
 export class StyleEditor {
     private updateTimeout: any;
-    private elementStates: ko.ObservableArray<string>;
+    private readonly elementStates: ko.ObservableArray<string>;
     private currentState: string;
 
     public readonly styleName: ko.Observable<string>;
@@ -34,10 +34,7 @@ export class StyleEditor {
     public readonly working: ko.Observable<boolean>;
 
 
-    constructor(
-        private readonly viewManager: ViewManager,
-        private readonly eventManager: EventManager
-    ) {
+    constructor(private readonly eventManager: EventManager) {
         this.styleName = ko.observable("New style");
         this.selectedState = ko.observable();
         this.elementStates = ko.observableArray();
@@ -148,7 +145,12 @@ export class StyleEditor {
 
     public onBoxUpdate(pluginConfig: BoxStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        Object.assign(style, pluginConfig);
+        StyleHelper.setPluginConfig(style, "padding", pluginConfig.padding, null);
+        StyleHelper.setPluginConfig(style, "margin", pluginConfig.margin, null);
+        StyleHelper.setPluginConfig(style, "border", pluginConfig.border, null);
+        StyleHelper.setPluginConfig(style, "borderRadius", pluginConfig.borderRadius, null);
+        StyleHelper.setPluginConfig(style, "typography", pluginConfig.typography, null);
+
         this.scheduleUpdate();
     }
 

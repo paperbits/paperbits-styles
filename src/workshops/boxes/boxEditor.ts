@@ -1,8 +1,10 @@
 import { BorderStyle } from "./../../contracts/borderContract";
 import * as ko from "knockout";
+import * as Objects from "@paperbits/common/objects";
 import template from "./boxEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { BoxStylePluginConfig } from "../../contracts";
+import { StyleHelper } from "../../styleHelper";
 
 
 @Component({
@@ -39,6 +41,7 @@ export class BoxEditor {
     public readonly borderBottomWidth: ko.Computed<any>;
 
     private isBoxUpdate: boolean;
+    private currentState: BoxStylePluginConfig;
 
     @Param()
     public readonly box: ko.Observable<BoxStylePluginConfig>;
@@ -121,30 +124,36 @@ export class BoxEditor {
         }
 
         const currentStyle = data;
+
         if (currentStyle.margin) {
             this.marginTop(currentStyle.margin.top);
             this.marginLeft(currentStyle.margin.left);
             this.marginRight(currentStyle.margin.right);
             this.marginBottom(currentStyle.margin.bottom);
         }
+
         if (currentStyle.border) {
             this.borderTop(currentStyle.border.top);
             this.borderLeft(currentStyle.border.left);
             this.borderRight(currentStyle.border.right);
             this.borderBottom(currentStyle.border.bottom);
         }
+
         if (currentStyle.borderRadius) {
             this.topLeftRadius(currentStyle.borderRadius.topLeftRadius);
             this.topRightRadius(currentStyle.borderRadius.topRightRadius);
             this.bottomLeftRadius(currentStyle.borderRadius.bottomLeftRadius);
             this.bottomRightRadius(currentStyle.borderRadius.bottomRightRadius);
         }
+
         if (currentStyle.padding) {
             this.paddingTop(currentStyle.padding.top);
             this.paddingLeft(currentStyle.padding.left);
             this.paddingRight(currentStyle.padding.right);
             this.paddingBottom(currentStyle.padding.bottom);
         }
+
+        this.currentState = this.getState();
     }
 
     private updateBox(update: BoxStylePluginConfig): void {
@@ -153,44 +162,49 @@ export class BoxEditor {
         this.isBoxUpdate = false;
     }
 
+    private parseNumber(value: any): any {
+        if (value === "auto") {
+            return value;
+        }
+
+        if (value === 0) {
+            return 0;
+        }
+
+        if (value) {
+            const parsed = parseInt(value);
+            if (parsed === 0) {
+                return 0;
+            }
+            return parsed || undefined;
+        }
+        else {
+            return undefined;
+        }
+    }
+
     private dispatchUpdates(): void {
         if (!this.onUpdate || this.isBoxUpdate) {
             return;
         }
 
-        const parseNumber = (value) => {
-            if (value === "auto") {
-                return value;
-            }
+        const newState: BoxStylePluginConfig = this.getState();
+        this.onUpdate(newState);
+    }
 
-            if (value === 0) {
-                return 0;
-            }
-
-            if (value) {
-                const parsed = parseInt(value);
-                if (parsed === 0) {
-                    return 0;
-                }
-                return parsed || undefined;
-            }
-            else {
-                return undefined;
-            }
-        };
-
-        this.onUpdate({
+    private getState(): BoxStylePluginConfig {
+        const state = {
             padding: {
-                top: parseNumber(this.paddingTop()),
-                left: parseNumber(this.paddingLeft()),
-                right: parseNumber(this.paddingRight()),
-                bottom: parseNumber(this.paddingBottom())
+                top: this.parseNumber(this.paddingTop()),
+                left: this.parseNumber(this.paddingLeft()),
+                right: this.parseNumber(this.paddingRight()),
+                bottom: this.parseNumber(this.paddingBottom())
             },
             margin: {
-                top: parseNumber(this.marginTop()),
-                left: parseNumber(this.marginLeft()),
-                right: parseNumber(this.marginRight()),
-                bottom: parseNumber(this.marginBottom())
+                top: this.parseNumber(this.marginTop()),
+                left: this.parseNumber(this.marginLeft()),
+                right: this.parseNumber(this.marginRight()),
+                bottom: this.parseNumber(this.marginBottom())
             },
             border: {
                 top: this.borderTop(),
@@ -199,11 +213,15 @@ export class BoxEditor {
                 bottom: this.borderBottom()
             },
             borderRadius: {
-                topLeftRadius: parseNumber(this.topLeftRadius()),
-                topRightRadius: parseNumber(this.topRightRadius()),
-                bottomLeftRadius: parseNumber(this.bottomLeftRadius()),
-                bottomRightRadius: parseNumber(this.bottomRightRadius())
+                topLeftRadius: this.parseNumber(this.topLeftRadius()),
+                topRightRadius: this.parseNumber(this.topRightRadius()),
+                bottomLeftRadius: this.parseNumber(this.bottomLeftRadius()),
+                bottomRightRadius: this.parseNumber(this.bottomRightRadius())
             }
-        });
+        };
+
+        Objects.cleanupObject(state);
+
+        return state;
     }
 }

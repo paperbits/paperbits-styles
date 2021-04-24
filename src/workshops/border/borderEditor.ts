@@ -10,12 +10,11 @@ import { StyleService } from "../..";
     template: template
 })
 export class BorderEditor {
-    public borderLineWidth: ko.Observable<string | number>;
-    public borderColor: ko.Observable<ColorContract>;
-    public borderColorKey: ko.Observable<string>;
-    public borderLineStyle: ko.Observable<string>;
-    public borderLineStyles: ko.ObservableArray<any>;
-
+    public readonly borderLineWidth: ko.Observable<string | number>;
+    public readonly borderColor: ko.Observable<ColorContract>;
+    public readonly borderColorKey: ko.Observable<string>;
+    public readonly borderLineStyle: ko.Observable<string>;
+    public readonly borderLineStyles: ko.ObservableArray<any>;
     public readonly colors: ko.ObservableArray<ColorContract>;
 
     @Param()
@@ -23,7 +22,6 @@ export class BorderEditor {
 
     @Event()
     public readonly onChange: (contract: BorderStyle) => void;
-
 
 
     constructor(private readonly styleService: StyleService) {
@@ -88,5 +86,4 @@ export class BorderEditor {
 
         this.onChange(borderStyle);
     }
-
 }
