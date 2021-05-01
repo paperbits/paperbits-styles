@@ -518,7 +518,7 @@ export class StyleGuide {
         const selectedElement = this.viewManager.getSelectedElement();
 
         if (selectedElement && selectedElement.element === element) {
-            const contextualEditor = this.getContextualEditor(element, styleable);
+            const contextualEditor = this.getContextCommands(element, styleable);
             const editCommand = contextualEditor.selectCommands.find(command => command.name === "edit");
 
             if (editCommand) {
@@ -527,7 +527,7 @@ export class StyleGuide {
             return;
         }
 
-        const contextualEditor = this.getContextualEditor(element, styleable);
+        const contextualEditor = this.getContextCommands(element, styleable);
 
         if (!this.isStyleSelectable(contextualEditor)) {
             return;
@@ -552,7 +552,7 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
-    private getContextualEditor(element: HTMLElement, styleable: Styleable): IContextCommandSet {
+    private getContextCommands(element: HTMLElement, styleable: Styleable): IContextCommandSet {
         const style = styleable.style;
 
         const styleContextualEditor: IContextCommandSet = {
@@ -745,7 +745,7 @@ export class StyleGuide {
             highlightedText = style.displayName;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextualEditor(element, styleable);
+            const contextualEditor = this.getContextCommands(element, styleable);
 
             highlightColor = contextualEditor.color;
 
