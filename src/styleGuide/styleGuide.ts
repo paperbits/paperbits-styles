@@ -568,6 +568,7 @@ export class StyleGuide {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
                 color: "#607d8b",
+                doNotClearSelection: true,
                 component: {
                     name: "confirmation",
                     params: {
@@ -600,6 +601,7 @@ export class StyleGuide {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete icon",
                 color: "#607d8b",
+                doNotClearSelection: true,
                 component: {
                     name: "confirmation",
                     params: {
