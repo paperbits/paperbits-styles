@@ -121,39 +121,29 @@
     </label>
 </div>
 
-<label class="form-label">
-    Background blend mode
-</label>
 <div class="form-group">
-    <label class="form-label">
-        <input name="blend" type="radio" value="normal" data-bind="checked: blend" />Normal
+    <label class="form-label" for="blend">
+        Background blend mode
     </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="multiply" data-bind="checked: blend, event: { change: applyChanges }" />Multiply
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="screen" data-bind="checked: blend, event: { change: applyChanges }" />Screen
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="overlay" data-bind="checked: blend, event: { change: applyChanges }" />Overlay
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="darken" data-bind="checked: blend, event: { change: applyChanges }" />Darken
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="lighten" data-bind="checked: blend, event: { change: applyChanges }" />Lighten
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="color-dodge" data-bind="checked: blend, event: { change: applyChanges }" />Color dodge
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="saturation" data-bind="checked: blend, event: { change: applyChanges }" />Saturation
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="color" data-bind="checked: blend, event: { change: applyChanges }" />Color
-    </label>
-    <label class="form-label">
-        <input name="blend" type="radio" value="luminosity" data-bind="checked: blend, event: { change: applyChanges }" />Luminosity
-    </label>
+    <div class="input-group">
+        <select id="blend" class="form-control"  data-bind="value: blend">
+            <option value="normal">Normal</option>
+            <option value="multiply">Multiply</option>
+            <option value="screen">Screen</option>
+            <option value="overlay">Overlay</option>
+            <option value="darken">Darken</option>
+            <option value="lighten">Lighten</option>
+            <option value="color-dodge">Color dodge</option>
+            <option value="color-burn">Color burn</option>
+            <option value="hard-light">Hard light</option>
+            <option value="soft-light">Soft light</option>
+            <option value="difference">Difference</option>
+            <option value="exclusion">Exclusion</option>
+            <option value="hue">Hue</option>
+            <option value="saturation">Saturation</option>
+            <option value="color">Color</option>
+            <option value="luminosity">Luminosity</option>
+        </select>
+    </div>
 </div>
 <!-- /ko -->
