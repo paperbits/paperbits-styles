@@ -23,6 +23,7 @@ export class BackgroundStylePlugin extends StylePlugin {
         const backgroundRepeat = [];
         const backgroundSize = [];
         const backgroundAttachment = [];
+        const backgroundBlend = [];
 
         if (pluginConfig.colorKey) {
             const color = Objects.getObjectAt<ColorContract>(pluginConfig.colorKey, this.themeContract);
@@ -49,6 +50,7 @@ export class BackgroundStylePlugin extends StylePlugin {
                 backgroundSize.push(image.size || "unset");
                 backgroundRepeat.push(image.repeat || "no-repeat");
                 backgroundAttachment.push(image.attachment || "unset");
+                backgroundBlend.push(image.blend || "unset");
             }
         }
 
@@ -82,6 +84,10 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (backgroundAttachment.length > 0) {
             rules.push(new StyleRule("backgroundAttachment", backgroundAttachment.join(",")));
+        }
+
+        if (backgroundBlend.length > 0) {
+            rules.push(new StyleRule("backgroundBlendMode", backgroundBlend.join(",")));
         }
 
         return rules;

@@ -14,6 +14,7 @@ import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 const defaultBackgroundSize = "original";
 const defaultBackgroundAttachment = "inherit";
+const defaultBlendMode = "normal";
 
 @Component({
     selector: "background",
@@ -31,6 +32,7 @@ export class Background {
     public readonly attachment: ko.Observable<string>;
     public readonly backgroundPreview: ko.Observable<Object>;
     public readonly direction: ko.Observable<string>;
+    public readonly blend: ko.Observable<string>;
     public readonly backgroundClass: string;
 
     public readonly horizontalOffsetDirection: ko.Observable<string>;
@@ -57,6 +59,7 @@ export class Background {
         this.sourceKey = ko.observable<string>();
         this.backgroundPreview = ko.observable<string>();
         this.direction = ko.observable<string>();
+        this.blend = ko.observable<string>();
 
         this.horizontalOffsetDirection = ko.observable<string>();
         this.verticalOffsetDirection = ko.observable<string>();
@@ -77,6 +80,7 @@ export class Background {
         this.background.subscribe(this.fillout);
         this.size.subscribe(this.applyChanges);
         this.attachment.subscribe(this.applyChanges);
+        this.blend.subscribe(this.applyChanges);
         this.horizontalOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
         this.vertialOffset.extend(ChangeRateLimit).subscribe(this.applyDirectionOffset);
     }
@@ -103,6 +107,7 @@ export class Background {
             this.source(null);
             this.sourceKey(null);
             this.backgroundPreview(null);
+            this.blend(null);
             this.clearBackgroundImageOffset();
             return;
         }
@@ -137,6 +142,7 @@ export class Background {
             this.size(image.size || defaultBackgroundSize);
             this.attachment(image.attachment || defaultBackgroundAttachment);
             this.position(image.position || "center");
+            this.blend(image.blend || defaultBlendMode);
 
             const media = await this.mediaService.getMediaByKey(image.sourceKey);
 
@@ -206,6 +212,7 @@ export class Background {
         this.size(this.size() || defaultBackgroundSize);
         this.attachment(this.attachment() || defaultBackgroundAttachment);
         this.position(this.position() || "center center");
+        this.blend(this.blend() || defaultBlendMode);
         this.applyChanges();
     }
 
@@ -229,6 +236,7 @@ export class Background {
         this.position(undefined);
         this.attachment(undefined);
         this.gradientKey(undefined);
+        this.blend(undefined);
         this.applyChanges();
     }
 
@@ -248,6 +256,7 @@ export class Background {
                 attachment: this.attachment() !== defaultBackgroundAttachment
                     ? this.attachment()
                     : undefined,
+                blend: this.blend() !== defaultBlendMode ? this.blend() : undefined,
             });
         }
 
