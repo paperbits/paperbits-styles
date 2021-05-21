@@ -120,4 +120,40 @@
             data-bind="checked: attachment, event: { change: applyChanges }" />Local
     </label>
 </div>
+
+<label class="form-label">
+    Background blend mode
+</label>
+<div class="form-group">
+    <label class="form-label">
+        <input name="blend" type="radio" value="normal" data-bind="checked: blend" />Normal
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="multiply" data-bind="checked: blend, event: { change: applyChanges }" />Multiply
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="screen" data-bind="checked: blend, event: { change: applyChanges }" />Screen
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="overlay" data-bind="checked: blend, event: { change: applyChanges }" />Overlay
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="darken" data-bind="checked: blend, event: { change: applyChanges }" />Darken
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="lighten" data-bind="checked: blend, event: { change: applyChanges }" />Lighten
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="color-dodge" data-bind="checked: blend, event: { change: applyChanges }" />Color dodge
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="saturation" data-bind="checked: blend, event: { change: applyChanges }" />Saturation
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="color" data-bind="checked: blend, event: { change: applyChanges }" />Color
+    </label>
+    <label class="form-label">
+        <input name="blend" type="radio" value="luminosity" data-bind="checked: blend, event: { change: applyChanges }" />Luminosity
+    </label>
+</div>
 <!-- /ko -->

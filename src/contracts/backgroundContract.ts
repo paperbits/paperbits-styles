@@ -25,6 +25,11 @@ export interface BackgroundImage {
      * e.g. "fixed".
      */
     attachment?: string;
+
+    /**
+     * e.g. "overlay"
+     */
+    blend?: string;
 }
 
 export interface BackgroundStylePluginConfig extends StylePluginConfig {
