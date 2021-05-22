@@ -17,4 +17,4 @@ export * from "./position/positionStylePlugin";
 export * from "./stickToStylePlugin";
 export * from "./transform/transformStylePlugin";
 export * from "./padding/paddingStylePlugin";
-export * from "./styleSizeValue";
+export * from "./size";

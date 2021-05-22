@@ -5,15 +5,15 @@ export enum SizeUnits {
     inches = "in"
 }
 
-export class StyleSizeValue {
+export class Size {
     constructor(
         public readonly value: number,
-        public readonly units: SizeUnits
+        public readonly units: SizeUnits = SizeUnits.pixels
     ) { }
 
-    public static parse(value: number | string): StyleSizeValue {
+    public static parse(value: number | string): Size {
         if (typeof value === "number") {
-            return new StyleSizeValue(value, SizeUnits.pixels);
+            return new Size(value, SizeUnits.pixels);
         }
 
         let num: string;
@@ -36,7 +36,7 @@ export class StyleSizeValue {
             units = SizeUnits.inches;
         }
 
-        return new StyleSizeValue(parseInt(num), units);
+        return new Size(parseInt(num), units);
     }
 
     public toString(): string {
