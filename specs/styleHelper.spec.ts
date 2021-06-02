@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { StyleHelper } from "./../src/styleHelper";
-import { LocalStyles, PluginBag, Breakpoints } from "@paperbits/common/styles";
+import { LocalStyles, Breakpoints } from "@paperbits/common/styles";
 import { TypographyStylePluginConfig } from "../src/contracts";
-import { StyleEditor } from "../src/workshops/styleEditor";
+import { CalcExpression, Size } from "../src/plugins";
 
 
 describe("Style helper", async () => {
@@ -63,35 +63,6 @@ describe("Style helper", async () => {
         expect(localStyles.appearance).to.equal(appearanceVariationKey);
     });
 
-    it("Test1", async () => {
-        const fontSizeXs = 15;
-        const fontSizeMd = 15;
-        const fontSizeLg = 20;
-        const fontWeight = 400;
-
-        const pluginBag: PluginBag = {
-            fontSize: {
-                xs: fontSizeXs,
-                md: fontSizeMd
-            },
-            fontWeight: 400
-        };
-
-        const typographyConfig: TypographyStylePluginConfig = {
-            fontSize: fontSizeMd,
-        };
-
-        StyleHelper.setPluginConfig(pluginBag, "size", typographyConfig, "lg"); // applying to specific viewport
-
-        // expect(pluginBag.fontSize.xs).to.equal(fontSizeXs);
-        // expect(pluginBag.fontSize.md).to.equal(fontSizeMd);
-        // expect(pluginBag.fontWeight).to.equal(400);
-
-        StyleHelper.optimizeProperty(pluginBag, "fontSize");
-
-        debugger;
-    });
-
     it("Can optimize style plugin config", async () => {
         const fontSizeXs = 15;
         const fontSizeMd = 17;
@@ -120,5 +91,49 @@ describe("Style helper", async () => {
         expect(config.md.fontSize).to.equal(fontSizeMd); // Stays as is
         expect(config.lg.fontSize).to.equal(undefined); // Gets removed
         expect(config.lg.fontWeight).to.equal(600); // Stays as is
+    });
+
+    it("Calc expression parses and stringifies correctly", async () => {
+        const expression1 = "calc(-50% + 100px)";
+        const parsed1 = CalcExpression.parse(expression1);
+        expect(parsed1.toString()).equals(expression1);
+
+        const expression2 = "calc(-50% - 100px)";
+        const parsed2 = CalcExpression.parse(expression2);
+        expect(parsed2.toString()).equals(expression2);
+
+        const expression3 = "calc(50% + 100px)";
+        const parsed3 = CalcExpression.parse(expression3);
+        expect(parsed3.toString()).equals(expression3);
+
+        const expression4 = "calc(50% - 100px)";
+        const parsed4 = CalcExpression.parse(expression4);
+        expect(parsed4.toString()).equals(expression4);
+    });
+
+    it("Size expression parses and stringifies correctly", async () => {
+        const expression1 = "50%";
+        const parsed1 = Size.parse(expression1);
+        expect(parsed1.toString()).equals(expression1);
+
+        const expression2 = "50px";
+        const parsed2 = Size.parse(expression2);
+        expect(parsed2.toString()).equals(expression2);
+
+        const expression3 = "50fr";
+        const parsed3 = Size.parse(expression3);
+        expect(parsed3.toString()).equals(expression3);
+
+        const expression4 = "50in";
+        const parsed4 = Size.parse(expression4);
+        expect(parsed4.toString()).equals(expression4);
+
+        const expression5 = "50";
+        const parsed5 = Size.parse(expression5);
+        expect(parsed5.toString()).equals("50px"); // "px" - default units must be assigned
+
+        const expression6 = 50;
+        const parsed6 = Size.parse(expression6);
+        expect(parsed6.toString()).equals("50px"); // "px" - default units must be assigned
     });
 });

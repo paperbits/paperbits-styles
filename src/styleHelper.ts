@@ -4,7 +4,7 @@ import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
-import { Size } from "./plugins";
+import { CalcExpression, Size } from "./plugins";
 
 
 class StyleConfigurator {
@@ -292,26 +292,8 @@ export class StyleHelper {
     }
 
     public static calculate(...sizes: Size[]): string {
-        let result = sizes[0].toString();
-
-        if (sizes.length === 1) {
-            return result;
-        }
-
-        for (let i = 1; i < sizes.length; i++) {
-            const value = sizes[i].value;
-
-            if (value === 0) {
-                continue;
-            }
-
-            const absValue = Math.abs(value);
-            const units = sizes[i].units;
-            const sign = value > 0 ? "+" : "-";
-
-            result += ` ${sign} ${absValue}${units}`;
-        }
-
-        return `calc(${result})`;
+        const calcExpr = new CalcExpression();
+        calcExpr.members = sizes;
+        return calcExpr.toString();
     }
 }
