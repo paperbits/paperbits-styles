@@ -445,7 +445,7 @@ export class StyleGuide {
         }
 
         if (!this.scrolling) {
-            this.viewManager.clearContextualEditors();
+            this.viewManager.clearContextualCommands();
         }
 
         this.scrolling = true;
@@ -586,11 +586,11 @@ export class StyleGuide {
                         },
                         onConfirm: async () => {
                             this.removeStyle(style);
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                             this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
                         },
                         onDecline: () => {
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 }
@@ -611,11 +611,11 @@ export class StyleGuide {
                         onConfirm: async () => {
                             await this.styleService.removeIcon(style.key);
                             await this.applyChanges();
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                             this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
                         },
                         onDecline: () => {
-                            this.viewManager.clearContextualEditors();
+                            this.viewManager.clearContextualCommands();
                         }
                     }
                 }
@@ -747,12 +747,12 @@ export class StyleGuide {
             highlightedText = style.displayName;
 
             const active = this.actives[style.key];
-            const contextualEditor = this.getContextCommands(element, styleable);
+            const contextualCommands = this.getContextCommands(element, styleable);
 
-            highlightColor = contextualEditor.color;
+            highlightColor = contextualCommands.color;
 
             if (!active || element !== active.element) {
-                this.viewManager.setContextualEditor(style.key, contextualEditor);
+                this.viewManager.setContextualCommands(style.key, contextualCommands);
 
                 this.actives[style.key] = {
                     element: element
@@ -761,7 +761,7 @@ export class StyleGuide {
         }
 
         tobeDeleted.forEach(x => {
-            this.viewManager.removeContextualEditor(x);
+            this.viewManager.removeContextualCommands(x);
             delete this.actives[x];
         });
 
