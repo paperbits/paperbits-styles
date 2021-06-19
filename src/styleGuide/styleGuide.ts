@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import * as Utils from "@paperbits/common";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events, MouseButton } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
 import { IStyleGroup, Styleable, VariationContract, StyleManager, StyleCompiler } from "@paperbits/common/styles";
 import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
@@ -425,18 +425,18 @@ export class StyleGuide {
 
     public attach(): void {
         // Firefox doesn't fire "mousemove" events by some reason
-        this.ownerDocument.addEventListener("mousemove", this.onPointerMove.bind(this), true);
-        this.ownerDocument.addEventListener("scroll", this.onWindowScroll.bind(this));
-        this.ownerDocument.addEventListener("mousedown", this.onPointerDown, true);
-        // this.ownerDocument.addEventListener("keydown", this.onKeyDown);
+        this.ownerDocument.addEventListener(Events.MouseMove, this.onPointerMove.bind(this), true);
+        this.ownerDocument.addEventListener(Events.Scroll, this.onWindowScroll.bind(this));
+        this.ownerDocument.addEventListener(Events.MouseDown, this.onPointerDown, true);
+        // this.ownerDocument.addEventListener(Events.KeyDown, this.onKeyDown);
     }
 
     @OnDestroyed()
     public dispose(): void {
-        this.ownerDocument.removeEventListener("mousemove", this.onPointerMove.bind(this), true);
-        this.ownerDocument.removeEventListener("scroll", this.onWindowScroll.bind(this));
-        this.ownerDocument.removeEventListener("mousedown", this.onPointerDown, true);
-        // this.ownerDocument.removeEventListener("keydown", this.onKeyDown);
+        this.ownerDocument.removeEventListener(Events.MouseMove, this.onPointerMove.bind(this), true);
+        this.ownerDocument.removeEventListener(Events.Scroll, this.onWindowScroll.bind(this));
+        this.ownerDocument.removeEventListener(Events.MouseDown, this.onPointerDown, true);
+        // this.ownerDocument.removeEventListener(Events.KeyDown, this.onKeyDown);
     }
 
     private onWindowScroll(): void {
@@ -487,7 +487,7 @@ export class StyleGuide {
             return;
         }
 
-        if (event.button !== 0) {
+        if (event.button !== MouseButton.Main) {
             return;
         }
 

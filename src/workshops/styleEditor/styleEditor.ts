@@ -1,9 +1,8 @@
 import * as ko from "knockout";
 import template from "./styleEditor.html";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
-import { PluginBag, VariationContract } from "@paperbits/common/styles";
-import { ViewManager } from "@paperbits/common/ui";
+import { VariationContract } from "@paperbits/common/styles";
 import { BackgroundStylePluginConfig, BoxStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig, TypographyStylePluginConfig } from "../../contracts";
 import { AnimationStylePluginConfig } from "../../plugins/animation";
 import { TransformStylePluginConfig } from "../../plugins/transform";
@@ -70,7 +69,7 @@ export class StyleEditor {
         }
 
         this.styleName.subscribe(this.onStyleNameUpdate);
-        this.eventManager.addEventListener("onViewportChange", this.updateObservables);
+        this.eventManager.addEventListener(Events.ViewportChange, this.updateObservables);
     }
 
     private scheduleUpdate(): void {
