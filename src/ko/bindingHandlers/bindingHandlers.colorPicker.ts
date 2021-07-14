@@ -31,7 +31,7 @@ ko.bindingHandlers["colorPicker"] = {
 
         pickr.on("change", (color: any) => {
             if (config.selectedColor) {
-                config.selectedColor(color.toRGBA().toString());
+                config.selectedColor(color.toRGBA().toString(0)); // round to integer with toString(precision)
             }
         });
     }
