@@ -153,12 +153,12 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         if (themeContract.utils) {
             for (const variationName of Object.keys(themeContract.utils.text)) {
-                const textStyle = await this.getVariationStyle(themeContract.utils.text[variationName], "text", variationName);
+                const textStyle = await this.getVariationStyle(themeContract.utils.text[variationName], "text", variationName, false, true);
                 styleSheet.styles.push(textStyle);
             }
 
             for (const variationName of Object.keys(themeContract.utils.content)) {
-                const contentStyle = await this.getVariationStyle(themeContract.utils.content[variationName], "content", variationName);
+                const contentStyle = await this.getVariationStyle(themeContract.utils.content[variationName], "content", variationName, false, true);
                 styleSheet.styles.push(contentStyle);
             }
         }
@@ -174,22 +174,15 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     continue;
                 }
 
+                const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
+
                 for (const variationName of variations) {
                     if (variationName === "default") {
                         continue;
                     }
 
-                    const componentName = Utils.camelCaseToKebabCase(tagName === "body" ? "text" : tagName);
-                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, true);
-
-                    if (variationStyle) {
-                        if (componentName === "text") {
-                            defaultComponentStyle.nestedStyles.push(variationStyle);
-                        }
-                        else {
-                            defaultComponentStyle.modifierStyles.push(variationStyle);
-                        }
-                    }
+                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, false);
+                    styleSheet.styles.push(variationStyle);
                 }
 
                 styleSheet.globalStyles.push(defaultComponentStyle);
@@ -238,7 +231,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return css;
     }
 
-    public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false): Promise<Style> {
+    public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false, useBreakpointInSelector: boolean = false): Promise<Style> {
         await this.initializePlugins();
 
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
@@ -304,9 +297,12 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     continue;
                 }
 
+                const breakpointSegment = useBreakpointInSelector ? `-${breakpoint}` : "";
+
                 const selector = isGlobal
                     ? componentName
-                    : `${componentName}-${breakpoint}-${variationName}`.replace("-default", "");
+                    : `${componentName}${breakpointSegment}-${variationName}`.replace("-default", "");
+
 
                 let mediaQuery = mediaQueries[breakpoint];
                 let style;
@@ -545,6 +541,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 }
                 else {
                     const styleKey = <string>categoryConfig;
+
                     const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
                     if (className) {
@@ -577,14 +574,8 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         const segments = key.split("/");
 
-        const category = segments[0];
         let component = segments[1];
         const componentVariation = segments[2];
-
-        if (category === "globals" && component !== "body" && component !== "ul") {
-            return null;
-        }
-
         const classNames = [];
 
         if (component === "body") {
@@ -609,11 +600,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
         }
 
         // TODO: Consider a case: components/navbar/default/components/navlink
-        const styles = await this.getStyles();
-        const style = Objects.getObjectAt(key, styles);
+        const style: VariationBagContract = await this.styleService.getStyleByKey(key);
 
-        if (style && style["class"]) {
-            classNames.push(style["class"][breakpoint || "xs"]);
+        if (style?.class) {
+            classNames.push(style.class[breakpoint || "xs"]);
         }
 
         return classNames.join(" ");

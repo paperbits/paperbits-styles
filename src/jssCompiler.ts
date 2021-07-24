@@ -18,28 +18,47 @@ jss.setup(opts);
  */
 export class JssCompiler {
     private flattenMediaQueries(styles: Style[], globalStyles: Style[]): StyleMediaQuery[] {
-        const nestedMediaQueries = styles.map(x => x.nestedMediaQueries);
-        const flattenNestedMediaQueries = nestedMediaQueries.reduce((acc, next) => acc.concat(next), []);
-        const nestedGlobalMediaQueries = globalStyles.map(x => x.nestedMediaQueries);
-        const flattenNestedGlobalMediaQueries = nestedGlobalMediaQueries.reduce((acc, next) => acc.concat(next), []);
-
         const groupedMediaQueries = [];
 
         for (const breakpointMinWidth of Object.values(BreakpointValues)) {
             const mediaQuery = new StyleMediaQuery(breakpointMinWidth);
 
-            flattenNestedMediaQueries
-                .filter(x => x.minWidth === breakpointMinWidth)
-                .forEach(x => mediaQuery.styles.push(...x.styles));
+            styles.forEach(x => {
+                const breakpointStyle = this.extractBreakpointStyle(x, breakpointMinWidth);
+                mediaQuery.styles.push(breakpointStyle);
+            });
 
-            flattenNestedGlobalMediaQueries
-                .filter(x => x.minWidth === breakpointMinWidth)
-                .forEach(x => mediaQuery.globalStyles.push(...x.styles));
+            globalStyles.forEach(x => {
+                const breakpointStyle = this.extractBreakpointStyle(x, breakpointMinWidth);
+                mediaQuery.globalStyles.push(breakpointStyle);
+            });
 
             groupedMediaQueries.push(mediaQuery);
         }
 
         return groupedMediaQueries;
+    }
+
+    private extractBreakpointStyle(style: Style, minWidth: number): Style {
+        const mediaQuery = style.nestedMediaQueries.find(x => x.minWidth === minWidth);
+
+        const styleInMediaQuery = !!mediaQuery
+            ? mediaQuery.styles[0]
+            : new Style(style.selector);
+
+        const extractedModifierStyles = style.modifierStyles
+            .map(modifierStyle => this.extractBreakpointStyle(modifierStyle, minWidth))
+            .filter(modifierStyle => !!modifierStyle);
+
+        styleInMediaQuery.modifierStyles = extractedModifierStyles;
+
+        const extractedNestedStyles = style.nestedStyles
+            .map(nestedStyle => this.extractBreakpointStyle(nestedStyle, minWidth))
+            .filter(nestedStyle => !!nestedStyle);
+
+        styleInMediaQuery.nestedStyles = extractedNestedStyles;
+
+        return styleInMediaQuery;
     }
 
     private styleSheetToCss(styleSheet: StyleSheet): string {
@@ -87,12 +106,34 @@ export class JssCompiler {
     }
 
     private styleRulesToJssString(style: Style): string {
-        const rules = style.rules.filter(x => !!x.value).map(rule => rule.toJssString()).filter(x => !!x).join(",");
-        const modifierStyles = style.modifierStyles.map(style => `"&.${style.selector}": ${this.styleRulesToJssString(style)}`).filter(x => !!x).join(",");
-        const pseudoStyles = style.pseudoStyles.map(style => `"&:${style.selector}": ${this.styleRulesToJssString(style)}`).filter(x => !!x).join(",");
-        const nestedStyles = style.nestedStyles.map(style => `"& .${style.selector}": ${this.styleRulesToJssString(style)}`).filter(x => !!x).join(",");
-        const nestedGloablStyles = style.nestedGlobalStyles.map(style => `"& ${style.selector}": ${this.styleRulesToJssString(style)}`).filter(x => !!x).join(",");
-        const jssString = `{ ${[rules, modifierStyles, pseudoStyles, nestedStyles, nestedGloablStyles /*, nestedMediaQueries*/].filter(x => !!x).join(",")} }`;
+        const rules = style.rules.filter(x => !!x.value)
+            .map(rule => rule.toJssString())
+            .filter(stylesJss => !!stylesJss)
+            .join(",");
+
+        const modifierStyles = style.modifierStyles
+            .map(style => `"&.${style.selector}": ${this.styleRulesToJssString(style)}`)
+            .filter(stylesJss => !!stylesJss)
+            .join(",");
+
+        const pseudoStyles = style.pseudoStyles
+            .map(style => `"&:${style.selector}": ${this.styleRulesToJssString(style)}`)
+            .filter(stylesJss => !!stylesJss)
+            .join(",");
+
+        const nestedStyles = style.nestedStyles
+            .map(style => `"& .${style.selector}": ${this.styleRulesToJssString(style)}`)
+            .filter(stylesJss => !!stylesJss)
+            .join(",");
+
+        const nestedGloablStyles = style.nestedGlobalStyles
+            .map(style => `"& ${style.selector}": ${this.styleRulesToJssString(style)}`)
+            .filter(stylesJss => !!stylesJss)
+            .join(",");
+
+        const jssString = `{ ${[rules, modifierStyles, pseudoStyles, nestedStyles, nestedGloablStyles /*, nestedMediaQueries*/]
+            .filter(stylesJss => !!stylesJss)
+            .join(",")} }`;
 
         return jssString;
     }
