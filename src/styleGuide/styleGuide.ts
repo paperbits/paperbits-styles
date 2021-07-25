@@ -65,7 +65,7 @@ export class StyleGuide {
     }
 
     @OnMounted()
-    public async initialize(): Promise<void> {
+    public initialize(): void {
         this.viewManager.mode = ViewManagerMode.selecting;
         this.applyChanges();
         this.ownerDocument = this.viewManager.getHostDocument();
@@ -77,7 +77,7 @@ export class StyleGuide {
         });
     }
 
-    public async addFonts(): Promise<void> {
+    public addFonts(): void {
         const view: View = {
             heading: "Fonts",
             component: {
@@ -265,7 +265,7 @@ export class StyleGuide {
                 params: {
                     elementStyle: style,
                     onUpdate: async () => {
-                        this.styleService.updateStyle(style);
+                        await this.styleService.updateStyle(style);
 
                         if (style.key.startsWith("components/")) {
                             const parts = style.key.split("/");
@@ -584,7 +584,7 @@ export class StyleGuide {
 
                             return message;
                         },
-                        onConfirm: async () => {
+                        onConfirm: () => {
                             this.removeStyle(style);
                             this.viewManager.clearContextualCommands();
                             this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
@@ -672,7 +672,7 @@ export class StyleGuide {
                             params: {
                                 elementStyle: style,
                                 onUpdate: async () => {
-                                    this.styleService.updateStyle(style);
+                                    await this.styleService.updateStyle(style);
 
                                     if (style.key.startsWith("components/")) {
                                         const parts = style.key.split("/");
@@ -723,7 +723,7 @@ export class StyleGuide {
         return styleContextualEditor;
     }
 
-    private async rerenderEditors(elements: HTMLElement[]): Promise<void> {
+    private rerenderEditors(elements: HTMLElement[]): void {
         let highlightedElement: HTMLElement;
         let highlightedText: string;
         let highlightColor: string;

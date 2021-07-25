@@ -144,11 +144,26 @@ export class StyleEditor {
 
     public onBoxUpdate(pluginConfig: BoxStylePluginConfig): void {
         const style = this.getStyleForSelectedState();
-        StyleHelper.setPluginConfig(style, "padding", pluginConfig.padding, null);
-        StyleHelper.setPluginConfig(style, "margin", pluginConfig.margin, null);
-        StyleHelper.setPluginConfig(style, "border", pluginConfig.border, null);
-        StyleHelper.setPluginConfig(style, "borderRadius", pluginConfig.borderRadius, null);
-        StyleHelper.setPluginConfig(style, "typography", pluginConfig.typography, null);
+
+        if (pluginConfig.padding) {
+            StyleHelper.setPluginConfig(style, "padding", pluginConfig.padding, null);
+        }
+
+        if (pluginConfig.margin) {
+            StyleHelper.setPluginConfig(style, "margin", pluginConfig.margin, null);
+        }
+
+        if (pluginConfig.border) {
+            StyleHelper.setPluginConfig(style, "border", pluginConfig.border, null);
+        }
+
+        if (pluginConfig.borderRadius) {
+            StyleHelper.setPluginConfig(style, "borderRadius", pluginConfig.borderRadius, null);
+        }
+
+        if (pluginConfig.typography) {
+            StyleHelper.setPluginConfig(style, "typography", pluginConfig.typography, null);
+        }
 
         this.scheduleUpdate();
     }

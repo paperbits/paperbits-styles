@@ -199,6 +199,10 @@ export class StyleHelper {
             throw new Error(`Parameter "pluginName" not specified.`);
         }
 
+        if (!pluginConfig) {
+            throw new Error(`Parameter "pluginConfig" not specified.`);
+        }
+
         let plugin = pluginBag[pluginName] || {};
 
         if (viewport) {

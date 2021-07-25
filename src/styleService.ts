@@ -220,7 +220,7 @@ export class StyleService {
     }
 
     public async updateStyles(updatedStyles: ThemeContract): Promise<void> {
-        this.objectStorage.updateObject(stylesPath, updatedStyles);
+        await this.objectStorage.updateObject(stylesPath, updatedStyles);
     }
 
     public async mergeStyles(appendStyles: ThemeContract): Promise<void> {
