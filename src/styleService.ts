@@ -79,7 +79,9 @@ export class StyleService {
             return defaultStyle;
         }
 
-        throw new Error(`Neither style nor default can be fetched by key "${styleKey}".`);
+        console.warn(`Neither style nor default can be fetched by key "${styleKey}".`);
+
+        return null;
     }
 
     public async addColorVariation(variationName: string): Promise<ColorContract> {
