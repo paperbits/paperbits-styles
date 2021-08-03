@@ -3,12 +3,16 @@ import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "../stylePlugin";
 import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, getLinearGradientString, ThemeContract } from "../../contracts";
 import { StyleRule } from "@paperbits/common/styles";
+// import { MediaService } from "@paperbits/common/media";
 
 export class BackgroundStylePlugin extends StylePlugin {
     private themeContract: ThemeContract;
     public readonly name: string = "background";
 
-    constructor(private readonly mediaPermalinkResolver: IPermalinkResolver) {
+    constructor(
+        // private readonly mediaService: MediaService,
+        private readonly mediaPermalinkResolver: IPermalinkResolver
+    ) {
         super();
     }
 
@@ -38,6 +42,17 @@ export class BackgroundStylePlugin extends StylePlugin {
 
         if (pluginConfig.images && pluginConfig.images.length > 0) {
             for (const image of pluginConfig.images) {
+                /**
+                 * TODO: image-set() function is not fully supported yet (see https://caniuse.com/?search=image-set),
+                 * plus it's not clear how to configure style fallbacks in JSS.
+                 */
+
+                // const media = await this.mediaService.getMediaByKey(image.sourceKey);
+                // if (media.variants) {
+                //     const imageSet = media.variants.map(x => `url("${x.downloadUrl}") ${x.width}w`).join(", ");
+                //     backgroundImage.push(`-webkit-image-set(${imageSet})`);
+                // }
+
                 const imageUrl = await this.mediaPermalinkResolver.getUrlByTargetKey(image.sourceKey);
 
                 if (!imageUrl) {

@@ -7,41 +7,44 @@ export interface BackgroundImage {
     sourceKey?: string;
 
     /**
-     * e.g. `contain`, `cover`.
+     * Images size, e.g. `contain`, `cover`.
      */
     size?: string;
 
    /**
-    * e.g. "top left".
+    * Image position, e.g. `top left`.
     */
     position?: string;
 
     /**
-     * e.g. "no-repeat".
+     * Image repeat behavior, e.g. `no-repeat`.
      */
     repeat?: string;
 
     /**
-     * e.g. "fixed".
+     * Image attachment behavior, e.g. `fixed`.
      */
     attachment?: string;
 
     /**
-     * e.g. "overlay"
+     * Image blend behavior, e.g. `overlay`.
      */
     blend?: string;
 }
 
 export interface BackgroundStylePluginConfig extends StylePluginConfig {
     /**
-     * e.g. "colors/default"
+     * Color key, e.g. `colors/default`.
      */
     colorKey?: string;
 
     /**
-     * e.g. "gradients/gradient1"
+     * Gradient key, e.g. `gradients/gradient1`.
      */
     gradientKey?: string;
 
+    /**
+     * Images.
+     */
     images?: BackgroundImage[];
 }
