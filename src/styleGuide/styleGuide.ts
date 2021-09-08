@@ -563,7 +563,9 @@ export class StyleGuide {
         };
 
         if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
-            !style.key.endsWith("/default") && style.key.indexOf("/navbar/default/") === -1
+            !style.key.endsWith("/default") &&
+            !style.key.includes("/components/") &&
+            style.key.indexOf("/navbar/default/") === -1
         ) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
