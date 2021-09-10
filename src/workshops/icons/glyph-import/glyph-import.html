@@ -3,7 +3,10 @@
         <div class="form-group">
             <input class="form-control" type="search" role="searchbox"
                 data-bind="textInput: searchPattern, valueUpdate: 'keyup', focus: true" placeholder="Search icons..."
-                aria-label="Search widgets" aria-controls="searchResult" />
+                aria-label="Search icons" aria-controls="searchResult" />
+            <p id="searchResult" class="text-hide" role="region" aria-live="polite"
+                data-bind="text: `Icons found: ${glyphCount()}`">
+            </p>
         </div>
     </div>
 

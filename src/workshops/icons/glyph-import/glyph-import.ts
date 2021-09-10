@@ -14,24 +14,28 @@ export interface GlyphItem {
     glyph: OpenTypeFontGlyph;
 }
 
+export interface GlyphItemGroup {
+    name: string;
+    font: any;
+    items: GlyphItem[];
+}
+
 @Component({
     selector: "glyph-import",
     template: template
 })
 export class GlyphImport {
-    public readonly working: ko.Observable<boolean>;
-    private originalCategories: any;
-    public glyphs: ko.ObservableArray;
-    public allGlyphs: any[];
-    public pages: ko.ObservableArray;
+    private originalCategories: GlyphItemGroup[];
 
-    public readonly categories: ko.Observable<{ name: string, items: any[] }[]>;
+    public readonly working: ko.Observable<boolean>;
+    public readonly glyphs: ko.ObservableArray;
+    public readonly glyphCount: ko.Observable<number>;
+    public readonly categories: ko.Observable<GlyphItemGroup[]>;
 
     constructor() {
         this.working = ko.observable(true);
         this.glyphs = ko.observableArray([]);
-        this.allGlyphs = [];
-        this.pages = ko.observableArray();
+        this.glyphCount = ko.observable();
         this.fonts = ko.observableArray();
         this.searchPattern = ko.observable("");
         this.selectGlyph = this.selectGlyph.bind(this);
@@ -112,6 +116,8 @@ export class GlyphImport {
             .filter(category => category.items.length > 0);
 
         this.categories(filteredCategories);
+        const glyphCount = filteredCategories.map(x => x.items.length).reduce((x, y) => x += y);
+        this.glyphCount(glyphCount);
         this.working(false);
     }
 
