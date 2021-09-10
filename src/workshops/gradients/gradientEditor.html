@@ -51,10 +51,10 @@
             <div class="style-card style-card-empty">
                 <div class="form-group" data-bind="scrollable: true">
                     <label for="gradientColors">Color stops</label>
-                    <div class="palette">
+                    <div class="palette" role="list">
                         <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                        <div class="color-box">
-                            <a href="#" role="listitem" class="color"
+                        <div class="color-box" role="presentation">
+                            <a href="#" role="listitem" class="color" aria-label="Select color stop"
                                 data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
                         </div>
                         <!-- /ko -->
