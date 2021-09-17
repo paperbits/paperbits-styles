@@ -1,6 +1,6 @@
 {
     "name": "@paperbits/styles",
-    "version": "0.1.444",
+    "version": "0.1.445",
     "description": "Paperbits style editors.",
     "author": "Paperbits",
     "license": "MIT",
@@ -16,7 +16,7 @@
         "url": "https://github.com/paperbits/paperbits-styles/issues"
     },
     "dependencies": {
-        "@paperbits/common": "0.1.444",
+        "@paperbits/common": "0.1.445",
         "@simonwep/pickr": "^1.7.4",
         "jss": "^10.4.0",
         "jss-preset-default": "^10.4.0",
