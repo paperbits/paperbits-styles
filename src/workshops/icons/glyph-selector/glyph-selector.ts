@@ -82,7 +82,7 @@ export class GlyphSelector {
         this.working(false);
     }
 
-    public async selectIcon(icon: any): Promise<void> {
+    public selectIcon(icon: any): void {
         if (this.onSelect) {
             this.onSelect(icon);
         }

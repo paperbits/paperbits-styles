@@ -116,8 +116,13 @@ export class GlyphImport {
             .filter(category => category.items.length > 0);
 
         this.categories(filteredCategories);
-        const glyphCount = filteredCategories.map(x => x.items.length).reduce((x, y) => x += y);
+
+        const glyphCount = filteredCategories.length > 0
+            ? filteredCategories.map(x => x.items.length).reduce((x, y) => x += y)
+            : 0;
+
         this.glyphCount(glyphCount);
+
         this.working(false);
     }
 
