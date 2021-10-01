@@ -111,7 +111,7 @@ export class GoogleFonts {
 
         Objects.setValue(fontContract.key, styles, fontContract);
 
-        this.styleService.updateStyles(styles);
+        await this.styleService.updateStyles(styles);
 
         if (this.selectedFont) {
             this.selectedFont(fontContract);

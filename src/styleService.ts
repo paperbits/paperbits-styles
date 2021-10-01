@@ -92,7 +92,7 @@ export class StyleService {
 
         Objects.setValue(`colors/${variationName}`, styles, newVariation);
 
-        this.updateStyles(styles);
+        await this.updateStyles(styles);
 
         return newVariation;
     }
@@ -119,7 +119,7 @@ export class StyleService {
         gradient.displayName = "< Unnamed >";
         Objects.setValue(`gradients/${variationName}`, styles, gradient);
 
-        this.updateStyles(styles);
+        await this.updateStyles(styles);
 
         return gradient;
     }
@@ -148,7 +148,7 @@ export class StyleService {
 
         Objects.setValue(`shadows/${variationName}`, styles, newVariation);
 
-        this.updateStyles(styles);
+        await this.updateStyles(styles);
 
         return newVariation;
     }
@@ -201,7 +201,7 @@ export class StyleService {
 
         styles.components[componentName][variationName] = variation;
 
-        this.updateStyles(styles);
+        await this.updateStyles(styles);
 
         return variation.key;
     }
@@ -216,7 +216,7 @@ export class StyleService {
 
         styles.globals["body"][variationName] = variation;
 
-        this.updateStyles(styles);
+        await this.updateStyles(styles);
 
         return variation;
     }

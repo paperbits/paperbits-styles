@@ -11,15 +11,8 @@ import { FontContract } from "../../contracts/fontContract";
     template: template
 })
 export class FontSelector {
-    @Param()
-    public readonly selectedFont: ko.Observable<FontContract>;
-
-    @Event()
-    public readonly onSelect: (font: FontContract) => void;
-
-    public fonts: ko.ObservableArray<FontContract>;
-
-    public compiledFontStyles: ko.Observable<string>;
+    public readonly fonts: ko.ObservableArray<FontContract>;
+    public readonly compiledFontStyles: ko.Observable<string>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -32,6 +25,12 @@ export class FontSelector {
         this.fonts = ko.observableArray();
         this.selectedFont = ko.observable();
     }
+
+    @Param()
+    public readonly selectedFont: ko.Observable<FontContract>;
+
+    @Event()
+    public readonly onSelect: (font: FontContract) => void;
 
     @OnMounted()
     public async loadAvailableFonts(): Promise<void> {
