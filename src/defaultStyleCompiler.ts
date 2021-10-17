@@ -487,6 +487,15 @@ export class DefaultStyleCompiler implements StyleCompiler {
             }
 
             const styleKey = <string>categoryConfig;
+
+            if (!styleKey) {
+                throw new Error(`Local styles doesn't have "key" property.`);
+            }
+
+            if (typeof styleKey !== "string") {
+                throw new Error(`Local styles key must be a string value.`);
+            }
+
             const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
             if (className) {
