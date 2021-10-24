@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./sizeEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { SizeStylePluginConfig } from "../../contracts";
+import { SizeStylePluginConfig } from "../../plugins";
 
 @Component({
     selector: "size-editor",

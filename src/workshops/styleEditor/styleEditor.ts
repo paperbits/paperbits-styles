@@ -3,7 +3,7 @@ import template from "./styleEditor.html";
 import { EventManager, Events } from "@paperbits/common/events";
 import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
 import { VariationContract } from "@paperbits/common/styles";
-import { BackgroundStylePluginConfig, BoxStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig, TypographyStylePluginConfig } from "../../contracts";
+import { BackgroundStylePluginConfig, BoxStylePluginConfig, ShadowStylePluginConfig, SizeStylePluginConfig, TypographyStylePluginConfig } from "../../plugins";
 import { AnimationStylePluginConfig } from "../../plugins/animation";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";

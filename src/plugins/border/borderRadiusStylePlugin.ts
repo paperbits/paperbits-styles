@@ -1,6 +1,6 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
-import { BorderRadiusStylePluginConfig } from "../../contracts";
+import { BorderRadiusStylePluginConfig } from "../../plugins";
 import { StyleHelper } from "../../styleHelper";
 
 

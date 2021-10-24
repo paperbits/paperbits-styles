@@ -1,4 +1,5 @@
-import { PrimitiveContract, StylePluginConfig } from "@paperbits/common/styles";
+import { PrimitiveContract } from "@paperbits/common/styles";
+
 
 export interface ShadowContract extends PrimitiveContract {
     /**
@@ -30,8 +31,4 @@ export interface ShadowContract extends PrimitiveContract {
      * Display the shadow inset.
      */
     inset?: boolean;
-}
-
-export interface ShadowStylePluginConfig extends StylePluginConfig {
-    shadowKey: string;
 }

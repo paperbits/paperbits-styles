@@ -1,10 +1,9 @@
-import { BorderStyle } from "./../../contracts/borderContract";
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common/objects";
 import template from "./boxEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BoxStylePluginConfig } from "../../contracts";
-import { StyleHelper } from "../../styleHelper";
+import { BoxStylePluginConfig } from "../../plugins";
+import { BorderStyle } from "../../plugins/border/borderStyle";
 
 
 @Component({

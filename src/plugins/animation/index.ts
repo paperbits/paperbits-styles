@@ -1,2 +1,2 @@
-export * from "./animationContract";
+export * from "../../contracts/animationContract";
 export * from "./animationStylePluginConfig";

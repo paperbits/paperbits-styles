@@ -1,6 +1,6 @@
-import { StylePlugin } from "./stylePlugin";
-import { ContainerStylePluginConfig } from "../contracts";
 import { StyleRule } from "@paperbits/common/styles";
+import { StylePlugin } from "../stylePlugin";
+import { ContainerStylePluginConfig } from "./containerStylePluginConfig";
 
 
 export class ContainerStylePlugin extends StylePlugin {

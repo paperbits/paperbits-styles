@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import template from "./container.html";
 import { Component, OnMounted, Param, Event } from "@paperbits/common/ko/decorators";
-import { ContainerStylePluginConfig } from "../../contracts/containerStylePluginConfig";
+import { ContainerStylePluginConfig } from "../../plugins/container/containerStylePluginConfig";
 
 @Component({
     selector: "container",

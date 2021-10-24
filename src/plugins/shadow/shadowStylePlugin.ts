@@ -1,8 +1,9 @@
 import * as Objects from "@paperbits/common";
-import { StylePlugin } from "./stylePlugin";
-import { ThemeContract, ShadowContract, ShadowStylePluginConfig } from "../contracts";
+import { StylePlugin } from "../stylePlugin";
+import { ThemeContract, ShadowContract } from "../../contracts";
+import { ShadowStylePluginConfig } from "@paperbits/styles/plugins";
 import { StyleRule } from "@paperbits/common/styles";
-import { StyleHelper } from "../styleHelper";
+import { StyleHelper } from "../../styleHelper";
 
 export class ShadowStylePlugin extends StylePlugin {
     private themeContract: ThemeContract;

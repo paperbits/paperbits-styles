@@ -1,6 +1,6 @@
 import { StyleRule } from "@paperbits/common/styles";
 import { StylePlugin } from "../stylePlugin";
-import { MarginStylePluginConfig } from "../../contracts";
+import { MarginStylePluginConfig } from "./marginStylePluginConfig";
 import { StyleHelper } from "../../styleHelper";
 
 

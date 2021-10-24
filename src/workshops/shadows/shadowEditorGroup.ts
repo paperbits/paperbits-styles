@@ -3,7 +3,8 @@ import * as Objects from "@paperbits/common";
 import template from "./shadowEditorGroup.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
-import { ShadowContract, ShadowStylePluginConfig } from "../../contracts/shadowContract";
+import { ShadowStylePluginConfig } from "../../plugins/shadow/shadowStylePluginConfig";
+import { ShadowContract } from "../../contracts/shadowContract";
 
 const inheritLabel = "(Inherit)";
 

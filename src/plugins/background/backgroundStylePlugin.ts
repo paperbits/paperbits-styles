@@ -1,7 +1,8 @@
 import * as Objects from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { StylePlugin } from "../stylePlugin";
-import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, getLinearGradientString, ThemeContract } from "../../contracts";
+import { ColorContract, LinearGradientContract, getLinearGradientString, ThemeContract } from "../../contracts";
+import { BackgroundStylePluginConfig } from "../../plugins";
 import { StyleRule } from "@paperbits/common/styles";
 // import { MediaService } from "@paperbits/common/media";
 

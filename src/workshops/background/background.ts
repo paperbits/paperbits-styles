@@ -7,8 +7,8 @@ import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
 import { Style, StyleSheet } from "@paperbits/common/styles";
 import { StyleService } from "../..";
-import { BackgroundStylePluginConfig, ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
-import { BackgroundStylePlugin } from "../../plugins/background/backgroundStylePlugin";
+import { ColorContract, LinearGradientContract, ThemeContract } from "../../contracts";
+import { BackgroundStylePlugin, BackgroundStylePluginConfig } from "../../plugins";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 
 

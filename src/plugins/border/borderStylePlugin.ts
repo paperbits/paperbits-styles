@@ -1,6 +1,7 @@
 import * as Objects from "@paperbits/common";
 import { StylePlugin } from "../stylePlugin";
-import { BorderStylePluginConfig, ColorContract, ThemeContract } from "../../contracts";
+import {  ColorContract, ThemeContract } from "../../contracts";
+import { BorderStylePluginConfig } from "./borderStylePluginConfig";
 import { StyleRule } from "@paperbits/common/styles";
 import { StyleHelper } from "../../styleHelper";
 

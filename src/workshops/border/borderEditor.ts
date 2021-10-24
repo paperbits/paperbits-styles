@@ -1,8 +1,8 @@
 import * as ko from "knockout";
 import template from "./borderEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
-import { BorderStyle } from "../../contracts/borderContract";
 import { ColorContract } from "../../contracts";
+import { BorderStyle } from "../../plugins/border/borderStyle";
 import { StyleService } from "../..";
 
 @Component({

@@ -24,7 +24,8 @@ import {
     PositionStylePlugin,
     StickToStylePlugin,
     PaddingStylePlugin,
-    TransformStylePlugin
+    TransformStylePlugin,
+    DisplayStylePlugin
 } from "./plugins";
 import { GridStylePlugin } from "./plugins/grid/gridStylePlugin";
 import { GridCellStylePlugin } from "./plugins/grid/gridCellStylePlugin";
@@ -120,6 +121,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["transition"] = new TransitionStylePlugin();
         this.plugins["position"] = new PositionStylePlugin();
         this.plugins["stickTo"] = new StickToStylePlugin();
+        this.plugins["display"] = new DisplayStylePlugin();
     }
 
     public async getStyleSheet(): Promise<StyleSheet> {

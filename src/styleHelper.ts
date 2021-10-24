@@ -4,7 +4,7 @@ import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
-import { CalcExpression, Size } from "./plugins";
+import { CalcExpression, Size } from "./size";
 
 
 class StyleConfigurator {
