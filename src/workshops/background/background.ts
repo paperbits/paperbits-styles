@@ -207,7 +207,7 @@ export class Background {
 
     public onMediaSelected(media: MediaContract): void {
         this.source(media ? `url("${media.downloadUrl}")` : "none");
-        this.sourceKey(media ? media.key : undefined);
+        this.sourceKey(media ? media.key : null);
         this.repeat(this.repeat() || "no-repeat");
         this.size(this.size() || defaultBackgroundSize);
         this.attachment(this.attachment() || defaultBackgroundAttachment);
@@ -218,12 +218,12 @@ export class Background {
 
     public onColorSelected(color: ColorContract): void {
         this.color(color);
-        this.colorKey(color ? color.key : undefined);
+        this.colorKey(color ? color.key : null);
         this.applyChanges();
     }
 
     public onGradientSelected(gradient: LinearGradientContract): void {
-        this.gradientKey(gradient ? gradient.key : undefined);
+        this.gradientKey(gradient ? gradient.key : null);
         this.applyChanges();
     }
 
@@ -251,12 +251,12 @@ export class Background {
                 position: this.position(),
                 size: this.size() !== defaultBackgroundSize
                     ? this.size()
-                    : undefined,
+                    : null,
                 repeat: this.repeat(),
                 attachment: this.attachment() !== defaultBackgroundAttachment
                     ? this.attachment()
-                    : undefined,
-                blend: this.blend() !== defaultBlendMode ? this.blend() : undefined,
+                    : null,
+                blend: this.blend() !== defaultBlendMode ? this.blend() : null,
             });
         }
 

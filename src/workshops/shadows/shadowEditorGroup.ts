@@ -47,7 +47,7 @@ export class ShadowEditorGroup {
 
     public onShadowSelected(shadow: ShadowContract): void {
         this.displayName(shadow ? shadow.displayName : inheritLabel);
-        this.shadowKey(shadow ? shadow.key : undefined);
+        this.shadowKey(shadow ? shadow.key : null);
         this.applyChanges();
     }
 
@@ -59,7 +59,7 @@ export class ShadowEditorGroup {
                 });
             }
             else {
-                this.onUpdate(undefined);
+                this.onUpdate(null);
             }
         }
     }

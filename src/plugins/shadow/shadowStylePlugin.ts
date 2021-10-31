@@ -1,7 +1,7 @@
 import * as Objects from "@paperbits/common";
 import { StylePlugin } from "../stylePlugin";
 import { ThemeContract, ShadowContract } from "../../contracts";
-import { ShadowStylePluginConfig } from "@paperbits/styles/plugins";
+import { ShadowStylePluginConfig } from "../../plugins";
 import { StyleRule } from "@paperbits/common/styles";
 import { StyleHelper } from "../../styleHelper";
 
@@ -27,7 +27,7 @@ export class ShadowStylePlugin extends StylePlugin {
         const blur = StyleHelper.parseValue(contract.blur || 0);
         const spread = StyleHelper.parseValue(contract.spread || 0);
         const color = contract.color || "#000";
-        const inset = contract.inset ? "inset" : undefined;
+        const inset = contract.inset ? "inset" : null;
 
         return [new StyleRule("boxShadow", [offsetX, offsetY, blur, spread, color, inset].join(" "))];
     }

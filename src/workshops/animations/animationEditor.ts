@@ -55,7 +55,7 @@ export class AnimationEditor {
         }
         else {
             this.duration(1);
-            this.iterationCount(undefined);
+            this.iterationCount(null);
             this.displayName(inheritLabel);
         }
 
@@ -66,7 +66,7 @@ export class AnimationEditor {
 
     public onAnimationSelected(animation: AnimationContract): void {
         this.displayName(animation ? animation.displayName : inheritLabel);
-        this.animationKey(animation ? animation.key : undefined);
+        this.animationKey(animation ? animation.key : null);
         this.applyChanges();
     }
 
@@ -82,7 +82,7 @@ export class AnimationEditor {
                 });
             }
             else {
-                this.onUpdate(undefined);
+                this.onUpdate(null);
             }
         }
     }

@@ -19,7 +19,7 @@ export class Transition {
     public readonly enabled: ko.Computed<boolean>;
 
     public timingFunctionOptions: any[] = [
-        { value: undefined, text: "(Inherit)" },
+        { value: null, text: "(Inherit)" },
         { value: "none", text: "None" },
         { value: "ease", text: "Ease" },
         { value: "ease-in", text: "Ease in" },

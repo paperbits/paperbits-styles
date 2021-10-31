@@ -199,7 +199,7 @@ export class StyleHelper {
             throw new Error(`Parameter "pluginName" not specified.`);
         }
 
-        if (!pluginConfig) {
+        if (pluginConfig === undefined) { // null is allowed, it means reset
             throw new Error(`Parameter "pluginConfig" not specified.`);
         }
 

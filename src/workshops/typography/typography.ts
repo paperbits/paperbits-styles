@@ -36,7 +36,7 @@ export class Typography {
     public currentStyle: ko.Computed<string>;
 
     public textTransformOptions: any = [
-        { value: undefined, text: "(Inherit)" },
+        { value: null, text: "(Inherit)" },
         { value: "none", text: "None" },
         { value: "capitalize", text: "Capitalize" },
         { value: "lowercase", text: "Lower-case" },
@@ -44,7 +44,7 @@ export class Typography {
     ];
 
     public textDecorationOptions: any = [
-        { value: undefined, text: "(Inherit)" },
+        { value: null, text: "(Inherit)" },
         { value: "none", text: "None" },
         { value: "underline", text: "Underline" },
         { value: "overline", text: "Overline" },
@@ -169,7 +169,7 @@ export class Typography {
 
     public async onFontSelected(fontContract: FontContract): Promise<void> {
         this.fontName(fontContract ? fontContract.displayName : inheritLabel);
-        this.fontKey(fontContract ? fontContract.key : undefined);
+        this.fontKey(fontContract ? fontContract.key : null);
 
         await this.updateObservables({
             fontKey: this.fontKey(),
@@ -180,12 +180,12 @@ export class Typography {
 
     public onColorSelected(colorContract: ColorContract): void {
         this.colorName(colorContract ? colorContract.displayName : inheritLabel);
-        this.colorKey(colorContract ? colorContract.key : undefined);
+        this.colorKey(colorContract ? colorContract.key : null);
     }
 
     public onShadowSelected(shadowContract: ShadowContract): void {
         this.shadowName(shadowContract ? shadowContract.displayName : inheritLabel);
-        this.shadowKey(shadowContract ? shadowContract.key : undefined);
+        this.shadowKey(shadowContract ? shadowContract.key : null);
     }
 
     public toggleBold(): void {
@@ -221,22 +221,22 @@ export class Typography {
 
     public alignLeft(): void {
         const alignment = this.textAlign();
-        this.textAlign(alignment === "left" ? undefined : "left");
+        this.textAlign(alignment === "left" ? null : "left");
     }
 
     public alignCenter(): void {
         const alignment = this.textAlign();
-        this.textAlign(alignment === "center" ? undefined : "center");
+        this.textAlign(alignment === "center" ? null : "center");
     }
 
     public alignRight(): void {
         const alignment = this.textAlign();
-        this.textAlign(alignment === "right" ? undefined : "right");
+        this.textAlign(alignment === "right" ? null : "right");
     }
 
     public justify(): void {
         const alignment = this.textAlign();
-        this.textAlign(alignment === "justify" ? undefined : "justify");
+        this.textAlign(alignment === "justify" ? null : "justify");
     }
 
     private applyChanges(): void {
