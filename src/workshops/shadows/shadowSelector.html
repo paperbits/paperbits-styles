@@ -2,15 +2,14 @@
     <h1>Shadow</h1>
     <hr />
 
-    <div class="flex flex-column flex-item flex-item-grow fonts" role="listbox" data-bind="scrollable: true, listbox: {}">
-        <a href="#" role="option" class="list-item" title="Clear shadow" data-bind="click: $component.clearShadow, focus: true">
-            <span class="list-item-label">
-                (Inherit)
-            </span>
+    <div class="flex flex-column flex-item flex-item-grow" role="listbox" data-bind="scrollable: true, listbox: {}">
+        <a role="option" class="list-item" title="Clear shadow" data-bind="activate: $component.clearShadow, focus: true">
+            <span class="list-item-label"> (Inherit) </span>
         </a>
+        
         <!-- ko foreach: { data: shadows, as: 'shadow' } -->
-        <a href="#" role="option" class="list-item shadow-box"
-            data-bind="click: $component.selectShadow, css: { selected: shadow.key == $component.selectedShadow() }">
+        <a role="option" class="list-item shadow-box"
+            data-bind="activate: $component.selectShadow, css: { selected: shadow.key == $component.selectedShadow() }">
             <span class="list-item-label" data-bind="text: shadow.displayName"></span>
         </a>
         <!--/ko -->

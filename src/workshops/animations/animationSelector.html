@@ -2,19 +2,16 @@
     <h1>Animation</h1>
     <hr />
 
-    <div class="flex flex-column list">
-        <div class="list" data-bind="scrollable: true">
-            <div class="list-item">
-                <a href="#" title="Clear animation" class="list-item-label" data-bind="click: $component.clearAnimations">
-                    (Inherit)
-                </a>
-            </div>
+    <div role="listbox" class="flex flex-column flex-item flex-item-grow" data-bind="scrollable: true, listbox: {}">
+        <a role="option" class="list-item" title="Clear animation" data-bind="activate: $component.clearAnimations">
+            <span class="list-item-label">(Inherit)</span>
+        </a>
 
-            <!-- ko foreach: { data: animations, as: 'animation' } -->
-            <div class="list-item" data-bind="css: { selected: animation.key == $component.selectedAnimation() }">
-                <a href="#" class="list-item-label" data-bind="click: $component.selectAnimation, text: animation.displayName"></a>
-            </div>
-            <!--/ko -->
-        </div>
+        <!-- ko foreach: { data: animations, as: 'animation' } -->
+        <a role="option" class="list-item"
+            data-bind="activate: $component.selectAnimation, css: { selected: animation.key == $component.selectedAnimation() }">
+            <span class="list-item-label" data-bind="text: animation.displayName"></span>
+        </a>
+        <!--/ko -->
     </div>
 </div>
