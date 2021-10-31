@@ -246,11 +246,11 @@ export class Typography {
 
         this.onUpdate({
             fontKey: this.fontKey(),
-            fontSize: this.fontSize() ? parseInt(this.fontSize()) : undefined,
+            fontSize: this.fontSize(),
             fontWeight: this.fontWeight(),
             fontStyle: this.fontStyle(),
-            lineHeight: this.lineHeight() || null,
-            letterSpacing: this.letterSpacing() || null,
+            lineHeight: this.lineHeight(),
+            letterSpacing: this.letterSpacing(),
             colorKey: this.colorKey(),
             shadowKey: this.shadowKey(),
             textAlign: this.textAlign(),

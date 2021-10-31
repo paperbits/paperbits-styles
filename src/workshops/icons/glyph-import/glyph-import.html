@@ -10,17 +10,16 @@
         </div>
     </div>
 
-    <div class="flex-item flex-item-grow" role="list" data-bind="scrollable: true">
+    <div role="listbox" class="flex-item flex-item-grow" data-bind="scrollable: true, listbox: {}">
         <!-- ko foreach: { data: categories, as: 'category' } -->
         <div class="flex-item">
             <!-- ko if: $component.showFontNames -->
             <h2 class="text-center" data-bind="text: category.name"></h2>
             <!-- /ko -->
             <!-- ko if: category.items.length > 0 -->
-            <div class="flex flex-row flex-wrap flex-item flex-item-grow" role="list">
+            <div class="flex flex-row flex-wrap flex-item flex-item-grow">
                 <!-- ko foreach: { data: category.items, as: 'item' } -->
-                <a href="#" data-bind="click: $component.selectGlyph, attr: { title: item.name }"
-                    class="list-item list-item-icon">
+                <a role="option" data-bind="activate: $component.selectGlyph, attr: { title: item.name }" class="list-item list-item-icon">
                     <canvas width="50" height="50" class="item" data-bind="fontGlyph: item"></canvas>
                     <div class="text-overflow" data-bind="text: item.name"></div>
                 </a>

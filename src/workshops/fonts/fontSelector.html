@@ -4,14 +4,14 @@
     <h1>Font family</h1>
     <hr />
 
-    <div class="flex flex-column flex-item flex-item-grow fonts" role="list" data-bind="scrollable: true">
-        <a href="#" role="listitem" class="list-item font-box" title="Clear font" data-bind="click: $component.clearFonts, focus: true">
+    <div class="flex flex-column flex-item flex-item-grow fonts" role="listbox" data-bind="scrollable: true, listbox: {}">
+        <a href="#" role="option" class="list-item font-box" title="Clear font" data-bind="click: $component.clearFonts, focus: true">
             <span class="font">
                 (Inherit)
             </span>
         </a>
         <!-- ko foreach: { data: fonts, as: 'font' } -->
-        <a href="#" role="listitem" class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, click: $component.selectFont">
+        <a href="#" role="option" class="list-item font-box" data-bind="css: { selected: font === $component.selectedFont() }, click: $component.selectFont">
             <span class="font" data-bind="text: font.displayName, style: { 'font-family': font.family }"></span>
         </a>
         <!--/ko -->

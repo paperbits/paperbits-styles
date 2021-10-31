@@ -11,23 +11,17 @@
 
 <div class="form-group">
     <label for="fontSize">Font size</label>
-    <input id="fontSize" type="number" class="form-control" placeholder="(Inherit)" min="5" max="100"
-        data-bind="textInput: $component.fontSize" />
-    <!-- input id="fontSize" type="range" class="form-control" min="5" max="100" data-bind="textInput: $component.fontSize" /-->
+    <size-input params="{ size: $component.fontSize, allowUnits: 'px,em,rem' }"></size-input>
 </div>
 
 <div class="form-group">
     <label for="lineHeight">Line height</label>
-    <input id="lineHeight" type="number" class="form-control" placeholder="(Inherit)" min="1" max="100"
-        data-bind="textInput: $component.lineHeight" />
-    <!-- <input id="lineHeight" type="range" class="form-control" min="5" max="100" data-bind="textInput: $component.lineHeight" /> -->
+    <size-input params="{ size: $component.lineHeight, allowUnits: 'px,em,rem' }"></size-input>
 </div>
 
 <div class="form-group">
     <label for="letterSpacing">Letter spacing</label>
-    <input id="letterSpacing" type="number" class="form-control" placeholder="(Inherit)" min="1" max="100"
-        data-bind="textInput: $component.letterSpacing" />
-    <!-- <input id="letterSpacing" type="range" class="form-control" min="0" max="20" data-bind="textInput: $component.letterSpacing" /> -->
+    <size-input params="{ size: $component.letterSpacing, allowUnits: 'px' }"></size-input>
 </div>
 
 <div class="form-group">

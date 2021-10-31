@@ -48,6 +48,7 @@ import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { FontManager } from "./openType";
 import { FontEditor } from "./workshops/fonts/fontEditor";
+import { SizeInput } from "./workshops/size/size-input";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -55,6 +56,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("glyphSelector", GlyphSelector);
         injector.bind("glyphImport", GlyphImport);
         injector.bind("glyphInput", GlyphInput);
+        injector.bind("sizeInput", SizeInput);
         injector.bind("googleFonts", GoogleFonts);
         injector.bind("typography", Typography);
         injector.bind("container", Container);

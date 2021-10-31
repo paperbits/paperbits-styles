@@ -1,0 +1,6 @@
+<div class="toolbox">
+    <div role="listbox" data-bind="foreach: { data: unitsOptions, as: 'unitsOption' }, listbox: {}">
+        <a href="#" role="option" class="list-item" data-bind="text: unitsOption.text, activate: $parent.onUnitsChange">
+        </a>
+    </div>
+</div>

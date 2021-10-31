@@ -2,16 +2,16 @@
     <h1>Color</h1>
     <hr/>
 
-    <div class="palette" role="list">
+    <div class="palette" role="listbox" data-bind="listbox: {}">
         <div class="color-box" data-bind="css: { selected: !$component.selectedColorKey() }, tooltip: 'Clear color'">
-            <a href="#" role="listitem" class="color" data-bind="click: $component.clearColors, focus: true">
+            <a role="option" class="color" data-bind="click: $component.clearColors, focus: true">
                 <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
             </a>
         </div>
 
         <!-- ko foreach: { data: colors, as: 'color' } -->
         <div class="color-box" data-bind="css: { selected: color.key === $component.selectedColorKey() }, tooltip: color.displayName">
-            <a href="#" role="listitem" class="color pseudo-transparent-bckg" data-bind="click: $component.selectColor">
+            <a role="option" class="color pseudo-transparent-bckg" data-bind="click: $component.selectColor">
                 <span class="fit" data-bind="style: { background: color.value }"></span>
             </a>
         </div>

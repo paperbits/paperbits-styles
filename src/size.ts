@@ -1,14 +1,59 @@
-export enum SizeUnits {
-    percents = "%",
-    pixels = "px",
-    fractions = "fr",
-    inches = "in"
+export const SizeUnits = {
+    /**
+     * Percents.
+     */
+    percents: "%",
+
+    /**
+     * Pixels.
+     */
+    pixels: "px",
+
+    /**
+     * Fractions.
+     */
+    Fractions: "fr",
+
+    /**
+     * Inches.
+     */
+    Inches: "in",
+
+    /**
+     * Current font size.
+     */
+    Em: "em",
+
+    /**
+     * Root font size.
+     */
+    Rem: "rem",
+
+    /**
+     * Viewport height. 1vh is 1% of the viewport height.
+     */
+    Vh: "vh",
+
+    /**
+     * viewport width. 1vw is 1% of the viewport width.
+     */
+    Vw: "vw",
+
+    /**
+     * viewport minimum. Shortest dimension (1vw or 1vh).
+     */
+    VMin: "vmin",
+
+    /**
+     * Viewport maximum. Longest dimension (1vw or 1vh).
+     */
+    VMax: "vmax"
 }
 
 export class Size {
     constructor(
         public value: number,
-        public units: SizeUnits = SizeUnits.pixels
+        public units: string = SizeUnits.pixels
     ) { }
 
     public static isSizeExpr(expression: unknown): boolean {
@@ -17,7 +62,7 @@ export class Size {
         }
 
         if (typeof expression === "string") {
-            return /^-?\d*(%|px|fr|in)?$/.test(expression);
+            return /^-?\d*(%|px|fr|in|em|rem|vw|vw|vmin|vmax)?$/.test(expression);
         }
 
         return false;
@@ -33,7 +78,7 @@ export class Size {
         }
 
         let num: string;
-        let units: SizeUnits;
+        let units: string;
 
         if (/^-?\d*%$/.test(value)) {
             num = value.replace("%", "");
@@ -45,11 +90,35 @@ export class Size {
         }
         else if (/^-?\d*fr$/.test(value)) {
             num = value.replace("fr", "");
-            units = SizeUnits.fractions;
+            units = SizeUnits.Fractions;
         }
         else if (/^-?\d*in$/.test(value)) {
             num = value.replace("in", "");
-            units = SizeUnits.inches;
+            units = SizeUnits.Inches;
+        }
+        else if (/^-?\d*em$/.test(value)) {
+            num = value.replace("em", "");
+            units = SizeUnits.Em;
+        }
+        else if (/^-?\d*rem$/.test(value)) {
+            num = value.replace("rem", "");
+            units = SizeUnits.Rem;
+        }
+        else if (/^-?\d*vw$/.test(value)) {
+            num = value.replace("vw", "");
+            units = SizeUnits.Vw;
+        }
+        else if (/^-?\d*vh$/.test(value)) {
+            num = value.replace("vh", "");
+            units = SizeUnits.Vh;
+        }
+        else if (/^-?\d*vmin$/.test(value)) {
+            num = value.replace("vmin", "");
+            units = SizeUnits.VMin;
+        }
+        else if (/^-?\d*vmax$/.test(value)) {
+            num = value.replace("vmax", "");
+            units = SizeUnits.VMax;
         }
         else if (/^-?\d*$/.test(value)) {
             num = value;

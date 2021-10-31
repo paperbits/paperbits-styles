@@ -17,11 +17,11 @@
 
     <style data-bind="html: compiledFontStyles"></style>
 
-    <div class="flex-item flex-item-grow list" role="list" data-bind="scrollable: true">
+    <div class="flex-item flex-item-grow list" role="listbox" data-bind="scrollable: true, listbox: {}">
         <!-- ko if: $component.icons().length > 0 -->
-        <div class="flex flex-row flex-wrap flex-item flex-item-grow" role="list">
+        <div class="flex flex-row flex-wrap flex-item flex-item-grow">
             <!-- ko foreach: { data:  $component.icons, as: 'icon' } -->
-            <a href="#" class="list-item list-item-icon" data-bind="click: $component.selectIcon">
+            <a role="option" class="list-item list-item-icon" data-bind="activate: $component.selectIcon">
                 <i class="icon" data-bind="css: icon.class"></i>
                 <div data-bind="text: icon.displayName"></div>
             </a>

@@ -9,13 +9,13 @@
     </div>
 </div>
 
-<div class="flex flex-column flex-item flex-item-grow fonts" role="list"
+<div class="flex flex-column flex-item flex-item-grow fonts" role="listbox"
     data-bind="scrollable: { onEndReach: $component.loadNextPage }" aria-live="polite">
     <!-- ko foreach: { data: fonts, as: 'font' } -->
     <div class="list-item font-box"
         data-bind="css: { selected: font === $component.selectedFont() }, scrolledIntoView: { onInView: font.loadPreview }">
         <style data-bind="jss: preview"></style>
-        <a href="#" role="listitem" class="font"
+        <a href="#" role="option" class="font"
             data-bind="click: $component.selectFont, text: font.family, style: { 'font-family': font.family }">
         </a>
     </div>
