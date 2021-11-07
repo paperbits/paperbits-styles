@@ -25,7 +25,7 @@ class PluginStyleConfigurator {
         private readonly name: string) { }
 
     public setConfig(value: StylePluginConfig, viewport?: string): void {
-        StyleHelper.setPluginConfigForLocalStyles(this.localStyles, this.name, value, viewport);
+        StyleHelper.setPluginConfigForLocalStyles(this.localStyles, this.name, value || null, viewport);
     }
 
     public getConfig<TStylePlugin>(viewport?: string): TStylePlugin {
@@ -120,32 +120,9 @@ export class StyleHelper {
      * @param viewport Requested viewport. If viewport not specified, the style gets applied to all viewports.
      */
     public static setPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
-        if (!localStyles) {
-            throw new Error(`Parameter "localStyles" not specified.`);
-        }
-
-        if (!pluginName) {
-            throw new Error(`Parameter "pluginName" not specified.`);
-        }
-
-        const instance = localStyles.instance || {};
-        let plugin = Objects.getObjectAt(pluginName, instance) || {};
-
-        if (viewport) {
-            plugin[viewport] = pluginConfig;
-        }
-        else {
-            plugin = pluginConfig;
-        }
-
-        Objects.setValue(pluginName, instance, plugin);
-        localStyles.instance = instance;
-
-        if (!instance.key) {
-            instance.key = Utils.randomClassName();
-        }
-
-        Objects.cleanupObject(localStyles, true, true);
+        const pluginBag = localStyles.instance || {};
+        StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig, viewport);
+        localStyles.instance = pluginBag;
     }
 
     public static getPluginConfig(pluginBag: PluginBag, pluginName: string, viewport: string = "xs"): StylePluginConfig {
@@ -203,7 +180,7 @@ export class StyleHelper {
             throw new Error(`Parameter "pluginConfig" not specified.`);
         }
 
-        let plugin = pluginBag[pluginName] || {};
+        let plugin = Objects.getObjectAt(pluginName, pluginBag) || {};
 
         if (viewport) {
             plugin[viewport] = pluginConfig;
@@ -212,7 +189,7 @@ export class StyleHelper {
             plugin = pluginConfig;
         }
 
-        pluginBag[pluginName] = plugin;
+        Objects.setValue(pluginName, pluginBag, plugin);
 
         if (!pluginBag.key) {
             pluginBag.key = Utils.randomClassName();
