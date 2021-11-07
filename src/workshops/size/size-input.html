@@ -1,5 +1,5 @@
 <div class="input-group" data-bind="keydown: onKeyDown">
-    <input type="number" min="0" class="form-control" placeholder="(Inherit)" data-bind="textInput: value" />
+    <input type="number" min="0" class="form-control" placeholder="(Inherit)" data-bind="textInput: value, attr: { id: $component.id }" />
 
     <!-- ko if: unitSelectionAllowed -->
     <button tabindex="0" class="btn input-group-btn" data-bind="balloon: { template: { name: 'units', data: $component }, closeOn: $component.onDismiss }">

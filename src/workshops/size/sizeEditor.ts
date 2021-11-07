@@ -34,7 +34,7 @@ export class SizeEditor {
     public readonly features: string;
 
     @Param()
-    public readonly units: string;
+    public readonly allowUnits: string;
 
     @Event()
     public readonly onUpdate: (contract: SizeStylePluginConfig) => void;
@@ -42,8 +42,6 @@ export class SizeEditor {
     constructor() {
         this.sizeConfig = ko.observable();
         this.features = "height,minMaxHeight,width,minMaxWidth";
-        this.units = "px";
-
         this.heightEnabled = ko.observable();
         this.itemHeight = ko.observable();
         this.widthEnabled = ko.observable();
@@ -62,7 +60,6 @@ export class SizeEditor {
     @OnMounted()
     public init(): void {
         const features = this.features.split(",");
-        const units = this.units.split(",");
         this.heightEnabled(features.includes("height"));
         this.minMaxHeightEnabled(features.includes("minMaxHeight"));
         this.widthEnabled(features.includes("width"));

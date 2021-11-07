@@ -36,6 +36,9 @@ export class SizeInput {
     }
 
     @Param()
+    public id: string;
+
+    @Param()
     public size: ko.Observable<string>;
 
     @Param()
@@ -46,7 +49,7 @@ export class SizeInput {
 
     @OnMounted()
     public initialize(): void {
-        const allowedUnits = this.allowUnits ? this.allowUnits.split(",") : ["px"];
+        const allowedUnits = !!this.allowUnits ? this.allowUnits.split(",") : ["px"];
         allowedUnits.forEach(x => this.unitsOptions.push({ value: x, text: x }));
 
         if (allowedUnits.length > 1) {
