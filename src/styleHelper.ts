@@ -5,6 +5,8 @@ import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
 import { CalcExpression, Size } from "./size";
+import { Display } from "./plugins";
+import { ViewManager } from "@paperbits/common/ui";
 
 
 class StyleConfigurator {
@@ -121,7 +123,7 @@ export class StyleHelper {
      */
     public static setPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
         const pluginBag = localStyles.instance || {};
-        StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig, viewport);
+        StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig || null, viewport);
         localStyles.instance = pluginBag;
     }
 
@@ -276,5 +278,31 @@ export class StyleHelper {
         const calcExpr = new CalcExpression();
         calcExpr.members = sizes;
         return calcExpr.toString();
+    }
+
+    public static setVisibility(localStyles: LocalStyles, newViewportValue: string, viewport: string, viewManager: ViewManager): void {
+        const displayStyle = localStyles?.instance?.display;
+
+        const displayOptions = [
+            { value: null, text: "(Inherit)" },
+            { value: Display.Inline, text: "Visible" },
+            { value: Display.None, text: "Hidden" }
+        ];
+
+        let otherValues = [];
+
+        const newState = displayStyle ? Objects.clone(displayStyle) : {};
+        newState[viewport] = newViewportValue;
+
+        otherValues = Object.values(newState);
+
+        const optionText = displayOptions.find(x => x.value === newViewportValue).text;
+
+        if (otherValues.includes(Display.None) && !otherValues.includes(Display.Inline) && !otherValues.includes(Display.Block)) {
+            viewManager.notifyError("Visibility", `Element should be set "Visible" on at least one other screen size, before you can set "${optionText}" on current one.`);
+            return;
+        }
+
+        StyleHelper.setPluginConfigForLocalStyles(localStyles, "display", newViewportValue, viewport);
     }
 }

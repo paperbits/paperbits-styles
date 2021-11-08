@@ -116,7 +116,6 @@ export class FontManager {
                     const glyphInFont = font.glyphs.get(index);
 
                     if (glyphInFont.unicode !== unicode) {
-                        console.log(glyphInFont.unicode);
                         glyphs.push(glyphInFont);
                         advanceWidths.push(glyphInFont.advanceWidth);
                     }

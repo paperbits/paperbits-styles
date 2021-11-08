@@ -2,7 +2,7 @@ import { StylePluginConfig } from "@paperbits/common/styles";
 
 
 export enum Display {
-    Inline = "inline",
+    Inline = "inline-block",
     Block = "block",
     None = "none"
 }
