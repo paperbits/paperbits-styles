@@ -9,6 +9,6 @@ export class StylesWorkshopSection implements ToolButton {
 
     public onActivate(): void {
         this.viewManager.clearJourney();
-        this.viewManager.setHost({ name: "style-guide" });
+        this.viewManager.setHost({ name: "style-guide" }, true);
     }
 }
