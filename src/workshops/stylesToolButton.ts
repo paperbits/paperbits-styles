@@ -1,9 +1,11 @@
 import { ToolButton, ViewManager } from "@paperbits/common/ui";
 
-export class StylesWorkshopSection implements ToolButton {
+const helpText = "<h1>Styles</h1><p>Manage your website global styles.</p>";
+
+export class StylesToolButton implements ToolButton {
     public readonly iconClass: string = "paperbits-icon paperbits-palette";
     public readonly title: string = "Styles";
-    public readonly helpText: string = "Manage website global styles.";
+    public readonly tooltip: string = helpText;
 
     constructor(private readonly viewManager: ViewManager) { }
 

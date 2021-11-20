@@ -26,7 +26,7 @@ import { Typography } from "./workshops/typography";
 import { Background } from "./workshops/background";
 import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleSheet";
 import { StylePlugin } from "./plugins";
-import { StylesWorkshopSection } from "./workshops/stylesSection";
+import { StylesToolButton } from "./workshops/stylesToolButton";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
 import { StylableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleable";
 import { ShadowPreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.shadowPreview";
@@ -93,7 +93,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("autostart", StylableBindingHandler);
         injector.bindToCollection("autostart", ShadowPreviewBindingHandler);
-        injector.bindToCollection("workshopSections", StylesWorkshopSection);
+        injector.bindToCollection("workshopSections", StylesToolButton);
         injector.bindToCollection("autostart", StyledBindingHandler);
         injector.bindToCollection("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
     }
