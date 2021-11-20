@@ -9,9 +9,9 @@
     </div>
 </div>
 
-<div class="flex flex-column flex-item flex-item-grow fonts" role="listbox" data-bind="scrollable: { onEndReach: $component.loadNextPage }, listbox: {}">
+<div class="flex flex-column flex-item flex-item-grow fonts" role="listbox" data-bind="scrollable: { onEndReach: $component.loadNextPage }, listbox: { onSelect: $component.selectFont }">
     <!-- ko foreach: { data: fonts, as: 'font' } -->
-    <div role="option" class="list-item font-box" data-bind="activate: $component.selectFont, scrolledIntoView: { onInView: font.loadPreview }">
+    <div role="option" class="list-item font-box" data-bind="scrolledIntoView: { onInView: font.loadPreview }">
         <style data-bind="jss: preview"></style>
         <div class="font" data-bind="text: font.family, style: { 'font-family': font.family }"></div>
     </div>
