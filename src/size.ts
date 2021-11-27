@@ -62,7 +62,7 @@ export class Size {
         }
 
         if (typeof expression === "string") {
-            return /^-?\d*(%|px|fr|in|em|rem|vw|vw|vmin|vmax)?$/.test(expression);
+            return /^-?(\d*\.)?\d*(%|px|fr|in|em|rem|vw|vw|vmin|vmax)?$/.test(expression);
         }
 
         return false;
@@ -80,52 +80,52 @@ export class Size {
         let num: string;
         let units: string;
 
-        if (/^-?\d*%$/.test(value)) {
+        if (/^-?(\d*\.)?\d*%$/.test(value)) {
             num = value.replace("%", "");
             units = SizeUnits.percents;
         }
-        else if (/^-?\d*px$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*px$/.test(value)) {
             num = value.replace("px", "");
             units = SizeUnits.pixels;
         }
-        else if (/^-?\d*fr$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*fr$/.test(value)) {
             num = value.replace("fr", "");
             units = SizeUnits.Fractions;
         }
-        else if (/^-?\d*in$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*in$/.test(value)) {
             num = value.replace("in", "");
             units = SizeUnits.Inches;
         }
-        else if (/^-?\d*em$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*em$/.test(value)) {
             num = value.replace("em", "");
             units = SizeUnits.Em;
         }
-        else if (/^-?\d*rem$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*rem$/.test(value)) {
             num = value.replace("rem", "");
             units = SizeUnits.Rem;
         }
-        else if (/^-?\d*vw$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*vw$/.test(value)) {
             num = value.replace("vw", "");
             units = SizeUnits.Vw;
         }
-        else if (/^-?\d*vh$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*vh$/.test(value)) {
             num = value.replace("vh", "");
             units = SizeUnits.Vh;
         }
-        else if (/^-?\d*vmin$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*vmin$/.test(value)) {
             num = value.replace("vmin", "");
             units = SizeUnits.VMin;
         }
-        else if (/^-?\d*vmax$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*vmax$/.test(value)) {
             num = value.replace("vmax", "");
             units = SizeUnits.VMax;
         }
-        else if (/^-?\d*$/.test(value)) {
+        else if (/^-?(\d*\.)?\d*$/.test(value)) {
             num = value;
             units = SizeUnits.pixels; // assigning "px" as default units
         }
 
-        const val = parseInt(num);
+        const val = parseFloat(num);
 
         return new Size(val, units);
     }
