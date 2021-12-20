@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { StyleHelper } from "./../src/styleHelper";
 import { LocalStyles, Breakpoints } from "@paperbits/common/styles";
-import { TypographyStylePluginConfig } from "../src/contracts";
-import { CalcExpression, Size } from "../src/plugins";
+import { TypographyStylePluginConfig } from "../src/plugins";
+import { CalcExpression, Size } from "../src/size";
 
 
 describe("Style helper", async () => {
@@ -31,7 +31,29 @@ describe("Style helper", async () => {
         expect(stylePluginConfigMd).to.equal(null);
     });
 
-    it("Sets local styles properly", async () => {
+    it("Sets and collapses nulls properly.", () => {
+        const sizeConfigXs = 100;
+        const backgroundConfigXs = 300;
+        const appearanceVariationKey = "components/picture/default";
+
+        const localStyles: LocalStyles = {
+            instance: {
+                size: {
+                    xs: sizeConfigXs
+                },
+                background: {
+                    xs: backgroundConfigXs
+                }
+            },
+            appearance: appearanceVariationKey
+        };
+
+        // if there is no non-null "size" props left, the "size" itself must become "null".
+        StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", null, "xs");
+        expect(localStyles.instance.size === null);
+    });
+
+    it("Sets local styles properly", () => {
         const sizeConfigXs = 100;
         const sizeConfigNew = 200;
         const backgroundConfigXs = 300;
@@ -49,13 +71,15 @@ describe("Style helper", async () => {
             appearance: appearanceVariationKey
         };
 
-        StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", sizeConfigNew, "md"); // applying to specific viewport
+        /* applying config to specific viewport */
+        StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", sizeConfigNew, "md");
         expect(localStyles.instance.size.md).to.equal(sizeConfigNew);
         expect(localStyles.instance.size.xs).to.equal(sizeConfigXs);
         expect(localStyles.instance.background.xs).to.equal(backgroundConfigXs);
         expect(localStyles.appearance).to.equal(appearanceVariationKey);
 
-        StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", sizeConfigNew); // applying to all viewports
+        /* applying config to all viewports */
+        StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", sizeConfigNew);
         expect(localStyles.instance.size).to.equal(sizeConfigNew);
         expect(localStyles.instance.size.md).to.equal(undefined);
         expect(localStyles.instance.size.xs).to.equal(undefined);

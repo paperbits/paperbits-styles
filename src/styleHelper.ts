@@ -123,6 +123,7 @@ export class StyleHelper {
      */
     public static setPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
         const pluginBag = localStyles.instance || {};
+
         StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig || null, viewport);
         localStyles.instance = pluginBag;
     }
@@ -164,10 +165,10 @@ export class StyleHelper {
 
     /**
      * Updates local styles configuration depending on specified viewport. If viewport not specified, the style gets applied to all viewports.
-     * @param pluginBag Local styles object.
-     * @param pluginName Name of the style plugin, e.g. "background".
-     * @param pluginConfig Style plugin configuration object.
-     * @param viewport Requested viewport. If viewport not specified, the style gets applied to all viewports.
+     * @param pluginBag - Local styles object.
+     * @param pluginName - Name of the style plugin, e.g. "background".
+     * @param pluginConfig - Style plugin configuration object.
+     * @param viewport - Requested viewport. If viewport not specified, the style gets applied to all viewports.
      */
     public static setPluginConfig(pluginBag: PluginBag, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
         if (!pluginBag) {
@@ -182,22 +183,22 @@ export class StyleHelper {
             throw new Error(`Parameter "pluginConfig" not specified.`);
         }
 
-        let plugin = Objects.getObjectAt(pluginName, pluginBag) || {};
+        let originalPluginConfig = Objects.getObjectAt(pluginName, pluginBag) || {};
 
         if (viewport) {
-            plugin[viewport] = pluginConfig;
+            originalPluginConfig[viewport] = pluginConfig;
         }
         else {
-            plugin = pluginConfig;
+            originalPluginConfig = pluginConfig;
         }
 
-        Objects.setValue(pluginName, pluginBag, plugin);
+        Objects.setValue(pluginName, pluginBag, originalPluginConfig);
 
         if (!pluginBag.key) {
             pluginBag.key = Utils.randomClassName();
         }
 
-        Objects.cleanupObject(pluginBag, true, true);
+        Objects.cleanupObject(pluginBag, { collapseNulls: true });
         // this.optimizePluginConfig(pluginBag);
     }
 

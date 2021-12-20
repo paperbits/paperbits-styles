@@ -75,8 +75,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
             console.error("Styles provider is not set!");
         }
 
-        const result = this.styles || await this.styleService.getStyles();
-        Objects.cleanupObject(result, true);
+        let result = this.styles || await this.styleService.getStyles();
+        result = Objects.clone(result); // To drop any object references
+        Objects.cleanupObject(result, { removeNulls: true });
 
         return result;
     }
@@ -129,6 +130,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
+
         const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
         styleSheet.fontFaces.push(...fontFaces);
@@ -509,6 +511,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
     }
 
     public async getStyleModelAsync(localStyles: LocalStyles, styleManager: StyleManager): Promise<StyleModel> {
+        if (!localStyles) {
+            throw new Error(`Parameter "localStyles" not specified.`);
+        }
+
+        localStyles = Objects.clone(localStyles); // To drop any object references
+        Objects.cleanupObject(localStyles, { removeNulls: true });
+
         const classNames = [];
         let variationStyle: Style;
         let key;
