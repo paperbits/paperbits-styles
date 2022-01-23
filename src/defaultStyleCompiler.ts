@@ -131,12 +131,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
     private generateInputGroup(formControlVariation: VariationContract): VariationBagContract {
         const inputGroup: any = {
             default: {
-                margin: {
-                    bottom: 30,
-                    left: 0,
-                    right: 0,
-                    top: 0
-                },
+                margin: formControlVariation.margin,
                 components: {
                     formControl: {
                         default: {
@@ -180,11 +175,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
 
+        this.generateAdditionalStyle(themeContract.components);
+
+        Objects.cleanupObject(themeContract, { collapseNulls: true });
+
         const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
         styleSheet.fontFaces.push(...fontFaces);
-
-        this.generateAdditionalStyle(themeContract.components);
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
@@ -311,6 +308,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
             const pluginConfig = variationConfig[pluginName];
 
+            if (!pluginConfig) {
+                throw new Error(`Plugin "${pluginName}" not defined for "${variationName}" variation of "${componentName}" component.`);
+            }
+
             if (!this.isResponsive(pluginConfig)) {
                 const rules = await plugin.configToStyleRules(pluginConfig);
                 resultStyle.addRules(rules);
@@ -388,15 +389,19 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return resultStyle;
     }
 
-    public getVariationClassNames(variations: VariationBagContract, componentName: string, variationName: string = null): string[] {
+    public getVariationClassNames(variation: VariationBagContract, componentName: string, variationName: string = null): string[] {
         const classNames = [];
 
         if (!variationName) {
             variationName = "default";
         }
 
-        for (const pluginName of Object.keys(variations)) {
-            const pluginConfig = variations[pluginName];
+        for (const pluginName of Object.keys(variation)) {
+            const pluginConfig = variation[pluginName];
+
+            if (!pluginConfig) {
+                throw new Error(`Plugin "${pluginName}" not defined for "${variationName}" variation of "${componentName}" component.`);
+            }
 
             if (this.isResponsive(pluginConfig)) {
                 for (const breakpoint of Object.keys(BreakpointValues)) {
