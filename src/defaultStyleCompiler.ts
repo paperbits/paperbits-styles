@@ -40,7 +40,9 @@ import {
     VariationBagContract,
     StateBagContract,
     LocalStyles,
-    PluginBag
+    PluginBag,
+    ComponentBagContract,
+    VariationContract
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
@@ -125,6 +127,53 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["display"] = new DisplayStylePlugin();
     }
 
+    // TODO: Move to specialized place (in paperbits-forms)
+    private generateInputGroup(formControlVariation: VariationContract): VariationBagContract {
+        const inputGroup: any = {
+            default: {
+                margin: {
+                    bottom: 30,
+                    left: 0,
+                    right: 0,
+                    top: 0
+                },
+                components: {
+                    formControl: {
+                        default: {
+                            margin: {
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                top: 0
+                            }
+                        }
+                    },
+                    inputGroupAddon: {
+                        default: {
+                            padding: formControlVariation.padding,
+                            borderRadius: formControlVariation.borderRadius,
+                            typography: formControlVariation.typography
+                        }
+                    }
+                }
+            }
+        };
+
+        return inputGroup;
+    }
+
+    // TODO: Move to specialized place (in paperbits-forms)
+    private generateAdditionalStyle(components: ComponentBagContract): void {
+        const formControlVariation = components.formControl?.default;
+
+        if (!formControlVariation) {
+            return;
+        }
+
+        const inputGroup = this.generateInputGroup(formControlVariation);
+        components.inputGroup = inputGroup;
+    }
+
     public async getStyleSheet(): Promise<StyleSheet> {
         await this.initializePlugins();
 
@@ -134,6 +183,8 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const fontsPlugin = new FontsStylePlugin(this.permalinkResolver, themeContract);
         const fontFaces = await fontsPlugin.contractToFontFaces();
         styleSheet.fontFaces.push(...fontFaces);
+
+        this.generateAdditionalStyle(themeContract.components);
 
         if (themeContract.components) {
             for (const componentName of Object.keys(themeContract.components)) {
