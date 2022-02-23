@@ -16,7 +16,7 @@ export class StylePreviewBindingHandler {
 
                 let styleConfig;
 
-                if (typeof config === "string") {
+                if (typeof config === "string") { // means style key
                     styleConfig = await this.styleService.getStyleByKey(config);
                 }
                 else {
