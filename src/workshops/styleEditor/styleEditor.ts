@@ -58,7 +58,10 @@ export class StyleEditor {
     @OnMounted()
     public initialize(): void {
         this.styleName(this.elementStyle.displayName);
-        this.allowBlockStyles(!this.elementStyle.key.startsWith("globals/body"));
+
+        const isBodyStyle = this.elementStyle.key?.startsWith("globals/body");
+
+        this.allowBlockStyles(!isBodyStyle);
         this.updateObservables();
 
         const states = this.elementStyle.allowedStates;
