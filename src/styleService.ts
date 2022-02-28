@@ -60,7 +60,7 @@ export class StyleService {
         styleKey = styleKey.trim();
 
         if (!StylePrimitives.some(x => styleKey.startsWith(`${x}/`))) {
-            throw new Error(`Unknown style premitive: "${styleKey}".`);
+            throw new Error(`Unknown style primitive: "${styleKey}".`);
         }
 
         const styles = await this.getStyles();
@@ -423,4 +423,8 @@ export class StyleService {
         const textStylesVariations = await this.getVariations("globals", "body");
         return this.sortByDisplayName(textStylesVariations);
     }
+
+    // public async createStyle(definition: StyleDefinition): any {
+    //     return null;
+    // }
 }
