@@ -49,7 +49,6 @@ import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { FontManager } from "./openType";
 import { FontEditor } from "./workshops/fonts/fontEditor";
 import { SizeInput } from "./workshops/size/size-input";
-import { StylableLocallyBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleable2";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -93,7 +92,6 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
         injector.bindToCollection("autostart", StylableBindingHandler);
-        injector.bindToCollection("autostart", StylableLocallyBindingHandler);
         injector.bindToCollection("autostart", ShadowPreviewBindingHandler);
         injector.bindToCollection("workshopSections", StylesToolButton);
         injector.bindToCollection("autostart", StyledBindingHandler);
