@@ -7,10 +7,12 @@
 
 import { IInjectorModule, IInjector } from "@paperbits/common/injection";
 import { registerAnimationTriggers } from "./animationTrigger";
+import { StylableRuntimeBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleable.runtime";
 
 
 export class StyleRuntimeModule implements IInjectorModule {
     public register(injector: IInjector): void {
         registerAnimationTriggers();
+        injector.bindToCollection("autostart", StylableRuntimeBindingHandler);
     }
 }

@@ -555,6 +555,13 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
+    private canBeDeleted(styleKey: string): boolean {
+        return (!styleKey.startsWith("globals/") || styleKey.startsWith("globals/body/")) &&
+            !styleKey.endsWith("/default") &&
+            !styleKey.includes("/components/") &&
+            styleKey.indexOf("/navbar/default/") === -1;
+    }
+
     private getContextCommands(element: HTMLElement, styleable: Styleable): IContextCommandSet {
         const style = styleable.style;
 
@@ -565,11 +572,7 @@ export class StyleGuide {
             element: element
         };
 
-        if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
-            !style.key.endsWith("/default") &&
-            !style.key.includes("/components/") &&
-            style.key.indexOf("/navbar/default/") === -1
-        ) {
+        if (this.canBeDeleted(style.key)) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
                 color: "#607d8b",
