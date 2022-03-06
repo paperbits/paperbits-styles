@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col col-md-12 samples">
                 <!-- ko foreach: { data: $component.fonts, as: 'font' } -->
-                <div class="style-card font style-card-framed" data-bind="styleable: font">
+                <div class="style-card font style-card-framed" data-bind="styleableGlobal: font">
                     <div class="font-sample" data-bind="style: { 'font-family': font.family }">
                         Abc
                     </div>
@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col col-md-12 samples">
                 <!--ko foreach: { data: $component.textStyles, as: 'textStyle' }-->
-                <div class="style-card style-card-framed" data-bind="styleable: textStyle">
+                <div class="style-card style-card-framed" data-bind="styleableGlobal: textStyle">
                     <div class="style-card-body">
                         <span data-bind="stylePreview: textStyle">
                             Abc
@@ -50,36 +50,36 @@
         <div class="row">
             <div class="col-md-6">
                 <article>
-                    <div class="style-card" data-bind="styleable: globals.h1.default">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h1/default'">
                         <div class="style-card-body">
                             <h1 data-bind="stylePreview: 'globals/h1/default'">Heading level 1</h1>
                         </div>
                     </div>
-                    <div class="style-card" data-bind="styleable: 'globals/h2/default'">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h2/default'">
                         <div class="style-card-body">
-                            <h2 data-bind="stylePreview: globals.h2.default">Heading level 2</h2>
+                            <h2 data-bind="stylePreview: 'globals/h2/default'">Heading level 2</h2>
                         </div>
                     </div>
 
-                    <div class="style-card" data-bind="styleable: globals.h3.default">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h3/default'">
                         <div class="style-card-body">
                             <h3 data-bind="stylePreview: 'globals/h3/default'">Heading level 3</h3>
                         </div>
                     </div>
 
-                    <div class="style-card" data-bind="styleable: 'globals/h4/default'">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h4/default'">
                         <div class="style-card-body">
                             <h4 data-bind="stylePreview: 'globals/h4/default'">Heading level 4</h4>
                         </div>
                     </div>
 
-                    <div class="style-card" data-bind="styleable: 'globals/h5/default'">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h5/default'">
                         <div class="style-card-body">
                             <h5 data-bind="stylePreview: 'globals/h5/default'">Heading level 5</h5>
                         </div>
                     </div>
 
-                    <div class="style-card" data-bind="styleable: globals.h6.default">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/h6/default'">
                         <div class="style-card-body">
                             <h6 data-bind="stylePreview: 'globals/h6/default'">Heading level 6</h6>
                         </div>
@@ -89,7 +89,7 @@
 
             <div class="col">
                 <article>
-                    <div class="style-card" data-bind="styleable: 'globals/p/default'">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/p/default'">
                         <div class="style-card-body">
                             <p data-bind="stylePreview: 'globals/p/default'">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -108,7 +108,7 @@
                 </article>
 
                 <article>
-                    <div class="style-card" data-bind="styleable: globals.a.default">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/a/default'">
                         <div class="style-card-body">
                             <a href="#" class="no-pointer-events" data-bind="stylePreview: 'globals/a/default'">Regular
                                 link</a>
@@ -117,7 +117,7 @@
                 </article>
 
                 <article>
-                    <div class="style-card" data-bind="styleable: 'globals/blockquote/default'">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/blockquote/default'">
                         <div class="style-card-body">
                             <blockquote data-bind="stylePreview: 'globals/blockquote/default'">
                                 Typography is the craft of endowing human language with a durable visual form. <br />
@@ -128,7 +128,7 @@
                 </article>
 
                 <article>
-                    <div class="style-card" data-bind="styleable: globals.pre.default">
+                    <div class="style-card" data-bind="styleableGlobal: 'globals/pre/default'">
                         <div class="style-card-body">
                             <pre data-bind="stylePreview: 'globals/pre/default'">class PictureModel {    
     sourceKey: string;    
@@ -141,7 +141,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="style-card" data-bind="styleable: globals.ul.default">
+                <div class="style-card" data-bind="styleableGlobal: 'globals/ul/default'">
                     <div class="style-card-body">
                         <ul class="style-card" data-bind="stylePreview: 'globals/ul/default'">
                             <li>
@@ -166,7 +166,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="style-card" data-bind="styleable: globals.ol.default">
+                <div class="style-card" data-bind="styleableGlobal: 'globals/ol/default'">
                     <div class="style-card-body">
                         <ol class="style-card" data-bind="stylePreview: 'globals/ol/default'">
                             <li>
@@ -197,7 +197,7 @@
         <h2 class="heading">Colors</h2>
         <div class="samples">
             <!-- ko foreach: { data: $component.colors, as: 'color' } -->
-            <div class="sample style-card" data-bind="styleable: color">
+            <div class="sample style-card" data-bind="styleableGlobal: color">
                 <div tabindex="0" class="style-card-square pseudo-transparent-bckg"
                     data-bind="attr: { title: color.displayName }">
                     <div class="fit" data-bind="style: { background: color.value }"></div>
@@ -220,7 +220,7 @@
         </h2>
         <div class="samples">
             <!-- ko foreach: { data: $component.gradients, as: 'gradient' } -->
-            <div class="sample style-card" data-bind="styleable: gradient">
+            <div class="sample style-card" data-bind="styleableGlobal: gradient">
                 <style data-bind="gradientPreview: gradient"></style>
                 <div class="style-card-square" data-bind="css: $component.keyToClass(gradient.key)"></div>
                 <span class="style-card-label" data-bind="text: gradient.displayName"></span>
@@ -239,7 +239,7 @@
         <h2 class="heading">Shadows</h2>
         <div class="samples">
             <!-- ko foreach: { data: $component.shadows, as: 'shadow' } -->
-            <div class="sample style-card" data-bind="styleable: shadow">
+            <div class="sample style-card" data-bind="styleableGlobal: shadow">
                 <style data-bind="shadowPreview: shadow"></style>
                 <div class="style-card-square" data-bind="css: $component.keyToClass(shadow.key)"></div>
                 <span class="style-card-label" data-bind="text: shadow.displayName"></span>
@@ -258,7 +258,7 @@
         <h2 class="heading">Icons <span class="preview">Preview</span></h2>
         <div class="samples">
             <!-- ko foreach: { data: $component.icons, as: 'icon' } -->
-            <div class="sample style-card" data-bind="styleable: icon">
+            <div class="sample style-card" data-bind="styleableGlobal: icon">
                 <div class="style-card-body">
                     <i class="icon" data-bind="css: icon.class"></i>
                 </div>
@@ -278,7 +278,7 @@
         <h2 class="heading">Form controls</h2>
         <div class="row">
             <div class="col col-md-3">
-                <div class="style-card" data-bind="styleable: components.formControl.default">
+                <div class="style-card" data-bind="styleableGlobal: components.formControl.default">
                     <div class="style-card-body">
                         <div class="form-group">
                             <label aria-hidden="true" tabindex="-1">Label</label>
@@ -291,7 +291,6 @@
                 </div>
             </div>
         </div>
-        <textarea data-bind="stylePreview:components.formControl.default">Text area content</textarea> -->
     </article>
 
     <!--ko foreach: { data: $component.uiComponents, as: 'item' }-->
@@ -300,7 +299,7 @@
         <div class="row">
             <div class="col col-md-12 samples">
                 <!--ko foreach: { data: item.variations, as: 'variation' }-->
-                <div class="sample style-card" data-bind="styleable: variation">
+                <div class="sample style-card" data-bind="styleableGlobal: variation">
                     <div class="style-card-body" data-bind="itemTemplate: $parent.itemTemplate"></div>
                     <span class="style-card-label" data-bind="text: variation.displayName"></span>
                 </div>

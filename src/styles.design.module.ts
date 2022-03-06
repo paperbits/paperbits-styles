@@ -28,7 +28,7 @@ import { StylesheetBindingHandler } from "./ko/bindingHandlers/bindingHandlers.s
 import { StylePlugin } from "./plugins";
 import { StylesToolButton } from "./workshops/stylesToolButton";
 import { StylePreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.stylePreview";
-import { StylableBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleable";
+import { StylableGlobalBindingHandler } from "./ko/bindingHandlers/bindingHandlers.styleableGlobal";
 import { ShadowPreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
@@ -91,7 +91,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
-        injector.bindToCollection("autostart", StylableBindingHandler);
+        injector.bindToCollection("autostart", StylableGlobalBindingHandler);
         injector.bindToCollection("autostart", ShadowPreviewBindingHandler);
         injector.bindToCollection("workshopSections", StylesToolButton);
         injector.bindToCollection("autostart", StyledBindingHandler);

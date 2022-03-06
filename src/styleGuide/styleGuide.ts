@@ -1,17 +1,18 @@
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common";
+import * as Utils from "@paperbits/common/utils";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { EventManager, Events, MouseButton } from "@paperbits/common/events";
 import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
 import { IStyleGroup, Styleable, VariationContract, StyleManager, StyleCompiler } from "@paperbits/common/styles";
-import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet } from "@paperbits/common/ui";
+import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet, ActiveElement } from "@paperbits/common/ui";
 import { StyleService } from "../styleService";
 import { FontContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract } from "../contracts";
 import { StyleItem } from "../models/styleItem";
 import { ComponentStyle } from "../contracts/componentStyle";
 import { formatUnicode } from "../styleUitls";
 import { OpenTypeFontGlyph } from "../openType";
+import { Bag } from "@paperbits/common";
 
 @Component({
     selector: "style-guide",
@@ -23,7 +24,7 @@ export class StyleGuide {
     private scrollTimeout: any;
     private pointerX: number;
     private pointerY: number;
-    private actives: object = {};
+    private activeElements: Bag<ActiveElement>;
     private ownerDocument: Document;
 
     public readonly styles: ko.Observable<any>;
@@ -62,6 +63,8 @@ export class StyleGuide {
         this.textStyles = ko.observableArray([]);
         this.navBars = ko.observableArray([]);
         this.uiComponents = ko.observableArray([]);
+
+        this.activeElements = {};
     }
 
     @OnMounted()
@@ -469,7 +472,7 @@ export class StyleGuide {
 
         const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
 
-        this.rerenderEditors(elements);
+        this.rerenderContextualCommands(elements);
     }
 
     private isStyleSelectable(contextualEditor: IContextCommandSet): boolean {
@@ -552,6 +555,13 @@ export class StyleGuide {
         this.renderHighlightedElements();
     }
 
+    private canBeDeleted(styleKey: string): boolean {
+        return (!styleKey.startsWith("globals/") || styleKey.startsWith("globals/body/")) &&
+            !styleKey.endsWith("/default") &&
+            !styleKey.includes("/components/") &&
+            styleKey.indexOf("/navbar/default/") === -1;
+    }
+
     private getContextCommands(element: HTMLElement, styleable: Styleable): IContextCommandSet {
         const style = styleable.style;
 
@@ -562,11 +572,7 @@ export class StyleGuide {
             element: element
         };
 
-        if ((!style.key.startsWith("globals/") || style.key.startsWith("globals/body/")) &&
-            !style.key.endsWith("/default") &&
-            !style.key.includes("/components/") &&
-            style.key.indexOf("/navbar/default/") === -1
-        ) {
+        if (this.canBeDeleted(style.key)) {
             styleContextualEditor.deleteCommand = {
                 tooltip: "Delete variation",
                 color: "#607d8b",
@@ -725,12 +731,12 @@ export class StyleGuide {
         return styleContextualEditor;
     }
 
-    private rerenderEditors(elements: HTMLElement[]): void {
+    private rerenderContextualCommands(elements: HTMLElement[]): void {
         let highlightedElement: HTMLElement;
         let highlightedText: string;
         let highlightColor: string;
 
-        const tobeDeleted = Object.keys(this.actives);
+        const tobeDeleted = Object.keys(this.activeElements);
 
         for (let i = elements.length - 1; i >= 0; i--) {
             const element = elements[i];
@@ -748,7 +754,7 @@ export class StyleGuide {
             highlightedElement = element;
             highlightedText = style.displayName;
 
-            const active = this.actives[style.key];
+            const active = this.activeElements[style.key];
             const contextualCommands = this.getContextCommands(element, styleable);
 
             highlightColor = contextualCommands.color;
@@ -756,7 +762,8 @@ export class StyleGuide {
             if (!active || element !== active.element) {
                 this.viewManager.setContextualCommands(style.key, contextualCommands);
 
-                this.actives[style.key] = {
+                this.activeElements[style.key] = {
+                    key: style.key,
                     element: element
                 };
             }
@@ -764,7 +771,7 @@ export class StyleGuide {
 
         tobeDeleted.forEach(x => {
             this.viewManager.removeContextualCommands(x);
-            delete this.actives[x];
+            delete this.activeElements[x];
         });
 
         if (this.activeHighlightedElement !== highlightedElement) {

@@ -7,7 +7,8 @@ export const StylePrimitives = [
     "gradients",
     "shadows",
     "utils",
-    "icons"
+    "icons",
+    "instance"
 ];
 
 export const IconsFontStyleName = "normal";
