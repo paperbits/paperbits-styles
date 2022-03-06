@@ -532,11 +532,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 for (const breakpoint of Object.keys(categoryConfig)) {
                     let className;
 
+                    const styleKey = categoryConfig[breakpoint];
+
                     if (breakpoint === "xs") {
-                        className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint]);
+                        className = await this.getClassNameByStyleKeyAsync(styleKey);
                     }
                     else {
-                        className = await this.getClassNameByStyleKeyAsync(categoryConfig[breakpoint], breakpoint);
+                        className = await this.getClassNameByStyleKeyAsync(styleKey, breakpoint);
                     }
 
                     if (className) {
@@ -603,11 +605,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     for (const breakpoint of Object.keys(pluginBag)) {
                         let className;
 
+                        const styleKey = pluginBag[breakpoint];
+
                         if (breakpoint === "xs") {
-                            className = await this.getClassNameByStyleKeyAsync(pluginBag[breakpoint]);
+                            className = await this.getClassNameByStyleKeyAsync(styleKey);
                         }
                         else {
-                            className = await this.getClassNameByStyleKeyAsync(pluginBag[breakpoint], breakpoint);
+                            className = await this.getClassNameByStyleKeyAsync(styleKey, breakpoint);
                         }
 
                         if (className) {
@@ -646,6 +650,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
     public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
         if (!key) {
             throw new Error(`Parameter "key" not specified.`);
+        }
+
+        if (typeof key !== "string") {
+            throw new Error(`Parameter "key" must be string.`);
         }
 
         const segments = key.split("/");
