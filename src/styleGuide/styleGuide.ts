@@ -49,6 +49,15 @@ export class StyleGuide {
         private readonly styleGroups: IStyleGroup[],
         private readonly styleCompiler: StyleCompiler
     ) {
+        this.renderContextualCommands = this.renderContextualCommands.bind(this);
+        this.onPointerDown = this.onPointerDown.bind(this);
+        this.initialize = this.initialize.bind(this);
+        this.dispose = this.dispose.bind(this);
+        // this.onDelete = this.onDelete.bind(this);
+        this.onPointerMove = this.onPointerMove.bind(this);
+        this.onWindowScroll = this.onWindowScroll.bind(this);
+        // this.onKeyDown = this.onKeyDown.bind(this);
+
         this.styles = ko.observable();
         this.colors = ko.observableArray([]);
         this.shadows = ko.observableArray([]);
@@ -65,19 +74,6 @@ export class StyleGuide {
         this.uiComponents = ko.observableArray([]);
 
         this.activeElements = {};
-    }
-
-    @OnMounted()
-    public initialize(): void {
-        this.viewManager.mode = ViewManagerMode.selecting;
-        this.applyChanges();
-        this.ownerDocument = this.viewManager.getHostDocument();
-        this.attach();
-
-        this.eventManager.dispatchEvent("displayHint", {
-            key: "7b92",
-            content: `<p>Here you can manage styles of every element of the content. All the customizations will get reflected everywhere on your website.</p><p>Press Escape button to get back to the page editing.</p>`
-        });
     }
 
     public addFonts(): void {
@@ -418,28 +414,26 @@ export class StyleGuide {
 
 
 
-
-
-
-
-
-
-
-
-    public attach(): void {
-        // Firefox doesn't fire "mousemove" events by some reason
-        this.ownerDocument.addEventListener(Events.MouseMove, this.onPointerMove.bind(this), true);
-        this.ownerDocument.addEventListener(Events.Scroll, this.onWindowScroll.bind(this));
+    @OnMounted()
+    public initialize(): void {
+        this.viewManager.mode = ViewManagerMode.selecting;
+        this.applyChanges();
+        this.ownerDocument = this.viewManager.getHostDocument();
+        this.ownerDocument.addEventListener(Events.MouseMove, this.onPointerMove, true);
+        this.ownerDocument.addEventListener(Events.Scroll, this.onWindowScroll);
         this.ownerDocument.addEventListener(Events.MouseDown, this.onPointerDown, true);
-        // this.ownerDocument.addEventListener(Events.KeyDown, this.onKeyDown);
+
+        this.eventManager.dispatchEvent("displayHint", {
+            key: "7b92",
+            content: `<p>Here you can manage styles of every element of the content. All the customizations will get reflected everywhere on your website.</p><p>Press Escape button to get back to the page editing.</p>`
+        });
     }
 
     @OnDestroyed()
     public dispose(): void {
-        this.ownerDocument.removeEventListener(Events.MouseMove, this.onPointerMove.bind(this), true);
-        this.ownerDocument.removeEventListener(Events.Scroll, this.onWindowScroll.bind(this));
+        this.ownerDocument.removeEventListener(Events.MouseMove, this.onPointerMove, true);
+        this.ownerDocument.removeEventListener(Events.Scroll, this.onWindowScroll);
         this.ownerDocument.removeEventListener(Events.MouseDown, this.onPointerDown, true);
-        // this.ownerDocument.removeEventListener(Events.KeyDown, this.onKeyDown);
     }
 
     private onWindowScroll(): void {
@@ -472,7 +466,7 @@ export class StyleGuide {
 
         const elements = Utils.elementsFromPoint(this.ownerDocument, this.pointerX, this.pointerY);
 
-        this.rerenderContextualCommands(elements);
+        this.renderContextualCommands(elements);
     }
 
     private isStyleSelectable(contextualEditor: IContextCommandSet): boolean {
@@ -731,7 +725,7 @@ export class StyleGuide {
         return styleContextualEditor;
     }
 
-    private rerenderContextualCommands(elements: HTMLElement[]): void {
+    private renderContextualCommands(elements: HTMLElement[]): void {
         let highlightedElement: HTMLElement;
         let highlightedText: string;
         let highlightColor: string;

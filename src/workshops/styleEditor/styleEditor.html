@@ -1,4 +1,5 @@
 <div class="form flex-item flex-item-grow" data-bind="scrollable: true">
+    <!-- ko if: styleName || elementStates -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section"
@@ -6,12 +7,14 @@
             <b>Main</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
+            <!-- ko if: styleName -->
             <div class="form-group">
                 <button class="btn btn-info" type="button" data-bind="tooltip: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>
                 <input id="styleName" type="text" class="form-control" spellcheck="false"
                     data-bind="textInput: styleName, focus: true">
             </div>
+            <!--/ko -->
             <!-- ko if: elementStates -->
             <div class="form-group">
                 <label for="textTransform">State</label>
@@ -21,9 +24,11 @@
             <!--/ko -->
         </div>
     </div>
+    <!--/ko -->
 
     <!-- ko ifnot: working -->
 
+    <!-- ko if: allowTypography -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#typographyCollapse'"
@@ -35,10 +40,12 @@
             <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
         </div>
     </div>
+    <!-- /ko -->
 
     <!-- ko if: allowBlockStyles -->
     <!-- <gradient-editor></gradient-editor> -->
 
+    <!-- ko if: allowBackground -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section"
@@ -46,12 +53,13 @@
             <b>Background</b>
             <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage background'"></button>
         </label>
-
         <div id="backgroundCollapse" class="collapse form-group-collapse">
             <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowShadow -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#shadowCollapse'"
@@ -64,7 +72,9 @@
             </shadow-editor-group>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowAnimation -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#animationCollapse'"
@@ -76,7 +86,9 @@
             <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowTransition -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#transitionsCollapse'"
@@ -87,7 +99,9 @@
             <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowTransform -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#transformCollapse'"
@@ -100,7 +114,9 @@
             <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowSize -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#sizeCollapse'"
@@ -113,16 +129,20 @@
             </size-editor>
         </div>
     </div>
+    <!-- /ko -->
 
+    <!-- ko if: allowBox -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#boxCollapse'"></a>
             <b>Box</b>
         </label>
         <div id="boxCollapse" class="collapse form-group-collapse">
-            <box params="{ box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
+            <box params="{ features: boxFeatures, box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
         </div>
     </div>
+    <!-- /ko -->
+    
     <!-- /ko -->
 
     <!-- /ko -->

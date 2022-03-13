@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { StyleHelper } from "./../src/styleHelper";
-import { LocalStyles, Breakpoints } from "@paperbits/common/styles";
+import { LocalStyles, Breakpoints, StyleDefinition } from "@paperbits/common/styles";
 import { TypographyStylePluginConfig } from "../src/plugins";
 import { CalcExpression, Size } from "../src/size";
 
@@ -159,5 +159,49 @@ describe("Style helper", async () => {
         const expression6 = 50;
         const parsed6 = Size.parse(expression6);
         expect(parsed6.toString()).equals("50px"); // "px" - default units must be assigned
+    });
+
+    it("Backfill local styles", () => {
+        const styleDefinition: StyleDefinition = {
+            colors: {
+                labelColor: {
+                    displayName: "Label color",
+                    defaults: {
+                        value: "green"
+                    }
+                }
+            },
+            components: {
+                clickCounter: {
+                    displayName: "Click counter",
+                    plugins: ["margin", "padding", "typography"],
+                    defaults: {
+                        typography: {
+                            fontSize: 10,
+                        }
+                    },
+                    components: {
+                        label: {
+                            displayName: "Click counter label",
+                            plugins: ["typography"],
+                            defaults: {
+                                typography: {
+                                    fontSize: 50,
+                                    color: "colors/labelColor"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const result: LocalStyles = {
+            key: "somekey"
+        };
+
+        StyleHelper.backfillLocalStyles(styleDefinition, result);
+
+        console.log(JSON.stringify(result, null, 4));
     });
 });

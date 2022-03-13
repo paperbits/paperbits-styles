@@ -52,6 +52,7 @@ import { IconsFontFamilyName, IconsFontStyleName, IconsFontWeight } from "./cons
 export class DefaultStyleCompiler implements StyleCompiler {
     private styles: ThemeContract;
     public readonly plugins: Bag<StylePlugin>;
+    private initialized: boolean;
 
     constructor(
         private readonly styleService: StyleService,
@@ -170,7 +171,11 @@ export class DefaultStyleCompiler implements StyleCompiler {
     }
 
     public async getStyleSheet(): Promise<StyleSheet> {
-        await this.initializePlugins();
+        if (!this.initialized) {
+            await this.initializePlugins();
+            this.initialized = true;
+        }
+
 
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
@@ -568,9 +573,13 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames.join(" ");
     }
 
-    public async getStyleModelAsync(localStyles: LocalStyles, styleManager: StyleManager): Promise<StyleModel> {
+    public async getStyleModelAsync(localStyles: LocalStyles, styleManager: StyleManager, widgetHandlerClass?: any): Promise<StyleModel> {
         if (!localStyles) {
             throw new Error(`Parameter "localStyles" not specified.`);
+        }
+
+        if (widgetHandlerClass) {
+            this.backfillLocalStyles(widgetHandlerClass, localStyles);
         }
 
         localStyles = Objects.clone(localStyles); // To drop any object references
@@ -704,5 +713,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const compiler = new JssCompiler();
         const css = compiler.compile(styleSheet);
         return css;
+    }
+
+    public backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void {
+        this.styleService.backfillLocalStyles(handlerClass, localStyles);
     }
 }

@@ -7,6 +7,8 @@ import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
 import { CalcExpression, Size } from "./size";
 import { Display } from "./plugins";
 import { ViewManager } from "@paperbits/common/ui";
+import { Bag } from "@paperbits/common";
+import { ComponentStyleDefinition, StyleDefinition } from "@paperbits/common/styles";
 
 
 class StyleConfigurator {
@@ -305,5 +307,41 @@ export class StyleHelper {
         }
 
         StyleHelper.setPluginConfigForLocalStyles(localStyles, "display", newViewportValue, viewport);
+    }
+
+
+    public static backfillComponentStyles(variationName: string, components: Bag<ComponentStyleDefinition>): any {
+        const styleObject = {};
+
+        const componentNames = Object.keys(components);
+
+        for (const componentName of componentNames) {
+            const componentDefinition = components[componentName];
+
+            if (componentDefinition.defaults) {
+                Objects.setValue(`${componentName}/${variationName}`, styleObject, componentDefinition.defaults);
+            }
+
+            if (componentDefinition.components) {
+                const childComponents = this.backfillComponentStyles("default", componentDefinition.components);
+                Objects.setValue(`${componentName}/${variationName}/components`, styleObject, childComponents);
+            }
+        }
+
+        return styleObject;
+    }
+
+    public static backfillLocalStyles(definition: StyleDefinition, localStyles: LocalStyles, componentName?: string): void {
+        if (localStyles.instance) {
+            return;
+        }
+
+        if (!componentName) {
+            componentName = Object.keys(definition.components)[0]; // take first component
+        }
+
+        const styleObject = this.backfillComponentStyles("default", definition.components);
+
+        localStyles.instance = Objects.getObjectAt(`${componentName}/default`, styleObject);
     }
 }

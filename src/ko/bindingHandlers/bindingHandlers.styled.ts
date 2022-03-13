@@ -6,7 +6,7 @@ import { JssCompiler } from "../../jssCompiler";
 export class StyledBindingHandler {
     constructor() {
         ko.bindingHandlers["styled"] = {
-            update: async (element: HTMLElement, valueAccessor) => {
+            update: (element: HTMLElement, valueAccessor) => {
                 const styleModel: StyleModel = ko.unwrap(valueAccessor());
 
                 if (!styleModel) {
@@ -28,7 +28,7 @@ export class StyledBindingHandler {
         };
 
         ko.bindingHandlers["styledInPlace"] = {
-            update: async (element: HTMLElement, valueAccessor) => {
+            update: (element: HTMLElement, valueAccessor) => {
                 const styleModel: StyleModel = ko.unwrap(valueAccessor());
 
                 if (!styleModel) {

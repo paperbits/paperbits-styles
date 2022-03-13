@@ -32,6 +32,20 @@ export class StyleEditor {
     public readonly allowBlockStyles: ko.Observable<boolean>;
     public readonly working: ko.Observable<boolean>;
 
+    public readonly allowTypography: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowPadding: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowMargin: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowBorder: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowBackground: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowShadow: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowAnimation: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowTransition: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowTransform: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowSize: ko.Observable<boolean> = ko.observable(true);
+    public readonly allowBox: ko.Observable<boolean> = ko.observable(true);
+
+    public readonly boxFeatures: ko.Observable<string> = ko.observable("padding,margin,border");
+
 
     constructor(private readonly eventManager: EventManager) {
         this.styleName = ko.observable("New style");
@@ -46,17 +60,51 @@ export class StyleEditor {
         this.elementStyleBox = ko.observable();
         this.elementStyleSize = ko.observable();
         this.allowBlockStyles = ko.observable();
+
         this.working = ko.observable(true);
     }
 
     @Param()
     public elementStyle: VariationContract;
 
+    @Param()
+    public plugins: string[];
+
     @Event()
     public onUpdate: (contract: any) => void;
 
     @OnMounted()
     public initialize(): void {
+        if (this.plugins) {
+            this.allowTypography(this.plugins.includes("typography"));
+            this.allowPadding(this.plugins.includes("padding"));
+            this.allowMargin(this.plugins.includes("margin"));
+            this.allowBorder(this.plugins.includes("border"));
+            this.allowBackground(this.plugins.includes("background"));
+            this.allowShadow(this.plugins.includes("shadow"));
+            this.allowAnimation(this.plugins.includes("animation"));
+            this.allowTransition(this.plugins.includes("transition"));
+            this.allowTransform(this.plugins.includes("transform"));
+            this.allowSize(this.plugins.includes("size"));
+
+            const boxFeatures = [];
+
+            if (this.allowPadding()) {
+                boxFeatures.push("padding");
+            }
+
+            if (this.allowMargin()) {
+                boxFeatures.push("margin");
+            }
+
+            if (this.allowBorder()) {
+                boxFeatures.push("border");
+            }
+
+            this.boxFeatures(boxFeatures.join(","));
+            this.allowBox(boxFeatures.length > 0);
+        }
+
         this.styleName(this.elementStyle.displayName);
 
         const isBodyStyle = this.elementStyle.key?.startsWith("globals/body");

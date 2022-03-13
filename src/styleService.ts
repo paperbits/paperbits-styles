@@ -6,11 +6,15 @@ import { IObjectStorage } from "@paperbits/common/persistence";
 import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
 import { AnimationContract } from "./plugins";
 import { ComponentStyle } from "./contracts/componentStyle";
-import { StyleHandler, VariationContract } from "@paperbits/common/styles";
+import { ComponentStyleDefinition, LocalStyles, StyleDefinition, StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
 import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
 import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
+import { IWidgetHandler } from "@paperbits/common/editing";
+import { components } from "knockout";
+import { Bag } from "@paperbits/common";
+import { StyleHelper } from "./styleHelper";
 
 
 const stylesPath = "styles";
@@ -19,6 +23,7 @@ export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly styleHandlers: StyleHandler[],
+        private readonly widgetHandlers: IWidgetHandler[],
         private readonly fontManager: FontManager,
         private readonly httpClient: HttpClient
     ) { }
@@ -37,17 +42,17 @@ export class StyleService {
             throw new Error("Data doesn't contain styles.");
         }
 
-        this.styleHandlers.forEach(styleHandler => {
-            if (styleHandler.migrate) {
-                styleHandler.migrate(stylesObject.components[styleHandler.key]);
-            }
+        // this.styleHandlers.forEach(styleHandler => {
+        //     if (styleHandler.migrate) {
+        //         styleHandler.migrate(stylesObject.components[styleHandler.key]);
+        //     }
 
-            if (stylesObject.components[styleHandler.key]) {
-                return;
-            }
+        //     if (stylesObject.components[styleHandler.key]) {
+        //         return;
+        //     }
 
-            stylesObject.components[styleHandler.key] = styleHandler.getDefaultStyle();
-        });
+        //     stylesObject.components[styleHandler.key] = styleHandler.getDefaultStyle();
+        // });
 
         return stylesObject;
     }
@@ -422,5 +427,76 @@ export class StyleService {
     public async getTextVariations(): Promise<VariationContract[]> {
         const textStylesVariations = await this.getVariations("globals", "body");
         return this.sortByDisplayName(textStylesVariations);
+    }
+
+    public async backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): Promise<void> {
+        const handler = this.widgetHandlers.find(x => x instanceof handlerClass);
+
+        if (!handler?.getStyleDefinitions) {
+            return;
+        }
+
+        const definition = handler.getStyleDefinitions();
+
+        if (!definition) {
+            return;
+        }
+
+        StyleHelper.backfillLocalStyles(definition, localStyles);
+
+        if (definition.colors) {
+            await this.backfillGlobals(definition);
+        }
+    }
+
+    private async backfillGlobals(definition: StyleDefinition): Promise<void> {
+        const styles = await this.getStyles();
+        const colorNames = Object.keys(definition.colors);
+
+        colorNames.forEach(colorName => {
+            const colorDefinition = definition.colors[colorName];
+            const colorKey = `colors/${colorName}`;
+
+            Objects.setValue(colorKey, styles, {
+                key: colorKey,
+                displayName: colorDefinition.displayName,
+                value: colorDefinition.defaults.value
+            });
+        });
+
+        this.updateStyles(styles);
+    }
+
+    public async backfillStyles(): Promise<void> {
+        const styles = await this.getStyles();
+
+        this.widgetHandlers.forEach(x => {
+            if (!x.getStyleDefinitions) {
+                return;
+            }
+
+            const definition = x.getStyleDefinitions();
+
+            if (!definition) {
+                return;
+            }
+
+            if (definition.colors) {
+                const colorNames = Object.keys(definition.colors);
+
+                colorNames.forEach(colorName => {
+                    const colorDefinition = definition.colors[colorName];
+                    const colorKey = `colors/${colorName}`;
+
+                    Objects.setValue(colorKey, styles, {
+                        key: colorKey,
+                        displayName: colorDefinition.displayName,
+                        value: colorDefinition.defaults.value
+                    });
+                });
+            }
+        });
+
+        this.updateStyles(styles);
     }
 }
