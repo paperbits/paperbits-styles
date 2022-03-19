@@ -8,6 +8,7 @@ import { AnimationStylePluginConfig } from "../../plugins/animation";
 import { TransformStylePluginConfig } from "../../plugins/transform";
 import { TransitionStylePluginConfig } from "../../plugins/transition";
 import { StyleHelper } from "../../styleHelper";
+import { StyleService } from "../../styleService";
 
 
 @Component({
@@ -43,11 +44,15 @@ export class StyleEditor {
     public readonly allowTransform: ko.Observable<boolean> = ko.observable(true);
     public readonly allowSize: ko.Observable<boolean> = ko.observable(true);
     public readonly allowBox: ko.Observable<boolean> = ko.observable(true);
-
     public readonly boxFeatures: ko.Observable<string> = ko.observable("padding,margin,border");
+    public readonly baseVariations: ko.ObservableArray<VariationContract> = ko.observableArray([]);
+    public readonly baseVariationKey: ko.Observable<string> = ko.observable();
 
 
-    constructor(private readonly eventManager: EventManager) {
+    constructor(
+        private readonly eventManager: EventManager,
+        private readonly styleService: StyleService
+    ) {
         this.styleName = ko.observable("New style");
         this.selectedState = ko.observable();
         this.elementStates = ko.observableArray();
@@ -60,6 +65,7 @@ export class StyleEditor {
         this.elementStyleBox = ko.observable();
         this.elementStyleSize = ko.observable();
         this.allowBlockStyles = ko.observable();
+        this.allowBlockStyles = ko.observable();
 
         this.working = ko.observable(true);
     }
@@ -68,13 +74,16 @@ export class StyleEditor {
     public elementStyle: VariationContract;
 
     @Param()
+    public baseComponentKey: string;
+
+    @Param()
     public plugins: string[];
 
     @Event()
     public onUpdate: (contract: any) => void;
 
     @OnMounted()
-    public initialize(): void {
+    public async initialize(): Promise<void> {
         if (this.plugins) {
             this.allowTypography(this.plugins.includes("typography"));
             this.allowPadding(this.plugins.includes("padding"));
@@ -105,6 +114,12 @@ export class StyleEditor {
             this.allowBox(boxFeatures.length > 0);
         }
 
+        if (this.baseComponentKey) {
+            const baseComponentVariations = await this.styleService.getComponentVariations(this.baseComponentKey);
+            this.baseVariations(baseComponentVariations);
+            // TODO: Apply base style
+        }
+
         this.styleName(this.elementStyle.displayName);
 
         const isBodyStyle = this.elementStyle.key?.startsWith("globals/body");
@@ -125,7 +140,7 @@ export class StyleEditor {
 
     private scheduleUpdate(): void {
         clearTimeout(this.updateTimeout);
-        this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 500);
+        this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 300);
     }
 
     public updateObservables(): void {

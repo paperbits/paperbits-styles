@@ -1,5 +1,5 @@
 <div class="form flex-item flex-item-grow" data-bind="scrollable: true">
-    <!-- ko if: styleName || elementStates -->
+    <!-- ko if: baseVariations().length > 0 || styleName || elementStates -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section"
@@ -15,6 +15,17 @@
                     data-bind="textInput: styleName, focus: true">
             </div>
             <!--/ko -->
+
+            <!-- ko if: baseVariations().length > 0 -->
+            <div class="form-group">
+                <label for="baseVariationKey" class="form-label">
+                    Base style
+                </label>
+                <select id="variationKey" class="form-control"
+                    data-bind="options: baseVariations, value: baseVariationKey, optionsText: 'displayName', optionsValue: 'key'"></select>
+            </div>
+            <!-- /ko -->
+
             <!-- ko if: elementStates -->
             <div class="form-group">
                 <label for="textTransform">State</label>

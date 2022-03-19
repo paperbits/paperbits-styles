@@ -204,4 +204,28 @@ describe("Style helper", async () => {
 
         console.log(JSON.stringify(result, null, 4));
     });
+
+
+    it("Can get style definition by style key", () => {
+        const styleDefinitions = {
+            components: {
+                clickCounter: {
+                    displayName: "Click counter",
+                    plugins: ["margin", "padding", "typography"],
+                    components: {
+                        button: {
+                            displayName: "Button",
+                            baseComponentKey: "button",
+                            plugins: ["typography", "margin", "border"]
+                        }
+                    }
+                }
+            }
+        };
+
+        const styleKey = "components/clickCounter/instance/components/button/default";
+        const result = StyleHelper.getComponentStyleDefinition(styleDefinitions, styleKey);
+
+        expect(result.displayName).equals("Button");
+    });
 });

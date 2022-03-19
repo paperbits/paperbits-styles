@@ -344,4 +344,27 @@ export class StyleHelper {
 
         localStyles.instance = Objects.getObjectAt(`${componentName}/default`, styleObject);
     }
+
+    public static getComponentStyleDefinition(styleDefinition: StyleDefinition, styleKey: string): ComponentStyleDefinition {
+        const styleKeySegments = styleKey.split("/");
+        const segments = [];
+
+        while (styleKeySegments.length > 0) {
+            const group = styleKeySegments.shift();
+            const componentName = styleKeySegments.shift();
+            const variationName = styleKeySegments.shift();
+
+            if (!group || !componentName || !variationName) {
+                throw new Error(`Could not find component style definition by key ${styleKey}.`);
+            }
+
+            segments.push(group);
+            segments.push(componentName);
+        }
+
+        const path = segments.join("/");
+        const componentStyleDefinition = Objects.getObjectAt<ComponentStyleDefinition>(path, styleDefinition);
+
+        return componentStyleDefinition;
+    }
 }

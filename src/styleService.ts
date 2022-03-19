@@ -298,7 +298,7 @@ export class StyleService {
         return undefined;
     }
 
-    public async getComponentVariations(componentName: string): Promise<any[]> {
+    public async getComponentVariations(componentName: string): Promise<VariationContract[]> {
         if (!componentName) {
             throw new Error(`Parameter "componentName" not specified.`);
         }
