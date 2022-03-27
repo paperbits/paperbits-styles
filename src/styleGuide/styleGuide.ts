@@ -568,6 +568,7 @@ export class StyleGuide {
 
         if (this.canBeDeleted(style.key)) {
             styleContextualEditor.deleteCommand = {
+                controlType: "toolbox-button",
                 tooltip: "Delete variation",
                 color: "#607d8b",
                 doNotClearSelection: true,
@@ -601,6 +602,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("icons/")) {
             styleContextualEditor.deleteCommand = {
+                controlType: "toolbox-button",
                 tooltip: "Delete icon",
                 color: "#607d8b",
                 doNotClearSelection: true,
@@ -633,6 +635,7 @@ export class StyleGuide {
         ) {
             styleContextualEditor.selectCommands.push({
                 name: "background",
+                controlType: "toolbox-button",
                 tooltip: "Change background",
                 iconClass: "paperbits-icon paperbits-drop",
                 position: "top right",
@@ -645,6 +648,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("colors/") || style.key.startsWith("shadows/") || style.key.startsWith("gradients/")) {
             styleContextualEditor.selectCommands.push({
+                controlType: "toolbox-button",
                 name: "edit",
                 tooltip: "Edit variation",
                 iconClass: "paperbits-icon paperbits-edit-72",
@@ -662,6 +666,7 @@ export class StyleGuide {
         else if (!style.key.startsWith("fonts/") && !style.key.startsWith("icons/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
+                controlType: "toolbox-button",
                 tooltip: "Edit variation",
                 iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
@@ -697,6 +702,7 @@ export class StyleGuide {
         if (style.key.startsWith("fonts/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
+                controlType: "toolbox-button",
                 tooltip: "Edit font",
                 iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
