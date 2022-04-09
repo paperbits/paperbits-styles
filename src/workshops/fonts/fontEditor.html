@@ -1,32 +1,30 @@
 <style data-bind="jss: preview"></style>
 
-<div class="form flex flex-column" data-bind="scrollable: true">
-    <div class="form-group">
-        <label for="styleName">Font name</label>
-        <input id="styleName" type="text" class="form-control" spellcheck="false"
-            data-bind="textInput: displayName, focus: true">
+<div class="form-group">
+    <label for="styleName">Font name</label>
+    <input id="styleName" type="text" class="form-control" spellcheck="false"
+        data-bind="textInput: displayName, focus: true">
+</div>
+
+<!-- ko foreach: { data: variants, as: 'variant' } -->
+<div class="font-variant-item">
+    <label data-bind="text: variant.displayName"></label>
+
+    <!-- ko if: $component.isVariantDefined(variant) -->
+    <div class="font-variant-display"
+        data-bind="text: $component.previewText, style: { 'font-family': $component.font.family, 'font-weight': variant.weight, 'font-style': variant.style }">
     </div>
+    <button class="btn btn-default" data-bind="click: $component.removeVariant">
+        <i aria-hidden="true" class="paperbits-icon paperbits-simple-remove"></i>
+        Remove
+    </button>
+    <!-- /ko -->
 
-    <!-- ko foreach: { data: variants, as: 'variant' } -->
-    <div class="font-variant-item">
-        <label data-bind="text: variant.displayName"></label>
-
-        <!-- ko if: $component.isVariantDefined(variant) -->
-        <div class="font-variant-display"
-            data-bind="text: $component.previewText, style: { 'font-family': $component.font.family, 'font-weight': variant.weight, 'font-style': variant.style }">
-        </div>
-        <button class="btn btn-default" data-bind="click: $component.removeVariant">
-            <i aria-hidden="true" class="paperbits-icon paperbits-simple-remove"></i>
-            Remove
-        </button>
-        <!-- /ko -->
-
-        <!-- ko ifnot: $component.isVariantDefined(variant) -->
-        <button class="btn btn-default" data-bind="click: $component.addVariant">
-            <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
-            Add
-        </button>
-        <!-- /ko -->
-    </div>
+    <!-- ko ifnot: $component.isVariantDefined(variant) -->
+    <button class="btn btn-default" data-bind="click: $component.addVariant">
+        <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
+        Add
+    </button>
     <!-- /ko -->
 </div>
+<!-- /ko -->
