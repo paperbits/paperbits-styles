@@ -1,55 +1,50 @@
-<div class="form flex-item flex-item-grow" data-bind="scrollable: true">
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#mainCollapse'" aria-label="Toggle 'Main' section"></a>
-            <b>Main</b>
-        </label>
-        <div id="mainCollapse" class="collapse form-group-collapse">
-            <div class="form-group">
-                <button class="btn btn-info" type="button"
-                    data-bind="tooltip: 'Name of the style'"></button>
-                <label for="style-name">Style name</label>
-                <input id="style-name" type="text" class="form-control" spellcheck="false"
-                    data-bind="textInput: styleName">
-            </div>
-            <div class="color-picker">
-                <!-- ko if: colorValue -->
-                <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
-                <!-- /ko -->
-            </div>
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#mainCollapse'"
+            aria-label="Toggle 'Main' section"></a>
+        <b>Main</b>
+    </label>
+    <div id="mainCollapse" class="collapse form-group-collapse">
+        <div class="form-group">
+            <button class="btn btn-info" type="button" data-bind="tooltip: 'Name of the style'"></button>
+            <label for="style-name">Style name</label>
+            <input id="style-name" type="text" class="form-control" spellcheck="false" data-bind="textInput: styleName">
+        </div>
+        <div class="color-picker">
+            <!-- ko if: colorValue -->
+            <div data-bind="colorPicker: { selectedColor: colorValue }"></div>
+            <!-- /ko -->
         </div>
     </div>
+</div>
 
-    <div class="form-group form-group-collapsible">
-        <label class="form-label">
-            <a href="#" class="form-group-toggle" title="Toggle section"
-                data-bind="collapse: '#miscellaneousCollapse'" aria-label="Toggle 'Shadow' section"></a>
-            <b>Shadow</b>
-        </label>
-        <div id="miscellaneousCollapse" class="collapse form-group-collapse">
-            <div class="form-group">
-                <label for="blur">Blur radius (in px)</label>
-                <input id="blur" type="range" class="form-control" min="1" max="50" data-bind="textInput: blur" />
-            </div>
-            <div class="form-group">
-                <label for="spread">Spread radius (in px)</label>
-                <input id="spread" type="range" class="form-control" min="1" max="50" data-bind="textInput: spread" />
-            </div>
-            <div class="form-group">
-                <label for="offsetX">Offset X (in px)</label>
-                <input id="offsetX" type="range" min="-50" max="50" class="form-control"
-                    data-bind="textInput: offsetX" />
-            </div>
-            <div class="form-group">
-                <label for="offsetY">Offset Y (in px)</label>
-                <input id="offsetY" type="range" min="-50" max="50" class="form-control"
-                    data-bind="textInput: offsetY" />
-            </div>
-            <div class="form-group">
-                <label class="form-label">
-                    <input name="scrollOnOverlow" type="checkbox" data-bind="checked: inset" /> Display the shadow inset
-                </label>
-            </div>
+<div class="form-group form-group-collapsible">
+    <label class="form-label">
+        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#miscellaneousCollapse'"
+            aria-label="Toggle 'Shadow' section"></a>
+        <b>Shadow</b>
+    </label>
+    <div id="miscellaneousCollapse" class="collapse form-group-collapse">
+        <div class="form-group">
+            <label for="blur">Blur radius (in px)</label>
+            <input id="blur" type="range" class="form-control" min="1" max="50" data-bind="textInput: blur" />
+        </div>
+        <div class="form-group">
+            <label for="spread">Spread radius (in px)</label>
+            <input id="spread" type="range" class="form-control" min="1" max="50" data-bind="textInput: spread" />
+        </div>
+        <div class="form-group">
+            <label for="offsetX">Offset X (in px)</label>
+            <input id="offsetX" type="range" min="-50" max="50" class="form-control" data-bind="textInput: offsetX" />
+        </div>
+        <div class="form-group">
+            <label for="offsetY">Offset Y (in px)</label>
+            <input id="offsetY" type="range" min="-50" max="50" class="form-control" data-bind="textInput: offsetY" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">
+                <input name="scrollOnOverlow" type="checkbox" data-bind="checked: inset" /> Display the shadow inset
+            </label>
         </div>
     </div>
 </div>

@@ -568,7 +568,8 @@ export class StyleGuide {
 
         if (this.canBeDeleted(style.key)) {
             styleContextualEditor.deleteCommand = {
-                tooltip: "Delete variation",
+                controlType: "toolbox-button",
+                tooltip: "Delete",
                 color: "#607d8b",
                 doNotClearSelection: true,
                 component: {
@@ -601,6 +602,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("icons/")) {
             styleContextualEditor.deleteCommand = {
+                controlType: "toolbox-button",
                 tooltip: "Delete icon",
                 color: "#607d8b",
                 doNotClearSelection: true,
@@ -624,46 +626,42 @@ export class StyleGuide {
             };
         }
 
-        if (!style.key.startsWith("colors/") &&
-            !style.key.startsWith("icons/") &&
-            !style.key.startsWith("fonts/") &&
-            !style.key.startsWith("shadows/") &&
-            !style.key.startsWith("gradients/") &&
-            !style.key.includes("/components/") // sub-components
-        ) {
+        if (style.key.startsWith("shadows/")) {
             styleContextualEditor.selectCommands.push({
-                name: "background",
-                tooltip: "Change background",
-                iconClass: "paperbits-icon paperbits-drop",
+                controlType: "toolbox-button",
+                displayName: "Edit shadow",
                 position: "top right",
-                color: "#607d8b",
-                callback: () => {
-                    styleable.toggleBackground();
-                }
+                callback: () => this.selectShadow(<ShadowContract>style)
             });
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
 
-        if (style.key.startsWith("colors/") || style.key.startsWith("shadows/") || style.key.startsWith("gradients/")) {
+        if (style.key.startsWith("gradients/")) {
             styleContextualEditor.selectCommands.push({
-                name: "edit",
-                tooltip: "Edit variation",
-                iconClass: "paperbits-icon paperbits-edit-72",
+                controlType: "toolbox-button",
+                displayName: "Edit gradient",
                 position: "top right",
-                color: "#607d8b",
-                callback: () => {
-                    if (style.key.startsWith("gradients/")) {
-                        this.selectGradient(style);
-                        return;
-                    }
-                    style.key.startsWith("colors/") ? this.selectColor(style) : this.selectShadow(<ShadowContract>style);
-                }
+                callback: () => this.selectGradient(style)
             });
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
-        else if (!style.key.startsWith("fonts/") && !style.key.startsWith("icons/")) {
+
+        if (style.key.startsWith("colors/")) {
+            styleContextualEditor.selectCommands.push({
+                controlType: "toolbox-button",
+                displayName: "Edit color",
+                position: "top right",
+                callback: () => this.selectColor(style)
+            });
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+        }
+
+        if (style.key.startsWith("components/") || style.key.startsWith("globals/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
-                tooltip: "Edit variation",
-                iconClass: "paperbits-icon paperbits-edit-72",
+                controlType: "toolbox-button",
+                displayName: "Edit style",
+                // iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {
@@ -692,13 +690,35 @@ export class StyleGuide {
                     this.viewManager.openViewAsPopup(view);
                 }
             });
+
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+        }
+
+        if (!style.key.startsWith("colors/") &&
+            !style.key.startsWith("icons/") &&
+            !style.key.startsWith("fonts/") &&
+            !style.key.startsWith("shadows/") &&
+            !style.key.startsWith("gradients/") &&
+            !style.key.includes("/components/") // sub-components
+        ) {
+            styleContextualEditor.selectCommands.push({
+                name: "background",
+                controlType: "toolbox-button",
+                tooltip: "Change background",
+                iconClass: "paperbits-icon paperbits-drop",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    styleable.toggleBackground();
+                }
+            });
         }
 
         if (style.key.startsWith("fonts/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
-                tooltip: "Edit font",
-                iconClass: "paperbits-icon paperbits-edit-72",
+                controlType: "toolbox-button",
+                displayName: "Edit font",
                 position: "top right",
                 color: "#607d8b",
                 callback: () => {

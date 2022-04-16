@@ -45,8 +45,8 @@ export class StyleEditor {
     public readonly allowSize: ko.Observable<boolean> = ko.observable(true);
     public readonly allowBox: ko.Observable<boolean> = ko.observable(true);
     public readonly boxFeatures: ko.Observable<string> = ko.observable("padding,margin,border");
-    public readonly baseVariations: ko.ObservableArray<VariationContract> = ko.observableArray([]);
-    public readonly baseVariationKey: ko.Observable<string> = ko.observable();
+    public readonly baseComponentVariations: ko.ObservableArray<VariationContract> = ko.observableArray([]);
+    public readonly baseComponentVariationKey: ko.Observable<string> = ko.observable();
 
 
     constructor(
@@ -74,7 +74,7 @@ export class StyleEditor {
     public elementStyle: VariationContract;
 
     @Param()
-    public baseComponentKey: string;
+    public baseComponentName: string;
 
     @Param()
     public plugins: string[];
@@ -114,10 +114,14 @@ export class StyleEditor {
             this.allowBox(boxFeatures.length > 0);
         }
 
-        if (this.baseComponentKey) {
-            const baseComponentVariations = await this.styleService.getComponentVariations(this.baseComponentKey);
-            this.baseVariations(baseComponentVariations);
-            // TODO: Apply base style
+        if (this.baseComponentName) {
+            const baseComponentVariations = await this.styleService.getComponentVariations(this.baseComponentName);
+            this.baseComponentVariations(baseComponentVariations);
+
+            const baseComponentVariationKey = this.elementStyle["appearance"];
+            this.baseComponentVariationKey(baseComponentVariationKey);
+
+            this.baseComponentVariationKey.subscribe(this.onBaseVariationUpdate);
         }
 
         this.styleName(this.elementStyle.displayName);
@@ -139,6 +143,10 @@ export class StyleEditor {
     }
 
     private scheduleUpdate(): void {
+        if (!this.onUpdate) {
+            return;
+        }
+
         clearTimeout(this.updateTimeout);
         this.updateTimeout = setTimeout(() => this.onUpdate(this.elementStyle), 300);
     }
@@ -164,25 +172,35 @@ export class StyleEditor {
     }
 
     private getStyleForSelectedState(): any {
-        let style;
+        let style: VariationContract;
+        let editableStyle = this.elementStyle;
+
+        if (this.baseComponentVariationKey()) {
+            editableStyle = this.elementStyle["instance"];
+        }
 
         if (!this.currentState) {
-            style = this.elementStyle;
+            style = editableStyle;
         }
-        else if (this.elementStyle.states) {
-            if (!this.elementStyle.states[this.currentState]) {
-                this.elementStyle.states[this.currentState] = {};
+        else if (editableStyle.states) {
+            if (!editableStyle.states[this.currentState]) {
+                editableStyle.states[this.currentState] = {};
             }
 
-            style = this.elementStyle.states[this.currentState];
+            style = editableStyle.states[this.currentState];
         }
         else {
-            style = {};
-            this.elementStyle.states = {};
-            this.elementStyle.states[this.currentState] = style;
+            style = <VariationContract>{};
+            editableStyle.states = {};
+            editableStyle.states[this.currentState] = style;
         }
 
         return style;
+    }
+
+    public onBaseVariationUpdate(baseVariationKey: string): void {
+        this.elementStyle["appearance"] = baseVariationKey;
+        this.scheduleUpdate();
     }
 
     public onStyleNameUpdate(name: string): void {

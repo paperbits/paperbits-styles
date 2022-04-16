@@ -17,7 +17,7 @@
 
     <style data-bind="html: compiledFontStyles"></style>
 
-    <div class="flex-item flex-item-grow list" role="listbox" data-bind="scrollable: true, listbox: {}">
+    <div class="flex-item flex-item-grow list" role="listbox" data-bind="listbox: {}">
         <!-- ko if: $component.icons().length > 0 -->
         <div class="flex flex-row flex-wrap flex-item flex-item-grow">
             <!-- ko foreach: { data:  $component.icons, as: 'icon' } -->
