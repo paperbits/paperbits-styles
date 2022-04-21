@@ -164,7 +164,7 @@ export class Typography {
         this.textAlign.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textTransform.extend(ChangeRateLimit).subscribe(this.applyChanges);
         this.textDecoration.extend(ChangeRateLimit).subscribe(this.applyChanges);
-        this.typography.extend(ChangeRateLimit).subscribe(this.updateObservables);
+        this.typography.subscribe(this.updateObservables);
     }
 
     public async onFontSelected(fontContract: FontContract): Promise<void> {
