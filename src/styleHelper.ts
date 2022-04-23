@@ -8,7 +8,7 @@ import { CalcExpression, Size } from "./size";
 import { Display } from "./plugins";
 import { ViewManager } from "@paperbits/common/ui";
 import { Bag } from "@paperbits/common";
-import { ComponentStyleDefinition, StyleDefinition } from "@paperbits/common/styles";
+import { ComponentBagDefiniton, ComponentStyleDefinition, StyleDefinition } from "@paperbits/common/styles";
 
 
 class StyleConfigurator {
@@ -367,4 +367,41 @@ export class StyleHelper {
 
         return componentStyleDefinition;
     }
+
+    public static getStyleDefinitionWrappers(components: ComponentBagDefiniton): ComponentStyleDefinitionWrapper[] {
+        const selectors: ComponentStyleDefinitionWrapper[] = [];
+        const componentNames = Object.keys(components);
+
+        for (const componentName of componentNames) {
+            const componentKey = `components/${componentName}`;
+            const componentSelector = `.${Utils.camelCaseToKebabCase(componentName)}`;
+
+            selectors.push({
+                key: componentKey,
+                definition: components[componentName],
+                selector: componentSelector
+            });
+
+            const component = components[componentName];
+
+            if (component.components) {
+                const childSelectors = this.getStyleDefinitionWrappers(component.components);
+                for (const childSelector of childSelectors) {
+                    selectors.push({
+                        key: `${componentKey}/${childSelector.key}/default`,
+                        definition: childSelector.definition,
+                        selector: `${componentSelector} ${childSelector.selector}`
+                    });
+                }
+            }
+        }
+
+        return selectors;
+    }
+}
+
+export interface ComponentStyleDefinitionWrapper {
+    key: string;
+    definition: ComponentStyleDefinition;
+    selector: string;
 }

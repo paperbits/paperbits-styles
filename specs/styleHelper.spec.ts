@@ -207,7 +207,7 @@ describe("Style helper", async () => {
 
 
     it("Can get style definition by style key", () => {
-        const styleDefinitions = {
+        const styleDefinition = {
             components: {
                 clickCounter: {
                     displayName: "Click counter",
@@ -224,8 +224,29 @@ describe("Style helper", async () => {
         };
 
         const styleKey = "components/clickCounter/instance/components/button/default";
-        const result = StyleHelper.getComponentStyleDefinition(styleDefinitions, styleKey);
+        const result = StyleHelper.getComponentStyleDefinition(styleDefinition, styleKey);
 
         expect(result.displayName).equals("Button");
+    });
+
+    it("Can build CSS selectors from style definitions", () => {
+        const styleDefinition = {
+            components: {
+                clickCounter: {
+                    displayName: "Click counter",
+                    plugins: ["margin", "padding", "typography"],
+                    components: {
+                        button: {
+                            displayName: "Button",
+                            baseComponentKey: "button",
+                            plugins: ["typography", "margin", "border"]
+                        }
+                    }
+                }
+            }
+        };
+
+        const wrappers = StyleHelper.getStyleDefinitionWrappers(styleDefinition.components);
+        console.log(wrappers);
     });
 });
