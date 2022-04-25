@@ -373,13 +373,14 @@ export class StyleHelper {
         const componentNames = Object.keys(components);
 
         for (const componentName of componentNames) {
-            const componentKey = `components/${componentName}`;
-            const componentSelector = `.${Utils.camelCaseToKebabCase(componentName)}`;
+            const componentStyleKey = `components/${componentName}`;
+            const componentStyleDefinition = components[componentName];
+            const componentStyleSelector = `.${Utils.camelCaseToKebabCase(componentName)}`;
 
             selectors.push({
-                key: componentKey,
-                definition: components[componentName],
-                selector: componentSelector
+                key: componentStyleKey,
+                definition: componentStyleDefinition,
+                selector: componentStyleSelector
             });
 
             const component = components[componentName];
@@ -388,9 +389,9 @@ export class StyleHelper {
                 const childSelectors = this.getStyleDefinitionWrappers(component.components);
                 for (const childSelector of childSelectors) {
                     selectors.push({
-                        key: `${componentKey}/${childSelector.key}/default`,
+                        key: `${componentStyleKey}/${childSelector.key}/default`,
                         definition: childSelector.definition,
-                        selector: `${componentSelector} ${childSelector.selector}`
+                        selector: `${componentStyleSelector} ${childSelector.selector}`
                     });
                 }
             }
