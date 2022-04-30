@@ -7,7 +7,7 @@
     </label>
     <div id="mainCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <button class="btn btn-info" type="button" data-bind="tooltip: 'Name of the gradient'"></button>
+            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the gradient'"></button>
             <label for="gradientName">Gradient name</label>
             <input id="gradientName" type="text" class="form-control" spellcheck="false"
                 data-bind="textInput: gradientViewModel().displayName, focus: true">
@@ -23,7 +23,7 @@
     </label>
     <div id="settingsCollapse" class="collapse form-group-collapse">
         <div class="form-group">
-            <button class="btn btn-info" type="button"
+            <button class="btn btn-info" role="tooltip"
                 data-bind="tooltip: 'Angle that determines gradient direction.'"></button>
             <label for="gradientDegree">Rotate: <span data-bind="text: direction"></span>°</label>
             <input id="gradientDegree" type="range" min="0" max="360" class="form-control"

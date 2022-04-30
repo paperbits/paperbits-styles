@@ -9,7 +9,7 @@
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
             <!-- ko if: styleName -->
             <div class="form-group">
-                <button class="btn btn-info" type="button" data-bind="tooltip: 'Name of the style'"></button>
+                <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>
                 <input id="styleName" type="text" class="form-control" spellcheck="false"
                     data-bind="textInput: styleName, focus: true">
@@ -65,7 +65,7 @@
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#typographyCollapse'"
                 aria-label="Toggle 'Typography' section"></a>
             <b>Typography</b>
-            <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage text appearance'"></button>
+            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage text appearance'"></button>
         </label>
         <div id="typographyCollapse" class="collapse form-group-collapse">
             <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
@@ -82,7 +82,7 @@
             <a href="#" class="form-group-toggle" title="Toggle section"
                 data-bind="collapse: '#backgroundCollapse'"></a>
             <b>Background</b>
-            <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage background'"></button>
+            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage background'"></button>
         </label>
         <div id="backgroundCollapse" class="collapse form-group-collapse">
             <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate }"></background>
@@ -138,7 +138,7 @@
             <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#transformCollapse'"
                 aria-label="Toggle 'Transform' section"></a>
             <b>Transform</b>
-            <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage element transformations'"></button>
+            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage element transformations'"></button>
         </label>
 
         <div id="transformCollapse" class="collapse form-group-collapse">

@@ -2,7 +2,7 @@
 <div class="form-group">
     <label for="itemWidth" class="form-label">
         Width
-        <button class="btn btn-info" type="button" aria-label="Container width"
+        <button class="btn btn-info" role="tooltip" aria-label="Container width"
             data-bind="tooltip: 'Set container width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'itemWidth', size: itemWidth, allowUnits: $component.allowUnits }"></size-input>
@@ -13,7 +13,7 @@
 <div class="form-group">
     <label for="itemHeight" class="form-label">
         Height
-        <button class="btn btn-info" type="button" aria-label="Container height"
+        <button class="btn btn-info" role="tooltip" aria-label="Container height"
             data-bind="tooltip: 'Set container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'itemHeight', size: itemHeight, allowUnits: $component.allowUnits }"></size-input>
@@ -24,7 +24,7 @@
 <div class="form-group">
     <label for="minWidth" class="form-label">
         Min width
-        <button class="btn btn-info" type="button" aria-label="Min container width"
+        <button class="btn btn-info" role="tooltip" aria-label="Min container width"
             data-bind="tooltip: 'Set minimum width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'minWidth', size: minWidth }"></size-input>
@@ -32,7 +32,7 @@
 <div class="form-group">
     <label for="maxWidth" class="form-label">
         Max width
-        <button class="btn btn-info" type="button" aria-label="Max container width"
+        <button class="btn btn-info" role="tooltip" aria-label="Max container width"
             data-bind="tooltip: 'Set maximum container width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'maxWidth', size: maxWidth }"></size-input>
@@ -43,7 +43,7 @@
 <div class="form-group">
     <label for="minHeight" class="form-label">
         Min height
-        <button class="btn btn-info" type="button" aria-label="Min container height"
+        <button class="btn btn-info" role="tooltip" aria-label="Min container height"
             data-bind="tooltip: 'Set minimum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'minHeight', size: minHeight }"></size-input>
@@ -51,7 +51,7 @@
 <div class="form-group">
     <label for="maxHeight" class="form-label">
         Max height
-        <button class="btn btn-info" type="button" aria-label="Max container height"
+        <button class="btn btn-info" role="tooltip" aria-label="Max container height"
             data-bind="tooltip: 'Set maximum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
     <size-input params="{ id: 'maxHeight', size: maxHeight }"></size-input>
@@ -61,7 +61,7 @@
 <!-- ko if: stretchEnabled -->
 <label class="form-label">
     Height
-    <button class="btn btn-info" type="button" data-bind="tooltip: 'Manage section height'"></button>
+    <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage section height'"></button>
 </label>
 <div class="form-group">
     <label for="stretch" class="form-label">
