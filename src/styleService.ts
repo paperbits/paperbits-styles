@@ -12,8 +12,6 @@ import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
 import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
 import { IWidgetHandler } from "@paperbits/common/editing";
-import { components } from "knockout";
-import { Bag } from "@paperbits/common";
 import { StyleHelper } from "./styleHelper";
 
 
