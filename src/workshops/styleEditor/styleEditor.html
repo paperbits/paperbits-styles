@@ -1,5 +1,5 @@
 
-    <!-- ko if: styleName -->
+    <!-- ko if: hasStyleName -->
     <div class="form-group form-group-collapsible">
         <label class="form-label">
             <a href="#" class="form-group-toggle" title="Toggle section"
@@ -7,7 +7,7 @@
             <b>Main</b>
         </label>
         <div id="miscellaneousCollapse" class="collapse form-group-collapse">
-            <!-- ko if: styleName -->
+            <!-- ko if: hasStyleName -->
             <div class="form-group">
                 <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the style'"></button>
                 <label for="styleName">Style name</label>

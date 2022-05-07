@@ -21,6 +21,7 @@ export class StyleEditor {
     private currentState: string;
 
     public readonly styleName: ko.Observable<string>;
+    public readonly hasStyleName: ko.Observable<boolean>;
     public readonly selectedState: ko.Observable<string>;
     public readonly elementStyleTypography: ko.Observable<TypographyStylePluginConfig>;
     public readonly elementStyleBackground: ko.Observable<BackgroundStylePluginConfig>;
@@ -54,6 +55,7 @@ export class StyleEditor {
         private readonly styleService: StyleService
     ) {
         this.styleName = ko.observable("New style");
+        this.hasStyleName = ko.observable(false);
         this.selectedState = ko.observable();
         this.elementStates = ko.observableArray();
         this.elementStyleTypography = ko.observable();
@@ -124,6 +126,7 @@ export class StyleEditor {
             this.baseComponentVariationKey.subscribe(this.onBaseVariationUpdate);
         }
 
+        this.hasStyleName(!!this.elementStyle.displayName);
         this.styleName(this.elementStyle.displayName);
 
         const isBodyStyle = this.elementStyle.key?.startsWith("globals/body");
