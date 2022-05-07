@@ -1,16 +1,18 @@
 <div class="editor">
     <h1>Color</h1>
-    <hr/>
+    <hr />
 
-    <div class="palette" role="listbox" data-bind="listbox: {}">
-        <div class="color-box" data-bind="css: { selected: !$component.selectedColorKey() }, tooltip: 'Clear color'">
+    <div role="listbox" aria-label="Colors" class="palette" data-bind="listbox: {}">
+        <div role="presentation" class="color-box"
+            data-bind="css: { selected: !$component.selectedColorKey() }, tooltip: 'Clear color'">
             <a role="option" class="color" data-bind="click: $component.clearColors, focus: true">
                 <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
             </a>
         </div>
 
         <!-- ko foreach: { data: colors, as: 'color' } -->
-        <div class="color-box" data-bind="css: { selected: color.key === $component.selectedColorKey() }, tooltip: color.displayName">
+        <div role="presentation" class="color-box"
+            data-bind="css: { selected: color.key === $component.selectedColorKey() }, tooltip: color.displayName">
             <a role="option" class="color pseudo-transparent-bckg" data-bind="click: $component.selectColor">
                 <span class="fit" data-bind="style: { background: color.value }"></span>
             </a>

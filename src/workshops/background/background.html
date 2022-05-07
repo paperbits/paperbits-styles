@@ -1,27 +1,27 @@
-<div class="tabs">
-    <div class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }">
-        <a href="#" role="button" aria-label="Clear background"
-            data-bind="tooltip: 'Clear background', click: clearBackground">
+<div role="listbox" aria-label="Background settings" class="tabs" data-bind="listbox: {}">
+    <div role="presentation" class="tab" data-bind="css: { 'tab-is-active': !sourceKey() && !colorKey() && !gradientKey() }">
+        <a role="option" aria-label="Clear background"
+            data-bind="tooltip: 'Clear background', activate: clearBackground">
             <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
         </a>
     </div>
 
-    <div class="tab" data-bind="css: { 'tab-is-active': sourceKey }">
-        <a href="#" role="button" aria-label="Background picture" aria-haspopup="true"
+    <div role="presentation" class="tab" data-bind="css: { 'tab-is-active': sourceKey }">
+        <a role="option" aria-label="Background picture" aria-haspopup="true"
             data-bind="tooltip: 'Background picture', balloon: { component: { name: 'media-selector', params: { onSelect: $component.onMediaSelected } } }">
             <i aria-hidden="true" class="paperbits-icon paperbits-image-2"></i>
         </a>
     </div>
 
-    <div class="tab" data-bind="css: { 'tab-is-active': colorKey }">
-        <a href="#" role="button" aria-label="Background color" aria-haspopup="true"
+    <div role="presentation" class="tab" data-bind="css: { 'tab-is-active': colorKey }">
+        <a role="option" aria-label="Background color" aria-haspopup="true"
             data-bind="tooltip: 'Background color', balloon: { component: { name: 'color-selector', params: { selectedColorKey: $component.colorKey, onSelect: $component.onColorSelected } } }">
             <i aria-hidden="true" class="paperbits-icon paperbits-paint-bucket-40"></i>
         </a>
     </div>
 
-    <div class="tab" data-bind="css: { 'tab-is-active': gradientKey }">
-        <a href="#" role="button" aria-label="Background gradient" aria-haspopup="true"
+    <div role="presentation" class="tab" data-bind="css: { 'tab-is-active': gradientKey }">
+        <a role="option" aria-label="Background gradient" aria-haspopup="true"
             data-bind="tooltip: 'Background gradient', balloon: { component: { name: 'gradient-selector', params: { onSelect: $component.onGradientSelected, selectedGradientKey: $component.gradientKey } } }">
             <i aria-hidden="true" class="paperbits-icon paperbits-gradient"></i>
         </a>
@@ -57,10 +57,10 @@
         </svg>
         <!-- /ko -->
         <style data-bind="jss: backgroundPreview"></style>
-        <a href="#" class="dropzone-showbox" alignment="center center"
+        <div aria-label="Background source" class="dropzone-showbox" alignment="center center"
             data-bind="alignment: { position: direction, onChange: onAlignmentChange }">
             <div class="fit" data-bind="css: backgroundClass"></div>
-        </a>
+        </div>
     </div>
 </div>
 
@@ -126,7 +126,7 @@
         Background blend mode
     </label>
     <div class="input-group">
-        <select id="blend" class="form-control"  data-bind="value: blend">
+        <select id="blend" class="form-control" data-bind="value: blend">
             <option value="normal">Normal</option>
             <option value="multiply">Multiply</option>
             <option value="screen">Screen</option>
