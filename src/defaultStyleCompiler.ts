@@ -579,7 +579,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         }
 
         if (widgetHandlerClass) {
-            this.backfillLocalStyles(widgetHandlerClass, localStyles);
+            await this.backfillLocalStyles(widgetHandlerClass, localStyles);
         }
 
         localStyles = Objects.clone(localStyles); // To drop any object references
@@ -715,7 +715,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return css;
     }
 
-    public backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void {
-        this.styleService.backfillLocalStyles(handlerClass, localStyles);
+    public async backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): Promise<void> {
+        await this.styleService.backfillLocalStyles(handlerClass, localStyles);
     }
 }
