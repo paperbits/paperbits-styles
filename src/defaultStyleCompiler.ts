@@ -160,6 +160,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
     // TODO: Move to specialized place (in paperbits-forms)
     private generateAdditionalStyle(components: ComponentBagContract): void {
+        if (!components) {
+            throw new Error(`Parameter "components" not specified.`);
+        }
+
         const formControlVariation = components.formControl?.default;
 
         if (!formControlVariation) {
@@ -289,6 +293,14 @@ export class DefaultStyleCompiler implements StyleCompiler {
     }
 
     public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false, useBreakpointInSelector: boolean = false): Promise<Style> {
+        if (!variationConfig) {
+            throw new Error(`Parameter "variationConfig" not specified.`);
+        }
+
+        if (!componentName) {
+            throw new Error(`Parameter "componentName" not specified.`);
+        }
+
         await this.initializePlugins();
 
         const selector = variationName ? `${componentName}-${variationName}`.replace("-default", "") : componentName;
