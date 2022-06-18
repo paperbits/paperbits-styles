@@ -54,7 +54,6 @@ export class BoxEditor {
     constructor() {
         this.box = ko.observable();
         this.features = "margin,padding,border";
-        // this.features = "padding,border";
 
         this.marginEnabled = ko.observable();
         this.marginTop = ko.observable();
@@ -117,40 +116,30 @@ export class BoxEditor {
         this.paddingBottom.subscribe(this.dispatchUpdates);
     }
 
-    private loadData(data: BoxStylePluginConfig): void {
-        if (!data) {
+    private loadData(config: BoxStylePluginConfig): void {
+        if (!config) {
             return;
         }
 
-        const currentStyle = data;
+        this.marginTop(config.margin?.top);
+        this.marginLeft(config.margin?.left);
+        this.marginRight(config.margin?.right);
+        this.marginBottom(config.margin?.bottom);
 
-        if (currentStyle.margin) {
-            this.marginTop(currentStyle.margin.top);
-            this.marginLeft(currentStyle.margin.left);
-            this.marginRight(currentStyle.margin.right);
-            this.marginBottom(currentStyle.margin.bottom);
-        }
+        this.borderTop(config.border?.top);
+        this.borderLeft(config.border?.left);
+        this.borderRight(config.border?.right);
+        this.borderBottom(config.border?.bottom);
 
-        if (currentStyle.border) {
-            this.borderTop(currentStyle.border.top);
-            this.borderLeft(currentStyle.border.left);
-            this.borderRight(currentStyle.border.right);
-            this.borderBottom(currentStyle.border.bottom);
-        }
+        this.topLeftRadius(config.borderRadius?.topLeftRadius);
+        this.topRightRadius(config.borderRadius?.topRightRadius);
+        this.bottomLeftRadius(config.borderRadius?.bottomLeftRadius);
+        this.bottomRightRadius(config.borderRadius?.bottomRightRadius);
 
-        if (currentStyle.borderRadius) {
-            this.topLeftRadius(currentStyle.borderRadius.topLeftRadius);
-            this.topRightRadius(currentStyle.borderRadius.topRightRadius);
-            this.bottomLeftRadius(currentStyle.borderRadius.bottomLeftRadius);
-            this.bottomRightRadius(currentStyle.borderRadius.bottomRightRadius);
-        }
-
-        if (currentStyle.padding) {
-            this.paddingTop(currentStyle.padding.top);
-            this.paddingLeft(currentStyle.padding.left);
-            this.paddingRight(currentStyle.padding.right);
-            this.paddingBottom(currentStyle.padding.bottom);
-        }
+        this.paddingTop(config.padding?.top);
+        this.paddingLeft(config.padding?.left);
+        this.paddingRight(config.padding?.right);
+        this.paddingBottom(config.padding?.bottom);
 
         this.currentState = this.getState();
     }
