@@ -61,15 +61,20 @@ export class JssCompiler {
         return styleInMediaQuery;
     }
 
-    private styleSheetToCss(styleSheet: StyleSheet): string {
+    private styleSheetToCss(styleSheet: StyleSheet, minWidth?: number): string {
         const globalStyles = styleSheet.globalStyles.map(style => this.styleToJssString(style)).filter(x => !!x).join(",");
         const globalJssString = `{ "@global": { ${globalStyles} } }`;
         const globalJssObject = JSON.parse(globalJssString);
         const globalCss = jss.createStyleSheet(globalJssObject).toString();
         const fontFacesJssString = `"@font-face":[${styleSheet.fontFaces.map(x => this.fontFaceToJssString(x)).join(",")}]`;
         const stylesJssString = styleSheet.styles.map(style => this.styleToJssString(style)).filter(x => !!x).join(",");
-        const mediaQueries = this.flattenMediaQueries(styleSheet.styles, styleSheet.globalStyles);
-        const mediaQueriesJssString = mediaQueries.map(x => this.mediaQueryToJssString(x)).filter(x => !!x).join(",");
+        let mediaQueries = this.flattenMediaQueries(styleSheet.styles, styleSheet.globalStyles);
+
+        if (minWidth) {
+            mediaQueries = mediaQueries.filter(mediaQuery => mediaQuery.minWidth <= minWidth);
+        }
+
+        const mediaQueriesJssString = mediaQueries.map(mediaQuery => this.mediaQueryToJssString(mediaQuery)).filter(mediaQuery => !!mediaQuery).join(",");
         const result = [fontFacesJssString, stylesJssString, mediaQueriesJssString].filter(x => !!x).join(",");
         const jssString = `{${result}}`;
         const jssObject = JSON.parse(jssString);
@@ -152,8 +157,14 @@ export class JssCompiler {
      */
     public compile(...styleSheets: StyleSheet[]): string {
         return styleSheets
-            .map((styleSheet) => this.styleSheetToCss(styleSheet))
+            .map(styleSheet => this.styleSheetToCss(styleSheet))
             .join(" ")
+            .replace(/\n/g, "")
+            .replace(/\s\s+/g, " ");
+    }
+
+    public compileForViewport(styleSheet: StyleSheet, minWidth: number): string {
+        return this.styleSheetToCss(styleSheet, minWidth)
             .replace(/\n/g, "")
             .replace(/\s\s+/g, " ");
     }
