@@ -553,7 +553,8 @@ export class StyleGuide {
         return (!styleKey.startsWith("globals/") || styleKey.startsWith("globals/body/")) &&
             !styleKey.endsWith("/default") &&
             !styleKey.includes("/components/") &&
-            styleKey.indexOf("/navbar/default/") === -1;
+            styleKey.indexOf("/navbar/default/") === -1 &&
+            styleKey !== "colors/defaultBg";
     }
 
     private getContextCommands(element: HTMLElement, styleable: Styleable): IContextCommandSet {
