@@ -585,7 +585,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames.join(" ");
     }
 
-    public async getStyleModelAsync(localStyles: LocalStyles, styleManager: StyleManager, widgetHandlerClass?: any): Promise<StyleModel> {
+    public async getStyleModelAsync(localStyles: LocalStyles, styleManager?: StyleManager, widgetHandlerClass?: any): Promise<StyleModel> {
         if (!localStyles) {
             throw new Error(`Parameter "localStyles" not specified.`);
         }
@@ -599,7 +599,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
         const classNames = [];
         let variationStyle: Style;
-        let key;
+        let styleSheetKey: string;
 
         for (const category of Object.keys(localStyles)) {
             const categoryConfig = localStyles[category];
@@ -612,7 +612,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 const pluginBag = <PluginBag>categoryConfig;
                 const instanceClassName = pluginBag.key || Utils.randomClassName();
                 pluginBag.key = instanceClassName;
-                key = pluginBag.key;
+                styleSheetKey = pluginBag.key;
 
                 variationStyle = await this.getVariationStyle(pluginBag, instanceClassName);
 
@@ -624,16 +624,11 @@ export class DefaultStyleCompiler implements StyleCompiler {
                     const pluginBag = <PluginBag>categoryConfig;
 
                     for (const breakpoint of Object.keys(pluginBag)) {
-                        let className;
-
                         const styleKey = pluginBag[breakpoint];
 
-                        if (breakpoint === "xs") {
-                            className = await this.getClassNameByStyleKeyAsync(styleKey);
-                        }
-                        else {
-                            className = await this.getClassNameByStyleKeyAsync(styleKey, breakpoint);
-                        }
+                        const className = breakpoint === "xs"
+                            ? await this.getClassNameByStyleKeyAsync(styleKey)
+                            : await this.getClassNameByStyleKeyAsync(styleKey, breakpoint);
 
                         if (className) {
                             classNames.push(className);
@@ -642,7 +637,6 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 }
                 else {
                     const styleKey = <string>categoryConfig;
-
                     const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
                     if (className) {
@@ -652,20 +646,18 @@ export class DefaultStyleCompiler implements StyleCompiler {
             }
         }
 
-        const localStyleSheet = new StyleSheet(key);
+        const localStyleSheet = new StyleSheet(styleSheetKey);
 
         if (variationStyle) {
             localStyleSheet.styles.push(variationStyle);
         }
 
-        const result: StyleModel = {
-            key: key,
-            classNames: classNames.join(" "),
-            styleSheet: localStyleSheet,
-            styleManager: styleManager
-        };
+        const styleModel = new StyleModel();
+        styleModel.classNames = classNames.join(" ");
+        styleModel.styleSheet = localStyleSheet;
+        styleModel.styleManager = styleManager;
 
-        return result;
+        return styleModel;
     }
 
     public async getClassNameByStyleKeyAsync(key: string, breakpoint?: string): Promise<string> {
@@ -729,5 +721,11 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
     public backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void {
         this.styleService.backfillLocalStyles(handlerClass, localStyles);
+    }
+
+    public getIconClassName(iconKey: string): string {
+        const segments = iconKey.split("/");
+        const name = segments[1];
+        return `icon icon-${Utils.camelCaseToKebabCase(name.replace("/", "-"))}`;
     }
 }

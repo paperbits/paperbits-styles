@@ -21,7 +21,7 @@ export class StyledBindingHandler {
 
                 ko.utils.domNodeDisposal.addDisposeCallback(element, () => {
                     if (styleModel.styleManager) {
-                        styleModel.styleManager.removeStyleSheet(styleModel.key);
+                        styleModel.styleManager.removeStyleSheet(styleModel.styleSheet);
                     }
                 });
             }
@@ -37,7 +37,7 @@ export class StyledBindingHandler {
 
                 const cssObservable = ko.observable();
 
-                let styleElement = element.ownerDocument.getElementById(styleModel.key);
+                let styleElement = element.ownerDocument.getElementById(styleModel.styleSheet.key);
 
                 const compiler = new JssCompiler();
                 const css = compiler.compile(styleModel.styleSheet);
@@ -45,7 +45,7 @@ export class StyledBindingHandler {
                 if (css) {
                     if (!styleElement) {
                         styleElement = element.ownerDocument.createElement("style");
-                        styleElement.id = styleModel.key;
+                        styleElement.id = styleModel.styleSheet.key;
                         element.ownerDocument.head.appendChild(styleElement);
                     }
 
