@@ -102,14 +102,14 @@ export class StyleGuide {
                                     }
                                 }
                             },
-                            resize: "vertically horizontally"
+                            resizing: "vertically horizontally"
                         };
 
                         this.viewManager.openViewAsPopup(view);
                     }
                 }
             },
-            resize: "vertically horizontally"
+            resizing: "vertically horizontally"
         };
 
         this.viewManager.openViewAsPopup(view);
@@ -176,7 +176,7 @@ export class StyleGuide {
                     }
                 }
             },
-            resize: {
+            resizing: {
                 directions: "vertically horizontally",
                 initialWidth: 400
             }
@@ -208,7 +208,7 @@ export class StyleGuide {
                     }
                 }
             },
-            resize: "vertically horizontally"
+            resizing: "vertically horizontally"
         };
 
         this.viewManager.openViewAsPopup(view);
@@ -228,7 +228,7 @@ export class StyleGuide {
                     }
                 }
             },
-            resize: "vertically horizontally"
+            resizing: "vertically horizontally"
         };
 
         this.viewManager.openViewAsPopup(view);
@@ -249,7 +249,7 @@ export class StyleGuide {
                     }
                 }
             },
-            resize: "vertically horizontally"
+            resizing: "vertically horizontally"
         };
 
         this.viewManager.openViewAsPopup(view);
@@ -277,7 +277,7 @@ export class StyleGuide {
                     }
                 }
             },
-            resize: "vertically horizontally"
+            resizing: "vertically horizontally"
         };
 
         this.viewManager.openViewAsPopup(view);
@@ -685,7 +685,7 @@ export class StyleGuide {
                                 }
                             }
                         },
-                        resize: "vertically horizontally"
+                        resizing: "vertically horizontally"
                     };
 
                     this.viewManager.openViewAsPopup(view);
@@ -735,7 +735,7 @@ export class StyleGuide {
                                 }
                             }
                         },
-                        resize: "vertically horizontally"
+                        resizing: "vertically horizontally"
                     };
 
                     this.viewManager.openViewAsPopup(view);
