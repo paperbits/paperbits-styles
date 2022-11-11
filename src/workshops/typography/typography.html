@@ -67,11 +67,9 @@
 </div>
 
 <div class="form-group">
-    <label for="textShadow">
-        Text shadow
-    </label>
+    <label for="textShadow">Text shadow</label>
     <div class="input-group">
-        <input id="textShadow" class="form-control" readonly
+        <input id="textShadow" class="form-control" role="combobox" readonly
             data-bind="value: $component.shadowName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected } } }" />
         <span class="btn input-group-btn">
             <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
