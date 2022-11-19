@@ -20,7 +20,7 @@ export class StylePublishModule implements IInjectorModule {
         injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);
         injector.bindSingleton("fontManager", FontManager);
-        injector.bindToCollection("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
-        injector.bindToCollection("publishers", FontPublisher);
+        injector.bindToCollectionAsSingletone("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
+        injector.bindToCollectionAsSingletone("publishers", FontPublisher);
     }
 }
