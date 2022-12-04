@@ -13,6 +13,7 @@ import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
 import { IWidgetHandler } from "@paperbits/common/editing";
 import { StyleHelper } from "./styleHelper";
+import { ISettingsProvider } from "@paperbits/common/configuration";
 
 
 const stylesPath = "styles";
@@ -23,6 +24,7 @@ export class StyleService {
         private readonly styleHandlers: StyleHandler[],
         private readonly widgetHandlers: IWidgetHandler[],
         private readonly fontManager: FontManager,
+        private readonly settingsProvider: ISettingsProvider,
         private readonly httpClient: HttpClient
     ) { }
 
@@ -396,20 +398,25 @@ export class StyleService {
     }
 
     public async getExternalIconFonts(): Promise<FontContract[]> {
-        const iconFontsUrl = Constants.iconsFontsLibraryUrl;
+        try {
+            const iconFontsUrl = await this.settingsProvider.getSetting<string>(Constants.iconsFontsLibraryUrlSettingName);
 
-        const response = await this.httpClient.send({
-            url: iconFontsUrl,
-            method: "GET"
-        });
+            const response = await this.httpClient.send({
+                url: iconFontsUrl || Constants.iconsFontsLibraryUrl,
+                method: "GET"
+            });
 
-        if (response.statusCode !== 200) {
-            return [];
+            if (response.statusCode !== 200) {
+                return [];
+            }
+
+            const iconFontsData = <any>response.toObject();
+
+            return iconFontsData.fonts;
         }
-
-        const iconFontsData = <any>response.toObject();
-
-        return iconFontsData.fonts;
+        catch (error) {
+            throw new Error(`Unable to load icon fonts library.`);
+        }
     }
 
     public async getFonts(): Promise<FontContract[]> {
