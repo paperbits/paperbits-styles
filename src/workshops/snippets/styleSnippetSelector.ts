@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import * as _ from "lodash";
+import * as Objects from "@paperbits/common/objects";
 import template from "./styleSnippetSelector.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleSnippetService } from "../../styleSnippetService";
@@ -172,7 +172,7 @@ export class StyleSnippetSelector {
             return;
         }
         
-        const selectedItem = _.cloneDeep(this.selectedSnippet());
+        const selectedItem = Objects.clone<StyleItem>(this.selectedSnippet());
         const source = selectedItem.stylesConfig;
         selectedItem.stylesConfig = source;
         const allKeys = this.getAllStyleKeys(source).filter((item, index, source) => source.indexOf(item) === index);
