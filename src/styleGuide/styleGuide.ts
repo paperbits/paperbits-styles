@@ -2,17 +2,17 @@ import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
-import { EventManager, Events, MouseButton } from "@paperbits/common/events";
-import { Component, OnMounted, OnDestroyed } from "@paperbits/common/ko/decorators";
-import { IStyleGroup, Styleable, VariationContract, StyleManager, StyleCompiler } from "@paperbits/common/styles";
-import { View, ViewManager, ViewManagerMode, IHighlightConfig, IContextCommandSet, ActiveElement } from "@paperbits/common/ui";
-import { StyleService } from "../styleService";
-import { FontContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract } from "../contracts";
-import { StyleItem } from "../models/styleItem";
+import { Bag, MouseButtons } from "@paperbits/common";
+import { EventManager, Events } from "@paperbits/common/events";
+import { Component, OnDestroyed, OnMounted } from "@paperbits/common/ko/decorators";
+import { IStyleGroup, Styleable, StyleCompiler, StyleManager, VariationContract } from "@paperbits/common/styles";
+import { ActiveElement, IContextCommandSet, IHighlightConfig, View, ViewManager, ViewManagerMode } from "@paperbits/common/ui";
+import { ColorContract, FontContract, LinearGradientContract, ShadowContract } from "../contracts";
 import { ComponentStyle } from "../contracts/componentStyle";
-import { formatUnicode } from "../styleUitls";
+import { StyleItem } from "../models/styleItem";
 import { OpenTypeFontGlyph } from "../openType";
-import { Bag } from "@paperbits/common";
+import { StyleService } from "../styleService";
+import { formatUnicode } from "../styleUitls";
 
 @Component({
     selector: "style-guide",
@@ -484,7 +484,7 @@ export class StyleGuide {
             return;
         }
 
-        if (event.button !== MouseButton.Main) {
+        if (event.button !== MouseButtons.Main) {
             return;
         }
 
