@@ -4,7 +4,7 @@
 
     <div role="listbox" aria-label="Gradients" class="palette" data-bind="listbox: {}">
         <a role="option" class="color-box"
-            data-bind="css: { selected: !$component.selectedGradientKey() }, tooltip: 'Clear gradient', activate: $component.clearGradients, focus: true">
+            data-bind="css: { selected: null === $component.selectedGradientKey() }, attr: { 'aria-label': 'Clear gradient' }, tooltip: 'Clear gradient', activate: $component.clearGradients, focus: true">
             <span class="color-box-wrapper">
                 <i aria-hidden="true" class="color paperbits-icon paperbits-ban"></i>
             </span>
@@ -12,7 +12,7 @@
 
         <!-- ko foreach: { data: gradients, as: 'gradient' } -->
         <a role="option" class="color-box"
-            data-bind="css: { selected: gradient.key === $component.selectedGradientKey() }, tooltip: gradient.displayName, activate: $component.selectGradient">
+            data-bind="css: { selected: gradient.key === $component.selectedGradientKey() }, attr: { 'aria-label': gradient.displayName }, tooltip: gradient.displayName, activate: $component.selectGradient">
             <span class="color-box-wrapper pseudo-transparent-bckg">
                 <span class="color" data-bind="style: { background: gradient.value }"></span>
             </span>
