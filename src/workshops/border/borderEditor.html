@@ -11,8 +11,10 @@
 
         <div class="form-group">
             <label for="borderLineStyle">Line style</label>
-            <select id="borderLineStyle" class="form-control"
-                data-bind="options: borderLineStyles, value: borderLineStyle, optionsText: 'name', optionsValue: 'value'"></select>
+            <dropdown id="borderLineStyle"
+                params="{ options: borderLineStyles, value: borderLineStyle, optionsText: 'name', optionsValue: 'value' }"
+                aria-label="Line Style">
+            </dropdown>
         </div>
 
         <div class="palette">

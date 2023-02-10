@@ -79,12 +79,16 @@
 
 <div class="form-group">
     <label for="textTransform">Transformation</label>
-    <select id="textTransform" class="form-control"
-        data-bind="options: textTransformOptions, optionsValue: 'value', optionsText: 'text', value: $component.textTransform"></select>
+    <dropdown id="textTransform"
+        params="{ options: textTransformOptions, optionsValue: 'value', optionsText: 'text', value: $component.textTransform }"
+        aria-label="Transformation">
+    </dropdown>
 </div>
 
 <div class="form-group">
     <label for="textDecoration">Decoration</label>
-    <select id="textDecoration" class="form-control"
-        data-bind="options: textDecorationOptions, optionsValue: 'value', optionsText: 'text', value: $component.textDecoration"></select>
+    <dropdown id="textDecoration"
+        params="{ options: textDecorationOptions, optionsValue: 'value', optionsText: 'text', value: $component.textDecoration }"
+        aria-label="Decoration">
+    </dropdown>
 </div>

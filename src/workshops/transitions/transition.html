@@ -1,7 +1,9 @@
 <div class="form-group">
     <label for="timingFunction">Timing function</label>
-    <select id="timingFunction" class="form-control"
-        data-bind="options: timingFunctionOptions, optionsValue: 'value', optionsText: 'text', value: $component.timingFunction"></select>
+    <dropdown id="timingFunction"
+        params="{ options: timingFunctionOptions, optionsValue: 'value', optionsText: 'text', value: $component.timingFunction }"
+        aria-label="Timing Function">
+    </dropdown>
 </div>
 
 <!-- ko if: $component.enabled -->
