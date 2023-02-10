@@ -17,7 +17,7 @@
         <!-- ko if: elementStates -->
         <div class="form-group">
             <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState}" aria-label="State">
+            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default'}" aria-label="State">
             </dropdown>
         </div>
         <!--/ko -->
@@ -47,10 +47,8 @@
         <!-- ko if: elementStates -->
         <div class="form-group">
             <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState}" aria-label="State">
+            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default' }" aria-label="State">
             </dropdown>
-            <select id="textTransform" class="form-control"
-                data-bind="options: elementStates, value: selectedState, optionsCaption: 'default'"></select>
         </div>
         <!--/ko -->
     </div>
