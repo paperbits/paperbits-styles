@@ -135,9 +135,9 @@ export class StyleEditor {
         this.updateObservables();
 
         const states = this.elementStyle.allowedStates;
-        this.elementStates(["default"].concat(states));
 
         if (states && states.length > 0) {
+            this.elementStates(states);
             this.selectedState.subscribe(this.onStateSelected);
         }
 
@@ -161,6 +161,7 @@ export class StyleEditor {
         this.elementStyleTypography(style.typography);
         this.elementStyleTransform(style.transform);
         this.elementStyleTransition(<TransitionStylePluginConfig>style.transition);
+
         this.elementStyleBackground(style.background);
         this.elementStyleShadow(<ShadowStylePluginConfig>style.shadow);
         this.elementStyleAnimation(<AnimationStylePluginConfig>style.animation);
