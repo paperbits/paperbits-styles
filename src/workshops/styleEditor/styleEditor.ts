@@ -135,7 +135,7 @@ export class StyleEditor {
         this.updateObservables();
 
         const states = this.elementStyle.allowedStates;
-        this.elementStates(states);
+        this.elementStates(["default"].concat(states));
 
         if (states && states.length > 0) {
             this.selectedState.subscribe(this.onStateSelected);
