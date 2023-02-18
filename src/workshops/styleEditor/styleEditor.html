@@ -17,7 +17,7 @@
         <!-- ko if: elementStates().length > 0 -->
         <div class="form-group">
             <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }" aria-label="State">
+            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
             </dropdown>
         </div>
         <!--/ko -->
@@ -38,8 +38,7 @@
                 Variation
             </label>
             <dropdown id="baseComponentVariationKey"
-                params="{ options: baseComponentVariations, value: baseComponentVariationKey, optionsText: 'displayName', optionsValue: 'key'}"
-                aria-label="Variation">
+                params="{ options: baseComponentVariations, value: baseComponentVariationKey, optionsText: 'displayName', optionsValue: 'key', heading: 'Variation' }">
             </dropdown>
         </div>
         <!-- /ko -->
@@ -47,7 +46,7 @@
         <!-- ko if: elementStates().length > 0 -->
         <div class="form-group">
             <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }" aria-label="State">
+            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
             </dropdown>
         </div>
         <!--/ko -->
