@@ -302,7 +302,7 @@ export class StyleHelper {
         const optionText = displayOptions.find(x => x.value === newViewportValue).text;
 
         if (otherValues.includes(Display.None) && !otherValues.includes(Display.Inline) && !otherValues.includes(Display.Block)) {
-            viewManager.notifyError("Visibility", `Element should be set "Visible" on at least one other screen size, before you can set "${optionText}" on current one.`);
+            viewManager.notifyError("Visibility", `This setting must be set to "Visible" for at least one other screen size, before you can set "${optionText}" on current one.`);
             return;
         }
 
