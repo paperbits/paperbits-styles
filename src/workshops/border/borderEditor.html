@@ -16,18 +16,21 @@
             </dropdown>
         </div>
 
-        <div class="palette">
-            <div class="color-box" data-bind="css: { selected: !$component.borderColorKey() }">
-                <a href="#" title="Clear color" class="color" role="button" data-bind="click: $component.clearColor">
-                    <i aria-hidden="true" class="paperbits-icon paperbits-ban"></i>
-                </a>
-            </div>
-
+        <div role="listbox" aria-label="Colors" class="palette" data-bind="listbox: {}">
+            <a role="option" class="color-box"
+                data-bind="css: { selected: null === $component.borderColorKey()  }, attr: { 'aria-label': 'Clear color' }, tooltip: 'Clear color', activate: $component.clearColors">
+                <span class="color-box-wrapper">
+                    <i aria-hidden="true" class="color paperbits-icon paperbits-ban"></i>
+                </span>
+            </a>
+    
             <!-- ko foreach: { data: colors, as: 'color' } -->
-            <div class="color-box" data-bind="css: { selected: color.key === $component.borderColorKey() }">
-                <a href="#" class="color" role="button"
-                    data-bind="click: $component.selectColor, attr: { title: color.displayName }, style: { background: color.value }"></a>
-            </div>
+            <a role="option" class="color-box"
+                data-bind="css: { selected: color.key === $component.borderColorKey() }, attr: { 'aria-label': color.displayName }, tooltip: color.displayName, activate: $component.selectColor">
+                <span class="color-box-wrapper pseudo-transparent-bckg">
+                    <span class="color" data-bind="style: { background: color.value }"></span>
+                </span>
+            </a>
             <!--/ko -->
         </div>
     </div>
