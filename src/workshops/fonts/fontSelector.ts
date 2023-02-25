@@ -4,6 +4,7 @@ import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorat
 import { StyleCompiler } from "@paperbits/common/styles";
 import { StyleService } from "../../styleService";
 import { FontContract } from "../../contracts/fontContract";
+import { SystemFonts } from "../../fonts/systemFonts";
 
 
 @Component({
@@ -38,7 +39,7 @@ export class FontSelector {
         this.compiledFontStyles(styles);
 
         const fonts = await this.styleService.getVariations<FontContract>("fonts");
-        this.fonts(fonts);
+        this.fonts(fonts.concat(SystemFonts));
     }
 
     public selectFont(font: FontContract): void {

@@ -4,6 +4,7 @@ import { ThemeContract, FontContract, ColorContract, ShadowContract } from "../.
 import { TypographyStylePluginConfig } from "./typographyStylePluginConfig";
 import { StyleRule } from "@paperbits/common/styles";
 import { StyleHelper } from "../../styleHelper";
+import { SystemFonts } from "../../fonts/systemFonts";
 
 export class TypographyStylePlugin extends StylePlugin {
     private themeContract: ThemeContract;
@@ -33,7 +34,7 @@ export class TypographyStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.fontKey) {
-            const fontContract = Objects.getObjectAt<FontContract>(pluginConfig.fontKey, this.themeContract);
+            const fontContract = Objects.getObjectAt<FontContract>(pluginConfig.fontKey, this.themeContract) || SystemFonts.find(font => font.key === pluginConfig.fontKey);
 
             if (fontContract) {
                 result.push(new StyleRule("fontFamily", fontContract.family));

@@ -21,7 +21,7 @@ export interface FontContract extends PrimitiveContract {
     /**
      * e.g. [400, 500, "regular", "500", "500italic"].
      */
-    variants: FontVariantContract[];
+    variants?: FontVariantContract[];
 
     /**
      * e.g. "v7"
