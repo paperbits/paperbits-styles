@@ -12,6 +12,7 @@ import { StyledBindingHandler } from "./ko/bindingHandlers/bindingHandlers.style
 import { FontManager } from "./openType";
 import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.publish";
 import { FontPublisher } from "./fonts/fontPublisher";
+import { LocalStyleHtmlPagePublisherPlugin } from "./publishing/localStylesHtmlPagePublisherPlugin";
 
 
 export class StylePublishModule implements IInjectorModule {
@@ -22,5 +23,6 @@ export class StylePublishModule implements IInjectorModule {
         injector.bindSingleton("fontManager", FontManager);
         injector.bindToCollectionAsSingletone("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
         injector.bindToCollectionAsSingletone("publishers", FontPublisher);
+        injector.bindToCollectionAsSingletone("htmlPagePublisherPlugins", LocalStyleHtmlPagePublisherPlugin);
     }
 }
