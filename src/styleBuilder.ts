@@ -5,6 +5,8 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { JssCompiler } from "./jssCompiler";
 import { MimeTypes } from "@paperbits/common";
 
+const hashingAlgorithm = "sha512";
+
 export class StyleBuilder {
     constructor(private readonly outputBlobStorage: IBlobStorage) { }
 
@@ -26,10 +28,10 @@ export class StyleBuilder {
 
         await this.outputBlobStorage.uploadBlob(permalink, contentBytes, MimeTypes.textCss);
 
-        const sha512hash = crypto.createHash("sha512");
+        const sha512hash = crypto.createHash(hashingAlgorithm);
         sha512hash.update(contentBytes);
 
         const signature = sha512hash.digest("base64");
-        return `sha512-${signature}`;
+        return `${hashingAlgorithm}-${signature}`;
     }
 }

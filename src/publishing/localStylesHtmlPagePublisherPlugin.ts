@@ -18,7 +18,7 @@ export class LocalStyleHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
 
     private appendStyleLink(document: Document, href: string, integrity: string): void {
         const element: HTMLStyleElement = document.createElement("link");
-        element.setAttribute("href", href);
+        element.setAttribute(Attributes.Href, href);
 
         if (integrity) {
             element.setAttribute(Attributes.Integrity, integrity);
