@@ -53,18 +53,22 @@
         <div class="style-card style-card-empty">
             <div class="form-group">
                 <label for="gradientColors">Color stops</label>
-                <div class="palette" role="list">
+              
+                <div role="listbox" aria-label="Colors" class="palette" data-bind="listbox: {}">
                     <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                    <div class="color-box" role="presentation">
-                        <a href="#" role="listitem" class="color" aria-label="Select color stop"
-                            data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }, style: { background: colorStop.color }"></a>
-                    </div>
-                    <!-- /ko -->
-                    <div class="color-box">
-                        <a href="#" title="Add color stop" class="color" data-bind="click: $component.addColor">
+                    <a role="option" class="color-box"
+                        data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }">
+                        <span class="color-box-wrapper pseudo-transparent-bckg">
+                            <span class="color" data-bind="style: { background: colorStop.color }"></span>
+                        </span>
+                    </a>
+                    <!--/ko -->
+
+                    <a role="option" title="Add color stop" class="color-box" data-bind="activate: $component.addColor">
+                        <span class="color-box-wrapper">
                             <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
-                        </a>
-                    </div>
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
