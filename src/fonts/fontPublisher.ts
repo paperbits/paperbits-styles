@@ -3,6 +3,7 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { Logger } from "@paperbits/common/logging";
 import { StyleService } from "../styleService";
 import { FontContract } from "../contracts";
+import { MimeTypes } from "@paperbits/common";
 
 
 export class FontPublisher implements IPublisher {
@@ -27,7 +28,7 @@ export class FontPublisher implements IPublisher {
                 const blob = await this.blobStorage.downloadBlob(blobKey);
 
                 if (blob) {
-                    await this.outputBlobStorage.uploadBlob(variant.sourceKey, blob, "font/ttf");
+                    await this.outputBlobStorage.uploadBlob(variant.sourceKey, blob, MimeTypes.fontTtf);
                     continue;
                 }
 

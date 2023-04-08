@@ -6,6 +6,7 @@ import { IconsFontFamilyName, IconsFontFileSourceKey, IconsFontStyleName } from 
 import { FontContract, FontGlyphContract, FontVariantContract, ThemeContract } from "../contracts";
 import { OpenTypeFont } from "./openTypeFont";
 import { OpenTypeFontGlyph } from "./openTypeFontGlyph";
+import { MimeTypes } from "@paperbits/common";
 
 
 export class FontManager {
@@ -83,7 +84,7 @@ export class FontManager {
 
         const fontArrayBuffer = font.toArrayBuffer();
 
-        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), "font/ttf");
+        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), MimeTypes.fontTtf);
 
         iconFont = this.getIconFontContract();
 
@@ -140,7 +141,7 @@ export class FontManager {
         glyphs.forEach((x, index) => x.advanceWidth = advanceWidths[index]);
 
         const fontArrayBuffer = font.toArrayBuffer();
-        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), "font/ttf");
+        await this.blobStorage.uploadBlob(IconsFontFileSourceKey, new Uint8Array(fontArrayBuffer), MimeTypes.fontTtf);
 
         iconFont = this.getIconFontContract();
         Objects.setValue("fonts/icons", styles, iconFont);
@@ -166,7 +167,7 @@ export class FontManager {
 
         const identifier = Utils.guid();
         const blobKey = `fonts/${identifier}${extension}`;
-        await this.blobStorage.uploadBlob(blobKey, content, "font/ttf");
+        await this.blobStorage.uploadBlob(blobKey, content, MimeTypes.fontTtf);
 
         const fontVariant: FontVariantContract = {
             weight: fontWeight,

@@ -10,6 +10,7 @@ import { IBlobStorage } from "@paperbits/common/persistence";
 import { FontVariantContract } from "../../contracts";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { EventManager } from "@paperbits/common/events";
+import { MimeTypes } from "@paperbits/common";
 
 
 interface Variant {
@@ -226,7 +227,7 @@ export class FontEditor {
         const variantIndex = this.font.variants.findIndex(x => x.weight.toString() === variant.weight.toString() && x.style === variant.style);
 
         try {
-            await this.blobStorage.uploadBlob(blobKey, content, "font/ttf");
+            await this.blobStorage.uploadBlob(blobKey, content, MimeTypes.fontTtf);
         }
         catch (error) {
             console.error(`Could not upload font variant blob. ${error.stack}`);

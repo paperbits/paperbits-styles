@@ -3,19 +3,24 @@
  */
 export interface FontVariantContract {
     /**
-     * e.g. "400", "bold", etc.
+     * Font weight, e.g. "400", "bold", etc.
      */
     weight: number | string;
 
     /**
-     * e.g. "normal", "italic".
+     * Font style, e.g. "normal", "italic".
      */
     style: string;
 
     /**
-     * @deprecated
+     * @deprecated Font file location, e.g. `https://cdn.paperbits.io/fonts/JollyGoodSans-Basic.woff2`.
      */
     file?: string;
+
+    /**
+     * Font mime-type, e.g. `font/ttf`.
+     */
+    mimeType?: string;
 
     /**
      * Font variant permalink, e.g. "http://fonts.gstatic.com/s/adventpro/v7/V8mDoQfxVT4Dvddr_yOwjcmODbY.ttf".

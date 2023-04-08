@@ -1,10 +1,8 @@
 import * as ko from "knockout";
-import * as Utils from "@paperbits/common/utils";
 import * as Objects from "@paperbits/common";
 import template from "./googleFonts.html";
 import { HttpClient, HttpMethod } from "@paperbits/common/http";
 import { ISettingsProvider } from "@paperbits/common/configuration";
-import { ISiteService } from "@paperbits/common/sites";
 import { ViewManager } from "@paperbits/common/ui";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
@@ -17,7 +15,6 @@ import { GoogleFont } from "./googleFont";
 import { FontManager } from "../../openType";
 
 
-const defaultApiKey = "AIzaSyDnNQwlwF8y3mxGwO5QglUyYZRj_VqNJgM"; 
 const defaultApiUrl = "https://www.googleapis.com/webfonts/v1/webfonts";
 
 @Component({
@@ -51,8 +48,13 @@ export class GoogleFonts {
     @OnMounted()
     public async loadGoogleFonts(): Promise<void> {
         const settings = await this.settingsProvider.getSetting<GoogleFontsSettings>("integration/googleFonts");
-        const apiKey = settings?.apiKey || defaultApiKey;
+        const apiKey = settings?.apiKey;
         const apiUrl = settings?.apiUrl || defaultApiUrl;
+
+        if (!apiKey) {
+            this.viewManager.notifyError("Google Fonts", `Unable to load fonts from Google Fonts service, the setting "apiKey" not specified.`);
+            return;
+        }
 
         const response = await this.httpClient.send<GoogleFontsResult>({
             url: `${apiUrl}?key=${apiKey}`,
