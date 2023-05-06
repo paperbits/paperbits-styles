@@ -26,6 +26,12 @@ export class AnimationSelector {
     @OnMounted()
     public async loadAnimations(): Promise<void> {
         const animations = await this.styleService.getAnimations();
+        const noAnimationOption = animations.find(x => x.key == "animations/none");
+
+        if (!noAnimationOption) {
+            animations.unshift(<any>{ "displayName": "No animation", "key": "animations/none" });
+        }
+
         this.animations(animations);
     }
 

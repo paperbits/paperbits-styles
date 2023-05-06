@@ -273,7 +273,7 @@ export class StyleGuide {
                             await this.onUpdateStyle(componentName);
                         }
 
-                        this.applyChanges();
+                        await this.applyChanges();
                     }
                 }
             },
@@ -674,13 +674,6 @@ export class StyleGuide {
                                 elementStyle: style,
                                 onUpdate: async () => {
                                     await this.styleService.updateStyle(style);
-
-                                    if (style.key.startsWith("components/")) {
-                                        const parts = style.key.split("/");
-                                        const componentName = parts[1];
-                                        await this.onUpdateStyle(componentName);
-                                    }
-
                                     this.applyChanges();
                                 }
                             }

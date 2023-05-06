@@ -29,6 +29,12 @@ export class ShadowSelector {
     @OnMounted()
     public async loadShadows(): Promise<void> {
         const shadows = await this.styleService.getShadows();
+        const noShadowOption = shadows.find(x => x.key == "shadows/none");
+
+        if (!noShadowOption) {
+            shadows.unshift(<any>{ "displayName": "No shadow", "key": "shadows/none" });
+        }
+
         this.shadows(shadows);
     }
 
