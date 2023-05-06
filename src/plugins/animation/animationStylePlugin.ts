@@ -18,6 +18,10 @@ export class AnimationStylePlugin extends StylePlugin {
     }
 
     public async configToStyleRules(pluginConfig: AnimationStylePluginConfig): Promise<StyleRule[]> {
+        if (pluginConfig.animationKey == "animations/none") {
+            return [new StyleRule("animation", "none")];
+        }
+
         const contract = Objects.getObjectAt<AnimationContract>(pluginConfig.animationKey, this.themeContract);
 
         const result = [

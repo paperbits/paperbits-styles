@@ -161,12 +161,25 @@ export class StyleService {
 
     public async getShadows(): Promise<ShadowContract[]> {
         const shadows = await this.getPrimitives<ShadowContract>("shadows");
-        return shadows.filter(x => x !== null && x.key !== "shadows/none");
+        const noShadowOption = shadows.find(x => x.key == "shadows/none");
+
+        if (!noShadowOption) {
+            shadows.unshift(<any>{ "displayName": "No shadow", "key": "shadows/none" });
+        }
+
+        return shadows;
     }
 
     public async getAnimations(): Promise<AnimationContract[]> {
         const animations = await this.getPrimitives<AnimationContract>("animations");
-        return animations.filter(x => x !== null && x.key !== "animations/none");
+
+        const noAnimationOption = animations.find(x => x.key == "animations/none");
+
+        if (!noAnimationOption) {
+            animations.unshift(<any>{ "displayName": "No animation", "key": "animations/none" });
+        }
+
+        return animations;
     }
 
     private rewriteVariationKeysRecursively(variation: VariationContract, parentKey: string): void {
