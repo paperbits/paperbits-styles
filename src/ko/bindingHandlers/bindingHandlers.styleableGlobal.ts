@@ -31,6 +31,7 @@ export class StylableGlobalBindingHandler {
                             backgroundObservable(null);
                             mode = 1;
                             break;
+                            
                         case 1:
                             backgroundObservable("transparent");
                             mode = 2;

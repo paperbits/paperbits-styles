@@ -246,11 +246,7 @@ export class StyleService {
         }
 
         const styles = await this.getStyles();
-
         Objects.setValue(style.key, styles, style);
-
-
-        console.log(styles);
 
         await this.updateStyles(styles);
     }

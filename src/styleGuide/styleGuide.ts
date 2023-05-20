@@ -629,6 +629,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("shadows/")) {
             styleContextualEditor.selectCommands.push({
+                name: "edit",
                 controlType: "toolbox-button",
                 displayName: "Edit shadow",
                 position: "top right",
@@ -639,6 +640,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("gradients/")) {
             styleContextualEditor.selectCommands.push({
+                name: "edit",
                 controlType: "toolbox-button",
                 displayName: "Edit gradient",
                 position: "top right",
@@ -649,6 +651,7 @@ export class StyleGuide {
 
         if (style.key.startsWith("colors/")) {
             styleContextualEditor.selectCommands.push({
+                name: "edit",
                 controlType: "toolbox-button",
                 displayName: "Edit color",
                 position: "top right",
