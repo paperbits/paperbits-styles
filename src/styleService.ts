@@ -468,7 +468,12 @@ export class StyleService {
             });
         });
 
-        this.updateStyles(styles);
+        await new Promise<void>((resolve) => {
+            setTimeout(async () => {
+                await this.mergeStyles(styles);
+                resolve();
+            }, 0);
+        });
     }
 
     public async backfillStyles(): Promise<void> {
