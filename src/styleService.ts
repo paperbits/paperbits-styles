@@ -188,30 +188,6 @@ export class StyleService {
         });
     }
 
-    public async addComponentVariation(componentName: string, variationName: string, snippet?: ComponentStyle): Promise<string> {
-        const styles = await this.getStyles();
-        const defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
-
-        if (!defaultVariation) {
-            throw new Error(`Default variation for component "${componentName}" not found.`);
-        }
-
-        const variation: VariationContract = Objects.clone(defaultVariation);
-        const key = `components/${componentName}/${variationName}`;
-
-        this.rewriteVariationKeysRecursively(variation, key);
-
-        variation.key = key;
-        variation.displayName = "< Unnamed >";
-        variation.category = "appearance";
-
-        styles.components[componentName][variationName] = variation;
-
-        await this.updateStyles(styles);
-
-        return variation.key;
-    }
-
     public async addTextStyleVariation(variationName: string): Promise<VariationContract> {
         const styles = await this.getStyles();
 
@@ -502,5 +478,45 @@ export class StyleService {
         });
 
         this.updateStyles(styles);
+    }
+
+    public async addComponentVariation(componentName: string, variationName: string, variation?: VariationContract): Promise<string> {
+        const key = `components/${componentName}/${variationName}`;
+
+        this.rewriteVariationKeysRecursively(variation, key);
+
+        variation.key = key;
+        variation.displayName = variation.displayName || "< Unnamed >";
+        variation.category = "appearance";
+
+        const styles = await this.getStyles();
+        styles.components[componentName][variationName] = variation;
+
+        await this.updateStyles(styles);
+
+        return variation.key;
+    }
+
+    public async convertLocalStylesToVariation(componentName: string, variationDisplayName: string, localStyles: LocalStyles): Promise<LocalStyles> {
+        const variationName = Utils.randomClassName();
+        const styleKey = `components/button/${variationName}`;
+
+        const variation: VariationContract = {
+            key: styleKey,
+            displayName: variationDisplayName,
+            category: "appearance",
+            allowedStates: [], // copy from default
+        }
+
+        delete localStyles.instance.key;
+        Object.assign(variation, localStyles.instance);
+
+        delete localStyles.instance;
+
+        localStyles["appearance"] = styleKey;
+
+        await this.addComponentVariation(componentName, variationName, <any>variation)
+
+        return localStyles;
     }
 }
