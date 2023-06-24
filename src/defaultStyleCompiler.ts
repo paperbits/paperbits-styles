@@ -42,7 +42,8 @@ import {
     LocalStyles,
     PluginBag,
     ComponentBagContract,
-    VariationContract
+    VariationContract,
+    StyleDefinition
 } from "@paperbits/common/styles";
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
@@ -179,7 +180,6 @@ export class DefaultStyleCompiler implements StyleCompiler {
             await this.initializePlugins();
             this.initialized = true;
         }
-
 
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
@@ -585,13 +585,9 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames.join(" ");
     }
 
-    public async getStyleModelAsync(localStyles: LocalStyles, styleManager?: StyleManager, widgetHandlerClass?: any): Promise<StyleModel> {
+    public async getStyleModelAsync(localStyles: LocalStyles, styleManager?: StyleManager): Promise<StyleModel> {
         if (!localStyles) {
             throw new Error(`Parameter "localStyles" not specified.`);
-        }
-
-        if (widgetHandlerClass) {
-            this.backfillLocalStyles(widgetHandlerClass, localStyles);
         }
 
         localStyles = Objects.clone(localStyles); // To drop any object references
@@ -620,28 +616,11 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 classNames.push(...instanceClassNames);
             }
             else {
-                if (this.isResponsive(categoryConfig)) {
-                    const pluginBag = <PluginBag>categoryConfig;
+                const styleKey = <string>categoryConfig;
+                const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
-                    for (const breakpoint of Object.keys(pluginBag)) {
-                        const styleKey = pluginBag[breakpoint];
-
-                        const className = breakpoint === "xs"
-                            ? await this.getClassNameByStyleKeyAsync(styleKey)
-                            : await this.getClassNameByStyleKeyAsync(styleKey, breakpoint);
-
-                        if (className) {
-                            classNames.push(className);
-                        }
-                    }
-                }
-                else {
-                    const styleKey = <string>categoryConfig;
-                    const className = await this.getClassNameByStyleKeyAsync(styleKey);
-
-                    if (className) {
-                        classNames.push(className);
-                    }
+                if (className) {
+                    classNames.push(className);
                 }
             }
         }
@@ -706,21 +685,8 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return classNames.join(" ");
     }
 
-    public styleToCss(style: Style): string {
-        if (!style) {
-            return "";
-        }
-
-        const styleSheet = new StyleSheet();
-        styleSheet.styles.push(style);
-
-        const compiler = new JssCompiler();
-        const css = compiler.compile(styleSheet);
-        return css;
-    }
-
-    public backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): void {
-        this.styleService.backfillLocalStyles(handlerClass, localStyles);
+    public backfillLocalStyles(localStyles: LocalStyles, styleDefinition: StyleDefinition): void {
+        this.styleService.backfillLocalStyles(localStyles, styleDefinition);
     }
 
     public getIconClassName(iconKey: string): string {

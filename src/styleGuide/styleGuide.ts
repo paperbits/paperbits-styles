@@ -1,5 +1,6 @@
 import * as ko from "knockout";
 import * as Utils from "@paperbits/common/utils";
+import * as Objects from "@paperbits/common/objects";
 import * as _ from "lodash";
 import template from "./styleGuide.html";
 import { Bag, MouseButtons } from "@paperbits/common";
@@ -295,14 +296,16 @@ export class StyleGuide {
         this.selectStyle(addedItem);
     }
 
-    public async onSnippetSelected(snippet: StyleItem): Promise<void> {
-        await this.styleService.mergeStyles(snippet.stylesConfig);
-        await this.openInEditor(snippet.stylesType.split("/").pop(), snippet);
-    }
-
-    public async openInEditor(componentName: string, snippet?: any): Promise<void> {
+    public async openInEditor(componentName: string, snippet?: ComponentStyle): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, snippet);
+        let defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
+
+        if (!defaultVariation) {
+            throw new Error(`Default variation for component "${componentName}" not found.`);
+        }
+
+        defaultVariation = Objects.clone(defaultVariation); // dropping references
+        const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, defaultVariation);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
 
         this.selectStyle(addedStyle);

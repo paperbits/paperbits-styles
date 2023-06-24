@@ -5,13 +5,11 @@ import * as Constants from "@paperbits/common/constants";
 import { IObjectStorage } from "@paperbits/common/persistence";
 import { ThemeContract, ColorContract, ShadowContract, LinearGradientContract, FontGlyphContract, FontContract } from "./contracts";
 import { AnimationContract } from "./plugins";
-import { ComponentStyle } from "./contracts/componentStyle";
-import { ComponentStyleDefinition, LocalStyles, StyleDefinition, StyleHandler, VariationContract } from "@paperbits/common/styles";
+import { LocalStyles, StyleDefinition, StyleHandler, VariationContract } from "@paperbits/common/styles";
 import { StylePrimitives } from "./constants";
 import { OpenTypeFontGlyph } from "./openType/openTypeFontGlyph";
 import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
-import { IWidgetHandler } from "@paperbits/common/editing";
 import { StyleHelper } from "./styleHelper";
 import { ISettingsProvider } from "@paperbits/common/configuration";
 
@@ -22,7 +20,6 @@ export class StyleService {
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly styleHandlers: StyleHandler[],
-        private readonly widgetHandlers: IWidgetHandler[],
         private readonly fontManager: FontManager,
         private readonly settingsProvider: ISettingsProvider,
         private readonly httpClient: HttpClient
@@ -41,18 +38,6 @@ export class StyleService {
         if (!stylesObject) {
             throw new Error("Data doesn't contain styles.");
         }
-
-        // this.styleHandlers.forEach(styleHandler => {
-        //     if (styleHandler.migrate) {
-        //         styleHandler.migrate(stylesObject.components[styleHandler.key]);
-        //     }
-
-        //     if (stylesObject.components[styleHandler.key]) {
-        //         return;
-        //     }
-
-        //     stylesObject.components[styleHandler.key] = styleHandler.getDefaultStyle();
-        // });
 
         return stylesObject;
     }
@@ -186,30 +171,6 @@ export class StyleService {
                 this.rewriteVariationKeysRecursively(subComponentVariation, key);
             });
         });
-    }
-
-    public async addComponentVariation(componentName: string, variationName: string, snippet?: ComponentStyle): Promise<string> {
-        const styles = await this.getStyles();
-        const defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
-
-        if (!defaultVariation) {
-            throw new Error(`Default variation for component "${componentName}" not found.`);
-        }
-
-        const variation: VariationContract = Objects.clone(defaultVariation);
-        const key = `components/${componentName}/${variationName}`;
-
-        this.rewriteVariationKeysRecursively(variation, key);
-
-        variation.key = key;
-        variation.displayName = "< Unnamed >";
-        variation.category = "appearance";
-
-        styles.components[componentName][variationName] = variation;
-
-        await this.updateStyles(styles);
-
-        return variation.key;
     }
 
     public async addTextStyleVariation(variationName: string): Promise<VariationContract> {
@@ -433,27 +394,15 @@ export class StyleService {
         return this.sortByDisplayName(textStylesVariations);
     }
 
-    public async backfillLocalStyles(handlerClass: any, localStyles: LocalStyles): Promise<void> {
-        const handler = this.widgetHandlers.find(x => x instanceof handlerClass);
+    public async backfillLocalStyles(localStyles: LocalStyles, styleDefinition: StyleDefinition): Promise<void> {
+        StyleHelper.backfillLocalStyles(styleDefinition, localStyles);
 
-        if (!handler?.getStyleDefinitions) {
-            return;
-        }
-
-        const definition = handler.getStyleDefinitions();
-
-        if (!definition) {
-            return;
-        }
-
-        StyleHelper.backfillLocalStyles(definition, localStyles);
-
-        if (definition.colors) {
-            await this.backfillGlobals(definition);
+        if (styleDefinition.colors) { // in case style definition require global styles
+            await this.backfillGlobalStyles(styleDefinition);
         }
     }
 
-    private async backfillGlobals(definition: StyleDefinition): Promise<void> {
+    public async backfillGlobalStyles(definition: StyleDefinition): Promise<void> {
         const styles = await this.getStyles();
         const colorNames = Object.keys(definition.colors);
 
@@ -471,36 +420,43 @@ export class StyleService {
         this.updateStyles(styles);
     }
 
-    public async backfillStyles(): Promise<void> {
+    public async addComponentVariation(componentName: string, variationName: string, variation?: VariationContract): Promise<string> {
+        const key = `components/${componentName}/${variationName}`;
+
+        this.rewriteVariationKeysRecursively(variation, key);
+
+        variation.key = key;
+        variation.displayName = variation.displayName || "< Unnamed >";
+        variation.category = "appearance";
+
         const styles = await this.getStyles();
+        styles.components[componentName][variationName] = variation;
 
-        this.widgetHandlers.forEach(x => {
-            if (!x.getStyleDefinitions) {
-                return;
-            }
+        await this.updateStyles(styles);
 
-            const definition = x.getStyleDefinitions();
+        return variation.key;
+    }
 
-            if (!definition) {
-                return;
-            }
+    public async convertLocalStylesToVariation(componentName: string, variationDisplayName: string, localStyles: LocalStyles): Promise<LocalStyles> {
+        const variationName = Utils.randomClassName();
+        const styleKey = `components/button/${variationName}`;
 
-            if (definition.colors) {
-                const colorNames = Object.keys(definition.colors);
+        const variation: VariationContract = {
+            key: styleKey,
+            displayName: variationDisplayName,
+            category: "appearance",
+            allowedStates: [], // copy from default
+        }
 
-                colorNames.forEach(colorName => {
-                    const colorDefinition = definition.colors[colorName];
-                    const colorKey = `colors/${colorName}`;
+        delete localStyles.instance.key;
+        Object.assign(variation, localStyles.instance);
 
-                    Objects.setValue(colorKey, styles, {
-                        key: colorKey,
-                        displayName: colorDefinition.displayName,
-                        value: colorDefinition.defaults.value
-                    });
-                });
-            }
-        });
+        delete localStyles.instance;
 
-        this.updateStyles(styles);
+        localStyles["appearance"] = styleKey;
+
+        await this.addComponentVariation(componentName, variationName, <any>variation)
+
+        return localStyles;
     }
 }
