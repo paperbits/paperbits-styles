@@ -75,7 +75,7 @@ export class Container {
         this.alignment(`${this.verticalAlignment()} ${this.horizontalAlignment()}`);
 
         const overflow = this.scrollOnOverlow()
-            ? { vertical: "scroll", horizontal: "scroll" }
+            ? { vertical: "scroll", horizontal: "scroll", autofit: this.container().overflow?.autofit }
             : null;
 
         this.onUpdate({
