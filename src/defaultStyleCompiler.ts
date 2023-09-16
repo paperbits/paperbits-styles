@@ -4,7 +4,7 @@ import { formatUnicode } from "./styleUitls";
 import { StyleService } from "./styleService";
 import { Bag } from "@paperbits/common";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
-import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
+import { BreakpointValues, Breakpoints } from "@paperbits/common/styles/breakpoints";
 import {
     StylePlugin,
     FontsStylePlugin,
@@ -179,7 +179,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         components.inputGroup = inputGroup;
     }
 
-    public async getStyleSheet(): Promise<StyleSheet> {
+    public async getStyleSheet(topBreakpoint?: string): Promise<StyleSheet> {
         if (!this.initialized) {
             await this.initializePlugins();
             this.initialized = true;
@@ -208,7 +208,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                         continue;
                     }
 
-                    const variationStyle = await this.getVariationStyle(componentConfig[variationName], componentName, variationName);
+                    const variationStyle = await this.getVariationStyle(componentConfig[variationName], componentName, variationName, false, false);
                     componentStyle.modifierStyles.push(variationStyle);
                 }
 
@@ -232,7 +232,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
             for (const tagName of Object.keys(themeContract.globals)) {
                 const tagConfig = themeContract.globals[tagName];
 
-                const defaultComponentStyle = await this.getVariationStyle(tagConfig["default"], tagName, "default", true);
+                const defaultComponentStyle = await this.getVariationStyle(tagConfig["default"], tagName, "default", true, false, topBreakpoint);
                 const variations = Object.keys(tagConfig);
 
                 if (!defaultComponentStyle && variations.length <= 1) {
@@ -246,7 +246,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
                         continue;
                     }
 
-                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, false);
+                    const variationStyle = await this.getVariationStyle(tagConfig[variationName], componentName, variationName, false, false, topBreakpoint);
                     styleSheet.styles.push(variationStyle);
                 }
 
@@ -296,7 +296,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         return css;
     }
 
-    public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false, useBreakpointInSelector: boolean = false): Promise<Style> {
+    public async getVariationStyle(variationConfig: VariationBagContract, componentName: string, variationName: string = null, isGlobal: boolean = false, useBreakpointInSelector: boolean = false, topBreakpoint?: string): Promise<Style> {
         if (!variationConfig) {
             throw new Error(`Parameter "variationConfig" not specified.`);
         }
@@ -356,6 +356,10 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
             /* Processing responsive styles */
             for (const breakpoint of Object.keys(BreakpointValues)) {
+                if (topBreakpoint && BreakpointValues[breakpoint] > BreakpointValues[topBreakpoint]) {
+                    continue;
+                }
+
                 const breakpointConfig = pluginConfig[breakpoint];
 
                 if (!breakpointConfig) {
