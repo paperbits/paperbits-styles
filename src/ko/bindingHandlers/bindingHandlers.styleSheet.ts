@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { JssCompiler } from "../../jssCompiler";
 import { StyleSheet } from "@paperbits/common/styles";
 
@@ -39,8 +39,8 @@ export class StylesheetBindingHandler {
                     }
                 };
 
-                this.eventManager.addEventListener("onStyleChange", applyStyleSheet);
-                this.eventManager.addEventListener("onStyleRemove", removeStyleSheet);
+                this.eventManager.addEventListener(Events.StyleChange, applyStyleSheet);
+                this.eventManager.addEventListener(Events.StyleRemove, removeStyleSheet);
             }
         };
     }
