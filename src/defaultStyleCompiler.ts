@@ -48,6 +48,8 @@ import {
 import { JssCompiler } from "./jssCompiler";
 import { ThemeContract } from "./contracts/themeContract";
 import { IconsFontFamilyName, IconsFontStyleName, IconsFontWeight } from "./constants";
+import { TableCellStylePlugin } from "./plugins/table/tableCellStylePlugin";
+import { TableStylePlugin } from "./plugins/table/tableStylePlugin";
 
 
 export class DefaultStyleCompiler implements StyleCompiler {
@@ -120,6 +122,8 @@ export class DefaultStyleCompiler implements StyleCompiler {
         this.plugins["states"] = new StatesStylePlugin(this);
         this.plugins["grid"] = new GridStylePlugin();
         this.plugins["grid-cell"] = new GridCellStylePlugin();
+        this.plugins["table"] = new TableStylePlugin();
+        this.plugins["table-cell"] = new TableCellStylePlugin();
         this.plugins["container"] = new ContainerStylePlugin();
         this.plugins["size"] = new SizeStylePlugin();
         this.plugins["transform"] = new TransformStylePlugin();

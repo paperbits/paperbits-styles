@@ -1,16 +1,16 @@
 import { StylePlugin } from "../stylePlugin";
 import { StyleRule } from "@paperbits/common/styles";
-import { GridCellStylePluginConfig } from "./gridCellStylePluginConfig";
+import { TableCellStylePluginConfig } from "./tableCellStylePluginConfig";
 
 
-export class GridCellStylePlugin extends StylePlugin {
-    public displayName: string = "Grid area";
+export class TableCellStylePlugin extends StylePlugin {
+    public displayName: string = "Table area";
 
     constructor() {
         super();
     }
 
-    public async configToStyleRules(pluginConfig: GridCellStylePluginConfig): Promise<StyleRule[]> {
+    public async configToStyleRules(pluginConfig: TableCellStylePluginConfig): Promise<StyleRule[]> {
         const rules = [
             new StyleRule("display", "flex"),
             new StyleRule("flexWrap", "wrap"),
@@ -58,23 +58,8 @@ export class GridCellStylePlugin extends StylePlugin {
             }
         }
 
-        if (pluginConfig.overflow) {
-            if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
-                rules.push(new StyleRule("overflow", "auto"));
-            }
-            else if (pluginConfig.overflow.vertical) {
-                rules.push(new StyleRule("overflowY", "auto"));
-            }
-            else {
-                rules.push(new StyleRule("overflowX", "auto"));
-            }
-
-            rules.push(new StyleRule("position", "absolute"));
-            rules.push(new StyleRule("top", "0"));
-            rules.push(new StyleRule("left", "0"));
-            rules.push(new StyleRule("right", "0"));
-            rules.push(new StyleRule("bottom", "0"));
-        }
+        rules.push(new StyleRule("overflowY", "auto"));
+        rules.push(new StyleRule("overflowX", "auto"));
 
         return rules;
     }
