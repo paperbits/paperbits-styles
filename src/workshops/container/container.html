@@ -53,13 +53,17 @@
     <label class="form-label">
         <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#contentFlowCollapse'"
             aria-label="Toggle 'Content flow' section"></a>
-        <b>Content flow</b>
+        <b>Scroll on overflow</b>
         <button class="btn btn-info" role="tooltip"
             data-bind="tooltip: 'Manage scrolling settings for container'"></button>
     </label>
     <div id="contentFlowCollapse" class="collapse form-group-collapse">
         <label class="form-label">
-            <input name="scrollOnOverlow" type="checkbox" data-bind="checked: scrollOnOverlow" />Scroll on overflow
+            <input name="scrollOnOverlowV" type="checkbox" data-bind="checked: scrollOnOverlowV" />Vertically
+        </label>
+
+        <label class="form-label">
+            <input name="scrollOnOverlowH" type="checkbox" data-bind="checked: scrollOnOverlowH" />Horizontally
         </label>
     </div>
 </div>

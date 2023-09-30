@@ -1,57 +1,53 @@
 <!-- ko if: hasStyleName -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#miscellaneousCollapse'"></a>
-        <b>Main</b>
-    </label>
-    <div id="miscellaneousCollapse" class="collapse form-group-collapse">
-        <!-- ko if: hasStyleName -->
-        <div class="form-group">
-            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the style'"></button>
-            <label for="styleName">Style name</label>
-            <input id="styleName" type="text" class="form-control" spellcheck="false"
-                data-bind="textInput: styleName, focus: true">
-        </div>
-        <!--/ko -->
-
-        <!-- ko if: elementStates().length > 0 -->
-        <div class="form-group">
-            <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
-            </dropdown>
-        </div>
-        <!--/ko -->
+<details open>
+    <summary>
+        Main
+    </summary>
+    <!-- ko if: hasStyleName -->
+    <div class="form-group">
+        <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the style'"></button>
+        <label for="styleName">Style name</label>
+        <input id="styleName" type="text" class="form-control" spellcheck="false"
+            data-bind="textInput: styleName, focus: true">
     </div>
-</div>
+    <!--/ko -->
+
+    <!-- ko if: elementStates().length > 0 -->
+    <div class="form-group">
+        <label for="textTransform">State</label>
+        <dropdown id="textTransform"
+            params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
+        </dropdown>
+    </div>
+    <!--/ko -->
+</details>
 <!--/ko -->
 
 <!-- ko if: baseComponentVariations().length > 0 -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#miscellaneousCollapse'"></a>
-        <b>Base style</b>
-    </label>
-    <div id="miscellaneousCollapse" class="collapse form-group-collapse">
-        <!-- ko if: baseComponentVariations().length > 0 -->
-        <div class="form-group">
-            <label for="baseComponentVariationKey" class="form-label">
-                Variation
-            </label>
-            <dropdown id="baseComponentVariationKey"
-                params="{ options: baseComponentVariations, value: baseComponentVariationKey, optionsText: 'displayName', optionsValue: 'key', heading: 'Variation' }">
-            </dropdown>
-        </div>
-        <!-- /ko -->
-
-        <!-- ko if: elementStates().length > 0 -->
-        <div class="form-group">
-            <label for="textTransform">State</label>
-            <dropdown id="textTransform" params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
-            </dropdown>
-        </div>
-        <!--/ko -->
+<details open>
+    <summary>
+        Base style
+    </summary>
+    <!-- ko if: baseComponentVariations().length > 0 -->
+    <div class="form-group">
+        <label for="baseComponentVariationKey" class="form-label">
+            Variation
+        </label>
+        <dropdown id="baseComponentVariationKey"
+            params="{ options: baseComponentVariations, value: baseComponentVariationKey, optionsText: 'displayName', optionsValue: 'key', heading: 'Variation' }">
+        </dropdown>
     </div>
-</div>
+    <!-- /ko -->
+
+    <!-- ko if: elementStates().length > 0 -->
+    <div class="form-group">
+        <label for="textTransform">State</label>
+        <dropdown id="textTransform"
+            params="{ options: elementStates, value: selectedState, optionsCaption: 'default', heading: 'State' }">
+        </dropdown>
+    </div>
+    <!--/ko -->
+</details>
 <!--/ko -->
 
 
@@ -59,117 +55,86 @@
 <!-- ko ifnot: working -->
 
 <!-- ko if: allowTypography -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#typographyCollapse'"
-            aria-label="Toggle 'Typography' section"></a>
-        <b>Typography</b>
+<details open>
+    <summary>
+        Typography
         <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage text appearance'"></button>
-    </label>
-    <div id="typographyCollapse" class="collapse form-group-collapse">
-        <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
-    </div>
-</div>
+    </summary>
+    <typography params="{ typography: elementStyleTypography, onUpdate: onTypographyUpdate }"></typography>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowBlockStyles -->
 <!-- <gradient-editor></gradient-editor> -->
 
 <!-- ko if: allowBackground -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#backgroundCollapse'"></a>
-        <b>Background</b>
+<details open>
+    <summary>
+        Background
         <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage background'"></button>
-    </label>
-    <div id="backgroundCollapse" class="collapse form-group-collapse">
-        <background params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate, optionsCaption: 'default' }"></background>
-    </div>
-</div>
+    </summary>
+    <background
+        params="{ background: elementStyleBackground, onUpdate: onBackgroundUpdate, optionsCaption: 'default' }">
+    </background>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowShadow -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#shadowCollapse'"
-            aria-label="Toggle 'Shadow' section"></a>
-        <b>Shadow</b>
-    </label>
-
-    <div id="shadowCollapse" class="collapse form-group-collapse">
-        <shadow-editor-group params="{ shadow: elementStyleShadow, onUpdate: onShadowUpdate }">
-        </shadow-editor-group>
-    </div>
-</div>
+<details open>
+    <summary>
+        Shadow
+    </summary>
+    <shadow-editor-group params="{ shadow: elementStyleShadow, onUpdate: onShadowUpdate }">
+    </shadow-editor-group>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowAnimation -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#animationCollapse'"
-            aria-label="Toggle 'Animation' section"></a>
-        <b>Animation</b>
-    </label>
-
-    <div id="animationCollapse" class="collapse form-group-collapse">
-        <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
-    </div>
-</div>
+<details open>
+    <summary>
+        Animation
+    </summary>
+    <animation params="{ animation: elementStyleAnimation, onUpdate: onAnimationUpdate }"></animation>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowTransition -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#transitionsCollapse'"
-            aria-label="Toggle 'Transition' section"></a>
-        <b>Transition</b>
-    </label>
-    <div id="transitionsCollapse" class="collapse form-group-collapse">
-        <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
-    </div>
-</div>
+<details open>
+    <summary>
+        Transition
+    </summary>
+    <transition params="{ transition: elementStyleTransition, onUpdate: onTransitionUpdate }"></transition>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowTransform -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#transformCollapse'"
-            aria-label="Toggle 'Transform' section"></a>
-        <b>Transform</b>
+<details open>
+    <summary>
+        Transform
         <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Manage element transformations'"></button>
-    </label>
-
-    <div id="transformCollapse" class="collapse form-group-collapse">
-        <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
-    </div>
-</div>
+    </summary>
+    <transform params="{ transform: elementStyleTransform, onUpdate: onTransformUpdate }"></transform>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowSize -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#sizeCollapse'"
-            aria-label="Toggle 'Size' section"></a>
-        <b>Size</b>
-    </label>
-    <div id="sizeCollapse" class="collapse form-group-collapse">
-        <size-editor
-            params="{ features: 'minMaxWidth,minMaxHeight', sizeConfig: elementStyleSize, onUpdate: onSizeUpdate }">
-        </size-editor>
-    </div>
-</div>
+<details open>
+    <summary>
+        Size
+    </summary>
+    <size-editor
+        params="{ features: 'minMaxWidth,minMaxHeight', sizeConfig: elementStyleSize, onUpdate: onSizeUpdate }">
+    </size-editor>
+</details>
 <!-- /ko -->
 
 <!-- ko if: allowBox -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#boxCollapse'"></a>
+<details open>
+    <summary>
         <b>Box</b>
-    </label>
-    <div id="boxCollapse" class="collapse form-group-collapse">
-        <box params="{ features: boxFeatures, box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
-    </div>
-</div>
+    </summary>
+    <box params="{ features: boxFeatures, box: elementStyleBox, onUpdate: onBoxUpdate }"></box>
+</details>
 <!-- /ko -->
 
 <!-- /ko -->

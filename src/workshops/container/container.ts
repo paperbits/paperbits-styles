@@ -11,14 +11,16 @@ export class Container {
     public readonly verticalAlignment: ko.Observable<string>;
     public readonly horizontalAlignment: ko.Observable<string>;
     public readonly alignment: ko.Observable<string>;
-    public readonly scrollOnOverlow: ko.Observable<boolean>;
+    public readonly scrollOnOverlowV: ko.Observable<boolean>;
+    public readonly scrollOnOverlowH: ko.Observable<boolean>;
     public readonly horizontalAlignmentTooltip: ko.Computed<string>;
 
     constructor() {
         this.alignment = ko.observable<string>();
         this.verticalAlignment = ko.observable<string>();
         this.horizontalAlignment = ko.observable<string>();
-        this.scrollOnOverlow = ko.observable<boolean>();
+        this.scrollOnOverlowV = ko.observable<boolean>();
+        this.scrollOnOverlowH = ko.observable<boolean>();
         this.container = ko.observable<ContainerStylePluginConfig>();
         this.overflowControls = ko.observable(false);
 
@@ -51,18 +53,15 @@ export class Container {
     public initialize(): void {
         this.updateObservables();
         this.container.subscribe(this.updateObservables);
-        this.scrollOnOverlow.subscribe(this.onOverflowChange);
+        this.scrollOnOverlowV.subscribe(this.onOverflowChange);
+        this.scrollOnOverlowH.subscribe(this.onOverflowChange);
     }
 
     private updateObservables(): void {
         const containerStyle = this.container();
 
-        if (containerStyle?.overflow) {
-            this.scrollOnOverlow(true);
-        }
-        else {
-            this.scrollOnOverlow(false);
-        }
+        this.scrollOnOverlowV(containerStyle?.overflow?.vertical === "scroll");
+        this.scrollOnOverlowH(containerStyle?.overflow?.horizontal === "scroll");
 
         this.verticalAlignment(containerStyle?.alignment?.vertical);
         this.horizontalAlignment(containerStyle?.alignment?.horizontal);
@@ -74,9 +73,14 @@ export class Container {
     private applyChanges(): void {
         this.alignment(`${this.verticalAlignment()} ${this.horizontalAlignment()}`);
 
-        const overflow = this.scrollOnOverlow()
-            ? { vertical: "scroll", horizontal: "scroll" }
-            : null;
+        let overflow = null
+
+        if (this.scrollOnOverlowV() || this.scrollOnOverlowH()) {
+            overflow = {
+                vertical: this.scrollOnOverlowV() ? "scroll" : null,
+                horizontal: this.scrollOnOverlowH() ? "scroll" : null,
+            };
+        }
 
         this.onUpdate({
             alignment: {

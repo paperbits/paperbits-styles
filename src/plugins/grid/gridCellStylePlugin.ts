@@ -59,14 +59,18 @@ export class GridCellStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.overflow) {
-            if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
-                rules.push(new StyleRule("overflow", "auto"));
-            }
-            else if (pluginConfig.overflow.vertical) {
-                rules.push(new StyleRule("overflowY", "auto"));
-            }
-            else {
-                rules.push(new StyleRule("overflowX", "auto"));
+            if (pluginConfig.overflow) {
+                if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
+                    rules.push(new StyleRule("overflow", "auto"));
+                }
+                else {
+                    if (pluginConfig.overflow.vertical) {
+                        rules.push(new StyleRule("overflowY", "auto"));
+                    }
+                    if (pluginConfig.overflow.horizontal) {
+                        rules.push(new StyleRule("overflowX", "auto"));
+                    }
+                }
             }
 
             rules.push(new StyleRule("position", "absolute"));
