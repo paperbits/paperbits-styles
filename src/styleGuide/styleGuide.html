@@ -275,26 +275,7 @@
         </div>
     </article>
 
-    <article>
-        <h2 class="heading">Form controls</h2>
-        <div class="row">
-            <div class="col col-md-3">
-                <div class="style-card" data-bind="styleableGlobal: components.formControl.default">
-                    <div class="style-card-body">
-                        <div class="form-group">
-                            <label aria-hidden="true" tabindex="-1">Label</label>
-                            <input type="text" class="form-control no-pointer-events" value="Input value"
-                                data-bind="stylePreview:components.formControl.default" tabindex="-1"
-                                aria-hidden="true" />
-                        </div>
-                    </div>
-                    <span class="style-card-label" data-bind="text: components.formControl.default.displayName"></span>
-                </div>
-            </div>
-        </div>
-    </article>
-
-    <!--ko foreach: { data: $component.uiComponents, as: 'item' }-->
+    <!-- ko foreach: { data: $component.uiComponents, as: 'item' } -->
     <article>
         <h2 class="heading" data-bind="text: item.displayName">Component</h2>
         <div class="row">
