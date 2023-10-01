@@ -1,77 +1,70 @@
 <!-- ko if: gradientViewModel() -->
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#mainCollapse'"
-            aria-label="Toggle 'Main' section"></a>
-        <b>Main</b>
-    </label>
-    <div id="mainCollapse" class="collapse form-group-collapse">
-        <div class="form-group">
-            <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the gradient'"></button>
-            <label for="gradientName">Gradient name</label>
-            <input id="gradientName" type="text" class="form-control" spellcheck="false"
-                data-bind="textInput: gradientViewModel().displayName, focus: true">
+<details open>
+    <summary>
+        Main
+    </summary>
+    <div class="form-group">
+        <button class="btn btn-info" role="tooltip" data-bind="tooltip: 'Name of the gradient'"></button>
+        <label for="gradientName">Gradient name</label>
+        <input id="gradientName" type="text" class="form-control" spellcheck="false"
+            data-bind="textInput: gradientViewModel().displayName, focus: true">
+    </div>
+</details>
+
+<details open>
+    <summary>
+        Settings
+    </summary>
+    
+    <div class="form-group">
+        <button class="btn btn-info" role="tooltip"
+            data-bind="tooltip: 'Angle that determines gradient direction.'"></button>
+        <label for="gradientDegree">Rotate: <span data-bind="text: direction"></span>°</label>
+        <input id="gradientDegree" type="range" min="0" max="360" class="form-control"
+            data-bind="textInput: direction, focus: true">
+    </div>
+
+    <style data-bind="jss: gradientPreview"></style>
+    <style data-bind="jss: gradientPreviewColorStops"></style>
+
+    <div class="dropzone">
+        <div class="dropzone-showbox">
+            <div class="fit gradient-preview" data-bind="angle: direction"></div>
+        </div>
+        <div class="slider-display">
+            <div class="fit gradient-preview-color-stops"></div>
+        </div>
+
+        <div class="slider">
+            <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
+            <div class="slider-thumb"
+                data-bind="style: { 'background-color': colorStop.color() }, slider: { percentage: colorStop.length, onChange: $component.onColorStopChange }">
+            </div>
+            <!-- /ko -->
         </div>
     </div>
-</div>
 
-<div class="form-group form-group-collapsible">
-    <label class="form-label">
-        <a href="#" class="form-group-toggle" title="Toggle section" data-bind="collapse: '#settingsCollapse'"
-            aria-label="Toggle 'Settings' section"></a>
-        <b>Settings</b>
-    </label>
-    <div id="settingsCollapse" class="collapse form-group-collapse">
+    <div class="style-card style-card-empty">
         <div class="form-group">
-            <button class="btn btn-info" role="tooltip"
-                data-bind="tooltip: 'Angle that determines gradient direction.'"></button>
-            <label for="gradientDegree">Rotate: <span data-bind="text: direction"></span>°</label>
-            <input id="gradientDegree" type="range" min="0" max="360" class="form-control"
-                data-bind="textInput: direction, focus: true">
-        </div>
+            <label for="gradientColors">Color stops</label>
 
-        <style data-bind="jss: gradientPreview"></style>
-        <style data-bind="jss: gradientPreviewColorStops"></style>
-
-        <div class="dropzone">
-            <div class="dropzone-showbox">
-                <div class="fit gradient-preview" data-bind="angle: direction"></div>
-            </div>
-            <div class="slider-display">
-                <div class="fit gradient-preview-color-stops"></div>
-            </div>
-
-            <div class="slider">
+            <div role="listbox" aria-label="Colors" class="palette" data-bind="listbox: {}">
                 <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                <div class="slider-thumb"
-                    data-bind="style: { 'background-color': colorStop.color() }, slider: { percentage: colorStop.length, onChange: $component.onColorStopChange }">
-                </div>
-                <!-- /ko -->
-            </div>
-        </div>
+                <a role="option" class="color-box"
+                    data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }">
+                    <span class="color-box-wrapper pseudo-transparent-bckg">
+                        <span class="color" data-bind="style: { background: colorStop.color }"></span>
+                    </span>
+                </a>
+                <!--/ko -->
 
-        <div class="style-card style-card-empty">
-            <div class="form-group">
-                <label for="gradientColors">Color stops</label>
-              
-                <div role="listbox" aria-label="Colors" class="palette" data-bind="listbox: {}">
-                    <!-- ko foreach: { data: gradientViewModel().colorStops, as: 'colorStop' } -->
-                    <a role="option" class="color-box"
-                        data-bind="balloon: { component: { name: 'color-stop-editor', params: { colorValue: colorStop.color, onSelect: function(data) { $component.changeColor($index, data); }} } }">
-                        <span class="color-box-wrapper pseudo-transparent-bckg">
-                            <span class="color" data-bind="style: { background: colorStop.color }"></span>
-                        </span>
-                    </a>
-                    <!--/ko -->
-
-                    <a role="option" title="Add color stop" class="color-box" data-bind="activate: $component.addColor">
-                        <span class="color-box-wrapper">
-                            <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
-                        </span>
-                    </a>
-                </div>
+                <a role="option" title="Add color stop" class="color-box" data-bind="activate: $component.addColor">
+                    <span class="color-box-wrapper">
+                        <i aria-hidden="true" class="paperbits-icon paperbits-simple-add"></i>
+                    </span>
+                </a>
             </div>
         </div>
     </div>
-</div>
+</details>
 <!-- /ko -->
