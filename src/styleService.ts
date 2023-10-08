@@ -42,7 +42,7 @@ export class StyleService {
         return stylesObject;
     }
 
-    public async getStyleByKey(styleKey: string): Promise<any> {
+    public async getStyleByKey(styleKey: string): Promise<VariationContract> {
         if (!styleKey) {
             throw new Error(`Parameter "styleKey" not specified.`);
         }
@@ -56,12 +56,14 @@ export class StyleService {
         const styles = await this.getStyles();
 
         // TODO: If no style found, try to take default one
-        const style = Objects.getObjectAt<any>(styleKey, styles);
+        const style = Objects.getObjectAt<VariationContract>(styleKey, styles);
 
         if (style) {
             return style;
         }
 
+        // Style handlers needed to create styles if they are absent in the style sheet.
+        // TODO: Use style definitions concept to backfill them instead of style handlers.
         const defaultStyle = this.styleHandlers
             .map(handler => handler.getDefaultStyle(styleKey))
             .find(x => !!x);
