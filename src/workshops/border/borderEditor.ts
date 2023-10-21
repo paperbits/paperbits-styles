@@ -64,7 +64,7 @@ export class BorderEditor {
         this.applyChanges();
     }
 
-    public clearColor(): void {
+    public clearColors(): void {
         this.borderColorKey(null);
         this.applyChanges();
     }

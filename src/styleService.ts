@@ -12,17 +12,21 @@ import { FontManager } from "./openType";
 import { HttpClient } from "@paperbits/common/http";
 import { StyleHelper } from "./styleHelper";
 import { ISettingsProvider } from "@paperbits/common/configuration";
+import { MigrationService } from "./migrations/migrationService";
 
 
 const stylesPath = "styles";
 
 export class StyleService {
+    private stylesObject: ThemeContract;
+
     constructor(
         private readonly objectStorage: IObjectStorage,
         private readonly styleHandlers: StyleHandler[],
         private readonly fontManager: FontManager,
         private readonly settingsProvider: ISettingsProvider,
-        private readonly httpClient: HttpClient
+        private readonly httpClient: HttpClient,
+        private readonly migrationService: MigrationService
     ) { }
 
     private sortByDisplayName(items: any[]): any[] {
@@ -30,17 +34,51 @@ export class StyleService {
     }
 
     /**
-     * Returns object with the whole theme styles.
+     * Returns object with the theme styles.
      */
     public async getStyles(): Promise<ThemeContract> {
+        if (this.stylesObject) {
+            return this.stylesObject;
+        }
+
         const stylesObject = await this.objectStorage.getObject<ThemeContract>(stylesPath);
 
         if (!stylesObject) {
             throw new Error("Data doesn't contain styles.");
         }
 
+        await this.migrationService.migrateTheme(stylesObject);
+        this.stylesObject = stylesObject;
+
         return stylesObject;
     }
+
+    public async backfillLocalStyles(localStyles: LocalStyles, styleDefinition: StyleDefinition): Promise<void> {
+        StyleHelper.backfillLocalStyles(styleDefinition, localStyles);
+
+        if (styleDefinition.colors) { // in case style definition require global styles
+            await this.backfillGlobalStyles(styleDefinition);
+        }
+    }
+
+    public async backfillGlobalStyles(definition: StyleDefinition): Promise<void> {
+        const styles = await this.getStyles();
+        const colorNames = Object.keys(definition.colors);
+
+        colorNames.forEach(colorName => {
+            const colorDefinition = definition.colors[colorName];
+            const colorKey = `colors/${colorName}`;
+
+            Objects.setValue(colorKey, styles, {
+                key: colorKey,
+                displayName: colorDefinition.displayName,
+                value: colorDefinition.defaults.value
+            });
+        });
+
+        this.updateStyles(styles);
+    }
+
 
     public async getStyleByKey(styleKey: string): Promise<VariationContract> {
         if (!styleKey) {
@@ -66,7 +104,7 @@ export class StyleService {
         // TODO: Use style definitions concept to backfill them instead of style handlers.
         const defaultStyle = this.styleHandlers
             .map(handler => handler.getDefaultStyle(styleKey))
-            .find(x => !!x);
+            .find(handler => !!handler);
 
         if (defaultStyle) {
             return defaultStyle;
@@ -394,32 +432,6 @@ export class StyleService {
     public async getTextVariations(): Promise<VariationContract[]> {
         const textStylesVariations = await this.getVariations("globals", "body");
         return this.sortByDisplayName(textStylesVariations);
-    }
-
-    public async backfillLocalStyles(localStyles: LocalStyles, styleDefinition: StyleDefinition): Promise<void> {
-        StyleHelper.backfillLocalStyles(styleDefinition, localStyles);
-
-        if (styleDefinition.colors) { // in case style definition require global styles
-            await this.backfillGlobalStyles(styleDefinition);
-        }
-    }
-
-    public async backfillGlobalStyles(definition: StyleDefinition): Promise<void> {
-        const styles = await this.getStyles();
-        const colorNames = Object.keys(definition.colors);
-
-        colorNames.forEach(colorName => {
-            const colorDefinition = definition.colors[colorName];
-            const colorKey = `colors/${colorName}`;
-
-            Objects.setValue(colorKey, styles, {
-                key: colorKey,
-                displayName: colorDefinition.displayName,
-                value: colorDefinition.defaults.value
-            });
-        });
-
-        this.updateStyles(styles);
     }
 
     public async addComponentVariation(componentName: string, variationName: string, variation?: VariationContract): Promise<string> {

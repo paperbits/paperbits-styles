@@ -10,7 +10,6 @@ import { IStyleGroup, Styleable, StyleCompiler, StyleManager, VariationContract 
 import { ActiveElement, IContextCommandSet, IHighlightConfig, View, ViewManager, ViewManagerMode } from "@paperbits/common/ui";
 import { ColorContract, FontContract, LinearGradientContract, ShadowContract } from "../contracts";
 import { ComponentStyle } from "../contracts/componentStyle";
-import { StyleItem } from "../models/styleItem";
 import { OpenTypeFontGlyph } from "../openType";
 import { StyleService } from "../styleService";
 import { formatUnicode } from "../styleUitls";
@@ -27,6 +26,8 @@ export class StyleGuide {
     private pointerY: number;
     private activeElements: Bag<ActiveElement>;
     private ownerDocument: Document;
+
+    public readonly working: ko.Observable<boolean>;
 
     public readonly styles: ko.Observable<any>;
     public readonly textBlocks: ko.ObservableArray<any>;
@@ -59,6 +60,7 @@ export class StyleGuide {
         this.onWindowScroll = this.onWindowScroll.bind(this);
         // this.onKeyDown = this.onKeyDown.bind(this);
 
+        this.working = ko.observable(true);
         this.styles = ko.observable();
         this.colors = ko.observableArray([]);
         this.shadows = ko.observableArray([]);
@@ -85,7 +87,11 @@ export class StyleGuide {
                 params: {
                     onSelect: async (font: FontContract, custom: boolean) => {
                         this.viewManager.closeView();
-                        await this.applyChanges();
+
+                        this.refreshFonts();
+                        this.rebuildStyleSheet();
+
+                        this.refreshFonts();
 
                         if (!custom) {
                             return;
@@ -99,7 +105,9 @@ export class StyleGuide {
                                     font: font,
                                     onChange: async () => {
                                         await this.styleService.updateStyle(font);
-                                        this.applyChanges();
+
+                                        this.refreshFonts();
+                                        this.rebuildStyleSheet();
                                     }
                                 }
                             },
@@ -118,12 +126,15 @@ export class StyleGuide {
 
     public async removeStyle(contract: VariationContract): Promise<void> {
         await this.styleService.removeStyle(contract.key);
+
         if (contract.key.startsWith("components/")) {
             const parts = contract.key.split("/");
             const componentName = parts[1];
             await this.onUpdateStyle(componentName);
-        } else {
-            this.applyChanges();
+        }
+        else {
+            this.refreshComponents();
+            this.rebuildStyleSheet();
         }
     }
 
@@ -173,7 +184,9 @@ export class StyleGuide {
                     onSelect: async (glyph: OpenTypeFontGlyph) => {
                         await this.styleService.addIcon(glyph);
                         this.viewManager.closeView();
-                        this.applyChanges();
+
+                        this.refreshIcons();
+                        this.rebuildStyleSheet();
                     }
                 }
             },
@@ -188,12 +201,16 @@ export class StyleGuide {
 
     public async removeColor(color: ColorContract): Promise<void> {
         await this.styleService.removeStyle(color.key);
-        this.applyChanges();
+
+        this.refreshColors();
+        this.rebuildStyleSheet();
     }
 
     public async removeGradient(gradient: LinearGradientContract): Promise<void> {
         await this.styleService.removeStyle(gradient.key);
-        this.applyChanges();
+
+        this.refreshGradients();
+        this.rebuildStyleSheet();
     }
 
     public selectColor(color: ColorContract): boolean {
@@ -205,7 +222,9 @@ export class StyleGuide {
                     selectedColor: color,
                     onSelect: async (color: ColorContract) => {
                         await this.styleService.updateStyle(color);
-                        this.applyChanges();
+
+                        this.refreshColors();
+                        this.rebuildStyleSheet();
                     }
                 }
             },
@@ -225,7 +244,9 @@ export class StyleGuide {
                     selectedGradient: gradient,
                     onSelect: async (gradient: LinearGradientContract) => {
                         await this.styleService.updateStyle(gradient);
-                        this.applyChanges();
+
+                        this.refreshGradients();
+                        this.rebuildStyleSheet();
                     }
                 }
             },
@@ -246,7 +267,9 @@ export class StyleGuide {
                     selectedShadow: shadow,
                     onSelect: async (shadow: ShadowContract) => {
                         await this.styleService.updateStyle(shadow);
-                        this.applyChanges();
+
+                        this.refreshShadows();
+                        this.rebuildStyleSheet();
                     }
                 }
             },
@@ -257,7 +280,7 @@ export class StyleGuide {
         return true;
     }
 
-    public selectStyle(style: VariationContract): boolean {
+    public selectComponent(style: VariationContract): boolean {
         const view: View = {
             heading: style.displayName,
             component: {
@@ -274,7 +297,31 @@ export class StyleGuide {
                             await this.onUpdateStyle(componentName);
                         }
 
-                        await this.applyChanges();
+                        this.refreshComponents();
+                        this.refreshTextVariations();
+                        this.rebuildStyleSheet();
+                    }
+                }
+            },
+            resizing: "vertically horizontally"
+        };
+
+        this.viewManager.openViewAsPopup(view);
+        return true;
+    }
+
+    public selectTextStyle(style: VariationContract): boolean {
+        const view: View = {
+            heading: style.displayName,
+            component: {
+                name: "style-editor",
+                params: {
+                    elementStyle: style,
+                    onUpdate: async () => {
+                        await this.styleService.updateStyle(style);
+
+                        this.refreshTextVariations();
+                        this.rebuildStyleSheet();
                     }
                 }
             },
@@ -293,10 +340,10 @@ export class StyleGuide {
         textStyles.push(addedItem);
         this.textStyles(this.sortByDisplayName(textStyles));
 
-        this.selectStyle(addedItem);
+        this.selectTextStyle(addedItem);
     }
 
-    public async openInEditor(componentName: string, snippet?: ComponentStyle): Promise<void> {
+    public async addComponentVariation(componentName: string, snippet?: ComponentStyle): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
         let defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
 
@@ -308,7 +355,7 @@ export class StyleGuide {
         const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, defaultVariation);
         const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
 
-        this.selectStyle(addedStyle);
+        this.selectComponent(addedStyle);
 
         await this.onUpdateStyle(componentName);
     }
@@ -325,21 +372,50 @@ export class StyleGuide {
     }
 
     public async applyChanges(): Promise<void> {
-        const styles = await this.styleService.getStyles();
+        this.refreshColors();
+        this.refreshGradients();
+        this.refreshShadows();
+        this.refreshIcons();
+        this.refreshTextVariations();
+        this.refreshComponents();
 
+        this.rebuildStyleSheet();
+    }
+
+    private async rebuildStyleSheet(): Promise<void> {
+        const styleManager = new StyleManager(this.eventManager);
+        const styleSheet = await this.styleCompiler.getStyleSheet();
+        styleManager.setStyleSheet(styleSheet);
+    }
+
+
+    private async refreshFonts(): Promise<void> {
         const fonts = await this.styleService.getFonts();
+        this.fonts([]);
         this.fonts(fonts.filter(x => x.key !== "fonts/icons"));
+    }
 
+    private async refreshColors(): Promise<void> {
         const colors = await this.styleService.getColors();
+        this.colors([]);
         this.colors(this.sortByDisplayName(colors));
+    }
 
+    private async refreshGradients(): Promise<void> {
         const gradients = await this.styleService.getGadients();
+        this.gradients([]);
         this.gradients(this.sortByDisplayName(gradients));
+    }
 
+    private async refreshShadows(): Promise<void> {
         const shadows = await this.styleService.getShadows();
+        this.shadows([]);
         this.shadows(shadows);
+    }
 
+    private async refreshIcons(): Promise<void> {
         const icons = await this.styleService.getIcons();
+
         const extendedIcons = icons.map(icon => ({
             key: icon.key,
             class: Utils.camelCaseToKebabCase(icon.key.replace("icons/", "icon-")),
@@ -348,18 +424,17 @@ export class StyleGuide {
         }));
 
         this.icons(extendedIcons);
+    }
 
+    private async refreshTextVariations(): Promise<void> {
         const textVariations = await this.styleService.getTextVariations();
+        this.textStyles([]);
         this.textStyles(textVariations);
+    }
 
+    private async refreshComponents(): Promise<void> {
         const components = await this.getComponentsStyles();
         this.uiComponents(components);
-
-        this.styles(styles);
-
-        const styleManager = new StyleManager(this.eventManager);
-        const styleSheet = await this.styleCompiler.getStyleSheet();
-        styleManager.setStyleSheet(styleSheet);
     }
 
     public async getComponentsStyles(): Promise<ComponentStyle[]> {
@@ -418,9 +493,8 @@ export class StyleGuide {
 
 
     @OnMounted()
-    public initialize(): void {
+    public async initialize(): Promise<void> {
         this.viewManager.mode = ViewManagerMode.selecting;
-        this.applyChanges();
         this.ownerDocument = this.viewManager.getHostDocument();
         this.ownerDocument.addEventListener(Events.MouseMove, this.onPointerMove, true);
         this.ownerDocument.addEventListener(Events.Scroll, this.onWindowScroll);
@@ -430,6 +504,16 @@ export class StyleGuide {
             key: "7b92",
             content: `<p>Here you can manage styles of every element of the content. All the customizations will get reflected everywhere on your website.</p><p>Press Escape button to get back to the page editing.</p>`
         });
+
+        this.refreshColors();
+        this.refreshFonts();
+        this.refreshGradients();
+        this.refreshShadows();
+        this.refreshIcons();
+        this.refreshTextVariations();
+        this.refreshComponents();
+
+        this.working(false);
     }
 
     @OnDestroyed()
@@ -618,9 +702,12 @@ export class StyleGuide {
                         },
                         onConfirm: async () => {
                             await this.styleService.removeIcon(style.key);
-                            await this.applyChanges();
+
+                            this.refreshIcons();
+                            this.rebuildStyleSheet();
+
                             this.viewManager.clearContextualCommands();
-                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
+                            this.viewManager.notifySuccess("Styles", `Icon "${style.displayName}" was deleted.`);
                         },
                         onDecline: () => {
                             this.viewManager.clearContextualCommands();
@@ -663,7 +750,7 @@ export class StyleGuide {
             styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
 
-        if (style.key.startsWith("components/") || style.key.startsWith("globals/")) {
+        if (style.key.startsWith("components/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 controlType: "toolbox-button",
@@ -680,7 +767,52 @@ export class StyleGuide {
                                 elementStyle: style,
                                 onUpdate: async () => {
                                     await this.styleService.updateStyle(style);
-                                    this.applyChanges();
+                                    this.rebuildStyleSheet();
+                                },
+                                onStateChange: (state: string): void => {
+                                    styleable.setState(state);
+                                    this.rebuildStyleSheet();
+                                },
+                                onRename: () => {
+                                    this.refreshComponents();
+                                }
+                            }
+                        },
+                        resizing: "vertically horizontally",
+                        onClose: () => {
+                            // return component to default state
+                            styleable.setState(null);
+                        }
+                    };
+
+                    this.viewManager.openViewAsPopup(view);
+                }
+            });
+
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+        }
+
+        if (style.key.startsWith("globals/")) {
+            styleContextualEditor.selectCommands.push({
+                name: "edit",
+                controlType: "toolbox-button",
+                displayName: "Edit style",
+                // iconClass: "paperbits-icon paperbits-edit-72",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    const view: View = {
+                        heading: style.displayName,
+                        component: {
+                            name: "style-editor",
+                            params: {
+                                elementStyle: style,
+                                onUpdate: async () => {
+                                    await this.styleService.updateStyle(style);
+                                    this.rebuildStyleSheet();
+                                },
+                                onRename: () => {
+                                    this.refreshTextVariations();
                                 }
                             }
                         },
@@ -730,7 +862,8 @@ export class StyleGuide {
                                 font: style,
                                 onChange: async () => {
                                     await this.styleService.updateStyle(style);
-                                    this.applyChanges();
+                                    this.refreshFonts();
+                                    this.rebuildStyleSheet();
                                 }
                             }
                         },

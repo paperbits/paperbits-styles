@@ -33,10 +33,8 @@ import { ShadowPreviewBindingHandler } from "./ko/bindingHandlers/bindingHandler
 import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
 import { Container } from "./workshops/container/container";
-import { StyleSnippetSelector } from "./workshops/snippets/styleSnippetSelector";
 import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
-import { StyleVariationSelector } from "./workshops/snippets/styleVariationSelector";
 import { StyledBindingHandler } from "./ko/bindingHandlers";
 import { OptionSelectorEditor } from "./workshops/optionSelector/optionSelectorEditor";
 import { SizeEditor } from "./workshops/size/sizeEditor";
@@ -49,6 +47,7 @@ import { DefaultStyleCompiler } from "./defaultStyleCompiler";
 import { FontManager } from "./openType";
 import { FontEditor } from "./workshops/fonts/fontEditor";
 import { SizeInput } from "./workshops/size/size-input";
+import { DefaultMigrationService } from "./migrations/defaultMigrationService";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -86,8 +85,6 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("styleGuide", StyleGuide);
         injector.bind("stylePlugin", StylePlugin);
         injector.bind("styleSnippet", StyleSnippet);
-        injector.bind("styleSnippetSelector", StyleSnippetSelector);
-        injector.bind("styleVariationSelector", StyleVariationSelector);
         injector.bindSingleton("styleSnippetService", StyleSnippetService);
         injector.bindToCollection("autostart", StylesheetBindingHandler);
         injector.bindToCollection("autostart", StylePreviewBindingHandler);
@@ -96,5 +93,6 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bindToCollection("workshopSections", StylesToolButton);
         injector.bindToCollection("autostart", StyledBindingHandler);
         injector.bindToCollection("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
+        injector.bindSingleton("migrationService", DefaultMigrationService);
     }
 }

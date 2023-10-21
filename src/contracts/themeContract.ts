@@ -9,6 +9,11 @@ import { FontGlyphContract } from "./fontGlyphContract";
  */
 export interface ThemeContract {
     /**
+     * Contract schema version.
+     */
+    schemaVersion?: number;
+
+    /**
      * Font definitions.
      */
     fonts?: Bag<FontContract>;

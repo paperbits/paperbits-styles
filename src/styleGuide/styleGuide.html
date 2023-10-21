@@ -1,5 +1,4 @@
-<div class="style-guide container" data-bind="if: styles">
-    <!-- ko with: styles -->
+<div class="style-guide container" data-bind="ifnot: working">
     <article>
         <h2 class="heading">Fonts</h2>
         <div class="row">
@@ -281,16 +280,13 @@
         <div class="row">
             <div class="col col-md-12 samples">
                 <!--ko foreach: { data: item.variations, as: 'variation' }-->
-                <div class="sample style-card" data-bind="styleableGlobal: variation">
+                <div class="sample style-card">
                     <div class="style-card-body" data-bind="itemTemplate: $parent.itemTemplate"></div>
                     <span class="style-card-label" data-bind="text: variation.displayName"></span>
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">
-                    <!-- <a href="#" class="btn-round" data-bind="balloon: { component: { name: 'style-snippet-selector', params: { snippetType: 'components/' + item.name, onSelect: $component.onSnippetSelected } } }">
-                        <i aria-hidden="true" class="paperbits-icon paperbits-color"></i>
-                    </a> -->
-                    <button class="btn-round" data-bind="click: $component.openInEditor.bind($data, item.name)"
+                    <button class="btn-round" data-bind="click: $component.addComponentVariation.bind($data, item.name)"
                         aria-label="Add variation"></button>
                     <div class="style-card-label">
                         Add variation
@@ -301,5 +297,4 @@
     </article>
     <!--/ko-->
 
-    <!-- /ko -->
 </div>

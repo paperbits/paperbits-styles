@@ -188,7 +188,7 @@ export class DefaultStyleCompiler implements StyleCompiler {
         const styleSheet = new StyleSheet("global");
         const themeContract = await this.getStyles();
 
-        this.generateAdditionalStyle(themeContract.components);
+        // this.generateAdditionalStyle(themeContract.components);
 
         Objects.cleanupObject(themeContract, { collapseNulls: true });
 
@@ -339,6 +339,8 @@ export class DefaultStyleCompiler implements StyleCompiler {
 
                 const pseudoStyles = await plugin.configToPseudoStyles(pluginConfig);
                 resultStyle.pseudoStyles.push(...pseudoStyles);
+
+                resultStyle.modifierStyles.push(...pseudoStyles);
 
                 const nestedStyles = await plugin.configToNestedStyles(pluginConfig);
 

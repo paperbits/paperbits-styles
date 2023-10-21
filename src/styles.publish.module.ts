@@ -13,6 +13,7 @@ import { FontManager } from "./openType";
 import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.publish";
 import { FontPublisher } from "./fonts/fontPublisher";
 import { LocalStyleHtmlPagePublisherPlugin } from "./publishing/localStylesHtmlPagePublisherPlugin";
+import { DefaultMigrationService } from "./migrations/defaultMigrationService";
 
 
 export class StylePublishModule implements IInjectorModule {
@@ -24,5 +25,6 @@ export class StylePublishModule implements IInjectorModule {
         injector.bindToCollectionAsSingletone("permalinkResolvers", FontPermalinkResolver, "fontPermalinkResolver");
         injector.bindToCollectionAsSingletone("publishers", FontPublisher);
         injector.bindToCollectionAsSingletone("htmlPagePublisherPlugins", LocalStyleHtmlPagePublisherPlugin);
+        injector.bindSingleton("migrationService", DefaultMigrationService);
     }
 }

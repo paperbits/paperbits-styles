@@ -84,6 +84,12 @@ export class StyleEditor {
     @Event()
     public onUpdate: (contract: any) => void;
 
+    @Event()
+    public onRename: (name: string) => void;
+
+    @Event()
+    public onStateChange: (state: string) => void;
+
     @OnMounted()
     public async initialize(): Promise<void> {
         if (this.plugins) {
@@ -173,6 +179,10 @@ export class StyleEditor {
     public onStateSelected(state: string): void {
         this.currentState = state;
         this.updateObservables();
+
+        if (this.onStateChange) {
+            this.onStateChange(state);
+        }
     }
 
     private getStyleForSelectedState(): any {
@@ -209,7 +219,10 @@ export class StyleEditor {
 
     public onStyleNameUpdate(name: string): void {
         this.elementStyle.displayName = name;
-        this.scheduleUpdate();
+
+        if (this.onRename) {
+            this.onRename(name);
+        }
     }
 
     public onBackgroundUpdate(pluginConfig: BackgroundStylePluginConfig): void {

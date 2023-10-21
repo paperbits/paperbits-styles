@@ -44,11 +44,25 @@ export class StylableGlobalBindingHandler {
                     }
                 };
 
+                let currentStateClass: string;
+
+                const setState = (state: string): void => {
+                    if (currentStateClass) {
+                        element.classList.remove(currentStateClass);
+                    }
+                    
+                    if (state) {
+                        element.classList.add(state);
+                        currentStateClass = state;
+                    }
+                }
+
                 ko.applyBindingsToNode(element, { css: backgroundObservable }, null);
 
                 styleable = {
                     style: style,
-                    toggleBackground: toggleBackground
+                    toggleBackground: toggleBackground,
+                    setState: setState
                 };
 
                 element["styleable"] = styleable;

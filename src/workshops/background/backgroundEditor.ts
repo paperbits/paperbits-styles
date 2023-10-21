@@ -1,7 +1,7 @@
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common/objects";
 import * as Utils from "@paperbits/common/utils";
-import template from "./background.html";
+import template from "./backgroundEditor.html";
 import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
 import { IMediaService, MediaContract } from "@paperbits/common/media";
 import { IPermalinkResolver } from "@paperbits/common/permalinks";
@@ -76,8 +76,8 @@ export class Background {
 
     @OnMounted()
     public async initialize(): Promise<void> {
-        await this.fillout();
-        this.background.subscribe(this.fillout);
+        await this.updateObservables();
+        
         this.size.subscribe(this.applyChanges);
         this.attachment.subscribe(this.applyChanges);
         this.blend.subscribe(this.applyChanges);
@@ -93,7 +93,7 @@ export class Background {
         return this.backgroundStylePlugin;
     }
 
-    private async fillout(): Promise<void> {
+    private async updateObservables(): Promise<void> {
         const backgroundPluginConfig = this.background();
 
         if (!backgroundPluginConfig) {
