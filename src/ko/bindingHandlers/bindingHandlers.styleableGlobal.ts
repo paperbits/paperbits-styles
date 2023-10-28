@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { Styleable } from "@paperbits/common/styles";
+import { Styleable } from "../../contracts/styleable";
 import { StyleService } from "../../styleService";
 
 
@@ -39,15 +39,10 @@ export class StylableGlobalBindingHandler {
                     stateObservable(state);
                 }
 
-                const getState = (): string => {
-                    return currentStateClass;
-                }
-
                 const styleable: Styleable = {
                     style: style,
                     toggleBackground: toggleBackground,
                     setState: setState,
-                    getState: getState,
                     state: stateObservable,
                     variationCard: variationCard
                 };

@@ -1,5 +1,5 @@
 import * as ko from "knockout";
-import { Styleable } from "@paperbits/common/styles";
+import { Styleable } from "../../contracts/styleable";
 
 
 ko.bindingHandlers["styleable"] = {
