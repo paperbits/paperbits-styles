@@ -39,7 +39,7 @@ export class ThemeMigration1 implements ThemeMigration {
             formGroupVariationBag[key] = {
                 key: `components/formGroup/${key}`,
                 category: "appearance",
-                displayName: "Normal form group",
+                displayName: "Normal form control",
                 components: {
                     formControl: { default: formControlVariation },
                     formLabel: { default: formLabelVariation },

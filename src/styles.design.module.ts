@@ -48,6 +48,7 @@ import { FontManager } from "./openType";
 import { FontEditor } from "./workshops/fonts/fontEditor";
 import { SizeInput } from "./workshops/size/size-input";
 import { DefaultMigrationService } from "./migrations/defaultMigrationService";
+import { StateSelector } from "./plugins/state/stateSelector";
 
 export class StylesDesignModule implements IInjectorModule {
     public register(injector: IInjector): void {
@@ -76,6 +77,7 @@ export class StylesDesignModule implements IInjectorModule {
         injector.bind("shadowEditorGroup", ShadowEditorGroup);
         injector.bind("animationSelector", AnimationSelector);
         injector.bind("animationEditor", AnimationEditor);
+        injector.bind("stateEditor", StateSelector);
         injector.bindSingleton("styleService", StyleService);
         injector.bindSingleton("styleCompiler", DefaultStyleCompiler);
         injector.bindToCollection("autostart", StyledBindingHandler);

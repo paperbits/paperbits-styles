@@ -6,14 +6,12 @@ import { StyleService } from "../../styleService";
 export class StylableGlobalBindingHandler {
     constructor(private readonly styleService: StyleService) {
         ko.bindingHandlers["styleableGlobal"] = {
-            update: async (element: HTMLElement, valueAccessor) => {
+            update: async (element: HTMLElement, valueAccessor, allBindings, bindingContext) => {
                 const config = ko.unwrap(valueAccessor());
 
                 const styleKey: string = typeof config === "string"
                     ? config
                     : config.key;
-
-                let styleable: Styleable;
 
                 const style = await this.styleService.getStyleByKey(styleKey);
 
@@ -21,48 +19,37 @@ export class StylableGlobalBindingHandler {
                     throw new Error(`Unable to find style by key ${styleKey}`);
                 }
 
-                const backgroundObservable = ko.observable();
-
-                let mode = 1;
-
-                const toggleBackground = () => {
-                    switch (mode) {
-                        case 0:
-                            backgroundObservable(null);
-                            mode = 1;
-                            break;
-                            
-                        case 1:
-                            backgroundObservable("transparent");
-                            mode = 2;
-                            break;
-
-                        case 2:
-                            backgroundObservable("dark");
-                            mode = 0;
-                            break;
-                    }
-                };
+                const variationCard = bindingContext;
+                const toggleBackground = () => variationCard.toggleBackground();
 
                 let currentStateClass: string;
+
+                const stateObservable = ko.observable();
 
                 const setState = (state: string): void => {
                     if (currentStateClass) {
                         element.classList.remove(currentStateClass);
                     }
-                    
+
                     if (state) {
                         element.classList.add(state);
-                        currentStateClass = state;
                     }
+
+                    currentStateClass = state;
+                    stateObservable(state);
                 }
 
-                ko.applyBindingsToNode(element, { css: backgroundObservable }, null);
+                const getState = (): string => {
+                    return currentStateClass;
+                }
 
-                styleable = {
+                const styleable: Styleable = {
                     style: style,
                     toggleBackground: toggleBackground,
-                    setState: setState
+                    setState: setState,
+                    getState: getState,
+                    state: stateObservable,
+                    variationCard: variationCard
                 };
 
                 element["styleable"] = styleable;

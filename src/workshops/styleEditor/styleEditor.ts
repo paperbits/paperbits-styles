@@ -18,7 +18,6 @@ import { StyleService } from "../../styleService";
 export class StyleEditor {
     private updateTimeout: any;
     private readonly elementStates: ko.ObservableArray<string>;
-    private currentState: string;
 
     public readonly styleName: ko.Observable<string>;
     public readonly hasStyleName: ko.Observable<boolean>;
@@ -79,6 +78,9 @@ export class StyleEditor {
     public baseComponentName: string;
 
     @Param()
+    public currentState: string;
+
+    @Param()
     public plugins: string[];
 
     @Event()
@@ -92,6 +94,8 @@ export class StyleEditor {
 
     @OnMounted()
     public async initialize(): Promise<void> {
+        this.selectedState(this.currentState);
+
         if (this.plugins) {
             this.allowTypography(this.plugins.includes("typography"));
             this.allowPadding(this.plugins.includes("padding"));

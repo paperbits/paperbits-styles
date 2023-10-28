@@ -440,7 +440,7 @@ export class StyleService {
         this.rewriteVariationKeysRecursively(variation, key);
 
         variation.key = key;
-        variation.displayName = variation.displayName || "< Unnamed >";
+        variation.displayName = "< Unnamed >";
         variation.category = "appearance";
 
         const styles = await this.getStyles();

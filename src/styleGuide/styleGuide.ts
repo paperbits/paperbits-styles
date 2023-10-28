@@ -14,6 +14,67 @@ import { OpenTypeFontGlyph } from "../openType";
 import { StyleService } from "../styleService";
 import { formatUnicode } from "../styleUitls";
 
+
+
+export class ComponentCard {
+    public name: string;
+    public displayName: ko.Observable<string>;
+    public backgroundClassName: ko.Observable<string>;
+    public itemTemplate: string;
+
+    public variationCards: ko.ObservableArray<ComponentVariationCard>;
+
+    constructor(public componentStyle: ComponentStyle) {
+        this.itemTemplate = componentStyle.itemTemplate;
+        this.name = componentStyle.name;
+        this.displayName = ko.observable(componentStyle.displayName);
+        this.backgroundClassName = ko.observable(null);
+
+        const self = this;
+
+        const variationCards = componentStyle.variations.map(variation => new ComponentVariationCard(self, variation));
+        this.variationCards = ko.observableArray(variationCards);
+    }
+}
+
+export class ComponentVariationCard {
+    private mode = 1;
+    public displayName: ko.Observable<string>;
+    public backgroundClassName: ko.Observable<string>;
+    public key: string;
+
+    constructor(private component: ComponentCard, public variation: VariationContract) {
+        this.displayName = ko.observable(variation.displayName);
+        this.backgroundClassName = ko.observable(null);
+        this.key = variation.key;
+    }
+
+    public toggleBackground = () => {
+        switch (this.mode) {
+            case 0:
+                this.backgroundClassName(null);
+                this.mode = 1;
+                break;
+
+            case 1:
+                this.backgroundClassName("transparent");
+                this.mode = 2;
+                break;
+
+            case 2:
+                this.backgroundClassName("dark");
+                this.mode = 0;
+                break;
+        }
+
+        console.log(this.backgroundClassName());
+    };
+
+    public delete(): void {
+        this.component.variationCards.remove(this);
+    }
+}
+
 @Component({
     selector: "style-guide",
     template: template
@@ -42,7 +103,7 @@ export class StyleGuide {
     public readonly icons: ko.ObservableArray<any>;
     public readonly textStyles: ko.ObservableArray<any>;
     public readonly navBars: ko.ObservableArray<any>;
-    public readonly uiComponents: ko.ObservableArray<ComponentStyle>;
+    public readonly uiComponents: ko.ObservableArray<ComponentCard>;
 
     constructor(
         private readonly styleService: StyleService,
@@ -128,9 +189,6 @@ export class StyleGuide {
         await this.styleService.removeStyle(contract.key);
 
         if (contract.key.startsWith("components/")) {
-            const parts = contract.key.split("/");
-            const componentName = parts[1];
-            await this.onUpdateStyle(componentName);
         }
         else {
             this.refreshComponents();
@@ -280,26 +338,21 @@ export class StyleGuide {
         return true;
     }
 
-    public selectComponent(style: VariationContract): boolean {
+    public selectComponent(variationCard: ComponentVariationCard): boolean {
         const view: View = {
-            heading: style.displayName,
+            heading: variationCard.variation.displayName,
             component: {
                 name: "style-editor",
                 params: {
-                    elementStyle: style,
+                    elementStyle: variationCard.variation,
                     onUpdate: async () => {
-                        await this.styleService.updateStyle(style);
+                        await this.styleService.updateStyle(variationCard.variation);
 
-                        if (style.key.startsWith("components/")) {
-                            const parts = style.key.split("/");
-                            const componentName = parts[1];
-
-                            await this.onUpdateStyle(componentName);
-                        }
-
-                        this.refreshComponents();
                         this.refreshTextVariations();
                         this.rebuildStyleSheet();
+                    },
+                    onRename: () => {
+                        this.refreshComponents();
                     }
                 }
             },
@@ -343,9 +396,9 @@ export class StyleGuide {
         this.selectTextStyle(addedItem);
     }
 
-    public async addComponentVariation(componentName: string, snippet?: ComponentStyle): Promise<void> {
+    public async addComponentVariation(componentName: string, componentCard?: ComponentCard): Promise<void> {
         const variationName = `${Utils.identifier().toLowerCase()}`; // TODO: Replace name with kebab-like name.
-        let defaultVariation = snippet.variations.find(x => x.key === `components/${componentName}/default`);
+        let defaultVariation = componentCard.componentStyle.variations.find(x => x.key === `components/${componentName}/default`);
 
         if (!defaultVariation) {
             throw new Error(`Default variation for component "${componentName}" not found.`);
@@ -353,22 +406,12 @@ export class StyleGuide {
 
         defaultVariation = Objects.clone(defaultVariation); // dropping references
         const addedStyleKey = await this.styleService.addComponentVariation(componentName, variationName, defaultVariation);
-        const addedStyle = await this.styleService.getStyleByKey(addedStyleKey);
+        const addedVariation = await this.styleService.getStyleByKey(addedStyleKey);
 
-        this.selectComponent(addedStyle);
+        const variationCard = new ComponentVariationCard(componentCard, addedVariation);
+        componentCard.variationCards.push(variationCard);
 
-        await this.onUpdateStyle(componentName);
-    }
-
-    private async onUpdateStyle(componentName: string): Promise<void> {
-        const components = this.uiComponents();
-        const old = components.find(c => c.name === componentName);
-
-        if (old) {
-            const updated = await this.getComponentsStyles();
-            const updatedItem = updated.find(c => c.name === componentName);
-            this.uiComponents.replace(old, updatedItem);
-        }
+        this.selectComponent(variationCard);
     }
 
     public async applyChanges(): Promise<void> {
@@ -434,7 +477,7 @@ export class StyleGuide {
 
     private async refreshComponents(): Promise<void> {
         const components = await this.getComponentsStyles();
-        this.uiComponents(components);
+        this.uiComponents(components.map(x => new ComponentCard(x)));
     }
 
     public async getComponentsStyles(): Promise<ComponentStyle[]> {
@@ -654,39 +697,7 @@ export class StyleGuide {
             element: element
         };
 
-        if (this.canBeDeleted(style.key)) {
-            styleContextualEditor.deleteCommand = {
-                controlType: "toolbox-button",
-                tooltip: "Delete",
-                color: "#607d8b",
-                doNotClearSelection: true,
-                component: {
-                    name: "confirmation",
-                    params: {
-                        getMessage: async () => {
-                            const references = await this.styleService.checkStyleIsInUse(style.key);
-                            const styleNames = references.map(x => x.displayName).join(`", "`);
 
-                            let message = `Are you sure you want to delete this style?`;
-
-                            if (styleNames) {
-                                message += ` It is referenced by "${styleNames}".`;
-                            }
-
-                            return message;
-                        },
-                        onConfirm: () => {
-                            this.removeStyle(style);
-                            this.viewManager.clearContextualCommands();
-                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
-                        },
-                        onDecline: () => {
-                            this.viewManager.clearContextualCommands();
-                        }
-                    }
-                }
-            };
-        }
 
         if (style.key.startsWith("icons/")) {
             styleContextualEditor.deleteCommand = {
@@ -725,7 +736,6 @@ export class StyleGuide {
                 position: "top right",
                 callback: () => this.selectShadow(<ShadowContract>style)
             });
-            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
 
         if (style.key.startsWith("gradients/")) {
@@ -736,7 +746,6 @@ export class StyleGuide {
                 position: "top right",
                 callback: () => this.selectGradient(style)
             });
-            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
 
         if (style.key.startsWith("colors/")) {
@@ -747,14 +756,48 @@ export class StyleGuide {
                 position: "top right",
                 callback: () => this.selectColor(style)
             });
-            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
+
+        if (style.key.startsWith("fonts/")) {
+            styleContextualEditor.selectCommands.push({
+                name: "edit",
+                controlType: "toolbox-button",
+                displayName: "Edit font",
+                position: "top right",
+                color: "#607d8b",
+                callback: () => {
+                    const view: View = {
+                        heading: style.displayName,
+                        component: {
+                            name: "font-editor",
+                            params: {
+                                font: style,
+                                onChange: async () => {
+                                    await this.styleService.updateStyle(style);
+                                    this.refreshFonts();
+                                    this.rebuildStyleSheet();
+                                }
+                            }
+                        },
+                        resizing: "vertically horizontally"
+                    };
+
+                    this.viewManager.openViewAsPopup(view);
+                }
+            });
+        }
+
+        const getDisplayName = ko.computed(() => {
+            return styleable.state()
+                ? `Edit style (:${styleable.state()})`
+                : `Edit style`
+        });
 
         if (style.key.startsWith("components/")) {
             styleContextualEditor.selectCommands.push({
                 name: "edit",
                 controlType: "toolbox-button",
-                displayName: "Edit style",
+                displayName: getDisplayName,
                 // iconClass: "paperbits-icon paperbits-edit-72",
                 position: "top right",
                 color: "#607d8b",
@@ -769,6 +812,7 @@ export class StyleGuide {
                                     await this.styleService.updateStyle(style);
                                     this.rebuildStyleSheet();
                                 },
+                                currentState: styleable.state(),
                                 onStateChange: (state: string): void => {
                                     styleable.setState(state);
                                     this.rebuildStyleSheet();
@@ -778,18 +822,30 @@ export class StyleGuide {
                                 }
                             }
                         },
-                        resizing: "vertically horizontally",
-                        onClose: () => {
-                            // return component to default state
-                            styleable.setState(null);
-                        }
+                        resizing: "vertically horizontally"
                     };
 
                     this.viewManager.openViewAsPopup(view);
                 }
             });
 
-            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+            if (style["allowedStates"]?.length > 1) {
+                styleContextualEditor.selectCommands.push({
+                    tooltip: "Select state",
+                    iconClass: "paperbits-icon paperbits-small-down",
+                    controlType: "toolbox-dropdown",
+                    component: {
+                        name: "state-selector",
+                        params: {
+                            states: style["allowedStates"],
+                            selectedState: styleable.state,
+                            onSelect: (state: string): void => {
+                                styleable.setState(state);
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         if (style.key.startsWith("globals/")) {
@@ -822,8 +878,6 @@ export class StyleGuide {
                     this.viewManager.openViewAsPopup(view);
                 }
             });
-
-            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
         }
 
         if (!style.key.startsWith("colors/") &&
@@ -833,6 +887,8 @@ export class StyleGuide {
             !style.key.startsWith("gradients/") &&
             !style.key.includes("/components/") // sub-components
         ) {
+            styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+
             styleContextualEditor.selectCommands.push({
                 name: "background",
                 controlType: "toolbox-button",
@@ -840,39 +896,47 @@ export class StyleGuide {
                 iconClass: "paperbits-icon paperbits-drop",
                 position: "top right",
                 color: "#607d8b",
-                callback: () => {
-                    styleable.toggleBackground();
-                }
+                callback: () => styleable.toggleBackground()
             });
         }
 
-        if (style.key.startsWith("fonts/")) {
-            styleContextualEditor.selectCommands.push({
-                name: "edit",
-                controlType: "toolbox-button",
-                displayName: "Edit font",
-                position: "top right",
-                color: "#607d8b",
-                callback: () => {
-                    const view: View = {
-                        heading: style.displayName,
-                        component: {
-                            name: "font-editor",
-                            params: {
-                                font: style,
-                                onChange: async () => {
-                                    await this.styleService.updateStyle(style);
-                                    this.refreshFonts();
-                                    this.rebuildStyleSheet();
-                                }
-                            }
-                        },
-                        resizing: "vertically horizontally"
-                    };
+        if (this.canBeDeleted(style.key)) {
+            if (styleContextualEditor.selectCommands.length == 1) {
+                styleContextualEditor.selectCommands.push({ controlType: "toolbox-splitter" });
+            }
 
-                    this.viewManager.openViewAsPopup(view);
+            styleContextualEditor.deleteCommand = {
+                controlType: "toolbox-button",
+                tooltip: "Delete",
+                color: "#607d8b",
+                doNotClearSelection: true,
+                component: {
+                    name: "confirmation",
+                    params: {
+                        getMessage: async () => {
+                            const references = await this.styleService.checkStyleIsInUse(style.key);
+                            const styleNames = references.map(x => x.displayName).join(`", "`);
+
+                            let message = `Are you sure you want to delete this style?`;
+
+                            if (styleNames) {
+                                message += ` It is referenced by "${styleNames}".`;
+                            }
+
+                            return message;
+                        },
+                        onConfirm: () => {
+                            styleable.variationCard.delete();
+                            this.removeStyle(style);
+                            this.viewManager.clearContextualCommands();
+                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
+                        },
+                        onDecline: () => {
+                            this.viewManager.clearContextualCommands();
+                        }
+                    }
                 }
-            });
+            };
         }
 
         return styleContextualEditor;

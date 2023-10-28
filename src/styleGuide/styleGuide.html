@@ -276,13 +276,14 @@
 
     <!-- ko foreach: { data: $component.uiComponents, as: 'item' } -->
     <article>
+        
         <h2 class="heading" data-bind="text: item.displayName">Component</h2>
         <div class="row">
             <div class="col col-md-12 samples">
-                <!--ko foreach: { data: item.variations, as: 'variation' }-->
-                <div class="sample style-card">
-                    <div class="style-card-body" data-bind="itemTemplate: $parent.itemTemplate"></div>
-                    <span class="style-card-label" data-bind="text: variation.displayName"></span>
+                <!--ko foreach: { data: item.variationCards, as: 'variationCard' }-->
+                <div class="sample style-card" data-bind="css: variationCard.backgroundClassName">
+                    <div class="style-card-body" data-bind="itemTemplate: item.itemTemplate"></div>
+                    <span class="style-card-label" data-bind="text: variationCard.displayName"></span>
                 </div>
                 <!--/ko-->
                 <div class="style-card style-card-empty">

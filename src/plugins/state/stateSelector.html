@@ -1,0 +1,13 @@
+<div class="flex flex-column">
+    <div role="listbox" class="list-checkboxes" data-bind="scrollable: true, listbox: {}">
+        <a role="option" class="list-item"
+        data-bind="activate: $component.selectState.bind($data, null), css: { 'list-item-checked': !$component.selectedState() }">
+        regular
+    </a>
+        <!-- ko foreach: { data: states, as: 'state' } -->
+        <a role="option" class="list-item"
+            data-bind="text: state, activate: $component.selectState, css: { 'list-item-checked': state === $component.selectedState() }">
+        </a>
+        <!--/ko-->
+    </div>
+</div>
