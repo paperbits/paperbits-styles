@@ -2,9 +2,9 @@
     <label for="shadowType">
         Type
     </label>
-    <div class="input-group">
+    <div class="input-group" data-bind="balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.shadowKey } } }">
         <input id="shadowType" class="form-control" readonly
-            data-bind="value: $component.displayName, balloon: { component: { name: 'shadow-selector', params: { onSelect: $component.onShadowSelected, selectedShadow: $component.shadowKey } } }" />
+            data-bind="value: $component.displayName" />
         <span class="btn input-group-btn">
             <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
         </span>

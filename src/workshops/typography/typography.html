@@ -1,8 +1,8 @@
 <div class="form-group">
     <label for="fontFamily">Font family</label>
-    <div class="input-group">
+    <div class="input-group" data-bind="balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }">
         <input id="fontFamily" class="form-control" readonly
-            data-bind="value: $component.fontName, balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }" />
+            data-bind="value: $component.fontName" />
         <span class="btn input-group-btn">
             <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
         </span>

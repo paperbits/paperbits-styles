@@ -2,9 +2,9 @@
     <label for="animationType">
         Type
     </label>
-    <div class="input-group">
+    <div class="input-group" data-bind="balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }">
         <input id="animationType" class="form-control" readonly
-            data-bind="value: $component.displayName, balloon: { component: { name: 'animation-selector', params: { onSelect: $component.onAnimationSelected, selectedAnimation: $component.animationKey } } }" />
+            data-bind="value: $component.displayName" />
         <span class="btn input-group-btn">
             <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
         </span>
