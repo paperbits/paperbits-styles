@@ -86,7 +86,7 @@ export class BoxEditor {
 
     @OnMounted()
     public init(): void {
-        const features = this.features.split(",");
+        const features = this.features.split(",").map(x => x.trim());
         this.marginEnabled(features.includes("margin"));
         this.paddingEnabled(features.includes("padding"));
         this.borderEnabled(features.includes("border"));
