@@ -76,8 +76,9 @@ export class Background {
 
     @OnMounted()
     public async initialize(): Promise<void> {
+        await Utils.delay(100);
         await this.updateObservables();
-        
+
         this.size.subscribe(this.applyChanges);
         this.attachment.subscribe(this.applyChanges);
         this.blend.subscribe(this.applyChanges);

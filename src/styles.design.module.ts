@@ -32,7 +32,7 @@ import { StylableGlobalBindingHandler } from "./ko/bindingHandlers/bindingHandle
 import { ShadowPreviewBindingHandler } from "./ko/bindingHandlers/bindingHandlers.shadowPreview";
 import { Transform } from "./workshops/transform/transform";
 import { Transition } from "./workshops/transitions/transition";
-import { Container } from "./workshops/container/container";
+import { Container } from "./workshops/alignment/alignment";
 import { StyleSnippetService } from "./styleSnippetService";
 import { StyleSnippet } from "./workshops/snippets/styleSnippet";
 import { StyledBindingHandler } from "./ko/bindingHandlers";

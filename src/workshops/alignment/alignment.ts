@@ -1,10 +1,10 @@
 import * as ko from "knockout";
-import template from "./container.html";
+import template from "./alignment.html";
 import { Component, OnMounted, Param, Event } from "@paperbits/common/ko/decorators";
 import { ContainerStylePluginConfig } from "../../plugins/container/containerStylePluginConfig";
 
 @Component({
-    selector: "container",
+    selector: "alignment-editor",
     template: template
 })
 export class Container {

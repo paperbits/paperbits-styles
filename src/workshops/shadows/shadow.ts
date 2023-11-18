@@ -1,6 +1,6 @@
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common";
-import template from "./shadowEditorGroup.html";
+import template from "./shadow.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../styleService";
 import { ShadowStylePluginConfig } from "../../plugins/shadow/shadowStylePluginConfig";
@@ -9,7 +9,7 @@ import { ShadowContract } from "../../contracts/shadowContract";
 const inheritLabel = "(Inherit)";
 
 @Component({
-    selector: "shadow-editor-group",
+    selector: "shadow",
     template: template
 })
 export class ShadowEditorGroup {
