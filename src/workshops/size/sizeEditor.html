@@ -1,3 +1,13 @@
+<!-- ko if: fitEnabled -->
+<div class="form-group">
+    <label for="fit" class="form-label">
+        <input type="checkbox" id="fit" name="stretch" data-bind="checked: fit" />Fit to parent
+    </label>
+</div>
+<!-- /ko -->
+
+<!-- ko ifnot: fit -->
+
 <!-- ko if: widthEnabled -->
 <div class="form-group">
     <label for="itemWidth" class="form-label">
@@ -68,4 +78,6 @@
         <input type="checkbox" id="stretch" name="stretch" data-bind="checked: stretch" />Stretch
     </label>
 </div>
+<!-- /ko -->
+
 <!-- /ko -->

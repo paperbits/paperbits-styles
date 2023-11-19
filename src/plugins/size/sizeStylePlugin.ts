@@ -12,36 +12,48 @@ export class SizeStylePlugin extends StylePlugin {
     }
 
     public async configToStyleRules(pluginConfig: SizeStylePluginConfig): Promise<StyleRule[]> {
-        const result = [];
+        const rules = [];
+
+        rules.push(new StyleRule("overflow", "auto"));
+
+        if (pluginConfig.fit) {
+            rules.push(new StyleRule("position", "absolute"));
+            rules.push(new StyleRule("top", "0"));
+            rules.push(new StyleRule("left", "0"));
+            rules.push(new StyleRule("right", "0"));
+            rules.push(new StyleRule("bottom", "0"));
+            rules.push(new StyleRule("zIndex", "100"));
+            return rules;
+        }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.width)) {
-            result.push(new StyleRule("width", StyleHelper.parseValue(pluginConfig.width)));
+            rules.push(new StyleRule("width", StyleHelper.parseValue(pluginConfig.width)));
         }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.height)) {
-            result.push(new StyleRule("height", StyleHelper.parseValue(pluginConfig.height)));
+            rules.push(new StyleRule("height", StyleHelper.parseValue(pluginConfig.height)));
         }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.minWidth)) {
-            result.push(new StyleRule("minWidth", StyleHelper.parseValue(pluginConfig.minWidth)));
+            rules.push(new StyleRule("minWidth", StyleHelper.parseValue(pluginConfig.minWidth)));
         }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.minHeight)) {
-            result.push(new StyleRule("minHeight", StyleHelper.parseValue(pluginConfig.minHeight)));
+            rules.push(new StyleRule("minHeight", StyleHelper.parseValue(pluginConfig.minHeight)));
         }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.maxWidth)) {
-            result.push(new StyleRule("maxWidth", StyleHelper.parseValue(pluginConfig.maxWidth)));
+            rules.push(new StyleRule("maxWidth", StyleHelper.parseValue(pluginConfig.maxWidth)));
         }
 
         if (!StyleHelper.isValueEmpty(pluginConfig.maxHeight)) {
-            result.push(new StyleRule("maxHeight", StyleHelper.parseValue(pluginConfig.maxHeight)));
+            rules.push(new StyleRule("maxHeight", StyleHelper.parseValue(pluginConfig.maxHeight)));
         }
 
         if (pluginConfig.stretch) {
-            result.push(new StyleRule("flexGrow", 1));
+            rules.push(new StyleRule("flexGrow", 1));
         }
 
-        return result;
+        return rules;
     }
 }

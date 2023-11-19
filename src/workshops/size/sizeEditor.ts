@@ -26,6 +26,8 @@ export class SizeEditor {
 
     public readonly stretchEnabled: ko.Observable<boolean>;
     public readonly stretch: ko.Observable<boolean>;
+    public readonly fitEnabled: ko.Observable<boolean>;
+    public readonly fit: ko.Observable<boolean>;
 
     @Param()
     public readonly sizeConfig: ko.Observable<SizeStylePluginConfig>;
@@ -55,6 +57,8 @@ export class SizeEditor {
 
         this.stretchEnabled = ko.observable();
         this.stretch = ko.observable();
+        this.fitEnabled = ko.observable();
+        this.fit = ko.observable();
     }
 
     @OnMounted()
@@ -65,6 +69,7 @@ export class SizeEditor {
         this.widthEnabled(features.includes("width"));
         this.minMaxWidthEnabled(features.includes("minMaxWidth"));
         this.stretchEnabled(features.includes("stretch"));
+        this.fitEnabled(features.includes("fit"));
 
         this.updateObservables();
 
@@ -91,6 +96,9 @@ export class SizeEditor {
 
         this.stretch
             .subscribe(this.applyChanges);
+
+        this.fit
+            .subscribe(this.applyChanges);
     }
 
     private updateObservables(): void {
@@ -104,6 +112,7 @@ export class SizeEditor {
         this.minWidth(pluginConfig?.minWidth);
         this.maxWidth(pluginConfig?.maxWidth);
         this.stretch(pluginConfig?.stretch);
+        this.fit(pluginConfig?.fit);
 
         this.updatesSuspended = false;
     }
@@ -124,7 +133,8 @@ export class SizeEditor {
             width: this.itemWidth(),
             minWidth: this.minWidth(),
             maxWidth: this.maxWidth(),
-            stretch: this.stretch()
+            stretch: this.stretch(),
+            fit: this.fit()
         };
 
         this.onUpdate(update);

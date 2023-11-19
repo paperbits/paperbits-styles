@@ -38,4 +38,9 @@ export interface SizeStylePluginConfig extends StylePluginConfig {
      * Inidicates if UI element should take all the available space.
      */
     stretch?: boolean;
+
+    /**
+     * Inidicates if UI element should fit into parent element (this cancels all the sizing settings).
+     */
+    fit?: boolean;
 }
