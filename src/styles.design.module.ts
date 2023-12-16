@@ -40,7 +40,7 @@ import { OptionSelectorEditor } from "./workshops/optionSelector/optionSelectorE
 import { SizeEditor } from "./workshops/size/sizeEditor";
 import { GlyphSelector } from "./workshops/icons/glyph-selector/glyph-selector";
 import { GlyphImport } from "./workshops/icons/glyph-import/glyph-import";
-import { GlyphInput } from "./workshops/icons/glyph-input/glyph-input";
+import { GlyphInput } from "./workshops/icons/input-glyph/input-glyph";
 import { FontPermalinkResolver } from "./fonts/fontPermalinkResolver.design";
 import { StyleService } from "./styleService";
 import { DefaultStyleCompiler } from "./defaultStyleCompiler";

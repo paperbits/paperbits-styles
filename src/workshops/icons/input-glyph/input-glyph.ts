@@ -1,12 +1,12 @@
 import * as ko from "knockout";
 import * as Objects from "@paperbits/common/objects";
-import template from "./glyph-input.html";
+import template from "./input-glyph.html";
 import { Component, Event, OnMounted, Param } from "@paperbits/common/ko/decorators";
 import { StyleService } from "../../..";
 import { FontContract, FontGlyphContract } from "../../../contracts";
 
 @Component({
-    selector: "glyph-input",
+    selector: "input-glyph",
     template: template
 })
 export class GlyphInput {
