@@ -14,8 +14,6 @@ export class SizeStylePlugin extends StylePlugin {
     public async configToStyleRules(pluginConfig: SizeStylePluginConfig): Promise<StyleRule[]> {
         const rules = [];
 
-        rules.push(new StyleRule("overflow", "auto"));
-
         if (pluginConfig.fit) {
             rules.push(new StyleRule("position", "absolute"));
             rules.push(new StyleRule("top", "0"));
@@ -23,6 +21,7 @@ export class SizeStylePlugin extends StylePlugin {
             rules.push(new StyleRule("right", "0"));
             rules.push(new StyleRule("bottom", "0"));
             rules.push(new StyleRule("zIndex", "100"));
+            rules.push(new StyleRule("overflow", "auto"));
             return rules;
         }
 

@@ -49,7 +49,7 @@ export class ContainerStylePlugin extends StylePlugin {
         }
 
         if (pluginConfig.overflow) {
-            if (pluginConfig.overflow.vertical && pluginConfig.overflow.horizontal) {
+            if (pluginConfig.overflow.vertical == "auto" && pluginConfig.overflow.horizontal == "auto") {
                 rules.push(new StyleRule("overflow", "auto"));
             }
             else {
