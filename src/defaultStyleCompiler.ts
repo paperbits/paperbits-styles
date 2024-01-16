@@ -626,6 +626,11 @@ export class DefaultStyleCompiler implements StyleCompiler {
                 classNames.push(...instanceClassNames);
             }
             else {
+
+                if(typeof categoryConfig !== "string") {
+                    continue;
+                }
+
                 const styleKey = <string>categoryConfig;
                 const className = await this.getClassNameByStyleKeyAsync(styleKey);
 
