@@ -51,6 +51,7 @@ export class SizeStylePlugin extends StylePlugin {
 
         if (pluginConfig.stretch) {
             rules.push(new StyleRule("flexGrow", 1));
+            rules.push(new StyleRule("flexShrink", 1));
         }
 
         return rules;
