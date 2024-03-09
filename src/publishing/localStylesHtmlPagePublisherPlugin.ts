@@ -14,6 +14,7 @@ const localStylesheetFilePath = `/styles.css`;
 export class LocalStyleHtmlPagePublisherPlugin implements HtmlPagePublisherPlugin {
     private localStyleBuilder: StyleBuilder;
     private subresourceIntegrityEnabled: boolean;
+    private staticAssetSuffix: string;
 
     constructor(
         private readonly settingsProvider: ISettingsProvider,
@@ -26,6 +27,7 @@ export class LocalStyleHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
 
     private async loadSettings(): Promise<void> {
         this.subresourceIntegrityEnabled = !!await this.settingsProvider.getSetting<boolean>("features/subresourceIntegrity");
+        this.staticAssetSuffix = await this.settingsProvider.getSetting<string>("staticAssetSuffix");
     }
 
     private appendStyleLink(document: Document, href: string, integrity: string): void {
@@ -46,12 +48,14 @@ export class LocalStyleHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
         await this.initialize();
 
         const styleManager: StyleManager = page.bindingContext?.styleManager;
+        const stylesheetFilePath = Utils.appendSuffixToFileName(localStylesheetFilePath, this.staticAssetSuffix);
 
         const localStylesheetPermalink = page.permalink === "/" // home page
-            ? localStylesheetFilePath
-            : `${page.permalink}${localStylesheetFilePath}`
+            ? stylesheetFilePath
+            : `${page.permalink}${stylesheetFilePath}`
 
         const styleSheets = styleManager.getAllStyleSheets();
+
         const hash = await this.localStyleBuilder.buildStyle(localStylesheetPermalink, ...styleSheets);
 
         this.appendStyleLink(document, localStylesheetPermalink, hash);
