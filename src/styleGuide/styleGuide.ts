@@ -7,7 +7,7 @@ import { Bag, MouseButtons } from "@paperbits/common";
 import { EventManager, Events } from "@paperbits/common/events";
 import { Component, OnDestroyed, OnMounted } from "@paperbits/common/ko/decorators";
 import { Styleable } from "../contracts/styleable";
-import { IStyleGroup, StyleCompiler, StyleManager, VariationContract } from "@paperbits/common/styles";
+import { IStyleGroup, PrimitiveContract, StyleCompiler, StyleManager, VariationContract } from "@paperbits/common/styles";
 import { ActiveElement, IContextCommandSet, IHighlightConfig, View, ViewManager, ViewManagerMode } from "@paperbits/common/ui";
 import { ColorContract, FontContract, LinearGradientContract, ShadowContract } from "../contracts";
 import { ComponentStyle } from "../contracts/componentStyle";
@@ -186,7 +186,7 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeStyle(contract: VariationContract): Promise<void> {
+    public async removeStyle(contract: PrimitiveContract): Promise<void> {
         await this.styleService.removeStyle(contract.key);
 
         if (contract.key.startsWith("components/")) {
@@ -195,6 +195,8 @@ export class StyleGuide {
             this.refreshComponents();
             this.rebuildStyleSheet();
         }
+
+        this.viewManager.notifySuccess("Styles", `Style "${contract.displayName}" was deleted.`);
     }
 
     public async addColor(): Promise<void> {
@@ -258,18 +260,36 @@ export class StyleGuide {
         this.viewManager.openViewAsPopup(view);
     }
 
-    public async removeColor(color: ColorContract): Promise<void> {
-        await this.styleService.removeStyle(color.key);
+    public async removeColor(style: PrimitiveContract): Promise<void> {
+        await this.styleService.removeStyle(style.key);
 
         this.refreshColors();
         this.rebuildStyleSheet();
+        this.viewManager.notifySuccess("Styles", `Color "${style.displayName}" was deleted.`);
     }
 
-    public async removeGradient(gradient: LinearGradientContract): Promise<void> {
-        await this.styleService.removeStyle(gradient.key);
+    public async removeGradient(style: PrimitiveContract): Promise<void> {
+        await this.styleService.removeStyle(style.key);
 
         this.refreshGradients();
         this.rebuildStyleSheet();
+        this.viewManager.notifySuccess("Styles", `Gradient "${style.displayName}" was deleted.`);
+    }
+
+    public async removeIcon(style: PrimitiveContract): Promise<void> {
+        await this.styleService.removeStyle(style.key);
+
+        this.refreshIcons();
+        this.rebuildStyleSheet();
+        this.viewManager.notifySuccess("Styles", `Icon "${style.displayName}" was deleted.`);
+    }
+
+    public async removeShadow(style: PrimitiveContract): Promise<void> {
+        await this.styleService.removeStyle(style.key);
+
+        this.refreshShadows();
+        this.rebuildStyleSheet();
+        this.viewManager.notifySuccess("Styles", `Shadow "${style.displayName}" was deleted.`);
     }
 
     public selectColor(color: ColorContract): boolean {
@@ -698,7 +718,7 @@ export class StyleGuide {
             element: element
         };
 
-
+        const styleCategory = style.key.split("/")[0];
 
         if (style.key.startsWith("icons/")) {
             styleContextualEditor.deleteCommand = {
@@ -927,10 +947,29 @@ export class StyleGuide {
                             return message;
                         },
                         onConfirm: () => {
-                            styleable.variationCard.delete();
-                            this.removeStyle(style);
                             this.viewManager.clearContextualCommands();
-                            this.viewManager.notifySuccess("Styles", `Style "${style.displayName}" was deleted.`);
+
+                            switch (styleCategory) {
+                                case "colors":
+                                    this.removeColor(style);
+                                    break;
+                                case "gradients":
+                                    this.removeGradient(style);
+                                    break;
+                                case "icons":
+                                    this.removeIcon(style);
+                                  
+                                    break;
+                                case "shadows":
+                                    this.removeShadow(style);
+                                    break;
+                                default:
+                                    this.removeStyle(style);
+                            }
+
+                            if (styleable.variationCard.delete) {
+                                styleable.variationCard.delete();
+                            }
                         },
                         onDecline: () => {
                             this.viewManager.clearContextualCommands();

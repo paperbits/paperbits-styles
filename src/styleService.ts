@@ -189,6 +189,11 @@ export class StyleService {
         return shadows.filter(x => x !== null && x.key !== "shadows/none");
     }
 
+    public async getShadow(shadowKey: string): Promise<ShadowContract> {
+        const shadows = await this.getPrimitives<ShadowContract>("shadows");
+        return shadows.find(x => x.key === shadowKey);
+    }
+
     public async getAnimations(): Promise<AnimationContract[]> {
         const animations = await this.getPrimitives<AnimationContract>("animations");
         return animations.filter(x => x !== null && x.key !== "animations/none");

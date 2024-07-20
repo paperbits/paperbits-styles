@@ -32,17 +32,18 @@ export class ShadowEditorGroup {
     public async loadShadows(): Promise<void> {
         const shadow = this.shadow();
 
+        let displayName = inheritLabel;
+
         if (shadow) {
-            const styles = await this.styleService.getStyles();
+            const shadowContract = await this.styleService.getShadow(shadow.shadowKey);
 
-            const shadowContract = Objects.getObjectAt<ShadowContract>(shadow.shadowKey, styles);
-            this.displayName(shadowContract.displayName);
+            if (shadowContract) {
+                displayName = shadowContract.displayName;
+                this.shadowKey(shadowContract.key);
+            }
+        }
 
-            this.shadowKey(shadow.shadowKey);
-        }
-        else {
-            this.displayName(inheritLabel);
-        }
+        this.displayName(displayName);
     }
 
     public onShadowSelected(shadow: ShadowContract): void {

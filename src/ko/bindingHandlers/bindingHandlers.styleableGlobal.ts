@@ -1,6 +1,7 @@
 import * as ko from "knockout";
 import { Styleable } from "../../contracts/styleable";
 import { StyleService } from "../../styleService";
+import { ComponentVariationCard } from "../../styleGuide";
 
 
 export class StylableGlobalBindingHandler {
@@ -19,7 +20,7 @@ export class StylableGlobalBindingHandler {
                     throw new Error(`Unable to find style by key ${styleKey}`);
                 }
 
-                const variationCard = bindingContext;
+                const variationCard: ComponentVariationCard = bindingContext;
                 const toggleBackground = () => variationCard.toggleBackground();
 
                 let currentStateClass: string;
