@@ -564,7 +564,7 @@ export class StyleGuide {
         this.ownerDocument.addEventListener(Events.Scroll, this.onWindowScroll);
         this.ownerDocument.addEventListener(Events.MouseDown, this.onPointerDown, true);
 
-        this.eventManager.dispatchEvent("displayHint", {
+        this.eventManager.dispatchEvent(Events.HintRequest, {
             key: "7b92",
             content: `<p>Here you can manage styles of every element of the content. All the customizations will get reflected everywhere on your website.</p><p>Press Escape button to get back to the page editing.</p>`
         });

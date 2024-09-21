@@ -9,7 +9,7 @@ import { ViewManager } from "@paperbits/common/ui";
 import { IBlobStorage } from "@paperbits/common/persistence";
 import { FontVariantContract } from "../../contracts";
 import { ChangeRateLimit } from "@paperbits/common/ko/consts";
-import { EventManager } from "@paperbits/common/events";
+import { EventManager, Events } from "@paperbits/common/events";
 import { MimeTypes } from "@paperbits/common";
 
 
@@ -169,7 +169,7 @@ export class FontEditor {
 
         await this.buildPreview();
 
-        this.eventManager.dispatchEvent("displayHint", {
+        this.eventManager.dispatchEvent(Events.HintRequest, {
             key: "4e45",
             content: `A font consists of one or more font faces. In the Font editor, you can upload and associate font faces to particular weights and styles.`
         });
