@@ -50,9 +50,11 @@ export class LocalStyleHtmlPagePublisherPlugin implements HtmlPagePublisherPlugi
         const styleManager: StyleManager = page.bindingContext?.styleManager;
         const stylesheetFilePath = Utils.appendSuffixToFileName(localStylesheetFilePath, this.staticAssetSuffix);
 
+        const localePrefix = page.locale ? `/${page.locale.code}` : "";
+
         const localStylesheetPermalink = page.permalink === "/" // home page
-            ? stylesheetFilePath
-            : `${page.permalink}${stylesheetFilePath}`
+            ? `${localePrefix}${stylesheetFilePath}`
+            : `${localePrefix}${page.permalink}${stylesheetFilePath}`
 
         const styleSheets = styleManager.getAllStyleSheets();
 
