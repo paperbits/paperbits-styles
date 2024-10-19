@@ -1,8 +1,8 @@
 <div class="form-group">
     <label for="fontFamily">Font family</label>
-    <div class="input-group" data-bind="balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }">
-        <input id="fontFamily" class="form-control" readonly
-            data-bind="value: $component.fontName" />
+    <div class="input-group">
+        <input id="fontFamily" class="form-control" readonly role="combobox"
+            data-bind="value: $component.fontName, balloon: { component: { name: 'font-selector', params: { onSelect: $component.onFontSelected } } }" />
         <span class="btn input-group-btn">
             <i aria-hidden="true" class="paperbits-icon paperbits-small-down"></i>
         </span>
@@ -11,17 +11,17 @@
 
 <div class="form-group">
     <label for="fontSize">Font size</label>
-    <size-input params="{ size: $component.fontSize, allowUnits: 'px,em,rem' }"></size-input>
+    <size-input params="{ id: 'fontSize', size: $component.fontSize, allowUnits: 'px,em,rem' }"></size-input>
 </div>
 
 <div class="form-group">
     <label for="lineHeight">Line height</label>
-    <size-input params="{ size: $component.lineHeight, allowUnits: 'px,em,rem' }"></size-input>
+    <size-input params="{ id: 'lineHeight', size: $component.lineHeight, allowUnits: 'px,em,rem' }"></size-input>
 </div>
 
 <div class="form-group">
     <label for="letterSpacing">Letter spacing</label>
-    <size-input params="{ size: $component.letterSpacing, allowUnits: 'px' }"></size-input>
+    <size-input params="{ id: 'letterSpacing', size: $component.letterSpacing, allowUnits: 'px' }"></size-input>
 </div>
 
 <div class="form-group">
