@@ -1,6 +1,6 @@
 import * as Objects from "@paperbits/common/objects";
 import * as Utils from "@paperbits/common/utils";
-import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
+import { Breakpoints, BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
@@ -69,12 +69,28 @@ class VariationStyleConfigurator {
 }
 
 export class StyleHelper {
-    private static isResponsive(variation: Object): boolean {
+    public static isResponsive(variation: Object): boolean {
         if (!variation) {
             throw new Error(`Parameter "variation" not specified.`);
         }
 
         return Object.keys(variation).some(props => Object.keys(BreakpointValues).includes(props));
+    }
+
+    public static getClosestBreakpoint(source: Breakpoints<any>, pluginName: string,  current: string): string {
+        const breakpoints = ["xs", "sm", "md", "lg", "xl"];
+        let index = breakpoints.indexOf(current);
+        let breakpoint = null;
+        let config;
+
+        do {
+            breakpoint = breakpoints[index];
+            config = source[breakpoint];
+            index--;
+        }
+        while (!config && index >= 0 && config?.[pluginName] === undefined);
+
+        return breakpoint;
     }
 
     public static getPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, viewport: string = "xs"): StylePluginConfig {
