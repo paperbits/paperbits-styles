@@ -29,6 +29,7 @@ export class SizeInput {
         this.size = ko.observable();
         this.displayUnits = ko.observable();
         this.value = ko.observable();
+        this.placeholder = ko.observable("(Inherit)");
         this.units = ko.observable(this.unitsOptions[0]);
         this.onDismiss = new ko.subscribable<SelectOption[]>();
         this.applyChanges = this.applyChanges.bind(this);
@@ -40,6 +41,9 @@ export class SizeInput {
 
     @Param()
     public size: ko.Observable<string>;
+
+    @Param()
+    public placeholder: ko.Observable<string>;
 
     @Param()
     public allowUnits: string;

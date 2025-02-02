@@ -37,7 +37,7 @@
         <button class="btn btn-info" role="tooltip" aria-label="Min container width"
             data-bind="tooltip: 'Set minimum width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
-    <size-input params="{ id: 'minWidth', size: minWidth, allowUnits: $component.allowUnits }"></size-input>
+    <size-input params="{ id: 'minWidth', size: minWidth, allowUnits: $component.allowUnits, placeholder: minWidthInherited }"></size-input>
 </div>
 <div class="form-group">
     <label for="maxWidth" class="form-label">
@@ -45,7 +45,7 @@
         <button class="btn btn-info" role="tooltip" aria-label="Max container width"
             data-bind="tooltip: 'Set maximum container width. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
-    <size-input params="{ id: 'maxWidth', size: maxWidth, allowUnits: $component.allowUnits }"></size-input>
+    <size-input params="{ id: 'maxWidth', size: maxWidth, allowUnits: $component.allowUnits, placeholder: maxWidthInherited }"></size-input>
 </div>
 <!-- /ko -->
 
@@ -56,7 +56,7 @@
         <button class="btn btn-info" role="tooltip" aria-label="Min container height"
             data-bind="tooltip: 'Set minimum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
-    <size-input params="{ id: 'minHeight', size: minHeight, allowUnits: $component.allowUnits }"></size-input>
+    <size-input params="{ id: 'minHeight', size: minHeight, allowUnits: $component.allowUnits, placeholder: minHeightInherited }"></size-input>
 </div>
 <div class="form-group">
     <label for="maxHeight" class="form-label">
@@ -64,7 +64,7 @@
         <button class="btn btn-info" role="tooltip" aria-label="Max container height"
             data-bind="tooltip: 'Set maximum container height. Depending on the viewport, this value can be different following the mobile-first approach. If not specified in the current viewport, the value inherits from closest smaller viewports.'"></button>
     </label>
-    <size-input params="{ id: 'maxHeight', size: maxHeight, allowUnits: $component.allowUnits }"></size-input>
+    <size-input params="{ id: 'maxHeight', size: maxHeight, allowUnits: $component.allowUnits, placeholder: maxHeightInherited }"></size-input>
 </div>
 <!-- /ko -->
 

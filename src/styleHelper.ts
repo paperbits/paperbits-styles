@@ -1,6 +1,6 @@
 import * as Objects from "@paperbits/common/objects";
 import * as Utils from "@paperbits/common/utils";
-import { BreakpointValues } from "@paperbits/common/styles/breakpoints";
+import { Breakpoints, BreakpointValues } from "@paperbits/common/styles/breakpoints";
 import { LocalStyles } from "@paperbits/common/styles/localStyles";
 import { PluginBag } from "@paperbits/common/styles/pluginBagContract";
 import { StylePluginConfig } from "@paperbits/common/styles/stylePluginConfig";
@@ -69,12 +69,41 @@ class VariationStyleConfigurator {
 }
 
 export class StyleHelper {
-    private static isResponsive(variation: Object): boolean {
+    public static isResponsive(variation: Object): boolean {
         if (!variation) {
             throw new Error(`Parameter "variation" not specified.`);
         }
 
         return Object.keys(variation).some(props => Object.keys(BreakpointValues).includes(props));
+    }
+
+    public static getClosestBreakpoint(source: Breakpoints<any>, pluginName: string, current: string, excludeCurrent: boolean = false): string {
+        const breakpoints = ["xs", "sm", "md", "lg", "xl"];
+        let index = breakpoints.indexOf(current);
+
+        if (excludeCurrent) {
+            index--;
+        }
+
+        let breakpoint = null;
+        let config;
+
+        do {
+            breakpoint = breakpoints[index];
+            config = source[breakpoint]?.[pluginName];
+            index--;
+        }
+        while (!config && index >= 0 && config === undefined);
+
+        if (excludeCurrent && breakpoint == current) {
+            return undefined;
+        }
+
+        if (config === undefined) {
+            return undefined;
+        }
+
+        return breakpoint;
     }
 
     public static getPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, viewport: string = "xs"): StylePluginConfig {
@@ -126,7 +155,14 @@ export class StyleHelper {
     public static setPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
         const pluginBag = localStyles.instance || {};
 
+        const isResponsive = !!pluginConfig && StyleHelper.isResponsive(pluginConfig);
+
+        if (isResponsive) {
+            viewport = null; // the configurtion is responsive, therefore ignoring viewport
+        }
+
         StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig || null, viewport);
+
         localStyles.instance = pluginBag;
     }
 

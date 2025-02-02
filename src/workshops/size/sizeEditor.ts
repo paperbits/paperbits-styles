@@ -2,6 +2,10 @@ import * as ko from "knockout";
 import template from "./sizeEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { SizeStylePluginConfig } from "../../plugins";
+import { Breakpoints } from "@paperbits/common";
+import { StyleHelper } from "../../styleHelper";
+import { ViewManager } from "@paperbits/common/ui";
+import { Size } from "../../size";
 
 @Component({
     selector: "size-editor",
@@ -23,6 +27,10 @@ export class SizeEditor {
     public readonly minMaxWidthEnabled: ko.Observable<boolean>;
     public readonly minWidth: ko.Observable<string | number>;
     public readonly maxWidth: ko.Observable<string | number>;
+    public readonly minWidthInherited: ko.Observable<any>;
+    public readonly maxWidthInherited: ko.Observable<any>;
+    public readonly minHeightInherited: ko.Observable<any>;
+    public readonly maxHeightInherited: ko.Observable<any>;
 
     public readonly stretchEnabled: ko.Observable<boolean>;
     public readonly stretch: ko.Observable<boolean>;
@@ -30,7 +38,7 @@ export class SizeEditor {
     public readonly fit: ko.Observable<boolean>;
 
     @Param()
-    public readonly sizeConfig: ko.Observable<SizeStylePluginConfig>;
+    public readonly sizeConfig: ko.Observable<SizeStylePluginConfig | Breakpoints<SizeStylePluginConfig>>;
 
     @Param()
     public readonly features: string;
@@ -39,11 +47,11 @@ export class SizeEditor {
     public readonly allowUnits: string;
 
     @Event()
-    public readonly onUpdate: (contract: SizeStylePluginConfig) => void;
+    public readonly onUpdate: (pluginConfig: SizeStylePluginConfig | Breakpoints<SizeStylePluginConfig>) => void;
 
-    constructor() {
+    constructor(private readonly viewManager: ViewManager) {
         this.sizeConfig = ko.observable();
-        this.features = "height,minMaxHeight,width,minMaxWidth";
+        this.features = "height,width,minHeight,maxHeight,minWidth,maxWidth";
         this.heightEnabled = ko.observable();
         this.itemHeight = ko.observable();
         this.widthEnabled = ko.observable();
@@ -54,6 +62,10 @@ export class SizeEditor {
         this.minMaxWidthEnabled = ko.observable();
         this.minWidth = ko.observable();
         this.maxWidth = ko.observable();
+        this.minWidthInherited = ko.observable();
+        this.maxWidthInherited = ko.observable();
+        this.minHeightInherited = ko.observable();
+        this.maxHeightInherited = ko.observable();
 
         this.stretchEnabled = ko.observable();
         this.stretch = ko.observable();
@@ -65,9 +77,9 @@ export class SizeEditor {
     public init(): void {
         const features = this.features.split(",");
         this.heightEnabled(features.includes("height"));
-        this.minMaxHeightEnabled(features.includes("minMaxHeight"));
+        this.minMaxHeightEnabled(features.includes("minHeight"));
         this.widthEnabled(features.includes("width"));
-        this.minMaxWidthEnabled(features.includes("minMaxWidth"));
+        this.minMaxWidthEnabled(features.includes("minWidth"));
         this.stretchEnabled(features.includes("stretch"));
         this.fitEnabled(features.includes("fit"));
 
@@ -101,18 +113,60 @@ export class SizeEditor {
             .subscribe(this.applyChanges);
     }
 
+    private isResponsive: boolean;
+
     private updateObservables(): void {
         this.updatesSuspended = true;
 
-        const pluginConfig = this.sizeConfig();
-        this.itemHeight(pluginConfig?.height);
-        this.minHeight(pluginConfig?.minHeight);
-        this.maxHeight(pluginConfig?.maxHeight);
-        this.itemWidth(pluginConfig?.width);
-        this.minWidth(pluginConfig?.minWidth);
-        this.maxWidth(pluginConfig?.maxWidth);
-        this.stretch(pluginConfig?.stretch);
-        this.fit(pluginConfig?.fit);
+        const configInput = this.sizeConfig();
+        this.isResponsive = !!configInput && StyleHelper.isResponsive(configInput);
+
+        let pluginConfig: SizeStylePluginConfig;
+
+        if (configInput) {
+            if (this.isResponsive) {
+                const viewport = this.viewManager.getViewport();
+                pluginConfig = configInput[viewport];
+
+                this.itemHeight(pluginConfig?.height);
+                this.minHeight(pluginConfig?.minHeight);
+                this.maxHeight(pluginConfig?.maxHeight);
+                this.itemWidth(pluginConfig?.width);
+                this.minWidth(pluginConfig?.minWidth);
+                this.maxWidth(pluginConfig?.maxWidth);
+                this.stretch(pluginConfig?.stretch);
+                this.fit(pluginConfig?.fit);
+
+                for (const property of this.features.split(",")) {
+                    if (!pluginConfig?.[property]) {
+                        const closestViewport = <any>StyleHelper.getClosestBreakpoint(<any>configInput, property, viewport, true);
+
+                        if (closestViewport) {
+                            pluginConfig = configInput[closestViewport][property];
+
+                            if (pluginConfig) {
+                                const size = Size.parse(<any>pluginConfig);
+                                this[property + "Inherited"](size.value);
+                                continue;
+                            }
+                        }
+                    }
+                    this[property + "Inherited"]("-");
+                }
+            }
+            else {
+                pluginConfig = <SizeStylePluginConfig>this.sizeConfig();
+
+                this.itemHeight(pluginConfig?.height);
+                this.minHeight(pluginConfig?.minHeight);
+                this.maxHeight(pluginConfig?.maxHeight);
+                this.itemWidth(pluginConfig?.width);
+                this.minWidth(pluginConfig?.minWidth);
+                this.maxWidth(pluginConfig?.maxWidth);
+                this.stretch(pluginConfig?.stretch);
+                this.fit(pluginConfig?.fit);
+            }
+        }
 
         this.updatesSuspended = false;
     }
@@ -126,7 +180,9 @@ export class SizeEditor {
             return;
         }
 
-        const update = {
+        let pluginConfig: SizeStylePluginConfig | Breakpoints<SizeStylePluginConfig>;
+
+        pluginConfig = {
             height: this.itemHeight(),
             minHeight: this.minHeight(),
             maxHeight: this.maxHeight(),
@@ -137,6 +193,14 @@ export class SizeEditor {
             fit: this.fit()
         };
 
-        this.onUpdate(update);
+        if (this.isResponsive) {
+            const configInput = this.sizeConfig();
+            const viewport = this.viewManager.getViewport();
+
+            configInput[viewport] = pluginConfig;
+            pluginConfig = configInput;
+        }
+
+        this.onUpdate(pluginConfig);
     }
 }
