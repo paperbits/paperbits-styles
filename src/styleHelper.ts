@@ -77,18 +77,31 @@ export class StyleHelper {
         return Object.keys(variation).some(props => Object.keys(BreakpointValues).includes(props));
     }
 
-    public static getClosestBreakpoint(source: Breakpoints<any>, pluginName: string,  current: string): string {
+    public static getClosestBreakpoint(source: Breakpoints<any>, pluginName: string, current: string, excludeCurrent: boolean = false): string {
         const breakpoints = ["xs", "sm", "md", "lg", "xl"];
         let index = breakpoints.indexOf(current);
+
+        if (excludeCurrent) {
+            index--;
+        }
+
         let breakpoint = null;
         let config;
 
         do {
             breakpoint = breakpoints[index];
-            config = source[breakpoint];
+            config = source[breakpoint]?.[pluginName];
             index--;
         }
-        while (!config && index >= 0 && config?.[pluginName] === undefined);
+        while (!config && index >= 0 && config === undefined);
+
+        if (excludeCurrent && breakpoint == current) {
+            return undefined;
+        }
+
+        if (config === undefined) {
+            return undefined;
+        }
 
         return breakpoint;
     }
@@ -142,7 +155,14 @@ export class StyleHelper {
     public static setPluginConfigForLocalStyles(localStyles: LocalStyles, pluginName: string, pluginConfig: StylePluginConfig, viewport?: string): void {
         const pluginBag = localStyles.instance || {};
 
+        const isResponsive = !!pluginConfig && StyleHelper.isResponsive(pluginConfig);
+
+        if (isResponsive) {
+            viewport = null; // the configurtion is responsive, therefore ignoring viewport
+        }
+
         StyleHelper.setPluginConfig(pluginBag, pluginName, pluginConfig || null, viewport);
+
         localStyles.instance = pluginBag;
     }
 

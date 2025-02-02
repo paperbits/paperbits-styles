@@ -249,4 +249,26 @@ describe("Style helper", async () => {
         const wrappers = StyleHelper.getStyleDefinitionWrappers(styleDefinition.components);
         console.log(wrappers);
     });
+
+    it("Correctly determines closest breakpoint", () => {
+        const configInput = {
+            xs: { minWidth: 200, maxWidth: 10 },
+            sm: { minWidth: 400 }
+        }
+
+        const case1 = <any>StyleHelper.getClosestBreakpoint(<any>configInput, "minWidth", "sm", true);
+        expect(case1).to.equal("xs");
+
+        const case2 = <any>StyleHelper.getClosestBreakpoint(<any>configInput, "minWidth", "xl", true);
+        expect(case2).to.equal("sm");
+
+        const case3 = <any>StyleHelper.getClosestBreakpoint(<any>configInput, "minWidth", "xs", true);
+        expect(case3).to.equal(undefined);
+
+        const case4 = <any>StyleHelper.getClosestBreakpoint(<any>configInput, "nonexistent", "sm", true);
+        expect(case4).to.equal(undefined);
+
+        const case5 = <any>StyleHelper.getClosestBreakpoint(<any>configInput, "maxWidth", "xl", true);
+        expect(case5).to.equal("xs");
+    });
 });

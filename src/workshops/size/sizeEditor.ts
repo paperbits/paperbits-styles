@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import template from "./sizeEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { SizeStylePluginConfig } from "../../plugins";
-import { Breakpoints } from "@paperbits/common";
+import { Breakpoints, BreakpointValues } from "@paperbits/common";
 import { StyleHelper } from "../../styleHelper";
 import { ViewManager } from "@paperbits/common/ui";
 import { Size } from "../../size";
@@ -76,7 +76,6 @@ export class SizeEditor {
     @OnMounted()
     public init(): void {
         const features = this.features.split(",");
-        console.log(features);
         this.heightEnabled(features.includes("height"));
         this.minMaxHeightEnabled(features.includes("minHeight"));
         this.widthEnabled(features.includes("width"));
@@ -114,16 +113,18 @@ export class SizeEditor {
             .subscribe(this.applyChanges);
     }
 
+    private isResponsive: boolean;
+
     private updateObservables(): void {
         this.updatesSuspended = true;
 
         const configInput = this.sizeConfig();
+        this.isResponsive = StyleHelper.isResponsive(configInput);
 
         let pluginConfig: SizeStylePluginConfig;
 
-
         if (configInput) {
-            if (StyleHelper.isResponsive(configInput)) {
+            if (this.isResponsive) {
                 const viewport = this.viewManager.getViewport();
                 pluginConfig = configInput[viewport];
 
@@ -138,7 +139,7 @@ export class SizeEditor {
 
                 for (const property of this.features.split(",")) {
                     if (!pluginConfig?.[property]) {
-                        const closestViewport = <any>StyleHelper.getClosestBreakpoint(<any>configInput, property, viewport);
+                        const closestViewport = <any>StyleHelper.getClosestBreakpoint(<any>configInput, property, viewport, true);
 
                         if (closestViewport) {
                             pluginConfig = configInput[closestViewport][property];
@@ -150,6 +151,9 @@ export class SizeEditor {
                             else {
                                 this[property + "Inherited"]("-");
                             }
+                        }
+                        else {
+                            this[property + "Inherited"]("-");
                         }
                     }
                     else {
@@ -183,17 +187,36 @@ export class SizeEditor {
             return;
         }
 
-        const update = {
-            height: this.itemHeight(),
-            minHeight: this.minHeight(),
-            maxHeight: this.maxHeight(),
-            width: this.itemWidth(),
-            minWidth: this.minWidth(),
-            maxWidth: this.maxWidth(),
-            stretch: this.stretch(),
-            fit: this.fit()
-        };
+        if (this.isResponsive) {
+            const configInput = this.sizeConfig();
+            const viewport = this.viewManager.getViewport();
 
-        this.onUpdate(update);
+            configInput[viewport] = {
+                height: this.itemHeight(),
+                minHeight: this.minHeight(),
+                maxHeight: this.maxHeight(),
+                width: this.itemWidth(),
+                minWidth: this.minWidth(),
+                maxWidth: this.maxWidth(),
+                stretch: this.stretch(),
+                fit: this.fit()
+            };
+
+            this.onUpdate(<any>configInput);
+        }
+        else {
+            const update = {
+                height: this.itemHeight(),
+                minHeight: this.minHeight(),
+                maxHeight: this.maxHeight(),
+                width: this.itemWidth(),
+                minWidth: this.minWidth(),
+                maxWidth: this.maxWidth(),
+                stretch: this.stretch(),
+                fit: this.fit()
+            };
+
+            this.onUpdate(update);
+        }
     }
 }
