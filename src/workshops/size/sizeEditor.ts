@@ -2,7 +2,7 @@ import * as ko from "knockout";
 import template from "./sizeEditor.html";
 import { Component, Param, Event, OnMounted } from "@paperbits/common/ko/decorators";
 import { SizeStylePluginConfig } from "../../plugins";
-import { Breakpoints, BreakpointValues } from "@paperbits/common";
+import { Breakpoints } from "@paperbits/common";
 import { StyleHelper } from "../../styleHelper";
 import { ViewManager } from "@paperbits/common/ui";
 import { Size } from "../../size";
@@ -47,7 +47,7 @@ export class SizeEditor {
     public readonly allowUnits: string;
 
     @Event()
-    public readonly onUpdate: (contract: SizeStylePluginConfig) => void;
+    public readonly onUpdate: (pluginConfig: SizeStylePluginConfig | Breakpoints<SizeStylePluginConfig>) => void;
 
     constructor(private readonly viewManager: ViewManager) {
         this.sizeConfig = ko.observable();
@@ -147,18 +147,11 @@ export class SizeEditor {
                             if (pluginConfig) {
                                 const size = Size.parse(<any>pluginConfig);
                                 this[property + "Inherited"](size.value);
-                            }
-                            else {
-                                this[property + "Inherited"]("-");
+                                continue;
                             }
                         }
-                        else {
-                            this[property + "Inherited"]("-");
-                        }
                     }
-                    else {
-                        this[property + "Inherited"]("-");
-                    }
+                    this[property + "Inherited"]("-");
                 }
             }
             else {
@@ -187,36 +180,27 @@ export class SizeEditor {
             return;
         }
 
+        let pluginConfig: SizeStylePluginConfig | Breakpoints<SizeStylePluginConfig>;
+
+        pluginConfig = {
+            height: this.itemHeight(),
+            minHeight: this.minHeight(),
+            maxHeight: this.maxHeight(),
+            width: this.itemWidth(),
+            minWidth: this.minWidth(),
+            maxWidth: this.maxWidth(),
+            stretch: this.stretch(),
+            fit: this.fit()
+        };
+
         if (this.isResponsive) {
             const configInput = this.sizeConfig();
             const viewport = this.viewManager.getViewport();
 
-            configInput[viewport] = {
-                height: this.itemHeight(),
-                minHeight: this.minHeight(),
-                maxHeight: this.maxHeight(),
-                width: this.itemWidth(),
-                minWidth: this.minWidth(),
-                maxWidth: this.maxWidth(),
-                stretch: this.stretch(),
-                fit: this.fit()
-            };
-
-            this.onUpdate(<any>configInput);
+            configInput[viewport] = pluginConfig;
+            pluginConfig = configInput;
         }
-        else {
-            const update = {
-                height: this.itemHeight(),
-                minHeight: this.minHeight(),
-                maxHeight: this.maxHeight(),
-                width: this.itemWidth(),
-                minWidth: this.minWidth(),
-                maxWidth: this.maxWidth(),
-                stretch: this.stretch(),
-                fit: this.fit()
-            };
 
-            this.onUpdate(update);
-        }
+        this.onUpdate(pluginConfig);
     }
 }

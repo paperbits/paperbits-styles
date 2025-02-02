@@ -205,7 +205,6 @@ describe("Style helper", async () => {
         console.log(JSON.stringify(result, null, 4));
     });
 
-
     it("Can get style definition by style key", () => {
         const styleDefinition = {
             components: {
