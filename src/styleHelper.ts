@@ -224,7 +224,15 @@ export class StyleHelper {
         let originalPluginConfig = Objects.getObjectAt(pluginName, pluginBag) || {};
 
         if (viewport) {
-            originalPluginConfig[viewport] = pluginConfig;
+            let configAtViewport = originalPluginConfig[viewport];
+
+            if (typeof configAtViewport == "object") {
+                Objects.mergeDeep(configAtViewport, pluginConfig);
+            }
+            else {
+                configAtViewport = pluginConfig;
+            }
+            originalPluginConfig[viewport] = configAtViewport;
         }
         else {
             originalPluginConfig = pluginConfig;

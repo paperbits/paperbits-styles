@@ -66,6 +66,12 @@ describe("Style helper", async () => {
                 },
                 background: {
                     xs: backgroundConfigXs
+                },
+                "grid-cell": {
+                    md: {
+                        alignment: { vertical: "center" },
+                        position: { col: 1, row: 1 }
+                    }
                 }
             },
             appearance: appearanceVariationKey
@@ -77,6 +83,9 @@ describe("Style helper", async () => {
         expect(localStyles.instance.size.xs).to.equal(sizeConfigXs);
         expect(localStyles.instance.background.xs).to.equal(backgroundConfigXs);
         expect(localStyles.appearance).to.equal(appearanceVariationKey);
+
+        StyleHelper.style(localStyles).plugin("grid-cell").setConfig({ alignment: { vertical: "start" } }, "md");
+        expect(localStyles.instance["grid-cell"].md.position).to.not.equal(undefined);
 
         /* applying config to all viewports */
         StyleHelper.setPluginConfigForLocalStyles(localStyles, "size", sizeConfigNew);
