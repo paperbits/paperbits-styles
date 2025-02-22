@@ -318,13 +318,21 @@ export class StyleService {
 
         const states = this.getAllowedStates(componentStyles);
 
-        const variations = Object.keys(componentStyles).map(variationName => {
+        const variations: VariationContract[] = [];
+
+        for (const variationName in Object.keys(componentStyles)) {
             const variationContract = componentStyles[variationName];
+
+            if (!variationContract) {
+                continue;
+            }
+
             if (states && variationName !== "default") {
                 variationContract.allowedStates = states;
             }
-            return variationContract;
-        });
+            
+            variations.push(variationContract);
+        }
 
         return variations;
     }
