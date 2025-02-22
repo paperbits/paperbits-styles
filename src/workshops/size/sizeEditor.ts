@@ -77,9 +77,9 @@ export class SizeEditor {
     public init(): void {
         const features = this.features.split(",");
         this.heightEnabled(features.includes("height"));
-        this.minMaxHeightEnabled(features.includes("minHeight"));
+        this.minMaxHeightEnabled(features.includes("minHeight") || features.includes("minMaxHeight"));
         this.widthEnabled(features.includes("width"));
-        this.minMaxWidthEnabled(features.includes("minWidth"));
+        this.minMaxWidthEnabled(features.includes("minWidth") || features.includes("minMaxWidth"));
         this.stretchEnabled(features.includes("stretch"));
         this.fitEnabled(features.includes("fit"));
 
