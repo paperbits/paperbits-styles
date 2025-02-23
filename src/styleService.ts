@@ -317,10 +317,9 @@ export class StyleService {
         }
 
         const states = this.getAllowedStates(componentStyles);
-
         const variations: VariationContract[] = [];
 
-        for (const variationName in Object.keys(componentStyles)) {
+        for (const variationName of Object.keys(componentStyles)) {
             const variationContract = componentStyles[variationName];
 
             if (!variationContract) {
