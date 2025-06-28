@@ -153,8 +153,6 @@ export class StyleGuide {
                         this.refreshFonts();
                         this.rebuildStyleSheet();
 
-                        this.refreshFonts();
-
                         if (!custom) {
                             return;
                         }
@@ -193,6 +191,7 @@ export class StyleGuide {
         }
         else {
             this.refreshComponents();
+            this.refreshFonts();
             this.rebuildStyleSheet();
         }
 
@@ -958,7 +957,7 @@ export class StyleGuide {
                                     break;
                                 case "icons":
                                     this.removeIcon(style);
-                                  
+
                                     break;
                                 case "shadows":
                                     this.removeShadow(style);
